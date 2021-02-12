@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: LaTeX new page
+# key: <lnp
+# --
+#+LATEX: \newpage

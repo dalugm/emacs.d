@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Table of Contents
+# key: toc
+# --
+* Table of Contents                                               :TOC:noexport:

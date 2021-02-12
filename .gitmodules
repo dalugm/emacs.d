@@ -1,0 +1,418 @@
+[submodule "ace-window"]
+	path = lib/ace-window
+	url = https://github.com/abo-abo/ace-window.git
+[submodule "ag"]
+	path = lib/ag
+	url = https://github.com/Wilfred/ag.el.git
+[submodule "alect-themes"]
+	path = lib/alect-themes
+	url = https://github.com/alezost/alect-themes.git
+[submodule "ample-theme"]
+	path = lib/ample-theme
+	url = https://github.com/jordonbiondo/ample-theme.git
+[submodule "anaphora"]
+	path = lib/anaphora
+	url = https://github.com/rolandwalker/anaphora.git
+[submodule "annalist"]
+	path = lib/annalist
+	url = https://github.com/noctuid/annalist.el.git
+[submodule "anti-zenburn-theme"]
+	path = lib/anti-zenburn-theme
+	url = https://github.com/m00natic/anti-zenburn-theme.git
+[submodule "apropospriate-theme"]
+	path = lib/apropospriate-theme
+	url = https://github.com/waymondo/apropospriate-theme.git
+[submodule "async"]
+	path = lib/async
+	url = https://github.com/jwiegley/emacs-async.git
+[submodule "atom-one-dark-theme"]
+	path = lib/atom-one-dark-theme
+	url = https://github.com/jonathanchu/atom-one-dark-theme.git
+[submodule "auto-compile"]
+	path = lib/auto-compile
+	url = https://github.com/emacscollective/auto-compile.git
+[submodule "auto-yasnippet"]
+	path = lib/auto-yasnippet
+	url = https://github.com/abo-abo/auto-yasnippet.git
+[submodule "autothemer"]
+	path = lib/autothemer
+	url = https://github.com/jasonm23/autothemer.git
+[submodule "avy"]
+	path = lib/avy
+	url = https://github.com/abo-abo/avy.git
+[submodule "avy-zh"]
+	path = lib/avy-zh
+	url = https://github.com/dalugm/avy-zh.git
+[submodule "bing-dict"]
+	path = lib/bing-dict
+	url = https://github.com/cute-jumper/bing-dict.el.git
+[submodule "borg"]
+	path = lib/borg
+	url = https://github.com/emacscollective/borg.git
+[submodule "challenger-deep-theme"]
+	path = lib/challenger-deep-theme
+	url = https://github.com/challenger-deep-theme/emacs.git
+[submodule "chocolate-theme"]
+	path = lib/chocolate-theme
+	url = https://github.com/SavchenkoValeriy/emacs-chocolate-theme.git
+[submodule "closql"]
+	path = lib/closql
+	url = https://github.com/emacscollective/closql.git
+[submodule "color-theme-sanityinc-solarized"]
+	path = lib/color-theme-sanityinc-solarized
+	url = https://github.com/purcell/color-theme-sanityinc-solarized.git
+[submodule "color-theme-sanityinc-tomorrow"]
+	path = lib/color-theme-sanityinc-tomorrow
+	url = https://github.com/purcell/color-theme-sanityinc-tomorrow.git
+[submodule "company"]
+	path = lib/company
+	url = https://github.com/company-mode/company-mode.git
+[submodule "company-box"]
+	path = lib/company-box
+	url = https://github.com/sebastiencs/company-box.git
+[submodule "cyberpunk-theme"]
+	path = lib/cyberpunk-theme
+	url = https://github.com/n3mo/cyberpunk-theme.el.git
+[submodule "darkokai-theme"]
+	path = lib/darkokai-theme
+	url = https://github.com/sjrmanning/darkokai.git
+[submodule "darkroom"]
+	path = lib/darkroom
+	url = https://github.com/joaotavora/darkroom.git
+[submodule "darktooth-theme"]
+	path = lib/darktooth-theme
+	url = https://github.com/emacsfodder/emacs-theme-darktooth.git
+[submodule "dash"]
+	path = lib/dash
+	url = https://github.com/magnars/dash.el.git
+	no-makeinfo = dash-template.texi
+[submodule "deferred"]
+	path = lib/deferred
+	url = https://github.com/kiwanami/emacs-deferred.git
+[submodule "diff-hl"]
+	path = lib/diff-hl
+	url = https://github.com/dgutov/diff-hl.git
+[submodule "doom-themes"]
+	path = lib/doom-themes
+	url = https://github.com/hlissner/emacs-doom-themes.git
+[submodule "dracula-theme"]
+	path = lib/dracula-theme
+	url = https://github.com/dracula/emacs.git
+[submodule "edit-indirect"]
+	path = lib/edit-indirect
+	url = https://github.com/Fanael/edit-indirect.git
+[submodule "editorconfig"]
+	path = lib/editorconfig
+	url = https://github.com/editorconfig/editorconfig-emacs.git
+[submodule "ein"]
+	path = lib/ein
+	url = https://github.com/millejoh/emacs-ipython-notebook.git
+[submodule "elfeed"]
+	path = lib/elfeed
+	url = https://github.com/skeeto/elfeed.git
+[submodule "elfeed-org"]
+	path = lib/elfeed-org
+	url = https://github.com/remyhonig/elfeed-org.git
+[submodule "emacsql"]
+	path = lib/emacsql
+	url = https://github.com/skeeto/emacsql.git
+	no-byte-compile = emacsql-pg.el
+[submodule "epkg"]
+	path = lib/epkg
+	url = https://github.com/emacscollective/epkg.git
+	makeinfo = epkg.texi
+[submodule "evil"]
+	path = lib/evil
+	url = https://github.com/emacs-evil/evil.git
+[submodule "evil-matchit"]
+	path = lib/evil-matchit
+	url = https://github.com/redguardtoo/evil-matchit.git
+[submodule "evil-nerd-commenter"]
+	path = lib/evil-nerd-commenter
+	url = https://github.com/redguardtoo/evil-nerd-commenter.git
+[submodule "evil-surround"]
+	path = lib/evil-surround
+	url = https://github.com/emacs-evil/evil-surround.git
+[submodule "evil-zh"]
+	path = lib/evil-zh
+	url = https://github.com/dalugm/evil-zh.git
+[submodule "exec-path-from-shell"]
+	path = lib/exec-path-from-shell
+	url = https://github.com/purcell/exec-path-from-shell.git
+[submodule "expand-region"]
+	path = lib/expand-region
+	url = https://github.com/magnars/expand-region.el.git
+[submodule "eyebrowse"]
+	path = lib/eyebrowse
+	url = https://depp.brause.cc/eyebrowse.git
+[submodule "f"]
+	path = lib/f
+	url = https://github.com/rejeep/f.el.git
+[submodule "find-file-in-project"]
+	path = lib/find-file-in-project
+	url = https://github.com/redguardtoo/find-file-in-project.git
+[submodule "flycheck"]
+	path = lib/flycheck
+	url = https://github.com/flycheck/flycheck.git
+[submodule "forge"]
+	path = lib/forge
+	url = https://github.com/magit/forge.git
+	info-path = docs
+[submodule "frame-local"]
+	path = lib/frame-local
+	url = https://github.com/sebastiencs/frame-local.git
+[submodule "geiser"]
+	path = lib/geiser
+	url = https://gitlab.com/jaor/geiser.git
+[submodule "general"]
+	path = lib/general
+	url = https://github.com/noctuid/general.el.git
+[submodule "ghub"]
+	path = lib/ghub
+	url = https://github.com/magit/ghub.git
+[submodule "git-link"]
+	path = lib/git-link
+	url = https://github.com/sshaw/git-link.git
+[submodule "git-modes"]
+	path = lib/git-modes
+	url = https://github.com/magit/git-modes.git
+[submodule "gotham-theme"]
+	path = lib/gotham-theme
+	url = https://depp.brause.cc/gotham-theme.git
+[submodule "grandshell-theme"]
+	path = lib/grandshell-theme
+	url = https://framagit.org/steckerhalter/grandshell-theme.git
+[submodule "green-is-the-new-black-theme"]
+	path = lib/green-is-the-new-black-theme
+	url = https://github.com/fredcamps/green-is-the-new-black-emacs.git
+[submodule "gruber-darker-theme"]
+	path = lib/gruber-darker-theme
+	url = https://github.com/rexim/gruber-darker-theme.git
+[submodule "gruvbox-theme"]
+	path = lib/gruvbox-theme
+	url = https://github.com/greduan/emacs-theme-gruvbox.git
+[submodule "hl-todo"]
+	path = lib/hl-todo
+	url = https://github.com/tarsius/hl-todo.git
+[submodule "ht"]
+	path = lib/ht
+	url = https://github.com/Wilfred/ht.el.git
+[submodule "htmlize"]
+	path = lib/htmlize
+	url = https://github.com/hniksic/emacs-htmlize.git
+[submodule "hydra"]
+	path = lib/hydra
+	url = https://github.com/abo-abo/hydra.git
+[submodule "inkpot-theme"]
+	path = lib/inkpot-theme
+	url = https://gitlab.com/ideasman42/emacs-inkpot-theme.git
+[submodule "ivy"]
+	path = lib/ivy
+	url = https://github.com/abo-abo/swiper.git
+	info-path = doc
+[submodule "jazz-theme"]
+	path = lib/jazz-theme
+	url = https://github.com/donderom/jazz-theme.git
+[submodule "kaolin-themes"]
+	path = lib/kaolin-themes
+	url = https://github.com/ogdenwebb/emacs-kaolin-themes.git
+[submodule "leuven-theme"]
+	path = lib/leuven-theme
+	url = https://github.com/fniessen/emacs-leuven-theme.git
+[submodule "lsp-mode"]
+	path = lib/lsp-mode
+	url = https://github.com/emacs-lsp/lsp-mode.git
+	load-path = .
+	load-path = clients
+[submodule "lsp-ui"]
+	path = lib/lsp-ui
+	url = https://github.com/emacs-lsp/lsp-ui.git
+[submodule "lua-mode"]
+	path = lib/lua-mode
+	url = https://github.com/immerrr/lua-mode.git
+[submodule "lush-theme"]
+	path = lib/lush-theme
+	url = https://github.com/andre-richter/emacs-lush-theme.git
+[submodule "magit"]
+	path = lib/magit
+	url = https://github.com/magit/magit.git
+	recursive-byte-compile = true
+	info-path = Documentation
+[submodule "markdown-mode"]
+	path = lib/markdown-mode
+	url = https://github.com/jrblevin/markdown-mode.git
+[submodule "markdown-toc"]
+	path = lib/markdown-toc
+	url = https://github.com/ardumont/markdown-toc.git
+[submodule "material-theme"]
+	path = lib/material-theme
+	url = https://github.com/cpaulik/emacs-material-theme.git
+[submodule "minimal-theme"]
+	path = lib/minimal-theme
+	url = https://github.com/anler/minimal-theme.git
+[submodule "modus-themes"]
+	path = lib/modus-themes
+	url = https://gitlab.com/protesilaos/modus-themes.git
+[submodule "moe-theme"]
+	path = lib/moe-theme
+	url = https://github.com/kuanyui/moe-theme.el.git
+[submodule "monokai-theme"]
+	path = lib/monokai-theme
+	url = https://github.com/oneKelvinSmith/monokai-emacs.git
+[submodule "naquadah-theme"]
+	path = lib/naquadah-theme
+	url = https://github.com/jd/naquadah-theme.git
+[submodule "nimbus-theme"]
+	path = lib/nimbus-theme
+	url = https://github.com/m-cat/nimbus-theme.git
+[submodule "no-littering"]
+	path = lib/no-littering
+	url = https://github.com/emacscollective/no-littering.git
+[submodule "nord-theme"]
+	path = lib/nord-theme
+	url = https://github.com/arcticicestudio/nord-emacs.git
+[submodule "ns-auto-titlebar"]
+	path = lib/ns-auto-titlebar
+	url = https://github.com/purcell/ns-auto-titlebar.git
+[submodule "organic-green-theme"]
+	path = lib/organic-green-theme
+	url = https://github.com/kostafey/organic-green-theme.git
+[submodule "ox-hugo"]
+	path = lib/ox-hugo
+	url = https://github.com/kaushalmodi/ox-hugo.git
+[submodule "packed"]
+	path = lib/packed
+	url = https://github.com/emacscollective/packed.git
+[submodule "pangu-spacing"]
+	path = lib/pangu-spacing
+	url = https://github.com/coldnew/pangu-spacing.git
+[submodule "parchment-theme"]
+	path = lib/parchment-theme
+	url = https://github.com/ajgrf/parchment.git
+[submodule "phoenix-dark-pink-theme"]
+	path = lib/phoenix-dark-pink-theme
+	url = https://github.com/j0ni/phoenix-dark-pink.git
+[submodule "polymode"]
+	path = lib/polymode
+	url = https://github.com/polymode/polymode.git
+[submodule "prescient"]
+	path = lib/prescient
+	url = https://github.com/raxod502/prescient.el.git
+[submodule "pyim"]
+	path = lib/pyim
+	url = https://github.com/tumashu/pyim.git
+[submodule "pyim-basedict"]
+	path = lib/pyim-basedict
+	url = https://github.com/tumashu/pyim-basedict.git
+[submodule "rainbow-delimiters"]
+	path = lib/rainbow-delimiters
+	url = https://github.com/Fanael/rainbow-delimiters.git
+[submodule "rainbow-mode"]
+	path = lib/rainbow-mode
+	url = https://github.com/emacsmirror/rainbow-mode.git
+[submodule "request"]
+	path = lib/request
+	url = https://github.com/tkf/emacs-request.git
+[submodule "s"]
+	path = lib/s
+	url = https://github.com/magnars/s.el.git
+[submodule "search-dired"]
+	path = lib/search-dired
+	url = https://github.com/dalugm/search-dired.git
+[submodule "separedit"]
+	path = lib/separedit
+	url = https://github.com/twlz0ne/separedit.el.git
+[submodule "sicp"]
+	path = lib/sicp
+	url = https://github.com/webframp/sicp-info.git
+[submodule "sinolor-themes"]
+	path = lib/sinolor-themes
+	url = https://github.com/dalugm/sinolor-themes.git
+[submodule "slime"]
+	path = lib/slime
+	url = https://github.com/slime/slime.git
+[submodule "smart-compile"]
+	path = lib/smart-compile
+	url = https://github.com/emacsmirror/smart-compile.git
+[submodule "smartparens"]
+	path = lib/smartparens
+	url = https://github.com/Fuco1/smartparens.git
+[submodule "solarized-theme"]
+	path = lib/solarized-theme
+	url = https://github.com/bbatsov/solarized-emacs.git
+[submodule "spacegray-theme"]
+	path = lib/spacegray-theme
+	url = https://github.com/bruce/emacs-spacegray-theme.git
+[submodule "spacemacs-theme"]
+	path = lib/spacemacs-theme
+	url = https://github.com/nashamri/spacemacs-theme.git
+[submodule "spinner"]
+	path = lib/spinner
+	url = https://github.com/Malabarba/spinner.el.git
+[submodule "srcery-theme"]
+	path = lib/srcery-theme
+	url = https://github.com/srcery-colors/srcery-emacs.git
+[submodule "subatomic-theme"]
+	path = lib/subatomic-theme
+	url = https://github.com/cryon/subatomic-theme.git
+[submodule "tagedit"]
+	path = lib/tagedit
+	url = https://github.com/magnars/tagedit.git
+[submodule "tango-plus-theme"]
+	path = lib/tango-plus-theme
+	url = https://github.com/tmalsburg/tango-plus-theme.git
+[submodule "tao-theme"]
+	path = lib/tao-theme
+	url = https://github.com/11111000000/tao-theme-emacs.git
+[submodule "toc-org"]
+	path = lib/toc-org
+	url = https://github.com/snosov1/toc-org.git
+[submodule "transient"]
+	path = lib/transient
+	url = https://github.com/magit/transient.git
+	info-path = docs
+[submodule "treepy"]
+	path = lib/treepy
+	url = https://github.com/volrath/treepy.el.git
+[submodule "use-package"]
+	path = lib/use-package
+	url = https://github.com/jwiegley/use-package.git
+[submodule "valign"]
+	path = lib/valign
+	url = https://github.com/casouri/valign.git
+[submodule "websocket"]
+	path = lib/websocket
+	url = https://github.com/ahyatt/emacs-websocket.git
+[submodule "wgrep"]
+	path = lib/wgrep
+	url = https://github.com/mhayashi1120/Emacs-wgrep.git
+[submodule "which-key"]
+	path = lib/which-key
+	url = https://github.com/justbur/emacs-which-key.git
+[submodule "winum"]
+	path = lib/winum
+	url = https://github.com/deb0ch/emacs-winum.git
+[submodule "with-editor"]
+	path = lib/with-editor
+	url = https://github.com/magit/with-editor.git
+[submodule "wucuo"]
+	path = lib/wucuo
+	url = https://github.com/redguardtoo/wucuo.git
+[submodule "xr"]
+	path = lib/xr
+	url = https://github.com/mattiase/xr.git
+[submodule "yaml-mode"]
+	path = lib/yaml-mode
+	url = https://github.com/yoshiki/yaml-mode.git
+[submodule "yasnippet"]
+	path = lib/yasnippet
+	url = https://github.com/joaotavora/yasnippet.git
+[submodule "yasnippet-snippets"]
+	path = lib/yasnippet-snippets
+	url = https://github.com/AndreaCrotti/yasnippet-snippets.git
+[submodule "zenburn-theme"]
+	path = lib/zenburn-theme
+	url = https://github.com/bbatsov/zenburn-emacs.git
+[submodule "zh-lib"]
+	path = lib/zh-lib
+	url = https://github.com/dalugm/zh-lib.el.git

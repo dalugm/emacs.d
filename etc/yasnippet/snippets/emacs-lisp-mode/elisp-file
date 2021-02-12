@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: elisp-file
+# key: ef
+# --
+;;; ${1:`(file-name-nondirectory buffer-file-name)`} --- ${2:description} -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;;
+;;  ${3:commentary}
+;;
+
+;;; Code:
+
+$0
+
+(provide '`(file-name-base buffer-file-name)`)
+
+;;; `(file-name-nondirectory buffer-file-name)` ends here

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: elisp-file-end
+# key: efe
+# --
+(provide '`(file-name-base buffer-file-name)`)
+
+;;; `(file-name-nondirectory buffer-file-name)` ends here

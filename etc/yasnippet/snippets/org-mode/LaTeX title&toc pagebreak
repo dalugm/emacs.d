@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: LaTeX title&toc pagebreak
+# key: <ltp
+# --
+#+LATEX_HEADER: \makeatletter \def\@maketitle{\null \begin{center} {\vskip 5em \Huge \@title} \vskip 30em {\LARGE \@author} \vskip 3em {\LARGE \@date} \end{center} \newpage} \makeatother

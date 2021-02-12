@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: buffer-file-path
+# key: bfp
+# --
+`(file-name-directory (with-current-buffer (window-buffer (minibuffer-selected-window))
+    buffer-file-truename))`$0

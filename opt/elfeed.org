@@ -1,0 +1,38 @@
+#+TITLE: Elfeed
+
+* elfeed                                                                        :elfeed:
+** Blog                                                                         :blog:
+*** [[https://blog.yinxiang.com/feed/][wangyin]]
+*** [[https://endlessparentheses.com/atom.xml][endless parenthesis]]
+*** [[https://feeds.feedburner.com/SanityInc][purcell]]
+*** [[https://feeds.feedburner.com/XahsEmacsBlog][Xah]]
+*** [[https://oremacs.com/atom.xml][oremacs]]
+*** [[https://www.matrix67.com/blog/feed.asp][matrix67]]
+*** [[https://www.ruanyifeng.com/blog/atom.xml][ruanyifeng]]
+*** [[https://blog.binchen.org/rss.xml][chenbin]]
+*** [[https://manateelazycat.github.io/feed.xml][wangyong]]
+*** [[https://sachachua.com/blog/feed][sasha-chua]]
+** Daily                                                                        :daily:
+*** [[https://feeds.feedburner.com/zhihu-daily][知乎日报]]
+*** [[https://songshuhui.net/feed][科学松鼠会]]
+*** [[https://www.guokr.com/rss/][果壳网]]
+*** [[https://www.zhihu.com/rss][知乎每日精选]]
+*** [[https://www.d4j.cn/feed ][三秋书屋]]
+*** [[https://www.douban.com/feed/review/book][豆瓣书评]]
+*** [[https://www.douban.com/feed/review/movie][豆瓣影评]]
+*** [[https://xkcd.com/rss.xml][xkcd]]
+** Emacs                                                                        :emacs:
+*** [[https://emacs.stackexchange.com/feeds][emacs.sx]]
+*** [[https://planet.emacsen.org/atom.xml][emacsen]]
+*** [[https://planet.emacslife.com/atom.xml][emacslife]]
+*** [[https://pragmaticemacs.com/feed/][pragmaticemacs]]
+*** [[https://www.masteringemacs.org/feed/][masteringemacs]]
+*** [[https://www.reddit.com/r/emacs/.rss][emacs.reddit]]
+*** [[https://emacsredux.com/][emacsredux]]
+** Tech                                                                         :tech:
+*** [[https://opensource.com/feed][opensource]]
+*** [[https://this-week-in-rust.org/rss.xml][this-week-in-rust]]
+*** [[https://www.lesswrong.com/feed.xml?view=curated-rss][LessWrong]]
+** News                                                                         :news:
+*** [[https://rss.slashdot.org/Slashdot/slashdotMain][Slashdot]]
+*** [[https://www.solidot.org/index.rss][Solidot]]

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: buffer-file-name
+# key: bfn
+# condition: t       
+# --
+`(file-name-base
+   (with-current-buffer (window-buffer (minibuffer-selected-window))
+     buffer-file-truename))`$0.`(file-name-extension
+                                  (with-current-buffer (window-buffer (minibuffer-selected-window))
+                                    buffer-file-truename))`

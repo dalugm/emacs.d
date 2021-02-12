@@ -1,0 +1,105 @@
+#+title: A basic Emacs setup
+#+author: dalu
+#+date: 2021:02:12
+
+* Table of Contents                                                             :TOC:noexport:
+- [[#why-emacs][Why Emacs]]
+- [[#about-this-configuration][About this configuration]]
+- [[#install][Install]]
+  - [[#makefile][Makefile]]
+  - [[#fetch-submodule-manually][Fetch submodule manually]]
+
+* Why Emacs
+
+Emacs changes how you think about programming.
+
+Emacs is *totally introspectable*. You can always find out 'what code
+runs when I press this button?'.
+
+Emacs is an *incremental programming environment*. There's no
+edit-compile-run cycle. There isn't even an edit-run cycle. You can
+execute snippets of code and gradually turn them into a finished
+project. There's no distinction between your editor and your
+interpreter.
+
+Emacs is a *mutable environment*. You can set variables, tweak
+functions with advice, or redefine entire functions. Nothing is
+off-limits.
+
+Emacs provides *functionality without applications*. Rather than
+separate applications, functionality is all integrated into your Emacs
+instance. Amazingly, this works. Ever wanted to use the same snippet
+tool for writing C++ classes as well as emails?
+
+Emacs is full of *incredible software concepts that haven't hit the
+mainstream yet*. For example:
+
+- Many platforms have a single item clipboard. Emacs has an *infinite
+  clipboard*.
+
+- If you undo a change, and then continue editing, you can't redo the
+  original change. Emacs allows *undoing to any historical state*,
+  even allowing tree-based exploration of history.
+
+- Emacs supports a *reverse variable search*: you can find variables
+  with a given value.
+
+- You can perform *structural editing* of code, allowing you to make
+  changes without breaking syntax. This works for lisps (paredit) and
+  non-lisps (smartparens).
+
+- Many applications use a modal GUI: for example, you can't do other
+  edits during a find-and-replace operation. Emacs provides *recursive
+  editing* that allow you to suspend what you're currently doing,
+  perform other edits, then continue the original task.
+
+Emacs has a *documentation culture*. Emacs includes a usage manual, a
+lisp programming manual, pervasive docstrings and even an interactive
+tutorial.
+
+Emacs has a *broad ecosystem*. If you want to edit code in a niche
+language, there's probably an Emacs package for it.
+
+Emacs doesn't have a monopoly on good ideas, and there are other great
+tools out there. Nonetheless, we believe the [[https://i.stack.imgur.com/7Cu9Z.jpg][Emacs learning curve pays
+off]].
+
+This *Why Emacs* section credits to [[https://github.com/remacs/remacs][Remacs]].
+
+* About this configuration
+
+This configuration is about Emacs + Evil, but Emacs vanilla key bindings
+ are respected.
+
+* Install
+
+Clone this repository to either =~/.emacs.d= or for testing purposes
+to any other location.
+
+The following description assumes that you clone this repo to
+=~/.emacs.d=. If you clone to other location, modify the corresponding
+path.
+
+#+BEGIN_SRC sh
+  git clone --depth 1 https://github.com/dalugm/emacs.d ~/.emacs.d
+#+END_SRC
+
+** Makefile
+
+#+BEGIN_SRC sh
+  cd ~/.emacs.d
+  make bootstrap-borg
+  make help                       # check help
+  # select one
+  make bootstrap-shallow          # shallow clone
+  make bootstrap                  # full clone
+#+END_SRC
+
+** Fetch submodule manually
+
+#+BEGIN_SRC sh
+  cd ~/.emacs.d
+  git submodule update --init --recursive --depth 1
+  git submodule foreach git reset --hard
+  git submodule foreach git checkout master
+#+END_SRC

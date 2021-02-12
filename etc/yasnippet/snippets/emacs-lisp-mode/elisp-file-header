@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: elisp-file-header
+# key: efh
+# --
+;;; ${1:`(file-name-nondirectory buffer-file-name)`} --- ${2:description} -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;;
+;; ${3:commentary}
+;;
+
+;;; Code:

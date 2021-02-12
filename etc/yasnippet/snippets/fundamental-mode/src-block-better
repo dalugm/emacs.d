@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: src-block-better
+# key: sbb
+# --
+┌──── ${1:language}
+│ ${2:code}
+└────
+$0

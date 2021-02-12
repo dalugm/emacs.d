@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: LaTeX header ctex
+# key: <lhc
+# --
+#+LATEX_HEADER: \usepackage{ctex}

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: fortune-motto
+# key: fm
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# --
+${1:content}
+
+        [32m《${2:name}》[m [33m—— ${3:author}[m
+%
+$0

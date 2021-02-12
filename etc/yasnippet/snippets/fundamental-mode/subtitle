@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: subtitle
+# key: srt
+# --
+${1:start hour}:${2:start minute}:${3:start second},${4:start msecond} --> ${5:end hour}:${6:end minute}:${7:end second},${8:end msecond}
+${0:subtitle}

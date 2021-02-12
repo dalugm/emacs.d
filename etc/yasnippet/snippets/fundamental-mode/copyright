@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: copyright
+# key: copy.
+# --
+Copyright `(if "©" "©" "(c)")` `(format-time-string "%Y")` `(user-full-name)`. All Rights Reserved.
