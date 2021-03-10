@@ -25,12 +25,19 @@
 (setq user-full-name "dalu")
 (setq user-mail-address "moutong945@outlook.com")
 
-;; env
+;;; env
 (set-language-environment "UTF-8")
-(prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
+
+;; coding configuration, last has highest priority
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html#Recognize-Coding
+(prefer-coding-system 'cp950)
+(prefer-coding-system 'gb2312)
+(prefer-coding-system 'cp936)
+(prefer-coding-system 'gb18030)
+(prefer-coding-system 'utf-8)
 
 ;; shutdown the startup screen
 (setq inhibit-startup-screen t)
@@ -98,20 +105,16 @@
               ;; disable the annoying bell ring
               ring-bell-function 'ignore)
 
-;; Tab and Space
-;; Indent with spaces
-;; https://stackoverflow.com/questions/69934/set-4-space-indent-in-emacs-in-text-mode
-(setq-default tab-width 8)
+;;; Tab and Space
+;; indent with spaces
 (setq-default indent-tabs-mode nil)
-
+;; but maintain correct appearance
+(setq-default tab-width 8)
 ;; smart tab behavior - indent or complete
 (setq tab-always-indent 'complete)
 
 ;; reply y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
-
-;; NO automatic new line when scrolling down at buffer bottom
-(setq next-line-add-newlines nil)
 
 ;; enable narrowing commands
 (put 'narrow-to-region 'disabled nil)
@@ -141,7 +144,7 @@
 
 ;; fix Emacs performance when edit so-long files
 (when (fboundp 'so-long-enable)
-  (add-hook 'after-init-hook 'so-long-enable))
+  (add-hook 'after-init-hook #'so-long-enable))
 
 ;; https://www.emacswiki.org/emacs/SavePlace
 (cond
@@ -162,10 +165,6 @@
   (global-auto-revert-mode +1)
   (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil))
-
-;; Hiding structured data
-(require 'hideshow)
-(add-hook 'prog-mode-hook 'hs-minor-mode)
 
 ;; clean up obsolete buffers automatically
 (require 'midnight)
@@ -194,17 +193,15 @@
                                     (space-mark ?\  [?·] [?.])
                                     (newline-mark ?\n [?¬ ?\n])))
 
-;; saner regex syntax
-(require 're-builder)
-(setq reb-re-syntax 'string)
-
-;; tramp setup
-(add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
-(setq tramp-chunksize 8192)
+;; `tramp-mode' config
+(with-eval-after-load 'tramp
+  (push (cons tramp-file-name-regexp nil) backup-directory-alist)
 
 ;; ;; https://github.com/syl20bnr/spacemacs/issues/1921
 ;; ;; If you tramp is hanging, you can uncomment below line.
 ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+
+  (setq tramp-chunksize 8192))
 
 ;; NOTE: `tool-bar-mode' and `scroll-bar-mode' are not defined in some cases
 ;; https://emacs-china.org/t/topic/5159/12
@@ -275,7 +272,7 @@
   ;; Github prompt is like "Password for 'https://user@github.com/':"
   (setq comint-password-prompt-regexp
     (format "%s\\|^ *Password for .*: *$" comint-password-prompt-regexp))
-  (add-hook 'comint-output-filter-functions 'comint-watch-for-password-prompt))
+  (add-hook 'comint-output-filter-functions #'comint-watch-for-password-prompt))
 
 ;; security
 (setq auth-sources '("~/.authinfo.gpg"))
@@ -293,6 +290,7 @@
 ;; keybindings ;;
 ;;;;;;;;;;;;;;;;;
 (global-set-key (kbd "C-c c c") #'compile)
+(global-set-key (kbd "C-c l t") #'load-theme)
 (global-set-key (kbd "C-c f f") #'recentf-open-files)
 (global-set-key (kbd "C-c f l") #'recentf-load-list)
 ;; be able to M-x without meta
@@ -302,14 +300,10 @@
                                   (insert "　")))
 
 ;; toggle
-(global-set-key (kbd "C-c t T") #'text-scale-adjust)
 (global-set-key (kbd "C-c t a") #'abbrev-mode)
 (global-set-key (kbd "C-c t f") #'display-fill-column-indicator-mode)
 (global-set-key (kbd "C-c t j") #'toggle-truncate-lines)
-(global-set-key (kbd "C-c t m") #'pop-to-mark-command)
-(global-set-key (kbd "C-c t o") #'outline-minor-mode)
 (global-set-key (kbd "C-c t r") #'cua-rectangle-mark-mode)
-(global-set-key (kbd "C-c t t") #'load-theme)
 (global-set-key (kbd "C-c t v") #'view-mode)
 (global-set-key (kbd "C-c t w") #'whitespace-mode)
 

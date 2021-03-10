@@ -7,6 +7,9 @@
 [submodule "alect-themes"]
 	path = lib/alect-themes
 	url = https://github.com/alezost/alect-themes.git
+[submodule "almost-mono-themes"]
+	path = lib/almost-mono-themes
+	url = https://github.com/cryon/almost-mono-themes.git
 [submodule "ample-theme"]
 	path = lib/ample-theme
 	url = https://github.com/jordonbiondo/ample-theme.git
@@ -355,6 +358,10 @@
 [submodule "subatomic-theme"]
 	path = lib/subatomic-theme
 	url = https://github.com/cryon/subatomic-theme.git
+[submodule "subed"]
+	path = lib/subed
+	url = https://github.com/rndusr/subed.git
+	load-path = subed
 [submodule "tagedit"]
 	path = lib/tagedit
 	url = https://github.com/magnars/tagedit.git
@@ -380,6 +387,9 @@
 [submodule "valign"]
 	path = lib/valign
 	url = https://github.com/casouri/valign.git
+[submodule "web-mode"]
+	path = lib/web-mode
+	url = https://github.com/fxbois/web-mode.git
 [submodule "websocket"]
 	path = lib/websocket
 	url = https://github.com/ahyatt/emacs-websocket.git

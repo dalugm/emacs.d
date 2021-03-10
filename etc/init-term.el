@@ -2,19 +2,21 @@
 
 ;;; Commentary:
 ;;
-;; Configuration about term/shell in Emacs
+;; Configuration about term/shell in Emacs.
 ;;
-;; using term is not recommended
+;; Using term is not recommended,
 ;; because normal EMACS keys won't work.
 ;;
 
 ;;; Code:
 
-;; use minimum eshell prompt
 (with-eval-after-load 'eshell
-  (setq eshell-prompt-function
-    (lambda ()
-      (concat (getenv "USER") " $ "))))
+  (add-hook 'eshell-mode-hook (lambda ()
+                                ;; alias
+                                (eshell/alias "f" "find-file $1")
+                                (eshell/alias "fo" "find-file-other-window $1")
+                                (eshell/alias "d" "dired $1")
+                                (eshell/alias "l" "ls -ahlG"))))
 
 (provide 'init-term)
 

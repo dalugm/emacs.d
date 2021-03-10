@@ -165,7 +165,8 @@
 ;; To make the position number update correctly in all cases
 (line-number-mode +1)
 (column-number-mode +1)
-;; Make displayed column number to count from 1
+
+;; ;; make displayed column number to count from 1
 ;; (setq column-number-indicator-zero-based nil)
 
 ;; human readable representation of file size in mode-line

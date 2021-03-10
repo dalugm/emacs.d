@@ -249,9 +249,9 @@ When in dired mode, open file under the cursor.
 With a prefix ARG always prompt for command to use."
   (interactive "P")
   (let* ((current-file-name
-         (if (eq major-mode 'dired-mode)
-             (dired-get-file-for-visit)
-           buffer-file-name))
+           (if (eq major-mode 'dired-mode)
+               (dired-get-file-for-visit)
+             buffer-file-name))
          (open (pcase system-type
                  (`darwin "open")
                  ((or `gnu `gnu/linux `gnu/kfreebsd) "xdg-open")))
@@ -267,7 +267,7 @@ With a prefix ARG always prompt for command to use."
   (interactive)
   (unless (buffer-file-name)
     (error "No file is currently being edited"))
-  (when (yes-or-no-p (format "Really delete '%s'?"
+  (when (yes-or-no-p (format "Really delete ‘%s’?"
                              (file-name-nondirectory buffer-file-name)))
     (delete-file (buffer-file-name))
     (kill-this-buffer)))
@@ -393,7 +393,8 @@ Including indent-buffer, which should not be called automatically on save."
         (delete-trailing-whitespace)
         (indent-region (point-min) (point-max) column)
         (message "Buffer formatted.")))))
-(global-set-key (kbd "C-M-\\") 'my/format-region-or-buffer)
+
+(global-set-key (kbd "C-M-\\") #'my/format-region-or-buffer)
 
 ;; https://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
 (defun my/toggle-selective-display (column)
@@ -414,6 +415,7 @@ Including indent-buffer, which should not be called automatically on save."
       (switch-to-buffer (get-buffer-create "*scratch*"))
       (funcall initial-major-mode)
       (insert initial-scratch-message))))
+
 (global-set-key (kbd "C-c X") #'my/switch-scratch-buffer)
 
 (defun my/occur-dwim ()
@@ -428,7 +430,8 @@ Including indent-buffer, which should not be called automatically on save."
               (regexp-quote sym))))
     regexp-history)
   (call-interactively 'occur))
-(global-set-key (kbd "M-s o") 'my/occur-dwim)
+
+(global-set-key (kbd "M-s o") #'my/occur-dwim)
 
 (defun my/hide-dos-eol ()
   "Do not show  in files containing mixed UNIX and DOS line endings."
@@ -451,6 +454,7 @@ Including indent-buffer, which should not be called automatically on save."
       (switch-to-builtin-shell))
     (t
       (suspend-frame))))
+
 (global-set-key (kbd "C-c m z") #'my/switch-to-shell)
 
 (defun my/load-theme (x)
@@ -469,6 +473,7 @@ Including indent-buffer, which should not be called automatically on save."
   (interactive)
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
+
 (global-set-key (kbd "C-c m d") #'my/emacs-default-theme)
 
 (defun my/kill-other-buffers-without-special-ones ()
@@ -496,6 +501,7 @@ Do NOT mess with special buffers."
   (if (bound-and-true-p hl-line-mode)
       (hl-line-mode -1)
     (hl-line-mode +1)))
+
 (global-set-key (kbd "C-c t h") #'my/toggle-hl-line)
 
 (defun my/toggle-line-number ()
@@ -510,6 +516,7 @@ Do NOT mess with special buffers."
       (progn
         (linum-mode +1)
         (setq linum-format "%4d ")))))
+
 (global-set-key (kbd "C-c t l") #'my/toggle-line-number)
 
 (defun my/strfile2dat ()
@@ -525,31 +532,20 @@ With nil `C-u' prefix, insert output below following an arrow.
 With one `C-u' prefix, insert output in current position.
 With two `C-u' prefix, insert output in current position and delete sexp."
   (interactive)
-  (let ((elisp (or (eq major-mode 'emacs-lisp-mode) (eq major-mode 'lisp-interaction-mode)))
-        (clisp (eq major-mode 'common-lisp-mode))
-        (scheme (eq major-mode 'scheme-mode)))
-    (cond
-      (elisp
-        (let ((value (eval (elisp--preceding-sexp))))
-          (save-excursion
-            (cond
-              ((equal current-prefix-arg nil) ; no prefix
-                (newline-and-indent)
-                (insert (format "%s%S" ";; => " value)))
-              ((equal current-prefix-arg '(4)) ; one prefix
-                (newline-and-indent)
-                (insert (format "%S" value)))
-              ((equal current-prefix-arg '(16)) ; two prefix
-                (backward-kill-sexp)
-                (insert (format "%S" value)))))))
-      (clisp
-        (message "Common Lisp mode is NOT supported yet!"))
-      (scheme
-        (message "Scheme mode is NOT supported yet!"))
-      (t
-        (message "This mode is NOT a symbolic expression related mode!")))))
+  (let ((value (eval (elisp--preceding-sexp))))
+    (save-excursion
+      (cond
+        ((equal current-prefix-arg nil) ; no prefix
+          (newline-and-indent)
+          (insert (format "%s%S" ";; => " value)))
+        ((equal current-prefix-arg '(4)) ; one prefix
+          (newline-and-indent)
+          (insert (format "%S" value)))
+        ((equal current-prefix-arg '(16)) ; two prefix
+          (backward-kill-sexp)
+          (insert (format "%S" value)))))))
 
-(global-set-key (kbd "C-c c e") 'my/eval-last-sexp)
+(global-set-key (kbd "C-c c e") #'my/eval-last-sexp)
 
 (defun my/insert-date (prefix)
   "Insert the current date.
@@ -563,6 +559,7 @@ With three PREFIX, insert locale's timestamp."
                   ((equal prefix '(16)) "%d %B %Y")
                   ((equal prefix '(64)) "%c"))))
     (insert (format-time-string format))))
+
 (global-set-key (kbd "C-c 1") #'my/insert-date)
 
 (defun my/insert-information (prefix)
@@ -575,6 +572,7 @@ With two PREFIX, insert variable `user-mail-address' only."
                   ((equal prefix '(4)) user-full-name)
                   ((equal prefix '(16)) user-mail-address))))
     (insert format)))
+
 (global-set-key (kbd "C-c 2") #'my/insert-information)
 
 (defun my/divide-file-chapter ()
@@ -582,16 +580,24 @@ With two PREFIX, insert variable `user-mail-address' only."
   (interactive)
   (goto-char (point-min))
   (while (< (point) (point-max))
-    (if (search-forward-regexp "^第.+[回章话]*" (line-end-position) t)
-        (newline)
-      (while (not (or (search-forward-regexp "^第.+[回章话]*" (line-end-position) t)
+    (beginning-of-line)
+    (if (search-forward-regexp "^第.\\{1,6\\}[回章话]" (line-end-position) t)
+        (progn
+          (end-of-line)
+          (newline))
+      (while (not (or (search-forward-regexp "^第.\\{1,6\\}[回章话]" (line-end-position) t)
                       (= (point) (point-max))))
-          (forward-line))
+        (forward-line))
       (forward-line -1)
       (end-of-line)
       (newline 2)
       (forward-line)
-      (beginning-of-line))))
+      (end-of-line)))
+  (when (= (point) (point-max))
+    (forward-line -1)
+    (delete-blank-lines)
+    (delete-blank-lines)
+    (forward-line)))
 
 (defun my/delete-visual-blank-lines ()
   "Delete all visual blank line."
@@ -659,6 +665,7 @@ Fix OLD-FUNC with ARGS."
   (save-excursion
     (mark-defun)
     (indent-region (region-beginning) (region-end))))
+
 (global-set-key (kbd "C-M-z") #'my/indent-defun)
 
 ;; https://emacs-china.org/t/emacs-builtin-mode/11937/63
@@ -676,6 +683,7 @@ Fix OLD-FUNC with ARGS."
         (define-key map [?r] #'winner-redo)
         map)
       t)))
+
 (global-set-key (kbd "C-x 4 u") #'my/transient-winner-undo)
 
 (defun my//calculate-time-duration (start end)

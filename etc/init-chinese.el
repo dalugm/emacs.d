@@ -14,16 +14,12 @@
 ;; ----- pyim ----------------------------------------------
 (use-package pyim
   :unless (featurep 'rime)
-  :bind ("C-\\" . toggle-input-method)
+  :bind (("C-\\" . toggle-input-method)
+         :map pyim-mode-map
+          ("," . pyim-page-previous-page)
+          ("." . pyim-page-next-page))
   :custom (default-input-method "pyim")
   :config
-  ;; -------------------------------------------------------
-  ;; basic config
-  ;; -------------------------------------------------------
-
-  (defvar my-pyim-directory (expand-file-name "pyim/" my-cache-d)
-    "The directory containing pyim dictionaries.")
-
   ;; 使用全拼
   (setq pyim-default-scheme 'quanpin)
 
@@ -51,8 +47,8 @@
   ;; use memory efficient pyim engine
   (setq pyim-dcache-backend 'pyim-dregcache)
 
-  ;; 开启联想词功能
-  (setq pyim-enable-shortcode nil)
+  ;; 和 `pyim-probe-dynamic-english' 配合
+  (global-set-key (kbd "M-j") #'pyim-convert-string-at-point)
 
   ;; 根据环境自动切换输入模式
   (setq-default pyim-english-input-switch-functions
@@ -68,6 +64,8 @@
   ;; -------------------------------------------------------
   ;; dict
   ;; -------------------------------------------------------
+  (defvar my-pyim-directory (expand-file-name "pyim/" my-cache-d)
+    "The directory containing pyim dictionaries.")
 
   ;; pyim-bigdict is recommended (20M).
   ;; There are too many useless words in pyim-greatdict
@@ -88,26 +86,12 @@
         (when (or (string= "pyim-bigdict" (file-name-base f))
                   (string= "pyim-greatdict" (file-name-base f)))
           (setq disable-basedict t))))
-    (unless disable-basedict (pyim-basedict-enable)))
+    (unless disable-basedict (pyim-basedict-enable))))
 
-  ;; -------------------------------------------------------
-  ;; keybinding
-  ;; -------------------------------------------------------
-  ;; 和 `pyim-probe-dynamic-english' 配合
-  (global-set-key (kbd "M-j") 'pyim-convert-string-at-point)
-  (define-key pyim-mode-map "," 'pyim-page-previous-page)
-  (define-key pyim-mode-map "." 'pyim-page-next-page))
-
-;; -------------------------------------------------------
-;; translate/dict
-;; -------------------------------------------------------
 (use-package bing-dict
   :bind ("C-c t b" . bing-dict-brief)
   :config (setq bind-dict-vocabulary-save t))
 
-;; ---------------------------------------------------------
-;; avy-zh
-;; ---------------------------------------------------------
 (use-package avy-zh
   :after avy
   :config (global-avy-zh-mode))

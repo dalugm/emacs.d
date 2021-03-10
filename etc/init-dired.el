@@ -7,16 +7,17 @@
 
 ;;; Code:
 
+;; enable some really cool extensions like C-x C-j(dired-jump)
+(require 'dired-x)
+
 (with-eval-after-load 'dired
 
-  ;; Extra Dired functionality
-  ;; enable some really cool extensions like C-x C-j(dired-jump)
-  (require 'dired-x)
+  ;; extra dired functionality
   (require 'dired-aux)
 
-  ;; dired - reuse current buffer by pressing `a'
+  ;; reuse current buffer by pressing `a'
   (put 'dired-find-alternate-file 'disabled nil)
-  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+  (define-key dired-mode-map (kbd "RET") #'dired-find-alternate-file)
 
   ;; search file name only when focus is over file
   (setq dired-isearch-filenames 'dwim)
@@ -26,17 +27,12 @@
   (setq dired-recursive-copies  'always)
 
   (when sys/macp
-    ;; Suppress the warning: `ls does not support --dired'.
-    (setq dired-use-ls-dired nil)
 
-    (when (executable-find "gls")
-      ;; Use GNU ls as `gls' from `coreutils' if available.
-      (setq insert-directory-program "gls")))
-
-  (when (or (and sys/macp (executable-find "gls"))
-            (and (not sys/macp) (executable-find "ls")))
-    ;; using `insert-directory-program'
-    (setq ls-lisp-use-insert-directory-program t))
+    (if (executable-find "gls")
+        ;; use GNU ls as `gls' from `coreutils' if available.
+        (setq insert-directory-program "gls")
+      ;; suppress the warning: `ls does not support --dired'.
+      (setq dired-use-ls-dired nil)))
 
   ;; Show directory first
   ;; https://emacs.stackexchange.com/questions/5649/sort-file-names-numbered-in-dired/5650#5650
@@ -100,8 +96,8 @@ If not in `dired', do nothing.
   (local-set-key (kbd ",") #'dired-up-directory)
   (local-set-key (kbd ";") #'avy-goto-char-2)
   (local-set-key (kbd "_") #'my/dired-cycle-space-underscore-hyphen)
-  (local-set-key (kbd "\C-c\C-e") #'my/ediff-files)
-  (local-set-key (kbd "\C-c\C-p") #'wdired-change-to-wdired-mode))
+  (local-set-key (kbd "C-c C-e") #'my/ediff-files)
+  (local-set-key (kbd "C-c C-p") #'wdired-change-to-wdired-mode))
 
 (add-hook 'dired-mode-hook #'my//dired-mode-hook-setup)
 

@@ -239,7 +239,7 @@
   ("w" whitespace-mode)
   ("y" yas-minor-mode)
   ("q" nil "quit" :color blue))
-(global-set-key (kbd "C-c h t") 'my/hydra-toggle/body)
+(global-set-key (kbd "C-c h t") #'my/hydra-toggle/body)
 
 ;; ---------------------------------------------------------
 ;; window

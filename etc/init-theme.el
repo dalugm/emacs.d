@@ -16,6 +16,8 @@
                                alect-black-alt
                                alect-dark
                                alect-dark-alt
+                               almost-mono-black
+                               almost-mono-gray
                                ample
                                ample-flat
                                apropospriate-dark
@@ -132,6 +134,7 @@
 (defvar my-black-theme-alist '(
                                 alect-black
                                 alect-black-alt
+                                almost-mono-black
                                 cyberpunk
                                 doom-homage-black
                                 grandshell
@@ -148,6 +151,8 @@
                                 adwaita
                                 alect-light
                                 alect-light-alt
+                                almost-mono-cream
+                                almost-mono-white
                                 ample-light
                                 anti-zenburn
                                 apropospriate-light

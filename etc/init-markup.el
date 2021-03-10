@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<script src='https://unpkg.com/mermaid@8.4.8/dist/mermaid.min.js'></script>
+<script src='https://unpkg.com/mermaid/dist/mermaid.min.js'></script>
 <script>
 mermaid.initialize({
   theme: 'default',  // default, forest, dark, neutral
@@ -75,12 +75,12 @@ mermaid.initialize({
 "
         markdown-gfm-additional-languages "Mermaid")
   :config
-  ;; don't wrap lines because there is table in `markdown-mode'
+  ;; don't wrap lines because there are tables in `markdown-mode'
   (add-hook 'markdown-mode-hook (lambda ()
                                   (setq-local truncate-lines t)))
-  ;; `pandoc' is better than obsolete `markdown'
-  (when (executable-find "pandoc")
-    (setq markdown-command "pandoc -f markdown")))
+  ;; `multimarkdown' is necessary for `highlight.js' and `mermaid.js'
+  (when (executable-find "multimarkdown")
+    (setq markdown-command "multimarkdown")))
 
 (use-package markdown-toc
   :after markdown-mode

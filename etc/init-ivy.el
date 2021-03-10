@@ -25,7 +25,7 @@
   ;; recenter after exiting `swiper'
   (setq swiper-action-recenter t)
 
-  ;; better performance on everything (especially windows), ivy-0.10.0 required
+  ;; better performance on everything (especially windows), Ivy 0.10.0 required
   ;; https://github.com/abo-abo/swiper/issues/1218
   (when sys/winp
     (setq ivy-dynamic-exhibit-delay-ms 250))

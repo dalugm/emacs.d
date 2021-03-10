@@ -94,7 +94,8 @@
         ("Sh" (mode . sh-mode))
         ("Markdown" (or (name . "^diary$")
                         (mode . markdown-mode)))
-        ("ReStructText" (mode . rst-mode)))))
+        ("ReStructText" (mode . rst-mode))
+        ("Txt" (mode . text-mode)))))
 
   ;; Modify the default ibuffer-formats
   (setq ibuffer-formats

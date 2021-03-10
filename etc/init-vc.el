@@ -41,8 +41,8 @@
   :config
   ;; add module section into the status buffer
   (magit-add-section-hook 'magit-status-sections-hook
-                          'magit-insert-modules
-                          'magit-insert-stashes 'append))
+                          #'magit-insert-modules
+                          #'magit-insert-stashes 'append))
 
 ;; access GIT forges from `magit'
 (use-package forge
@@ -74,8 +74,8 @@
 
   ;; integration with `magit'
   (with-eval-after-load 'magit
-    (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)))
+    (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
+    (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)))
 
 (use-package git-modes
   :mode ("/\\.dockerignore\\'" . gitignore-mode))

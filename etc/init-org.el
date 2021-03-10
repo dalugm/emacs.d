@@ -131,6 +131,8 @@
   ;; ---------------------------------------------------------
   ;; Enhance org
   ;; ---------------------------------------------------------
+  ;; make Emacs respect kinsoku rules when wrapping lines visually
+  (setq word-wrap-by-category t)
 
   (defun my/org-demote-or-promote (&optional is-promote)
     "Demote or promote current org tree according to IS-PROMOTE."

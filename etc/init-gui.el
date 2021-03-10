@@ -117,7 +117,7 @@ If FRAME is nil, it defaults to the selected frame."
 ;; ;; Emacs use `symbola' (https://dn-works.com/ufas/) as default fallback font
 ;; ;; install it to avoid traversing all fonts
 ;; ;;
-;; ;; NOTE: use `my/load-font' to handle this now
+;; ;; NOTE: I am using `my/load-font' to handle this now
 ;; ;;
 ;; ;; Default font
 ;; (set-face-attribute 'default nil :font (font-spec :family "Unifont" :size 16))
@@ -194,7 +194,7 @@ Fonts are specified in `my-font-alist'."
     (set (make-local-variable 'face-remapping-alist)
       (copy-tree `((default :font ,font
                             :height ,(* 10 (font-get `,font ':size))))))))
-(global-set-key (kbd "C-c m f") #'my/load-buffer-font)
+(global-set-key (kbd "C-c l f") #'my/load-buffer-font)
 
 (defun my/load-font (&optional font-name)
   "Prompt for a FONT-NAME and set it.
@@ -218,7 +218,7 @@ use it instead."
     (when (or font-name (not (custom-variable-p my-font)))
       (customize-set-variable 'my-font font-name))))
 
-(global-set-key (kbd "C-c m F") #'my/load-font)
+(global-set-key (kbd "C-c l F") #'my/load-font)
 
 (my/load-font)
 

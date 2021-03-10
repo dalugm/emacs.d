@@ -22,12 +22,19 @@
           ("M-?" . tagedit-convolute-tags)
           ("M-)" . tagedit-forward-slurp-tag)
           ("M-+" . tagedit-forward-barf-tag)
+          ("M-s a" . te/goto-tag-begging)
+          ("M-s e" . te/goto-tag-end)
           ("M-s g" . tagedit-goto-tag-content)
           ("M-s j" . tagedit-join-tags)
+          ("M-s k" . te/kill-current-tag)
+          ("M-s m" . te/goto-tag-match)
           ("M-s r" . tagedit-raise-tag)
           ("M-s s" . tagedit-splice-tag)
           ("M-s t" . tagedit-toggle-multiline-tag))
   :config (tagedit-add-experimental-features))
+
+(use-package web-mode
+  :mode ("\\.vue\\'" . web-mode))
 
 (provide 'init-web)
 

@@ -10,13 +10,13 @@
 (use-package evil
   :hook (after-init . evil-mode)
   :config
-  ;; Make evil search behave more like VIM
+  ;; make evil search behave more like VIM
   (evil-select-search-module 'evil-search-module 'evil-search)
   (setq evil-ex-interactive-search-highlight 'selected-window)
 
   ;; https://github.com/emacs-evil/evil/issues/342
   ;; Cursor is always black because of evil.
-  ;; Here is the workaround
+  ;; here is the workaround
   (setq evil-default-cursor t)
 
   ;; move back the cursor one position when exiting insert mode
@@ -138,8 +138,8 @@
     (add-to-list 'evil-buffer-regexps b))
 
   ;; hook
-  (dolist (hook '(org-capture-mode-hook view-mode-hook))
-    (add-hook hook 'evil-emacs-state))
+  (dolist (hook '(org-capture-mode-hook cua-rectangle-mark-mode-hook))
+    (add-hook hook #'evil-emacs-state))
 
   ;; specify MAJOR mode uses Evil (vim) NORMAL state or EMACS original state.
   (dolist (p '(
@@ -488,12 +488,7 @@
     "th" '(my/toggle-hl-line :which-key "hl-line")
     "tj" 'toggle-truncate-lines
     "tl" '(my/toggle-line-number :which-key "line-number")
-    "tm" '(pop-to-mark-command :which-key "pop-to-mark")
-    "to" '(outline-minor-mode :which-key "outline-minor")
     "tp" '(my/transient-transparency :which-key "transparency")
-    "tr" '(cua-rectangle-mark-mode :which-key "cua-rectangle")
-    "tt" '(load-theme :which-key "toggle-theme")
-    "tT" 'text-scale-adjust
     "tv" '(view-mode :which-key "view")
     "tw" '(whitespace-mode :which-key "whitespace")
     "ty" '(yas-minor-mode :which-key "yasnippet")
