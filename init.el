@@ -1,4 +1,4 @@
-;;; init.el --- Emacs start file -*- lexical-binding: t; -*-
+;;; init.el --- Emacs start-up file -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;
@@ -135,8 +135,10 @@
   (require 'init-lua)
   (require 'init-web)
   (require 'init-ruby)
+  (require 'init-rust)
   (require 'init-python)
   (require 'init-markup)
+  (require 'init-csharp)
 
   ;; ;; M-x `benchmark-init/show-durations-tree' to show benchmark result
   ;; (require 'benchmark-init-modes)

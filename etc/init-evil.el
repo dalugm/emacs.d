@@ -107,22 +107,22 @@
   ;; As a general rule, mode specific evil leader keys started
   ;; with upper cased character or 'g' or special character except "=" and "-"
   (evil-declare-key 'normal org-mode-map
-    "gh" 'outline-up-heading
-    "gn" 'outline-next-visible-heading
-    "gp" 'outline-previous-visible-heading
-    "$" 'org-end-of-line                ; smarter behavior on headlines etc.
-    "^" 'org-beginning-of-line          ; ditto
-    "<" (lambda () (interactive) (my/org-demote-or-promote 1)) ; outdent
-    ">" 'my/org-demote-or-promote                              ; indent
-    (kbd "TAB") 'org-cycle)
+    "gh" #'outline-up-heading
+    "gn" #'outline-next-visible-heading
+    "gp" #'outline-previous-visible-heading
+    "$"  #'org-end-of-line              ; smarter behavior on headlines etc.
+    "^"  #'org-beginning-of-line        ; ditto
+    "<"  (lambda () (interactive) (my/org-demote-or-promote 1)) ; outdent
+    ">"  #'my/org-demote-or-promote                             ; indent
+    (kbd "TAB") #'org-cycle)
 
   (evil-declare-key 'normal markdown-mode-map
-    "gh" 'outline-up-heading
-    "gn" 'outline-next-visible-heading
-    "gp" 'outline-previous-visible-heading
-    "<" (lambda () (interactive) (my/markdown-demote-or-promote 1)) ; outdent
-    ">" 'my/markdown-demote-or-promote                              ; indent
-    (kbd "TAB") 'markdown-cycle)
+    "gh" #'outline-up-heading
+    "gn" #'outline-next-visible-heading
+    "gp" #'outline-previous-visible-heading
+    "<"  (lambda () (interactive) (my/markdown-demote-or-promote 1)) ; outdent
+    ">"  #'my/markdown-demote-or-promote                             ; indent
+    (kbd "TAB") #'markdown-cycle)
 
   ;; ---------------------------------------------------------
   ;; evil-initial-state
@@ -251,10 +251,12 @@
 (use-package evil-nerd-commenter
   :bind (:map evil-normal-state-map
           ("gc" . evilnc-comment-operator)
-          ("gy" . evilnc-copy-and-comment-operator)
+          ("gp" . evilnc-copy-and-comment-operator)
+          ("gy" . evilnc-yank-and-comment-operator)
          :map evil-motion-state-map
           ("gc" . evilnc-comment-operator)
-          ("gy" . evilnc-copy-and-comment-operator)))
+          ("gp" . evilnc-copy-and-comment-operator)
+          ("gy" . evilnc-yank-and-comment-operator)))
 
 ;; https://medium.com/@schtoeffel/you-don-t-need-more-than-one-cursor-in-vim-2c44117d51db
 ;; https://macplay.github.io/posts/vim-bu-xu-yao-duo-guang-biao-bian-ji-gong-neng/
@@ -269,125 +271,125 @@
     :states '(normal visual))
 
   (my-comma-leader-def
-    ","   'execute-extended-command
-    "."   'evil-ex
-    "aa"  'avy-goto-char-2
-    "ac"  'avy-goto-char-timer
-    "ag"  'avy-goto-line
-    "ae"  'avy-goto-end-of-line
-    "aj"  'avy-goto-line-below
-    "ak"  'avy-goto-line-above
-    "af"  'beginning-of-defun
-    "ar"  'align-regexp
-    "as"  'ace-swap-window
-    "aw"  'avy-goto-word-or-subword-1
-    "bb"  '((lambda () (interactive) (switch-to-buffer nil)) :which-key "prev-buffer")
-    "bu"  'backward-up-list
-    "cc"  'evilnc-comment-or-uncomment-lines
-    "cd"  'evilnc-copy-and-comment-lines
-    "cl"  'evilnc-quick-comment-or-uncomment-to-the-line
-    "cp"  'evilnc-comment-or-uncomment-paragraphs
-    "cr"  'comment-or-uncomment-region
-    "ct"  'evilnc-comment-or-uncomment-html-tag
-    "cT"  'evilnc-comment-or-uncomment-html-paragraphs
-    "cg"  'counsel-grep
-    "si"  'imenu
-    "sr"  'my/counsel-rg
-    "sf"  'my/counsel-fzf
-    "dd"  'pwd
-    "dj"  'dired-jump
-    "eb"  'eval-buffer
-    "ee"  'eval-expression
-    "ef"  'end-of-defun
-    "el"  'eval-last-sexp
-    "fr"  'recentf-open-files
-    "fl"  'recentf-load-list
-    "gf"  'counsel-git
-    "ir"  'ivy-resume
-    "kb"  'kill-buffer-and-window
-    "mf"  'mark-defun
-    "op"  'smart-compile
-    "sc"  'shell-command
-    "ss"  'counsel-grep-or-swiper
-    "xb"  'ivy-switch-buffer
-    "xc"  'save-buffers-kill-terminal
-    "xh"  'mark-whole-buffer
-    "xf"  'find-file
-    "xk"  'kill-buffer
-    "xs"  'save-buffer
-    "yy"  'yas-minor-mode
+    ","  #'execute-extended-command
+    "."  #'evil-ex
+    "aa" #'avy-goto-char-2
+    "ac" #'avy-goto-char-timer
+    "ag" #'avy-goto-line
+    "ae" #'avy-goto-end-of-line
+    "aj" #'avy-goto-line-below
+    "ak" #'avy-goto-line-above
+    "af" #'beginning-of-defun
+    "ar" #'align-regexp
+    "as" #'ace-swap-window
+    "aw" #'avy-goto-word-or-subword-1
+    "bb" (lambda () (interactive) (switch-to-buffer nil) :which-key "prev-buffer")
+    "bu" #'backward-up-list
+    "cc" #'evilnc-comment-or-uncomment-lines
+    "cd" #'evilnc-copy-and-comment-lines
+    "cl" #'evilnc-quick-comment-or-uncomment-to-the-line
+    "cp" #'evilnc-comment-or-uncomment-paragraphs
+    "cr" #'comment-or-uncomment-region
+    "ct" #'evilnc-comment-or-uncomment-html-tag
+    "cT" #'evilnc-comment-or-uncomment-html-paragraphs
+    "cg" #'counsel-grep
+    "si" #'imenu
+    "sr" #'my/counsel-rg
+    "sf" #'my/counsel-fzf
+    "dd" #'pwd
+    "dj" #'dired-jump
+    "eb" #'eval-buffer
+    "ee" #'eval-expression
+    "ef" #'end-of-defun
+    "el" #'eval-last-sexp
+    "fr" #'recentf-open-files
+    "fl" #'recentf-load-list
+    "gf" #'counsel-git
+    "ir" #'ivy-resume
+    "kb" #'kill-buffer-and-window
+    "mf" #'mark-defun
+    "op" #'smart-compile
+    "sc" #'shell-command
+    "ss" #'counsel-grep-or-swiper
+    "xb" #'ivy-switch-buffer
+    "xc" #'save-buffers-kill-terminal
+    "xh" #'mark-whole-buffer
+    "xf" #'find-file
+    "xk" #'kill-buffer
+    "xs" #'save-buffer
+    "yy" #'yas-minor-mode
     ;; org
     ;; toggle overview
-    "c$"  'org-archive-subtree          ; `\C-c\$'
+    "c$" #'org-archive-subtree          ; `\C-c\$'
     ;; org-do-demote/org-do-premote support selected region
-    "c<"  'org-do-promote     ; `\C-c\C-<'
-    "c>"  'org-do-demote      ; `\C-c\C->'
-    "cam" 'org-tags-view      ; `\C-c\a\m': search items in org-file-apps by tag
-    "cxi" 'org-clock-in       ; `\C-c\C-x\C-i'
-    "cxo" 'org-clock-out      ; `\C-c\C-x\C-o'
-    "cxr" 'org-clock-report   ; `\C-c\C-x\C-r'
-    "oa"  'org-agenda
-    "ob"  'org-switchb
-    "oc"  'org-capture
-    "ol"  'org-store-link
-    "ot"  'org-toggle-link-display
-    "oh"  '((lambda ()
-              (interactive)
-              (counsel-org-agenda-headlines)) :which-key "counsel-org-headlines")
+    "c<"  #'org-do-promote     ; `\C-c\C-<'
+    "c>"  #'org-do-demote      ; `\C-c\C->'
+    "cam" #'org-tags-view      ; `\C-c\a\m': search items in org-file-apps by tag
+    "cxi" #'org-clock-in       ; `\C-c\C-x\C-i'
+    "cxo" #'org-clock-out      ; `\C-c\C-x\C-o'
+    "cxr" #'org-clock-report   ; `\C-c\C-x\C-r'
+    "oa"  #'org-agenda
+    "ob"  #'org-switchb
+    "oc"  #'org-capture
+    "ol"  #'org-store-link
+    "ot"  #'org-toggle-link-display
+    "oh"  (lambda ()
+            (interactive)
+            (counsel-org-agenda-headlines) :which-key "counsel-org-headlines")
     ;; window
-    "0"   'winum-select-window-0-or-10
-    "1"   'winum-select-window-1
-    "2"   'winum-select-window-2
-    "3"   'winum-select-window-3
-    "4"   'winum-select-window-4
-    "5"   'winum-select-window-5
-    "6"   'winum-select-window-6
-    "7"   'winum-select-window-7
-    "8"   'winum-select-window-8
-    "9"   'winum-select-window-9
-    "ff"  '(my/toggle-full-window :which-key "toggle-full-window")
-    "oo"  'delete-other-windows
-    "sa"  'split-window-vertically
-    "sd"  'split-window-horizontally
-    "sh"  'split-window-below
-    "sq"  'delete-window
-    "sv"  'split-window-right
-    "xr"  '(my/rotate-windows :which-key "rotate window")
-    "xt"  '(my/toggle-two-split-window :which-key "toggle window split")
-    "xo"  'ace-window
-    "x0"  'delete-window
-    "x1"  'delete-other-windows
-    "x2"  'split-window-vertically
-    "x3"  'split-window-horizontally
-    "x50" 'delete-frame
-    "x51" 'delete-other-frames
-    "x52" 'make-frame-command
-    "x5o" 'other-frame
+    "0"   #'winum-select-window-0-or-10
+    "1"   #'winum-select-window-1
+    "2"   #'winum-select-window-2
+    "3"   #'winum-select-window-3
+    "4"   #'winum-select-window-4
+    "5"   #'winum-select-window-5
+    "6"   #'winum-select-window-6
+    "7"   #'winum-select-window-7
+    "8"   #'winum-select-window-8
+    "9"   #'winum-select-window-9
+    "ff"  #'(my/toggle-full-window :which-key "toggle-full-window")
+    "oo"  #'delete-other-windows
+    "sa"  #'split-window-vertically
+    "sd"  #'split-window-horizontally
+    "sh"  #'split-window-below
+    "sq"  #'delete-window
+    "sv"  #'split-window-right
+    "xr"  #'(my/rotate-windows :which-key "rotate window")
+    "xt"  #'(my/toggle-two-split-window :which-key "toggle window split")
+    "xo"  #'ace-window
+    "x0"  #'delete-window
+    "x1"  #'delete-other-windows
+    "x2"  #'split-window-vertically
+    "x3"  #'split-window-horizontally
+    "x50" #'delete-frame
+    "x51" #'delete-other-frames
+    "x52" #'make-frame-command
+    "x5o" #'other-frame
     ;; `fly*-checker'
-    "de"  'flycheck-display-error-at-point
-    "fa"  'flyspell-auto-correct-word
-    "fc"  'flycheck-buffer
-    "fn"  'flyspell-goto-next-error
-    "fs"  'flyspell-buffer
-    "ne"  'flycheck-next-error
-    "pe"  'flycheck-previous-error
+    "de" #'flycheck-display-error-at-point
+    "fa" #'flyspell-auto-correct-word
+    "fc" #'flycheck-buffer
+    "fn" #'flyspell-goto-next-error
+    "fs" #'flyspell-buffer
+    "ne" #'flycheck-next-error
+    "pe" #'flycheck-previous-error
     ;; workspace
-    "ip"  'find-file-in-project
-    "tt"  'find-file-in-current-directory
-    "jj"  'find-file-in-project-at-point
-    "kk"  'find-file-in-project-by-selected
-    "fd"  'find-directory-in-project-by-selected
+    "ip" #'find-file-in-project
+    "tt" #'find-file-in-current-directory
+    "jj" #'find-file-in-project-at-point
+    "kk" #'find-file-in-project-by-selected
+    "fd" #'find-directory-in-project-by-selected
     ;; vc
-    "va"  'vc-next-action               ; `\C-x\v\v' in original
-    "vc"  'my/vc-copy-file-and-rename-buffer
-    "vf"  'my/vc-rename-file-and-buffer
-    "vg"  'vc-annotate                  ; `\C-x\v\g' in original
-    "vn"  'diff-hl-next-hunk
-    "vp"  'diff-hl-previous-hunk
+    "va" #'vc-next-action               ; `\C-x\v\v' in original
+    "vc" #'my/vc-copy-file-and-rename-buffer
+    "vf" #'my/vc-rename-file-and-buffer
+    "vg" #'vc-annotate                  ; `\C-x\v\g' in original
+    "vn" #'diff-hl-next-hunk
+    "vp" #'diff-hl-previous-hunk
     ;; http://ergoemacs.org/emacs/emacs_pinky_2020.html
     ;; `keyfreq-show' proved sub-window operations happen most.
-    "xx"  'my/kill-other-buffers-without-special-ones
-    "zz"  'my/switch-to-shell)
+    "xx" #'my/kill-other-buffers-without-special-ones
+    "zz" #'my/switch-to-shell)
 
   ;; Use `SPC' as leader key
   ;; all keywords arguments are still supported
@@ -396,127 +398,128 @@
     :states '(normal visual))
 
   (my-space-leader-def
-    "SPC" 'execute-extended-command
-    ":"   'eval-expression
+    "SPC" #'execute-extended-command
+    ":"   #'eval-expression
     ;; bookmark/buffer
-    "b"  '(:ignore t :which-key "bookmark")
-    "bb" 'bookmark-jump
-    "bd" 'bookmark-delete
-    "be" 'eval-buffer
-    "bj" 'bookmark-jump
-    "bJ" 'bookmark-jump-other-window
-    "bk" 'kill-buffer
-    "bl" 'bookmark-bmenu-list
-    "bL" '(counsel-bookmarked-directory :which-key "list-bookmarked-dir")
-    "bm" 'bookmark-set
-    "bo" '(my/kill-other-buffers-without-special-ones :which-key "keep-this-buffer-only")
-    "bO" '(my/kill-other-buffers-with-special-ones :which-key "keep-this-buffer-only")
-    "bs" 'bookmark-save
-    "bx" '(my/switch-scratch-buffer :which-key "open-scratch")
+    "b"  #'(:ignore t :which-key "bookmark")
+    "bb" #'bookmark-jump
+    "bd" #'bookmark-delete
+    "be" #'eval-buffer
+    "bj" #'bookmark-jump
+    "bJ" #'bookmark-jump-other-window
+    "bk" #'kill-buffer
+    "bl" #'bookmark-bmenu-list
+    "bL" #'(counsel-bookmarked-directory :which-key "list-bookmarked-dir")
+    "bm" #'bookmark-set
+    "bo" #'(my/kill-other-buffers-without-special-ones :which-key "keep-this-buffer-only")
+    "bO" #'(my/kill-other-buffers-with-special-ones :which-key "keep-this-buffer-only")
+    "bs" #'bookmark-save
+    "bx" #'(my/switch-scratch-buffer :which-key "open-scratch")
     ;; code
-    "c"  '(:ignore t :which-key "code")
-    "cc" 'my/smart-run
-    "cC" 'smart-compile
+    "c"  #'(:ignore t :which-key "code")
+    "cc" #'my/smart-run
+    "cC" #'smart-compile
     ;; file
-    "f"  '(:ignore t :which-key "file")
-    "fb" '(my/browse-this-file :which-key "browse-this-file")
-    "fc" '(my/copy-this-file :which-key "copy-this-file")
-    "fy" '(my/copy-file-name :which-key "copy-file-name")
-    "fd" '(my/delete-this-file :which-key "delete-this-file")
-    "fD" '(my/delete-file :which-key "delete-file-under-cwd")
-    "fj" '(counsel-file-jump :which-key "file-jump")
-    "fo" '(my/open-this-file-externally :which-key "open-external")
-    "fm" '(my/move-this-file :which-key "move-this-file")
-    "fr" '(my/rename-this-file :which-key "rename-this-file")
-    "fs" '(my/sudo-edit-file :which-key "sudo-edit")
-    "fS" '(my/sudo-find-file :which-key "sudo-find")
+    "f"  #'(:ignore t :which-key "file")
+    "fb" #'(my/browse-this-file :which-key "browse-this-file")
+    "fc" #'(my/copy-this-file :which-key "copy-this-file")
+    "fy" #'(my/copy-file-name :which-key "copy-file-name")
+    "fd" #'(my/delete-this-file :which-key "delete-this-file")
+    "fD" #'(my/delete-file :which-key "delete-file-under-cwd")
+    "fj" #'(counsel-file-jump :which-key "file-jump")
+    "fo" #'(my/open-this-file-externally :which-key "open-external")
+    "fm" #'(my/move-this-file :which-key "move-this-file")
+    "fr" #'(my/rename-this-file :which-key "rename-this-file")
+    "fs" #'(my/sudo-edit-file :which-key "sudo-edit")
+    "fS" #'(my/sudo-find-file :which-key "sudo-find")
     ;; git
-    "g"  '(:ignore t :which-key "git")
-    "gd" 'magit-dispatch
-    "gg" 'magit-status
-    "gf" 'counsel-git
+    "g"  #'(:ignore t :which-key "git")
+    "gd" #'magit-dispatch
+    "gg" #'magit-status
+    "gf" #'counsel-git
     ;; hydra
-    "h"  '(:ignore t :which-key "hydra")
-    "hE" '(my/hydra-paredit-edit/body :which-key "paredit-edit")
-    "hM" '(my/hydra-paredit-move/body :which-key "paredit-move")
-    "hT" '(my/hydra-theme/body :which-key "theme")
-    "hf" '(my/hydra-file/body :which-key "file")
-    "hi" '(my/hydra-erc/body :which-key "irc")
-    "hm" '(my/hydra-misc/body :which-key "misc")
-    "hp" '(my/hydra-paredit/body :which-key "paredit")
-    "ht" '(my/hydra-toggle/body :which-key "toggle")
-    "hw" '(my/hydra-window/body :which-key "window")
+    "h"  #'(:ignore t :which-key "hydra")
+    "hE" #'(my/hydra-paredit-edit/body :which-key "paredit-edit")
+    "hM" #'(my/hydra-paredit-move/body :which-key "paredit-move")
+    "hT" #'(my/hydra-theme/body :which-key "theme")
+    "hf" #'(my/hydra-file/body :which-key "file")
+    "hi" #'(my/hydra-erc/body :which-key "irc")
+    "hm" #'(my/hydra-misc/body :which-key "misc")
+    "hp" #'(my/hydra-paredit/body :which-key "paredit")
+    "ht" #'(my/hydra-toggle/body :which-key "toggle")
+    "hw" #'(my/hydra-window/body :which-key "window")
     ;; load
-    "l"  '(:ignore t :which-key "load")
-    "lF" '(my/load-font :which-key "load-font")
-    "lf" '(my/load-buffer-font :which-key "load-buffer-font")
-    "lt" '(load-theme :which-key "load-theme")
+    "l"  #'(:ignore t :which-key "load")
+    "lF" #'(my/load-font :which-key "load-font")
+    "lf" #'(my/load-buffer-font :which-key "load-buffer-font")
+    "lt" #'(load-theme :which-key "load-theme")
     ;; org
-    "o"  '(:ignore t :which-key "org")
-    "oa" 'org-agenda
-    "ob" 'org-switchb
-    "oc" 'org-capture
-    "ot" '(org-toggle-link-display :which-key "toggle-link-display")
+    "o"  #'(:ignore t :which-key "org")
+    "oa" #'org-agenda
+    "ob" #'org-switchb
+    "oc" #'org-capture
+    "ot" #'(org-toggle-link-display :which-key "toggle-link-display")
     ;; project
-    "p"  '(:ignore t :which-key "project")
-    "pa" '(find-file-in-project-at-point :which-key "ffip-at-point")
-    "pc" '(ffip-create-project-file :which-key "create-project-file")
-    "pd" '(find-file-in-current-directory :which-key "ffip-cwd")
-    "pD" '(find-file-in-current-directory-by-selected :which-key "ffip-cwd-by-select")
-    "pf" '(find-file-in-project :which-key "ffip")
-    "pF" '(ffip-lisp-find-file-in-project :which-key "ffip-lisp-ffip")
-    "pi" '(ffip-insert-file :which-key "ffip-insert-file")
-    "pp" '(find-file-in-project-at-point :which-key "ffip-at-point")
-    "pr" '(ffip-find-relative-path :which-key "ffip-find-relative-path")
-    "ps" '(find-file-in-project-by-selected :which-key "ffip-by-select")
-    "pS" '(find-file-with-similar-name :which-key "ffip-with-similar-name")
-    "pv" '(ffip-show-diff :which-key "ffip-show-diff")
+    "p"  #'(:ignore t :which-key "project")
+    "pa" #'(find-file-in-project-at-point :which-key "ffip-at-point")
+    "pc" #'(ffip-create-project-file :which-key "create-project-file")
+    "pd" #'(find-file-in-current-directory :which-key "ffip-cwd")
+    "pD" #'(find-file-in-current-directory-by-selected :which-key "ffip-cwd-by-select")
+    "pf" #'(find-file-in-project :which-key "ffip")
+    "pF" #'(ffip-lisp-find-file-in-project :which-key "ffip-lisp-ffip")
+    "pi" #'(ffip-insert-file :which-key "ffip-insert-file")
+    "pp" #'(find-file-in-project-at-point :which-key "ffip-at-point")
+    "pr" #'(ffip-find-relative-path :which-key "ffip-find-relative-path")
+    "ps" #'(find-file-in-project-by-selected :which-key "ffip-by-select")
+    "pS" #'(find-file-with-similar-name :which-key "ffip-with-similar-name")
+    "pv" #'(ffip-show-diff :which-key "ffip-show-diff")
     ;; search
-    "s"  '(:ignore t :which-key "search")
-    "sd" '(search-dired-dwim :which-key "search-file-cwd")
-    "sD" 'search-dired
-    "sf" '(my/counsel-fzf :which-key "search-fzf")
-    "sF" 'counsel-fzf
-    "sr" '(my/counsel-rg :which-key "search-rg")
-    "sR" 'counsel-rg
-    "ss" 'counsel-grep-or-swiper
-    "si" 'imenu
+    "s"  #'(:ignore t :which-key "search")
+    "sd" #'(search-dired-dwim :which-key "search-file-cwd")
+    "sD" #'search-dired
+    "sf" #'(my/counsel-fzf :which-key "search-fzf")
+    "sF" #'counsel-fzf
+    "so" #'my/search-online
+    "sr" #'(my/counsel-rg :which-key "search-rg")
+    "sR" #'counsel-rg
+    "ss" #'counsel-grep-or-swiper
+    "si" #'imenu
     ;; toggle
-    "t"  '(:ignore t :which-key "toggle")
-    "ta" '(abbrev-mode :which-key "abbrev")
-    "tf" '(display-fill-column-indicator-mode :which-key "fill-column-indicator")
-    "th" '(my/toggle-hl-line :which-key "hl-line")
-    "tj" 'toggle-truncate-lines
-    "tl" '(my/toggle-line-number :which-key "line-number")
-    "tp" '(my/transient-transparency :which-key "transparency")
-    "tv" '(view-mode :which-key "view")
-    "tw" '(whitespace-mode :which-key "whitespace")
-    "ty" '(yas-minor-mode :which-key "yasnippet")
-    "tY" '(yas-global-mode :which-key "yasnippet-global")
+    "t"  #'(:ignore t :which-key "toggle")
+    "ta" #'(abbrev-mode :which-key "abbrev")
+    "tf" #'(display-fill-column-indicator-mode :which-key "fill-column-indicator")
+    "th" #'(my/toggle-hl-line :which-key "hl-line")
+    "tj" #'toggle-truncate-lines
+    "tl" #'(my/toggle-line-number :which-key "line-number")
+    "tp" #'(my/transient-transparency :which-key "transparency")
+    "tv" #'(view-mode :which-key "view")
+    "tw" #'(whitespace-mode :which-key "whitespace")
+    "ty" #'(yas-minor-mode :which-key "yasnippet")
+    "tY" #'(yas-global-mode :which-key "yasnippet-global")
     ;; window
-    "w"   '(:ignore t :which-key "window")
-    "w'"  'eyebrowse-last-window-config
-    "w,"  'eyebrowse-rename-window-config
-    "w."  'eyebrowse-switch-to-window-config
-    "w\"" 'eyebrowse-close-window-config
-    "w1"  'eyebrowse-switch-to-window-config-1
-    "w2"  'eyebrowse-switch-to-window-config-2
-    "w3"  'eyebrowse-switch-to-window-config-3
-    "w4"  'eyebrowse-switch-to-window-config-4
-    "w5"  'eyebrowse-switch-to-window-config-5
-    "w6"  'eyebrowse-switch-to-window-config-6
-    "w7"  'eyebrowse-switch-to-window-config-7
-    "w8"  'eyebrowse-switch-to-window-config-8
-    "w9"  'eyebrowse-switch-to-window-config-9
-    "wc"  'eyebrowse-create-window-config
-    "wd"  'delete-window
-    "wh"  'evil-window-left
-    "wj"  'evil-window-down
-    "wk"  'evil-window-up
-    "wl"  'evil-window-right
-    "wn"  'eyebrowse-create-named-window-config
-    "ws"  'split-window-below
-    "wv"  'split-window-right))
+    "w"   #'(:ignore t :which-key "window")
+    "w'"  #'eyebrowse-last-window-config
+    "w,"  #'eyebrowse-rename-window-config
+    "w."  #'eyebrowse-switch-to-window-config
+    "w\"" #'eyebrowse-close-window-config
+    "w1"  #'eyebrowse-switch-to-window-config-1
+    "w2"  #'eyebrowse-switch-to-window-config-2
+    "w3"  #'eyebrowse-switch-to-window-config-3
+    "w4"  #'eyebrowse-switch-to-window-config-4
+    "w5"  #'eyebrowse-switch-to-window-config-5
+    "w6"  #'eyebrowse-switch-to-window-config-6
+    "w7"  #'eyebrowse-switch-to-window-config-7
+    "w8"  #'eyebrowse-switch-to-window-config-8
+    "w9"  #'eyebrowse-switch-to-window-config-9
+    "wc"  #'eyebrowse-create-window-config
+    "wd"  #'delete-window
+    "wh"  #'evil-window-left
+    "wj"  #'evil-window-down
+    "wk"  #'evil-window-up
+    "wl"  #'evil-window-right
+    "wn"  #'eyebrowse-create-named-window-config
+    "ws"  #'split-window-below
+    "wv"  #'split-window-right))
 
 (provide 'init-evil)
 

@@ -1,4 +1,4 @@
-alias l ls -lAGh
+alias l ls -ahlG
 alias d dired $1
 alias fo find-file-other-window $1
 alias f find-file $1

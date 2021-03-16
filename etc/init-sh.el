@@ -1,4 +1,4 @@
-;;; init-sh.el --- sh-mode configuration -*- lexical-binding: t; -*-
+;;; init-sh.el --- Shell programming in Emacs -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;

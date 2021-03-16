@@ -131,7 +131,7 @@ If FRAME is nil, it defaults to the selected frame."
 ;; (set-fontset-font t 'hangul "Sarasa Mono Slab K")
 
 (defcustom my-font nil
-  "Used to cache configuration across sessions."
+  "Used to cache font configuration across sessions."
   :type 'string
   :group 'convenience)
 
@@ -194,6 +194,7 @@ Fonts are specified in `my-font-alist'."
     (set (make-local-variable 'face-remapping-alist)
       (copy-tree `((default :font ,font
                             :height ,(* 10 (font-get `,font ':size))))))))
+
 (global-set-key (kbd "C-c l f") #'my/load-buffer-font)
 
 (defun my/load-font (&optional font-name)

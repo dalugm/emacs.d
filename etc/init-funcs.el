@@ -1,4 +1,4 @@
-;;; init-funcs.el --- personal functions -*- lexical-binding: t; -*-
+;;; init-funcs.el --- useful functions -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;
@@ -83,8 +83,8 @@ version control automatically."
            (splitter
              (if (= (car this-win-edges)
                     (car (window-edges (next-window))))
-                 'split-window-horizontally
-               'split-window-vertically)))
+                 #'split-window-horizontally
+               #'split-window-vertically)))
       (delete-other-windows)
       (let ((first-win (selected-window)))
         (funcall splitter)
@@ -280,8 +280,6 @@ With a prefix ARG always prompt for command to use."
   (cond
     ((or sys/macp sys/linuxp sys/cygwinp)
       (shell-command (format "find . -depth -name %s -print0 | xargs -0 rm" file)))
-    (sys/winp
-      (message "Is there a way to delete file under Windows terminal?"))
     (t
       (message "Can't find a way to delete file.")))
   (message "‘%s’ under current working directory deleted." file))
@@ -368,6 +366,49 @@ With a prefix ARG always prompt for command to use."
                    (format "%s 平安" sym))
         list
         ", "))))
+
+;;;;;;;;;;;;;;;;;;;;
+;; SEARCH RELATED ;;
+;;;;;;;;;;;;;;;;;;;;
+
+(defcustom my-search-engine nil
+  "Used to cache search configuration across sessions."
+  :type 'string
+  :group 'convenience)
+
+(defvar my-search-engine-alist
+  '(
+     (baidu      . "https://www.baidu.com/s?wd=")
+     (bing       . "https://www.bing.com/search?q=")
+     (duckduckgo . "https://www.duckduckgo.com/?q=")
+     (github     . "https://www.github.com/search?q=")
+     (google     . "https://www.google.com/search?q=")
+     (vocabulary . "https://www.vocabulary.com/dictionary/")
+     (wikipedia  . "https://www.wikipedia.org/wiki/Special:Search?go=Go&search=")
+     (youtube    . "https://www.youtube.com/results?search_query=")
+     )
+  "An alist of all the engines you can search by.
+Key is a symbol as the name, value is a plist specifying the search url.")
+
+(defun my/search-online (&optional search-engine)
+  "Search a query or region if any by using SEARCH-ENGINE."
+  (interactive (list
+                 (completing-read "Choose a search engine: "
+                   (mapcar #'car my-search-engine-alist))))
+  (let* ((search-engine (or search-engine my-search-engine))
+         (search-url (if search-engine
+                         (alist-get (intern search-engine) my-search-engine-alist
+                           nil nil #'equal)
+                       (cdar my-search-engine-alist)))
+         (url search-url))
+    (browse-url
+      (url-encode-url
+        (concat url
+          (if mark-active
+            (buffer-substring (region-beginning) (region-end))
+            (read-string (message "%s Search: " (capitalize search-engine)))))))))
+
+(global-set-key (kbd "C-c s o") #'my/search-online)
 
 ;;;;;;;;;;;;;;;
 ;; DAILY USE ;;
@@ -474,7 +515,7 @@ Including indent-buffer, which should not be called automatically on save."
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
 
-(global-set-key (kbd "C-c m d") #'my/emacs-default-theme)
+(global-set-key (kbd "C-c m e") #'my/emacs-default-theme)
 
 (defun my/kill-other-buffers-without-special-ones ()
   "Keep all buffers but the current one.
@@ -562,7 +603,7 @@ With three PREFIX, insert locale's timestamp."
 
 (global-set-key (kbd "C-c 1") #'my/insert-date)
 
-(defun my/insert-information (prefix)
+(defun my/insert-user-information (prefix)
   "Insert user information.
 With one PREFIX, insert variable `user-full-name' only.
 With two PREFIX, insert variable `user-mail-address' only."
@@ -573,7 +614,7 @@ With two PREFIX, insert variable `user-mail-address' only."
                   ((equal prefix '(16)) user-mail-address))))
     (insert format)))
 
-(global-set-key (kbd "C-c 2") #'my/insert-information)
+(global-set-key (kbd "C-c 2") #'my/insert-user-information)
 
 (defun my/divide-file-chapter ()
   "Divide FILE according to specified word."
@@ -605,6 +646,8 @@ With two PREFIX, insert variable `user-mail-address' only."
   (save-restriction
     (narrow-to-region (window-start) (window-end))
     (delete-matching-lines "^[ \t]*$" (point-min) (point-max))))
+
+(global-set-key (kbd "C-c m d") #'my/delete-visual-blank-lines)
 
 (defun my/smart-run ()
   "Run programs according to major mode."

@@ -59,10 +59,17 @@
   (setq ibuffer-saved-filter-groups
     '(("default"
         ("Dired" (mode . dired-mode))
-        ("Emacs" (or (name . "^\\*scratch\\*$")
-                     (name . "^\\*Messages\\*$")))
-        ("Lisp" (or (mode . emacs-lisp-mode)
-                    (mode . lisp-interaction-mode)))
+        ("Emacs" (or (name . "^\\*Help\\*$")
+                     (name . "^\\*Messages\\*$")
+                     (name . "^\\*scratch\\*$")))
+        ("Lisp" (or (mode . lisp-mode)
+                    (mode . emacs-lisp-mode)
+                    (mode . common-lisp-mode)
+                    (mode . elisp-byte-code-mode)
+                    (mode . lisp-interaction-mode)
+                    (mode . emacs-lisp-compilation-mode)))
+        ("Scheme" (or (mode . scheme-mode)
+                      (mode . racket-mode)))
         ("Org" (mode . org-mode))
         ("Magit" (or (mode . magit-mode)
                      (mode . magit-log-mode)
@@ -76,7 +83,11 @@
                    (mode . gitignore-mode)
                    (mode . gitattributes-mode)))
         ("C/C++" (or (mode . c-mode)
-                     (mode . cc-mode)))
+                     (mode . c++-mode)))
+        ("C#" (or (mode . csharp-mode)
+                  (mode . csharp-tree-sitter-mode)))
+        ("ObjC" (mode . objc-mode))
+        ("Java" (mode . java-mode))
         ("Python" (or (mode . python-mode)
                       (mode . ipython-mode)
                       (mode . ipynb-mode)
@@ -84,6 +95,8 @@
                       (mode . inferior-python-mode)))
         ("FrontEnd" (or (mode . js-mode)
                         (mode . css-mode)
+                        (mode . web-mode)
+                        (mode . sass-mode)
                         (mode . scss-mode)
                         (mode . html-mode)
                         (mode . mhtml-mode)
@@ -92,8 +105,11 @@
                     (mode . enh-ruby-mode)
                     (mode . inf-ruby-mode)))
         ("Sh" (mode . sh-mode))
-        ("Markdown" (or (name . "^diary$")
-                        (mode . markdown-mode)))
+        ("TERMINAL" (or (mode . eshell-mode)
+                        (mode . shell-mode)
+                        (mode . term-mode)))
+        ("Markdown" (mode . markdown-mode))
+        ("Snippet" (mode . snippet-mode))
         ("ReStructText" (mode . rst-mode))
         ("Txt" (mode . text-mode)))))
 
@@ -118,8 +134,8 @@
 
   (add-hook 'ibuffer-mode-hook #'my//ibuffer-mode-hook-setup))
 
-;; replace buffer-menu with ibuffer
-(global-set-key (kbd "C-x C-b") #'ibuffer)
+;; replace `buffer-menu' with `ibuffer'
+(global-set-key [remap list-buffers] #'ibuffer)
 
 (provide 'init-ibuffer)
 

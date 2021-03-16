@@ -34,7 +34,21 @@
   :config (tagedit-add-experimental-features))
 
 (use-package web-mode
-  :mode ("\\.vue\\'" . web-mode))
+  :mode "\\.[px]?html?\\'"
+  :mode "\\.\\(?:tpl\\|blade\\)\\(?:\\.php\\)?\\'"
+  :mode "\\.as[cp]x\\'"
+  :mode "\\.csproj\\'"
+  :mode "\\.eco\\'"
+  :mode "\\.erb\\'"
+  :mode "\\.hbs\\'"
+  :mode "\\.jinja2?\\'"
+  :mode "\\.jsp\\'"
+  :mode "\\.l?eex\\'"
+  :mode "\\.mustache\\'"
+  :mode "\\.svelte\\'"
+  :mode "\\.twig\\'"
+  :mode "\\.vue\\'"
+  :mode "\\.wxml\\'")
 
 (provide 'init-web)
 

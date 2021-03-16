@@ -1,4 +1,4 @@
-;;; init-python.el --- programming in python -*- lexical-binding: t; -*-
+;;; init-python.el --- Python programming in Emacs -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;

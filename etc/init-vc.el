@@ -42,7 +42,7 @@
   ;; add module section into the status buffer
   (magit-add-section-hook 'magit-status-sections-hook
                           #'magit-insert-modules
-                          #'magit-insert-stashes 'append))
+                          #'magit-insert-stashes #'append))
 
 ;; access GIT forges from `magit'
 (use-package forge

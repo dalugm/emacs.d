@@ -16,8 +16,6 @@
                                alect-black-alt
                                alect-dark
                                alect-dark-alt
-                               almost-mono-black
-                               almost-mono-gray
                                ample
                                ample-flat
                                apropospriate-dark
@@ -25,7 +23,6 @@
                                challenger-deep
                                chocolate
                                cyberpunk
-                               darkokai
                                darktooth
                                deeper-blue
                                doom-Iosvkem
@@ -71,15 +68,12 @@
                                doom-zenburn
                                dracula
                                gotham
-                               grandshell
                                green-is-the-new-black
-                               gruber-darker
                                gruvbox
                                gruvbox-dark-hard
                                gruvbox-dark-medium
                                gruvbox-dark-soft
                                inkpot
-                               jazz
                                kaolin-aurora
                                kaolin-blossom
                                kaolin-bubblegum
@@ -92,18 +86,13 @@
                                kaolin-temple
                                kaolin-valley-dark
                                leuven-dark
-                               lush
                                manoj-dark
                                material
-                               minimal-black
                                misterioso
                                modus-vivendi
                                moe-dark
                                monokai
-                               naquadah
-                               nimbus
                                nord
-                               phoenix-dark-pink
                                sanityinc-solarized-dark
                                sanityinc-tomorrow-blue
                                sanityinc-tomorrow-bright
@@ -111,6 +100,7 @@
                                sanityinc-tomorrow-night
                                sinolor-black
                                sinolor-dark
+                               sinolor-eva
                                sinolor-green
                                sinolor-palace
                                solarized-dark
@@ -118,10 +108,8 @@
                                solarized-gruvbox-dark
                                solarized-wombat-dark
                                solarized-zenburn
-                               spacegray
                                spacemacs-dark
                                srcery
-                               subatomic
                                tango-dark
                                tao-yin
                                tsdh-dark
@@ -134,15 +122,13 @@
 (defvar my-black-theme-alist '(
                                 alect-black
                                 alect-black-alt
-                                almost-mono-black
                                 cyberpunk
                                 doom-homage-black
-                                grandshell
                                 manoj-dark
-                                minimal-black
                                 modus-vivendi
                                 sanityinc-tomorrow-bright
                                 sinolor-black
+                                sinolor-eva
                                 wheatgrass
                                 )
   "Themes used in the light-less black environment.")
@@ -151,10 +137,7 @@
                                 adwaita
                                 alect-light
                                 alect-light-alt
-                                almost-mono-cream
-                                almost-mono-white
                                 ample-light
-                                anti-zenburn
                                 apropospriate-light
                                 dichromacy
                                 doom-acario-light
@@ -178,7 +161,6 @@
                                 leuven
                                 light-blue
                                 material-light
-                                minimal-light
                                 modus-operandi
                                 moe-light
                                 organic-green
@@ -191,7 +173,6 @@
                                 solarized-light-high-contrast
                                 spacemacs-light
                                 tango
-                                tango-plus
                                 tao-yang
                                 tsdh-light
                                 whiteboard

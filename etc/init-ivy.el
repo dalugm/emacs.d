@@ -36,12 +36,12 @@
   ;; ---------------------------------------------------------
 
   (defun my/counsel-rg (&optional DIR)
-    "Modify counsel-rg functions to search files in DIR."
+    "Modify `counsel-rg' functions to search files in DIR."
     (interactive "Drg in directory: ")
     (counsel-rg nil DIR))
 
   (defun my/counsel-fzf (&optional DIR)
-    "Modify counsel-fzf functions to search files in DIR."
+    "Modify `counsel-fzf' functions to search files in DIR."
     (interactive "Dfzf in directory: ")
     (counsel-fzf nil DIR))
 
@@ -61,11 +61,9 @@
         (read (current-buffer))))
     (message "Load ivy-views."))
 
-  ;; `\C-o\f' to toggle case sensitive
-  ;; https://github.com/abo-abo/swiper/issues/1104
   (defun my//ivy--regex-plus (str)
     "Enhance `ivy--regex-plus' with special STR start pattern.
-Search camelCase word starting with ‘/’.
+Search camel case word starting with ‘/’.
 Search Chinese starting with ‘:’ by building regex using `zh-lib'."
     (my|ensure 'zh-lib)
     (let ((len (length str)))
@@ -79,7 +77,7 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
           (setq str (zh-lib-build-regexp-string (substring str 1 len) nil)))
         ;; If the first character of input in ivy is ‘/’,
         ;; remaining input is converted to pattern to search camel case word
-        ;; For example, input ‘/ic’ match ‘isController’ or ‘isCollapsed’
+        ;; For example, input ‘/ic’ match ‘isController’ or ‘IsCollapsed’
         ((string= (substring str 0 1) "/")
           (let ((rlt "")
                 (i 0)
@@ -100,7 +98,6 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
                 (setq i (1+ i))))
             (setq str rlt))))
       (ivy--regex-plus str)))
-  ;; Enhance ivy
   (setq ivy-re-builders-alist '((t . my//ivy--regex-plus)))
 
   ;; Display an arrow with the selected item
@@ -125,9 +122,9 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
   ;; ;; Sort ivy candidates
   ;; (setq ivy-sort-matches-functions-alist
   ;;   '((t . nil)
-  ;;      (ivy-completion-in-region . ivy--shorter-matches-first)
-  ;;      (ivy-switch-buffer . ivy-sort-function-buffer)
-  ;;      (counsel-find-file . ivy--shorter-matches-first)))
+  ;;     (ivy-completion-in-region . ivy--shorter-matches-first)
+  ;;     (ivy-switch-buffer . ivy-sort-function-buffer)
+  ;;     (counsel-find-file . ivy--shorter-matches-first)))
 
   ;; -------------------------------------------------------
   ;; keybindings

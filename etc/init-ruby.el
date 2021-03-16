@@ -1,4 +1,4 @@
-;;; init-ruby.el --- programming in ruby -*- lexical-binding: t; -*-
+;;; init-ruby.el --- Ruby programming in Emacs -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;

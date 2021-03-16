@@ -7,9 +7,6 @@
 [submodule "alect-themes"]
 	path = lib/alect-themes
 	url = https://github.com/alezost/alect-themes.git
-[submodule "almost-mono-themes"]
-	path = lib/almost-mono-themes
-	url = https://github.com/cryon/almost-mono-themes.git
 [submodule "ample-theme"]
 	path = lib/ample-theme
 	url = https://github.com/jordonbiondo/ample-theme.git
@@ -19,9 +16,6 @@
 [submodule "annalist"]
 	path = lib/annalist
 	url = https://github.com/noctuid/annalist.el.git
-[submodule "anti-zenburn-theme"]
-	path = lib/anti-zenburn-theme
-	url = https://github.com/m00natic/anti-zenburn-theme.git
 [submodule "apropospriate-theme"]
 	path = lib/apropospriate-theme
 	url = https://github.com/waymondo/apropospriate-theme.git
@@ -73,12 +67,12 @@
 [submodule "company-box"]
 	path = lib/company-box
 	url = https://github.com/sebastiencs/company-box.git
+[submodule "csharp-mode"]
+	path = lib/csharp-mode
+	url = https://github.com/emacs-csharp/csharp-mode.git
 [submodule "cyberpunk-theme"]
 	path = lib/cyberpunk-theme
 	url = https://github.com/n3mo/cyberpunk-theme.el.git
-[submodule "darkokai-theme"]
-	path = lib/darkokai-theme
-	url = https://github.com/sjrmanning/darkokai.git
 [submodule "darkroom"]
 	path = lib/darkroom
 	url = https://github.com/joaotavora/darkroom.git
@@ -182,15 +176,9 @@
 [submodule "gotham-theme"]
 	path = lib/gotham-theme
 	url = https://depp.brause.cc/gotham-theme.git
-[submodule "grandshell-theme"]
-	path = lib/grandshell-theme
-	url = https://framagit.org/steckerhalter/grandshell-theme.git
 [submodule "green-is-the-new-black-theme"]
 	path = lib/green-is-the-new-black-theme
 	url = https://github.com/fredcamps/green-is-the-new-black-emacs.git
-[submodule "gruber-darker-theme"]
-	path = lib/gruber-darker-theme
-	url = https://github.com/rexim/gruber-darker-theme.git
 [submodule "gruvbox-theme"]
 	path = lib/gruvbox-theme
 	url = https://github.com/greduan/emacs-theme-gruvbox.git
@@ -213,9 +201,6 @@
 	path = lib/ivy
 	url = https://github.com/abo-abo/swiper.git
 	info-path = doc
-[submodule "jazz-theme"]
-	path = lib/jazz-theme
-	url = https://github.com/donderom/jazz-theme.git
 [submodule "kaolin-themes"]
 	path = lib/kaolin-themes
 	url = https://github.com/ogdenwebb/emacs-kaolin-themes.git
@@ -233,9 +218,6 @@
 [submodule "lua-mode"]
 	path = lib/lua-mode
 	url = https://github.com/immerrr/lua-mode.git
-[submodule "lush-theme"]
-	path = lib/lush-theme
-	url = https://github.com/andre-richter/emacs-lush-theme.git
 [submodule "magit"]
 	path = lib/magit
 	url = https://github.com/magit/magit.git
@@ -250,9 +232,6 @@
 [submodule "material-theme"]
 	path = lib/material-theme
 	url = https://github.com/cpaulik/emacs-material-theme.git
-[submodule "minimal-theme"]
-	path = lib/minimal-theme
-	url = https://github.com/anler/minimal-theme.git
 [submodule "modus-themes"]
 	path = lib/modus-themes
 	url = https://gitlab.com/protesilaos/modus-themes.git
@@ -262,12 +241,6 @@
 [submodule "monokai-theme"]
 	path = lib/monokai-theme
 	url = https://github.com/oneKelvinSmith/monokai-emacs.git
-[submodule "naquadah-theme"]
-	path = lib/naquadah-theme
-	url = https://github.com/jd/naquadah-theme.git
-[submodule "nimbus-theme"]
-	path = lib/nimbus-theme
-	url = https://github.com/m-cat/nimbus-theme.git
 [submodule "no-littering"]
 	path = lib/no-littering
 	url = https://github.com/emacscollective/no-littering.git
@@ -292,9 +265,6 @@
 [submodule "parchment-theme"]
 	path = lib/parchment-theme
 	url = https://github.com/ajgrf/parchment.git
-[submodule "phoenix-dark-pink-theme"]
-	path = lib/phoenix-dark-pink-theme
-	url = https://github.com/j0ni/phoenix-dark-pink.git
 [submodule "polymode"]
 	path = lib/polymode
 	url = https://github.com/polymode/polymode.git
@@ -316,6 +286,9 @@
 [submodule "request"]
 	path = lib/request
 	url = https://github.com/tkf/emacs-request.git
+[submodule "rust-mode"]
+	path = lib/rust-mode
+	url = https://github.com/rust-lang/rust-mode.git
 [submodule "s"]
 	path = lib/s
 	url = https://github.com/magnars/s.el.git
@@ -343,9 +316,6 @@
 [submodule "solarized-theme"]
 	path = lib/solarized-theme
 	url = https://github.com/bbatsov/solarized-emacs.git
-[submodule "spacegray-theme"]
-	path = lib/spacegray-theme
-	url = https://github.com/bruce/emacs-spacegray-theme.git
 [submodule "spacemacs-theme"]
 	path = lib/spacemacs-theme
 	url = https://github.com/nashamri/spacemacs-theme.git
@@ -355,9 +325,6 @@
 [submodule "srcery-theme"]
 	path = lib/srcery-theme
 	url = https://github.com/srcery-colors/srcery-emacs.git
-[submodule "subatomic-theme"]
-	path = lib/subatomic-theme
-	url = https://github.com/cryon/subatomic-theme.git
 [submodule "subed"]
 	path = lib/subed
 	url = https://github.com/rndusr/subed.git
@@ -365,9 +332,6 @@
 [submodule "tagedit"]
 	path = lib/tagedit
 	url = https://github.com/magnars/tagedit.git
-[submodule "tango-plus-theme"]
-	path = lib/tango-plus-theme
-	url = https://github.com/tmalsburg/tango-plus-theme.git
 [submodule "tao-theme"]
 	path = lib/tao-theme
 	url = https://github.com/11111000000/tao-theme-emacs.git
@@ -378,6 +342,18 @@
 	path = lib/transient
 	url = https://github.com/magit/transient.git
 	info-path = docs
+[submodule "tree-sitter"]
+	path = lib/tree-sitter
+	url = https://github.com/ubolonton/emacs-tree-sitter.git
+	load-path = core
+	load-path = lisp
+	load-path = langs
+[submodule "tree-sitter-indent"]
+	path = lib/tree-sitter-indent
+	url = https://codeberg.org/FelipeLema/tree-sitter-indent.el.git
+[submodule "tree-sitter-langs"]
+	path = lib/tree-sitter-langs
+	url = https://github.com/ubolonton/tree-sitter-langs.git
 [submodule "treepy"]
 	path = lib/treepy
 	url = https://github.com/volrath/treepy.el.git

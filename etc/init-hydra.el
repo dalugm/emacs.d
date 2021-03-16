@@ -239,6 +239,7 @@
   ("w" whitespace-mode)
   ("y" yas-minor-mode)
   ("q" nil "quit" :color blue))
+
 (global-set-key (kbd "C-c h t") #'my/hydra-toggle/body)
 
 ;; ---------------------------------------------------------
@@ -340,6 +341,7 @@
   ("," my/scroll-other-window-up)
   ("." scroll-other-window)
   ("SPC" nil))
+
 (global-set-key (kbd "C-c h w") #'my/hydra-window/body)
 
 ;; ---------------------------------------------------------
@@ -384,6 +386,7 @@
   ("i" evil-insert :color blue)
   ("S" smartparens-strict-mode)
   ("SPC" nil :color blue))
+
 (global-set-key (kbd "C-c h p") #'my/hydra-paredit/body)
 
 (defhydra my/hydra-paredit-move (:hint nil :color amaranth)
@@ -410,6 +413,7 @@
   ("i" evil-insert :color blue)
   ("S" smartparens-strict-mode)
   ("SPC" nil :color blue))
+
 (global-set-key (kbd "C-c h M") #'my/hydra-paredit-move/body)
 
 (defhydra my/hydra-paredit-edit (:hint nil :color amaranth)
@@ -438,6 +442,7 @@
   ("i" evil-insert :color blue)
   ("S" smartparens-strict-mode)
   ("SPC" nil :color blue))
+
 (global-set-key (kbd "C-c h E") #'my/hydra-paredit-edit/body)
 
 ;; ---------------------------------------------------------
@@ -455,7 +460,7 @@
 | ^_R_evert this file | ^_o_pen file      |
 | ^_r_ename this file | ^DOS _e_ol remove |
 | ^_m_ove this file   | ^DOS _E_ol hidden |
-| ^save as _u_tf8     | ^^^               |
+| ^save as _u_tf8     | ^_f_ormat buffer  |
 +-^^^-----------------+-^^^---------------+
   ^_q_uit
 "
@@ -464,6 +469,7 @@
   ("d" my/delete-this-file :color blue)
   ("e" my/remove-dos-eol)
   ("E" my/hide-dos-eol)
+  ("f" my/format-region-or-buffer)
   ("o" my/open-this-file-externally :color blue)
   ("R" my/revert-this-buffer :color blue)
   ("r" my/rename-this-file :color blue)
@@ -473,6 +479,7 @@
   ("u" my/save-file-as-utf8)
   ("y" my/copy-file-name)
   ("q" nil))
+
 (global-set-key (kbd "C-c h f") #'my/hydra-file/body)
 
 ;; ---------------------------------------------------------
@@ -500,6 +507,7 @@
   ("b" (my//random-theme my-black-theme-alist))
   ("L" my/load-theme)
   ("q" nil))
+
 (global-set-key (kbd "C-c h T") #'my/hydra-theme/body)
 
 (provide 'init-hydra)

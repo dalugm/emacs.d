@@ -1,4 +1,4 @@
-;;; init-lua.el --- programming in lua -*- lexical-binding: t; -*-
+;;; init-lua.el --- Lua programming in Emacs -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;
