@@ -10,6 +10,9 @@
 (use-package csharp-mode
   :mode "\\.cs\\'")
 
+(use-package web-mode
+  :mode "\\.cshtml\\'")
+
 (provide 'init-csharp)
 
 ;;; init-csharp.el ends here

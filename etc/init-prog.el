@@ -7,17 +7,6 @@
 
 ;;; Code:
 
-;; ---------------------------------------------------------
-;; compile
-;; ---------------------------------------------------------
-;; Compilation from Emacs
-(defun my//colorize-compilation-buffer ()
-  "Colorize a compilation mode buffer."
-  ;; we don't want to mess with child modes such as grep-mode, ack, ag, etc
-  (when (eq major-mode 'compilation-mode)
-    (let ((inhibit-read-only t))
-      (ansi-color-apply-on-region (point-min) (point-max)))))
-
 (require 'compile)
 ;; Just save before compiling
 (setq compilation-ask-about-save nil)
@@ -29,7 +18,24 @@
 ;; Colorize output of Compilation Mode
 ;; https://stackoverflow.com/a/3072831/355252
 (require 'ansi-color)
+
+(defun my//colorize-compilation-buffer ()
+  "Colorize a compilation mode buffer."
+  ;; we don't want to mess with child modes such as grep-mode, ack, ag, etc
+  (when (eq major-mode 'compilation-mode)
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region (point-min) (point-max)))))
+
 (add-hook 'compilation-filter-hook #'my//colorize-compilation-buffer)
+
+(defun my//generic-prog-mode-hook-setup ()
+  "Generic configuration for `prog-mode'."
+  ;; camel case aware editing operations
+  (subword-mode +1))
+
+(add-hook 'prog-mode-hook #'my//generic-prog-mode-hook-setup)
+;; some programming major-modes NOT inherited from prog-mode
+(add-hook 'css-mode-hook #'my//generic-prog-mode-hook-setup)
 
 ;; https://ebzzry.io/en/emacs-pairs/
 (use-package smartparens
@@ -122,6 +128,13 @@ respectively."
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package xml-mode
+  :mode "\\.csproj\\'"
+  :mode "\\.xaml\\'"
+  :mode "\\.p\\(?:list\\|om\\)\\'"      ; plist, pom
+  :mode "\\.xs\\(?:d\\|lt\\)\\'"        ; xsd, xslt
+  :mode "\\.rss\\'")
 
 (provide 'init-prog)
 

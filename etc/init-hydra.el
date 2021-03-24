@@ -194,55 +194,6 @@
   (define-key dired-mode-map "y" #'my/hydra-dired/body))
 
 ;; ---------------------------------------------------------
-;; Toggle minor mode
-;; ---------------------------------------------------------
-;; https://github.com/abo-abo/hydra/blob/master/hydra-examples.el
-
-(defhydra my/hydra-toggle (:color amaranth :hint nil)
-  "
-------------------------------------------------------------
-[_a_] abbrev-mode           : %`abbrev-mode
-[_d_] debug-on-error        : %`debug-on-error
-[_f_] fill-column-indicator : %(bound-and-true-p display-fill-column-indicator-mode)
-[_g_] glasses-mode          : %(bound-and-true-p glasses-mode)
-[_h_] hl-line-mode          : %(bound-and-true-p hl-line-mode)
-[_i_] indent-tabs-mode      : %`indent-tabs-mode
-[_l_] line-numbers          : %(if (bound-and-true-p display-line-numbers) display-line-numbers
-                                 (bound-and-true-p linum-mode))
-[_o_] outline-minor         : %(bound-and-true-p outline-minor-mode)
-[_p_] prettier symbols      : %`prettify-symbols-mode
-[_r_] rainbow-mode          : %(bound-and-true-p rainbow-mode)
-[_s_] sp-strict-mode        : %(bound-and-true-p smartparens-strict-mode)
-[_t_] truncate-lines        : %`truncate-lines
-[_v_] view-mode             : %`view-mode
-[_V_] visual-line           : %`visual-line-mode
-[_w_] whitespace-mode       : %`whitespace-mode
-[_y_] yasnippet-mode        : %(bound-and-true-p yas-minor-mode)
-------------------------------------------------------------
-"
-  ("a" abbrev-mode)
-  ("d" toggle-debug-on-error)
-  ("f" display-fill-column-indicator-mode)
-  ("g" glasses-mode)
-  ("h" hl-line-mode)
-  ("i" (lambda ()
-         (interactive)
-         (setq indent-tabs-mode (not indent-tabs-mode))))
-  ("l" my/toggle-line-number)
-  ("o" outline-minor-mode)
-  ("p" prettify-symbols-mode)
-  ("r" rainbow-mode)
-  ("s" smartparens-strict-mode)
-  ("t" toggle-truncate-lines)
-  ("v" view-mode)
-  ("V" visual-line-mode)
-  ("w" whitespace-mode)
-  ("y" yas-minor-mode)
-  ("q" nil "quit" :color blue))
-
-(global-set-key (kbd "C-c h t") #'my/hydra-toggle/body)
-
-;; ---------------------------------------------------------
 ;; window
 ;; ---------------------------------------------------------
 ;; https://github.com/abo-abo/hydra/wiki/Window-Management
@@ -508,7 +459,7 @@
   ("L" my/load-theme)
   ("q" nil))
 
-(global-set-key (kbd "C-c h T") #'my/hydra-theme/body)
+(global-set-key (kbd "C-c h t") #'my/hydra-theme/body)
 
 (provide 'init-hydra)
 

@@ -7,10 +7,6 @@
 
 ;;; Code:
 
-;; New `less-css-mde' in Emacs 26
-(unless (fboundp 'less-css-mode)
-  (require 'less-css-mode))
-
 (use-package tagedit
   :hook (html-mode . tagedit-mode)
   :bind (:map tagedit-mode-map
@@ -37,7 +33,6 @@
   :mode "\\.[px]?html?\\'"
   :mode "\\.\\(?:tpl\\|blade\\)\\(?:\\.php\\)?\\'"
   :mode "\\.as[cp]x\\'"
-  :mode "\\.csproj\\'"
   :mode "\\.eco\\'"
   :mode "\\.erb\\'"
   :mode "\\.hbs\\'"

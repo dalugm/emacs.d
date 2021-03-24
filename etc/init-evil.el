@@ -41,12 +41,12 @@
     (save-excursion (dotimes (_ count) (evil-insert-newline-below))))
   (define-key evil-normal-state-map (kbd "] SPC") #'evil-unimpaired-insert-newline-below)
 
-  (defun my//evil-disable-ex-highlights-h ()
-    "Disable ex search buffer highlights."
+  (defun my//evil-disable-ex-highlight ()
+    "Disable evil ex search buffer highlight."
     (when (evil-ex-hl-active-p 'evil-ex-search)
       (evil-ex-nohighlight) t))
 
-  (advice-add #'keyboard-quit :before #'my//evil-disable-ex-highlights-h)
+  (advice-add #'keyboard-quit :before #'my//evil-disable-ex-highlight)
 
   (defun my//show-current-evil-state ()
     "Change modeline's face according to different evil state."
@@ -305,6 +305,7 @@
     "fr" #'recentf-open-files
     "fl" #'recentf-load-list
     "gf" #'counsel-git
+    "gs" #'counsel-git-grep
     "ir" #'ivy-resume
     "kb" #'kill-buffer-and-window
     "mf" #'mark-defun
@@ -436,17 +437,18 @@
     "g"  #'(:ignore t :which-key "git")
     "gd" #'magit-dispatch
     "gg" #'magit-status
-    "gf" #'counsel-git
+    "gf" #'magit-file-dispatch
+    "gc" #'counsel-git
+    "gs" #'counsel-git-grep
     ;; hydra
     "h"  #'(:ignore t :which-key "hydra")
     "hE" #'(my/hydra-paredit-edit/body :which-key "paredit-edit")
     "hM" #'(my/hydra-paredit-move/body :which-key "paredit-move")
-    "hT" #'(my/hydra-theme/body :which-key "theme")
+    "ht" #'(my/hydra-theme/body :which-key "theme")
     "hf" #'(my/hydra-file/body :which-key "file")
     "hi" #'(my/hydra-erc/body :which-key "irc")
     "hm" #'(my/hydra-misc/body :which-key "misc")
     "hp" #'(my/hydra-paredit/body :which-key "paredit")
-    "ht" #'(my/hydra-toggle/body :which-key "toggle")
     "hw" #'(my/hydra-window/body :which-key "window")
     ;; load
     "l"  #'(:ignore t :which-key "load")

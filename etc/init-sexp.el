@@ -8,7 +8,7 @@
 ;;; Code:
 
 ;; https://endlessparentheses.com/get-in-the-habit-of-using-sharp-quote.html
-(defun my//endless-sharp ()
+(defun my/endless-sharp ()
   "Insert #' unless in a string or comment."
   (interactive)
   (call-interactively #'self-insert-command)
@@ -18,7 +18,7 @@
                 (eq (char-after) ?'))
       (insert "'"))))
 
-(define-key emacs-lisp-mode-map "#" #'my//endless-sharp)
+(define-key emacs-lisp-mode-map "#" #'my/endless-sharp)
 
 ;; https://www.travishinkelman.com/posts/getting-started-with-chez-scheme-and-emacs/
 (use-package geiser

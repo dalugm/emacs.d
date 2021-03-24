@@ -9,8 +9,6 @@
 
 (defun my//ruby-mode-hook-setup ()
   "Default configuration for ruby."
-  ;; CamelCase aware editing operations
-  (subword-mode +1)
   (with-eval-after-load 'exec-path-from-shell
     (exec-path-from-shell-copy-env "RUBYPATH")))
 
