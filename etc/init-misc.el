@@ -109,8 +109,7 @@
     (let ((separedit-default-mode 'emacs-lisp-mode))
       (with-current-buffer (separedit)
         (prog1 (call-interactively #'eval-last-sexp)
-          (execute-kbd-macro (kbd "C-c C-k"))))))
-  :config (setq separedit-default-mode 'markdown-mode))
+          (execute-kbd-macro (kbd "C-c C-k")))))))
 
 (use-package search-dired
   :bind (("C-c s d" . search-dired-dwim)

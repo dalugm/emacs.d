@@ -81,9 +81,9 @@
   :mode ("/\\.dockerignore\\'" . gitignore-mode))
 
 (use-package git-link
-  :bind (("C-c v l" . git-link)
-         ("C-c v c" . git-link-commit)
-         ("C-c v h" . git-link-homepage)))
+  :bind (("C-c v l l" . git-link)
+         ("C-c v l c" . git-link-commit)
+         ("C-c v l h" . git-link-homepage)))
 
 (provide 'init-vc)
 

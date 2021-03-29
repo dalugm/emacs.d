@@ -83,7 +83,8 @@
   (which-key-add-key-based-replacements "C-c p" "project")
   (which-key-add-key-based-replacements "C-c s" "search")
   (which-key-add-key-based-replacements "C-c t" "toggle")
-  (which-key-add-key-based-replacements "C-c v" "version")
+  (which-key-add-key-based-replacements "C-c v" "vc")
+  (which-key-add-key-based-replacements "C-c v l" "link")
   (which-key-add-key-based-replacements "C-c w" "workspace")
 
   (which-key-add-major-mode-key-based-replacements 'emacs-lisp-mode

@@ -26,6 +26,8 @@
           (rename-file filename new-name t)
           (set-visited-file-name new-name t t)))))))
 
+(global-set-key (kbd "C-c v r") #'my/vc-rename-file-and-buffer)
+
 (defun my/vc-copy-file-and-rename-buffer ()
   "Copy the current buffer and file it is visiting.
 If the old file is under version control, the new file is added into
@@ -44,6 +46,8 @@ version control automatically."
           (when (vc-backend filename)
             (vc-register)))))))
 
+(global-set-key (kbd "C-c v c") #'my/vc-copy-file-and-rename-buffer)
+
 (defun my/vc-delete-file-and-buffer ()
   "Kill the current buffer and deletes the file it is visiting."
   (interactive)
@@ -55,6 +59,8 @@ version control automatically."
           (delete-file filename delete-by-moving-to-trash)
           (message "Deleted file %s" filename)
           (kill-buffer))))))
+
+(global-set-key (kbd "C-c v d") #'my/vc-delete-file-and-buffer)
 
 ;;;;;;;;;;;;
 ;; Window ;;
@@ -71,28 +77,29 @@ version control automatically."
 (defun my/toggle-two-split-window ()
   "Toggle two window layout vertically or horizontally."
   (interactive)
-  (when (= (count-windows) 2)
-    (let* ((this-win-buffer (window-buffer))
-           (next-win-buffer (window-buffer (next-window)))
-           (this-win-edges (window-edges (selected-window)))
-           (next-win-edges (window-edges (next-window)))
-           (this-win-2nd (not (and (<= (car this-win-edges)
-                                       (car next-win-edges))
-                                   (<= (cadr this-win-edges)
-                                       (cadr next-win-edges)))))
-           (splitter
-             (if (= (car this-win-edges)
-                    (car (window-edges (next-window))))
-                 #'split-window-horizontally
-               #'split-window-vertically)))
-      (delete-other-windows)
-      (let ((first-win (selected-window)))
-        (funcall splitter)
-        (when this-win-2nd (other-window 1))
-        (set-window-buffer (selected-window) this-win-buffer)
-        (set-window-buffer (next-window) next-win-buffer)
-        (select-window first-win)
-        (when this-win-2nd (other-window 1))))))
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+               (if (= (car this-win-edges)
+                      (car (window-edges (next-window))))
+                   #'split-window-horizontally
+                 #'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (when this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (when this-win-2nd (other-window 1))))
+    (error "Not two windows in current frame!")))
 
 (global-set-key (kbd "C-c w t") #'my/toggle-two-split-window)
 
@@ -238,7 +245,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (let ((file-name (buffer-file-name)))
     (if (and (fboundp 'tramp-tramp-file-p)
              (tramp-tramp-file-p file-name))
-        (error "Cannot open tramp file")
+        (error "Cannot open tramp file!")
       (browse-url (concat "file://" file-name)))))
 
 (global-set-key (kbd "C-c f b") #'my/browse-this-file)
