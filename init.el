@@ -131,6 +131,7 @@
   (require 'init-sexp)
   (require 'init-lsp)
   (require 'init-cc)
+  (require 'init-go)
   (require 'init-sh)
   (require 'init-lua)
   (require 'init-web)

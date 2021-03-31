@@ -16,16 +16,8 @@
           ("C-t" . company-other-backend))
   :config
   (setq company-idle-delay 0.2
-        company-clang-insert-arguments nil
-        company-require-match nil
-        company-ctags-ignore-case t
-        ;; I don't like the downcase word in company-dabbrev
-        company-dabbrev-downcase nil
         ;; make previous/next selection in the popup cycles
         company-selection-wrap-around t
-        ;; Some languages use camel case naming convention,
-        ;; so company should be case sensitive.
-        company-dabbrev-ignore-case nil
         ;; press `M-number' to choose candidate
         company-show-numbers t
         ;; https://github.com/company-mode/company-mode/issues/146
@@ -45,8 +37,10 @@
   ;; So that's BAD idea.
   ;; `company-auto-complete' is obsolete since v0.9.14.
   (setq company-auto-commit nil)
+
   ;; can't work with TRAMP
-  (setq company-backends (delete 'company-ropemacs company-backends)))
+  (with-eval-after-load 'tramp
+    (setq company-backends (delete 'company-ropemacs company-backends))))
 
 (use-package company-box
   :when (display-graphic-p)

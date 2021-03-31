@@ -1,8 +1,8 @@
-;;; init-prog.el --- program configuration -*- lexical-binding: t; -*-
+;;; init-prog.el --- Programming in Emacs -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;
-;; Basic configuration for prog-mode.
+;; Generic Programming Configuration.
 ;;
 
 ;;; Code:

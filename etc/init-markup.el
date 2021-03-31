@@ -88,7 +88,7 @@ mermaid.initialize({
           ("g" . markdown-toc-generate-or-refresh-toc)))
 
 (use-package yaml-mode
-  :mode ("\\.\\(yml\\|yaml\\)\\'"))
+  :mode "\\.\\(yml\\|yaml\\)\\'")
 
 (use-package ox-hugo
   :after ox)

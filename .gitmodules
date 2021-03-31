@@ -173,6 +173,9 @@
 [submodule "git-modes"]
 	path = lib/git-modes
 	url = https://github.com/magit/git-modes.git
+[submodule "go-mode"]
+	path = lib/go-mode
+	url = https://github.com/dominikh/go-mode.el.git
 [submodule "gotham-theme"]
 	path = lib/gotham-theme
 	url = https://depp.brause.cc/gotham-theme.git
