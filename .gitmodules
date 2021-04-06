@@ -160,7 +160,13 @@
 	url = https://github.com/sebastiencs/frame-local.git
 [submodule "geiser"]
 	path = lib/geiser
-	url = https://gitlab.com/jaor/geiser.git
+	url = https://gitlab.com/emacs-geiser/geiser.git
+[submodule "geiser-guile"]
+	path = lib/geiser-guile
+	url = https://gitlab.com/emacs-geiser/guile.git
+[submodule "geiser-mit"]
+	path = lib/geiser-mit
+	url = https://gitlab.com/emacs-geiser/mit.git
 [submodule "general"]
 	path = lib/general
 	url = https://github.com/noctuid/general.el.git

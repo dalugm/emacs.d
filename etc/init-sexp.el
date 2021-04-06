@@ -24,8 +24,6 @@
 (use-package geiser
   :commands geiser
   :config
-  ;; geiser replies on a REPL to provide autodoc and completion
-  (setq geiser-mode-start-repl-p t)
   (setq geiser-mode-smart-tab-p t))
 
 (use-package slime

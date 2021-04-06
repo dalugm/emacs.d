@@ -9,8 +9,7 @@
 
 ;; markdown
 (use-package markdown-mode
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.\\(markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
+  :mode ("README\\.md\\'" . gfm-mode)
   :bind (:map markdown-mode-command-map
           ("'" . markdown-edit-code-block)
           ("f" . markdown-footnote-goto-text)
