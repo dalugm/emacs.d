@@ -43,7 +43,7 @@ If FRAME is nil, it defaults to the selected frame."
   (interactive)
   (let ((alpha (frame-parameter frame 'alpha))
         (setting (cons my-active-transparency
-                   my-inactive-transparency)))
+                       my-inactive-transparency)))
     (if (equal alpha setting)
         (my/disable-transparency frame)
       (my/enable-transparency frame setting))))
@@ -58,7 +58,7 @@ The default value for ALPHA is based on
   (interactive)
   (let ((alpha-setting (or alpha
                            (cons my-active-transparency
-                             my-inactive-transparency))))
+                                 my-inactive-transparency))))
     (set-frame-parameter frame 'alpha alpha-setting)))
 
 (defun my/disable-transparency (&optional frame)
@@ -188,7 +188,7 @@ Fonts are specified in `my-font-alist'."
          (font (apply #'font-spec
                  (if font-name
                      (alist-get (intern font-name) my-font-alist
-                       nil nil #'equal)
+                                nil nil #'equal)
                    (cdar my-font-alist)))))
     ;; use `face-remapping-alist' instead of `buffer-face-mode-face'
     (set (make-local-variable 'face-remapping-alist)

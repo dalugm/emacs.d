@@ -604,8 +604,9 @@ With three PREFIX, insert locale's timestamp."
   (let ((format (cond
                   ((not prefix) "%F %R")
                   ((equal prefix '(4)) "%F")
-                  ((equal prefix '(16)) "%d %B %Y")
-                  ((equal prefix '(64)) "%c"))))
+                  ((equal prefix '(16)) "%Y-%m-%dT%H:%M:%S%:z")
+                  ((equal prefix '(64)) "%d %B %Y")
+                  ((equal prefix '(256)) "%c"))))
     (insert (format-time-string format))))
 
 (global-set-key (kbd "C-c 1") #'my/insert-date)
