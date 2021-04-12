@@ -29,6 +29,9 @@
           ("M-s t" . tagedit-toggle-multiline-tag))
   :config (tagedit-add-experimental-features))
 
+(use-package typescript-mode
+  :mode "\\.ts[x]\\'")
+
 (use-package web-mode
   :mode "\\.[px]?html?\\'"
   :mode "\\.\\(?:tpl\\|blade\\)\\(?:\\.php\\)?\\'"
