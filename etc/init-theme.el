@@ -18,7 +18,6 @@
                                alect-dark-alt
                                ample
                                ample-flat
-                               apropospriate-dark
                                atom-one-dark
                                challenger-deep
                                chocolate
@@ -138,7 +137,6 @@
                                 alect-light
                                 alect-light-alt
                                 ample-light
-                                apropospriate-light
                                 dichromacy
                                 doom-acario-light
                                 doom-ayu-light

@@ -16,9 +16,6 @@
 [submodule "annalist"]
 	path = lib/annalist
 	url = https://github.com/noctuid/annalist.el.git
-[submodule "apropospriate-theme"]
-	path = lib/apropospriate-theme
-	url = https://github.com/waymondo/apropospriate-theme.git
 [submodule "async"]
 	path = lib/async
 	url = https://github.com/jwiegley/emacs-async.git

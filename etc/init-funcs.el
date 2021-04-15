@@ -344,6 +344,25 @@ With a prefix ARG always prompt for command to use."
   (interactive)
   (set-buffer-file-coding-system 'undecided-dos nil))
 
+(defun my/disable-final-newline ()
+  "Do not add a newline automatically at the end of current buffer."
+  (interactive)
+  (set (make-local-variable 'require-final-newline) nil)
+  (message "No newline at the end of current buffer."))
+
+(defun my/enable-final-newline ()
+  "Do add a newline automatically at the end of current buffer."
+  (interactive)
+  (set (make-local-variable 'require-final-newline) t)
+  (message "Add newline at the end of current buffer."))
+
+(defun my/toggle-final-newline()
+  "Toggle whether add a newline at the end of current buffer."
+  (interactive)
+  (if require-final-newline
+      (my/disable-final-newline)
+    (my/enable-final-newline)))
+
 ;;;;;;;;;;;;;;
 ;; JUST4FUN ;;
 ;;;;;;;;;;;;;;

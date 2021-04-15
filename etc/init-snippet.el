@@ -7,10 +7,8 @@
 
 ;;; Code:
 
-;; https://stackoverflow.com/questions/7619640/emacs-latex-yasnippet-why-are-newlines-inserted-after-a-snippet
 (use-package yasnippet
   :init
-  ;; Insert license
   (defun my/insert-license ()
     "Insert a license file template into the current file."
     (interactive)
@@ -32,7 +30,12 @@
   :bind (("C-c t y" . yas-minor-mode)
          ("C-c t Y" . yas-global-mode))
   :config (yas-reload-all)
-  (setq my-private-snippet (expand-file-name "my-snippets/" my-optional-d))
+
+  ;; https://stackoverflow.com/questions/7619640/emacs-latex-yasnippet-why-are-newlines-inserted-after-a-snippet
+  (add-hook 'snippet-mode-hook (lambda ()
+                                 (setq-local require-final-newline nil)))
+
+  (setq my-private-snippet (expand-file-name "~/my-snippets"))
   (when (and (file-exists-p my-private-snippet)
              (not (member my-yasnippets yas-snippet-dirs)))
     (add-to-list 'yas-snippet-dirs my-private-snippet)))
