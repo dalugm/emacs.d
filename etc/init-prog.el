@@ -130,7 +130,7 @@ respectively."
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package xml-mode
-  :mode "\\.csproj\\'"
+  :mode "\\.[^.]*proj\\'"               ; msbuild xml files
   :mode "\\.xaml\\'"
   :mode "\\.p\\(?:list\\|om\\)\\'"      ; plist, pom
   :mode "\\.xs\\(?:d\\|lt\\)\\'"        ; xsd, xslt

@@ -137,6 +137,7 @@
   (require 'init-web)
   (require 'init-ruby)
   (require 'init-rust)
+  (require 'init-build)
   (require 'init-python)
   (require 'init-markup)
   (require 'init-csharp)

@@ -8,14 +8,13 @@
 ;;; Code:
 
 (use-package yasnippet
-  :init
+  :hook (after-init . yas-global-mode)
+  :config
   (defun my/insert-license ()
-    "Insert a license file template into the current file."
+    "Insert a license template into current buffer."
     (interactive)
-    (my|ensure 'yasnippet)
     (when (featurep 'evil)
       (evil-insert-state))
-    (yas-minor-mode-on)
     (unless (gethash 'text-mode yas--tables)
       (yas-reload-all t))
     (let ((templates
@@ -27,9 +26,6 @@
                       collect (cons (string-remove-prefix "__license-" uuid) tpl)))))
       (when-let (uuid (yas-choose-value (mapcar #'car templates)))
         (yas-expand-snippet (cdr (assoc uuid templates))))))
-  :bind (("C-c t y" . yas-minor-mode)
-         ("C-c t Y" . yas-global-mode))
-  :config (yas-reload-all)
 
   ;; https://stackoverflow.com/questions/7619640/emacs-latex-yasnippet-why-are-newlines-inserted-after-a-snippet
   (add-hook 'snippet-mode-hook (lambda ()
@@ -46,9 +42,9 @@
 (use-package auto-yasnippet
   :after yasnippet
   :bind (:map yas-minor-mode-map
-          ("C-c t c" . aya-create)
-          ("C-c t e" . aya-expand)
-          ("C-c t o" . aya-open-line)))
+          ("C-c e c" . aya-create)
+          ("C-c e p" . aya-expand)
+          ("C-c e l" . aya-open-line)))
 
 (provide 'init-snippet)
 

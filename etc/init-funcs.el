@@ -424,14 +424,14 @@ Key is a symbol as the name, value is a plist specifying the search url.")
   (let* ((search-engine (or search-engine my-search-engine))
          (search-url (if search-engine
                          (alist-get (intern search-engine) my-search-engine-alist
-                           nil nil #'equal)
+                                    nil nil #'equal)
                        (cdar my-search-engine-alist)))
          (url search-url))
     (browse-url
       (url-encode-url
         (concat url
           (if mark-active
-            (buffer-substring (region-beginning) (region-end))
+              (buffer-substring (region-beginning) (region-end))
             (read-string (message "%s Search: " (capitalize search-engine)))))))))
 
 (global-set-key (kbd "C-c s o") #'my/search-online)

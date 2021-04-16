@@ -86,6 +86,9 @@
 [submodule "diff-hl"]
 	path = lib/diff-hl
 	url = https://github.com/dgutov/diff-hl.git
+[submodule "dockerfile-mode"]
+	path = lib/dockerfile-mode
+	url = https://github.com/spotify/dockerfile-mode.git
 [submodule "doom-themes"]
 	path = lib/doom-themes
 	url = https://github.com/hlissner/emacs-doom-themes.git
@@ -185,6 +188,9 @@
 [submodule "green-is-the-new-black-theme"]
 	path = lib/green-is-the-new-black-theme
 	url = https://github.com/fredcamps/green-is-the-new-black-emacs.git
+[submodule "groovy-mode"]
+	path = lib/groovy-mode
+	url = https://github.com/Groovy-Emacs-Modes/groovy-emacs-modes.git
 [submodule "gruvbox-theme"]
 	path = lib/gruvbox-theme
 	url = https://github.com/greduan/emacs-theme-gruvbox.git
@@ -304,6 +310,9 @@
 [submodule "separedit"]
 	path = lib/separedit
 	url = https://github.com/twlz0ne/separedit.el.git
+[submodule "sharper"]
+	path = lib/sharper
+	url = https://github.com/sebasmonia/sharper.git
 [submodule "sicp"]
 	path = lib/sicp
 	url = https://github.com/webframp/sicp-info.git

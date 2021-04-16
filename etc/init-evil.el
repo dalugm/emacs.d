@@ -318,7 +318,6 @@
     "xf" #'find-file
     "xk" #'kill-buffer
     "xs" #'save-buffer
-    "yy" #'yas-minor-mode
     ;; org
     ;; toggle overview
     "c$" #'org-archive-subtree          ; `\C-c\$'
@@ -496,8 +495,6 @@
     "tp" #'(my/transient-transparency :which-key "transparency")
     "tv" #'(view-mode :which-key "view")
     "tw" #'(whitespace-mode :which-key "whitespace")
-    "ty" #'(yas-minor-mode :which-key "yasnippet")
-    "tY" #'(yas-global-mode :which-key "yasnippet-global")
     ;; window
     "w"   #'(:ignore t :which-key "window")
     "w'"  #'eyebrowse-last-window-config
