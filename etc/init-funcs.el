@@ -407,6 +407,7 @@ With a prefix ARG always prompt for command to use."
      (baidu      . "https://www.baidu.com/s?wd=")
      (bing       . "https://www.bing.com/search?q=")
      (duckduckgo . "https://www.duckduckgo.com/?q=")
+     (gitee      . "https://search.gitee.com/?q=")
      (github     . "https://www.github.com/search?q=")
      (google     . "https://www.google.com/search?q=")
      (vocabulary . "https://www.vocabulary.com/dictionary/")

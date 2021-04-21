@@ -277,6 +277,9 @@
 [submodule "parchment-theme"]
 	path = lib/parchment-theme
 	url = https://github.com/ajgrf/parchment.git
+[submodule "php-mode"]
+	path = lib/php-mode
+	url = https://github.com/emacs-php/php-mode.git
 [submodule "polymode"]
 	path = lib/polymode
 	url = https://github.com/polymode/polymode.git

@@ -306,7 +306,7 @@
 (global-set-key (kbd "C-c t j") #'toggle-truncate-lines)
 (global-set-key (kbd "C-c t r") #'cua-rectangle-mark-mode)
 (global-set-key (kbd "C-c t s") #'subword-mode)
-(global-set-key (kbd "C-c t v") #'view-mode)
+(global-set-key (kbd "C-c t v") #'visual-line-mode)
 (global-set-key (kbd "C-c t w") #'whitespace-mode)
 
 ;; abbrevs

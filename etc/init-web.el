@@ -46,7 +46,16 @@
   :mode "\\.svelte\\'"
   :mode "\\.twig\\'"
   :mode "\\.vue\\'"
-  :mode "\\.wxml\\'")
+  :mode "\\.wxml\\'"
+  :mode "templates/.+\\.php\\'"
+  :mode "wp-content/themes/.+/.+\\.php\\'")
+
+(use-package php-mode
+  :mode "\\.inc\\'"
+  :config
+  ;; Disable HTML compatibility in `php-mode'.
+  ;; `web-mode' has superior support for php+html.
+  (setq php-mode-template-compatibility nil))
 
 (provide 'init-web)
 

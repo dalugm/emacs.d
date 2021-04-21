@@ -493,7 +493,7 @@
     "tj" #'toggle-truncate-lines
     "tl" #'(my/toggle-line-number :which-key "line-number")
     "tp" #'(my/transient-transparency :which-key "transparency")
-    "tv" #'(view-mode :which-key "view")
+    "tv" #'(visual-line-mode :which-key "visual-line")
     "tw" #'(whitespace-mode :which-key "whitespace")
     ;; window
     "w"   #'(:ignore t :which-key "window")
