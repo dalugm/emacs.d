@@ -92,24 +92,25 @@
 (use-package evil-nerd-commenter
   :bind (("C-c c l" . evilnc-comment-or-uncomment-lines)
          ("C-c c d" . evilnc-copy-and-comment-lines)
-         ("C-c c p" . evilnc-comment-or-uncomment-paragraphs)
-         ("C-c c t" . evilnc-comment-or-uncomment-html-tag)
-         ("C-c c T" . evilnc-comment-or-uncomment-html-paragraphs)))
+         ("C-c c p" . evilnc-comment-or-uncomment-paragraphs)))
 
 (use-package darkroom
   :bind (("C-c t d" . darkroom-tentative-mode)
          ("C-c t D" . darkroom-mode)))
 
 (use-package separedit
-  :bind (("C-c e e" . separedit)
-         ("C-c c E" . separedit/eval-last-sexp-in-comment))
+  :bind ("C-c e e" . separedit)
   :init
   (defun separedit/eval-last-sexp-in-comment ()
     (interactive)
     (let ((separedit-default-mode 'emacs-lisp-mode))
       (with-current-buffer (separedit)
         (prog1 (call-interactively #'eval-last-sexp)
-          (execute-kbd-macro (kbd "C-c C-k")))))))
+          (execute-kbd-macro (kbd "C-c C-k"))))))
+
+  (dolist (map (list emacs-lisp-mode-map
+                     lisp-interaction-mode-map))
+    (define-key map (kbd "C-c C-r") #'separedit/eval-last-sexp-in-comment)))
 
 (use-package search-dired
   :bind (("C-c s d" . search-dired-dwim)

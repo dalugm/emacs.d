@@ -594,27 +594,6 @@ Do NOT mess with special buffers."
     (shell-command (format "strfile %s %s" (buffer-file-name) dat-file))
     (message "Strfile finish: %s." dat-file)))
 
-(defun my/eval-last-sexp ()
-  "Evaluate the last symbolic expression at the point.
-With nil `C-u' prefix, insert output below following an arrow.
-With one `C-u' prefix, insert output in current position.
-With two `C-u' prefix, insert output in current position and delete sexp."
-  (interactive)
-  (let ((value (eval (elisp--preceding-sexp))))
-    (save-excursion
-      (cond
-        ((equal current-prefix-arg nil) ; no prefix
-          (newline-and-indent)
-          (insert (format "%s%S" ";; => " value)))
-        ((equal current-prefix-arg '(4)) ; one prefix
-          (newline-and-indent)
-          (insert (format "%S" value)))
-        ((equal current-prefix-arg '(16)) ; two prefix
-          (backward-kill-sexp)
-          (insert (format "%S" value)))))))
-
-(global-set-key (kbd "C-c c e") #'my/eval-last-sexp)
-
 (defun my/insert-date (prefix)
   "Insert the current date.
 With one PREFIX, use ISO format.

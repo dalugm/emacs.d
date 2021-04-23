@@ -290,8 +290,6 @@
     "cl" #'evilnc-quick-comment-or-uncomment-to-the-line
     "cp" #'evilnc-comment-or-uncomment-paragraphs
     "cr" #'comment-or-uncomment-region
-    "ct" #'evilnc-comment-or-uncomment-html-tag
-    "cT" #'evilnc-comment-or-uncomment-html-paragraphs
     "cg" #'counsel-grep
     "si" #'imenu
     "sr" #'my/counsel-rg
@@ -451,9 +449,9 @@
     "hw" #'(my/hydra-window/body :which-key "window")
     ;; load
     "l"  #'(:ignore t :which-key "load")
-    "lF" #'(my/load-font :which-key "load-font")
-    "lf" #'(my/load-buffer-font :which-key "load-buffer-font")
-    "lt" #'(load-theme :which-key "load-theme")
+    "lF" #'(my/load-font :which-key "font")
+    "lf" #'(my/load-buffer-font :which-key "buffer-font")
+    "lt" #'(load-theme :which-key "theme")
     ;; org
     "o"  #'(:ignore t :which-key "org")
     "oa" #'org-agenda

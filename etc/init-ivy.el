@@ -45,22 +45,6 @@
     (interactive "Dfzf in directory: ")
     (counsel-fzf nil DIR))
 
-  ;; save `ivy-views'
-  (defun my/save-ivy-views ()
-    (interactive)
-    (with-temp-file (expand-file-name "ivy-views" my-cache-d)
-      (prin1 ivy-views (current-buffer))
-      (message "Save ivy-views.")))
-
-  ;; load `ivy-views'
-  (defun my/load-ivy-views ()
-    (interactive)
-    (setq ivy-views
-      (with-temp-buffer
-        (insert-file-contents (expand-file-name "ivy-views" my-cache-d))
-        (read (current-buffer))))
-    (message "Load ivy-views."))
-
   (defun my//ivy--regex-plus (str)
     "Enhance `ivy--regex-plus' with special STR start pattern.
 Search camel case word starting with ‘/’.

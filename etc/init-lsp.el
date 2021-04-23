@@ -8,6 +8,7 @@
 ;;; Code:
 
 (use-package lsp-mode
+  :bind ("C-c l l" . lsp)
   :init (setq lsp-keymap-prefix "C-c a")
   ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
   ;; NOTE: Only take effects after Emacs 27

@@ -32,7 +32,7 @@
 ;; (dolist (hook '(java-mode-hook emacs-lisp-mode-hook org-mode-hook
 ;;                 js-mode-hook javascript-mode-hook web-mode-hook
 ;;                 c++-mode-hook c-mode-hook))
-;;   (add-hook hook #'my-setup-develop-environment))
+;;   (add-hook hook #'my/setup-develop-environment))
 
 (use-package magit
   :bind (("C-x g"   . magit-status)
