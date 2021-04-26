@@ -33,12 +33,14 @@
     (interactive "p")
     (save-excursion (dotimes (_ count) (evil-insert-newline-above)))
     (when (bolp) (forward-char count)))
+
   (define-key evil-normal-state-map (kbd "[ SPC") #'evil-unimpaired-insert-newline-above)
 
   (defun evil-unimpaired-insert-newline-below (count)
     "Insert COUNT blank line(s) below current line."
     (interactive "p")
     (save-excursion (dotimes (_ count) (evil-insert-newline-below))))
+
   (define-key evil-normal-state-map (kbd "] SPC") #'evil-unimpaired-insert-newline-below)
 
   (defun my//evil-disable-ex-highlight ()
@@ -76,7 +78,7 @@
   ;; evil keybinding
   ;; ---------------------------------------------------------
 
-  ;; I prefer Emacs way after pressing ":" in evil-mode
+  ;; I prefer Emacs way after pressing `:' in evil-mode
   (define-key evil-ex-completion-map (kbd "C-a") #'move-beginning-of-line)
   (define-key evil-ex-completion-map (kbd "C-b") #'backward-char)
   (define-key evil-ex-completion-map (kbd "M-p") #'previous-complete-history-element)
@@ -204,47 +206,35 @@
   (my|quoted-text-object "QuanJiaoWanKuoHao" "i" "〔" "〕")
   (my|quoted-text-object "QuanJiaoHuaKuoHao" "o" "｛" "｝")
 
-  (setq-default
-    evil-surround-pairs-alist (cons '(?Q . ("《 " . " 》")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?q . ("《" . "》")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?E . ("“ " . " ”")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?e . ("“" . "”")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?D . ("‘ " . " ’")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?d . ("‘" . "’")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?R . ("「 " . " 」")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?r . ("「" . "」")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?F . ("『 " . " 』")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?f . ("『" . "』")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?T . ("【 " . " 】")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?t . ("【" . "】")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?G . ("〖 " . " 〗")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?g . ("〖" . "〗")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?Y . ("（ " . " ）")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?y . ("（" . "）")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?U . ("［ " . " ］")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?u . ("［" . "］")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?I . ("〔 " . " 〕")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?i . ("〔" . "〕")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?O . ("｛ " . " ｝")) evil-surround-pairs-alist)
-    evil-surround-pairs-alist (cons '(?o . ("｛" . "｝")) evil-surround-pairs-alist)
-    )
+  (dolist (char '((?Q . ("《 " . " 》")) (?q . ("《" . "》"))
+                  (?E . ("“ "  . " ”" )) (?e . ("“"  . "”" ))
+                  (?D . ("‘ "  . " ’" )) (?d . ("‘"  . "’" ))
+                  (?R . ("「 " . " 」")) (?r . ("「" . "」"))
+                  (?F . ("『 " . " 』")) (?f . ("『" . "』"))
+                  (?T . ("【 " . " 】")) (?t . ("【" . "】"))
+                  (?G . ("〖 " . " 〗")) (?g . ("〖" . "〗"))
+                  (?Y . ("（ " . " ）")) (?y . ("（" . "）"))
+                  (?U . ("［ " . " ］")) (?u . ("［" . "］"))
+                  (?I . ("〔 " . " 〕")) (?i . ("〔" . "〕"))
+                  (?O . ("｛ " . " ｝")) (?o . ("｛" . "｝"))
+                   ))
+    (setq-default evil-surround-pairs-alist
+                  (cons char evil-surround-pairs-alist)))
 
-  (add-hook 'org-mode-hook (lambda ()
-                             (push '(?b . ("*" . "*")) evil-surround-pairs-alist)
-                             (push '(?c . ("~" . "~")) evil-surround-pairs-alist)
-                             (push '(?i . ("/" . "/")) evil-surround-pairs-alist)
-                             (push '(?s . ("+" . "+")) evil-surround-pairs-alist)
-                             (push '(?u . ("_" . "_")) evil-surround-pairs-alist)
-                             (push '(?v . ("=" . "=")) evil-surround-pairs-alist)
-                             )))
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (push '(?b . ("*" . "*")) evil-surround-pairs-alist)
+              (push '(?c . ("~" . "~")) evil-surround-pairs-alist)
+              (push '(?i . ("/" . "/")) evil-surround-pairs-alist)
+              (push '(?s . ("+" . "+")) evil-surround-pairs-alist)
+              (push '(?u . ("_" . "_")) evil-surround-pairs-alist)
+              (push '(?v . ("=" . "=")) evil-surround-pairs-alist)
+              )))
 
 (use-package evil-matchit
   :config (global-evil-matchit-mode))
 
 (use-package evil-zh
-  :init
-  (setq evil-zh-with-search-rule 'custom)
-  (setq evil-zh-start-pattern ":")
   :config (global-evil-zh-mode))
 
 ;; bundle with `evil'
@@ -283,7 +273,8 @@
     "ar" #'align-regexp
     "as" #'ace-swap-window
     "aw" #'avy-goto-word-or-subword-1
-    "bb" (lambda () (interactive) (switch-to-buffer nil) :which-key "prev-buffer")
+    "bb" (lambda ()
+           (interactive) (switch-to-buffer nil) :which-key "prev-buffer")
     "bu" #'backward-up-list
     "cc" #'evilnc-comment-or-uncomment-lines
     "cd" #'evilnc-copy-and-comment-lines
@@ -333,7 +324,8 @@
     "ot"  #'org-toggle-link-display
     "oh"  (lambda ()
             (interactive)
-            (counsel-org-agenda-headlines) :which-key "counsel-org-headlines")
+            (counsel-org-agenda-headlines)
+            :which-key "counsel-org-headlines")
     ;; window
     "0"   #'winum-select-window-0-or-10
     "1"   #'winum-select-window-1
@@ -409,8 +401,10 @@
     "bl" #'bookmark-bmenu-list
     "bL" #'(counsel-bookmarked-directory :which-key "list-bookmarked-dir")
     "bm" #'bookmark-set
-    "bo" #'(my/kill-other-buffers-without-special-ones :which-key "keep-this-buffer-only")
-    "bO" #'(my/kill-other-buffers-with-special-ones :which-key "keep-this-buffer-only")
+    "bo" #'(my/kill-other-buffers-without-special-ones
+             :which-key "keep-this-buffer-only")
+    "bO" #'(my/kill-other-buffers-with-special-ones
+             :which-key "keep-this-buffer-only")
     "bs" #'bookmark-save
     "bx" #'(my/switch-scratch-buffer :which-key "open-scratch")
     ;; code
@@ -463,7 +457,8 @@
     "pa" #'(find-file-in-project-at-point :which-key "ffip-at-point")
     "pc" #'(ffip-create-project-file :which-key "create-project-file")
     "pd" #'(find-file-in-current-directory :which-key "ffip-cwd")
-    "pD" #'(find-file-in-current-directory-by-selected :which-key "ffip-cwd-by-select")
+    "pD" #'(find-file-in-current-directory-by-selected
+             :which-key "ffip-cwd-by-select")
     "pf" #'(find-file-in-project :which-key "ffip")
     "pF" #'(ffip-lisp-find-file-in-project :which-key "ffip-lisp-ffip")
     "pi" #'(ffip-insert-file :which-key "ffip-insert-file")
@@ -486,7 +481,8 @@
     ;; toggle
     "t"  #'(:ignore t :which-key "toggle")
     "ta" #'(abbrev-mode :which-key "abbrev")
-    "tf" #'(display-fill-column-indicator-mode :which-key "fill-column-indicator")
+    "tf" #'(display-fill-column-indicator-mode
+             :which-key "fill-column-indicator")
     "th" #'(my/toggle-hl-line :which-key "hl-line")
     "tj" #'toggle-truncate-lines
     "tl" #'(my/toggle-line-number :which-key "line-number")

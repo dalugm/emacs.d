@@ -1,8 +1,8 @@
-;;; init-filetype.el --- filetype recognizes -*- lexical-binding: t; -*-
+;;; init-filetype.el --- filetype recognize -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;
-;; Choose major mode according to file's extension.
+;; Choose major mode according to file extension.
 ;;
 
 ;;; Code:
@@ -11,12 +11,12 @@
 
 ;; Handier way to add modes to auto-mode-alist
 (defun add-auto-mode (mode &rest patterns)
-  "Add entries to `auto-mode-alist' to use `MODE' for all given file `PATTERNS'."
+  "Add entries to `auto-mode-alist' to use MODE for all given file PATTERNS."
   (dolist (pattern patterns)
     (add-to-list 'auto-mode-alist (cons pattern mode))))
 
 (defun add-interpreter-mode (mode &rest patterns)
-  "Add entries to `interpreter-mode-alist' to use `MODE' for all given file `PATTERNS'."
+  "Add entries to `interpreter-mode-alist' to use MODE for all given file PATTERNS."
   (dolist (pattern patterns)
     (add-to-list 'interpreter-mode-alist (cons pattern mode))))
 
@@ -36,7 +36,7 @@
                "\\(Rakefile\\|Gemfile\\)$")
 
 ;; python
-(add-interpreter-mode 'python-mode "python3")
+(add-interpreter-mode 'python-mode "python")
 
 ;; java
 (add-auto-mode 'java-mode

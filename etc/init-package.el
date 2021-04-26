@@ -128,8 +128,7 @@
   :custom (avy-style 'at-full))
 
 (use-package zh-lib
-  :config
-  (setq zh-lib-scheme 'simplified-traditional-quanpin-all))
+  :custom (zh-lib-scheme 'simplified-traditional-quanpin-all))
 
 (use-package smart-compile
   :bind ("C-c c s" . smart-compile))
