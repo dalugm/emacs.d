@@ -11,7 +11,21 @@
   :hook ((after-init . ivy-mode)
          (ivy-mode . counsel-mode))
   :bind (("C-s" . swiper-isearch)
-         ("C-r" . swiper-isearch-backward))
+         ("C-r" . swiper-isearch-backward)
+         ("C-c s s" . counsel-grep-or-swiper)
+         ("C-c s g" . counsel-git)
+         ("C-c s f" . my/counsel-fzf)
+         ("C-c s F" . counsel-fzf)
+         ("C-c s r" . my/counsel-rg)
+         ("C-c s R" . counsel-rg)
+         ("C-c s j" . counsel-file-jump)
+         ("C-c c b" . counsel-bookmark)
+         ("C-c c y" . counsel-yank-pop)
+         ("C-c c R" . counsel-register)
+         ("C-c w v" . ivy-push-view)
+         ("C-c w V" . ivy-pop-view)
+         ([remap recentf-open-files] . counsel-recentf)
+         ([remap switch-to-buffer] . ivy-switch-buffer))
   :init
   ;; press `M-n' to insert thing-at-point into minibuffer
   ;; `M-j' to extend the minibuffer input with the next word
@@ -58,7 +72,8 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
         ;; remaining input is converted into Zhongwen regex.
         ;; For example, input ‘:zw’ match ‘中文’, ‘植物’ and etc.
         ((string= (substring str 0 1) ":")
-          (setq str (zh-lib-build-regexp-string (substring str 1 len) nil)))
+          (setq str (zh-lib-build-regexp-string (substring str 1 len)
+                                                nil)))
         ;; If the first character of input in ivy is ‘/’,
         ;; remaining input is converted to pattern to search camel case word
         ;; For example, input ‘/ic’ match ‘isController’ or ‘IsCollapsed’
@@ -72,12 +87,14 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
               (while (< i (length subs))
                 (setq c (elt subs i))
                 (setq rlt (concat rlt (cond
-                                        ((and (< c ?a) (> c ?z) (< c ?A) (> c ?Z))
+                                        ((and (< c ?a) (> c ?z)
+                                              (< c ?A) (> c ?Z))
                                           (format "%c" c))
                                         (t
-                                          (concat (if (= i 0)
-                                                      (format "[%c%c]" (+ c 32) c)
-                                                    (format "%c" c))
+                                          (concat
+                                            (if (= i 0)
+                                                (format "[%c%c]" (+ c 32) c)
+                                              (format "%c" c))
                                             "[a-z]+")))))
                 (setq i (1+ i))))
             (setq str rlt))))
@@ -89,18 +106,21 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
     "Transform CANDIDATES into a string for minibuffer."
     (ivy--format-function-generic
       (lambda (str)
-        (concat (if (and (>= (length str) 1) (string= " " (substring str 0 1)))
+        (concat (if (and (>= (length str) 1)
+                         (string= " " (substring str 0 1)))
                     ">"
                   "> ")
           (ivy--add-face str 'ivy-current-match)))
       (lambda (str)
-        (concat (if (and (>= (length str) 1) (string= " " (substring str 0 1)))
+        (concat (if (and (>= (length str) 1)
+                         (string= " " (substring str 0 1)))
                     " "
                   "  ")
           str))
       candidates
       "\n"))
-  (setf (alist-get 't ivy-format-functions-alist) #'my//ivy-format-function-arrow)
+  (setf (alist-get 't ivy-format-functions-alist)
+        #'my//ivy-format-function-arrow)
 
   ;; ;; https://github.com/abo-abo/swiper/issues/2213
   ;; ;; Sort ivy candidates
@@ -113,21 +133,6 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
   ;; -------------------------------------------------------
   ;; keybindings
   ;; -------------------------------------------------------
-
-  (global-set-key [remap switch-to-buffer] #'ivy-switch-buffer)
-  (global-set-key [remap recentf-open-files] #'counsel-recentf)
-  (global-set-key (kbd "C-c s s") #'counsel-grep-or-swiper)
-  (global-set-key (kbd "C-c s g") #'counsel-git)
-  (global-set-key (kbd "C-c s f") #'my/counsel-fzf)
-  (global-set-key (kbd "C-c s F") #'counsel-fzf)
-  (global-set-key (kbd "C-c s r") #'my/counsel-rg)
-  (global-set-key (kbd "C-c s R") #'counsel-rg)
-  (global-set-key (kbd "C-c s j") #'counsel-file-jump)
-  (global-set-key (kbd "C-c c b") #'counsel-bookmark)
-  (global-set-key (kbd "C-c c y") #'counsel-yank-pop)
-  (global-set-key (kbd "C-c c R") #'counsel-register)
-  (global-set-key (kbd "C-c w v") #'ivy-push-view)
-  (global-set-key (kbd "C-c w V") #'ivy-pop-view)
 
   ;; https://oremacs.com/2015/07/23/ivy-multiaction/
   ;; press `M-o' to execute `ivy-dispatching-done'
@@ -146,16 +151,17 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
     (push (cons #'counsel-mode nil) desktop-minor-mode-table)
     (push (cons #'ivy-mode nil) desktop-minor-mode-table)))
 
-;; Better sorting and filtering.
-;; Enable this will set `ivy-initial-inputs-alist' to `nil'.
-;; https://github.com/raxod502/prescient.el/issues/7
-;;
-;; NOTE: must be loaded after `counsel'.
-;; Because loading `counsel' results in a number of changes being made to the
-;; user's configuration of `ivy', which `ivy-prescient.el' will then undo.
 (use-package ivy-prescient
   :hook (counsel-mode . ivy-prescient-mode)
   :custom (ivy-prescient-enable-filtering nil))
+
+(use-package counsel-etags
+  :bind (("C-c c j" . counsel-etags-find-tag-at-point)
+         ("C-c c g" . counsel-etags-scan-code))
+  :hook (prog-mode . (lambda ()
+                       (add-hook 'after-save-hook
+                                 #'counsel-etags-virtual-update-tags
+                                 'append 'local))))
 
 (provide 'init-ivy)
 

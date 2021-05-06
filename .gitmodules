@@ -64,6 +64,9 @@
 [submodule "company-box"]
 	path = lib/company-box
 	url = https://github.com/sebastiencs/company-box.git
+[submodule "counsel-etags"]
+	path = lib/counsel-etags
+	url = https://github.com/redguardtoo/counsel-etags.git
 [submodule "csharp-mode"]
 	path = lib/csharp-mode
 	url = https://github.com/emacs-csharp/csharp-mode.git

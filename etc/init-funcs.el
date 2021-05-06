@@ -174,7 +174,7 @@ version control automatically."
 If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (interactive
     (list (read-file-name "Copy file to: ")
-      current-prefix-arg))
+          current-prefix-arg))
   (unless (and buffer-file-name (file-exists-p buffer-file-name))
     (user-error "Buffer is not visiting any file"))
   (let ((old-path (buffer-file-name (buffer-base-buffer)))
@@ -191,7 +191,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 If FORCE-P, overwrite the destination file if it exists, without confirmation."
   (interactive
     (list (read-file-name "Move file to: ")
-      current-prefix-arg))
+          current-prefix-arg))
   (unless (and buffer-file-name (file-exists-p buffer-file-name))
     (user-error "Buffer is not visiting any file"))
   (let ((old-path (buffer-file-name (buffer-base-buffer)))
@@ -284,11 +284,7 @@ With a prefix ARG always prompt for command to use."
 (defun my/delete-file (file)
   "Delete FILE under current working directory."
   (interactive "sFile name: ")
-  (cond
-    ((or sys/macp sys/linuxp sys/cygwinp)
-      (shell-command (format "find . -depth -name %s -print0 | xargs -0 rm" file)))
-    (t
-      (message "Can't find a way to delete file.")))
+  (shell-command (format "find . -depth -name %s -print0 | xargs -0 rm" file))
   (message "‘%s’ under current working directory deleted." file))
 
 (global-set-key (kbd "C-c f D") #'my/delete-file)
@@ -304,7 +300,7 @@ With a prefix ARG always prompt for command to use."
                           "|"))
       "sudo:root@" host
       ":" (or (file-remote-p file 'localname)
-            file))))
+              file))))
 
 (defun my/sudo-edit-file ()
   "Edit current file as root."
@@ -682,7 +678,6 @@ With two PREFIX, insert variable `user-mail-address' only."
 
 (global-set-key (kbd "C-c c r") #'my/smart-run)
 
-;; Fix space problem when join Chinese lines.
 (defun my/fixup-whitespace ()
   "Fix up white space between objects around point.
 Leave one space or none, according to the context."

@@ -9,8 +9,28 @@
 
 (use-package evil
   :hook (after-init . evil-mode)
+  :bind (:map evil-normal-state-map
+          ("]b" . next-buffer)
+          ("[b" . previous-buffer)
+          ("g1" . avy-goto-char-timer)
+          ("g2" . avy-goto-char-2)
+          ("g3" . avy-goto-word-or-subword-1)
+          ("gll" . avy-goto-line)
+          ("glj" . avy-goto-line-below)
+          ("glk" . avy-goto-line-above)
+          ("gle" . avy-goto-end-of-line)
+          ("M-." . xref-find-definitions)
+         :map evil-insert-state-map
+          ("C-n" . next-line)
+          ("C-p" . previous-line)
+          ("C-a" . beginning-of-line)
+          ("C-e" . end-of-line)
+          ("C-k" . kill-line)
+          ("C-t" . transpose-chars)
+         :map evil-visual-state-map
+          ("v" . er/expand-region))
   :config
-  ;; make evil search behave more like VIM
+  ;; make evil-search behave more like VIM
   (evil-select-search-module 'evil-search-module 'evil-search)
   (setq evil-ex-interactive-search-highlight 'selected-window)
 
@@ -77,34 +97,6 @@
   ;; ---------------------------------------------------------
   ;; evil keybinding
   ;; ---------------------------------------------------------
-
-  ;; I prefer Emacs way after pressing `:' in evil-mode
-  (define-key evil-ex-completion-map (kbd "C-a") #'move-beginning-of-line)
-  (define-key evil-ex-completion-map (kbd "C-b") #'backward-char)
-  (define-key evil-ex-completion-map (kbd "M-p") #'previous-complete-history-element)
-  (define-key evil-ex-completion-map (kbd "M-n") #'next-complete-history-element)
-
-  (define-key evil-insert-state-map (kbd "C-n") #'next-line)
-  (define-key evil-insert-state-map (kbd "C-p") #'previous-line)
-  (define-key evil-insert-state-map (kbd "C-a") #'beginning-of-line)
-  (define-key evil-insert-state-map (kbd "C-e") #'end-of-line)
-  (define-key evil-insert-state-map (kbd "C-k") #'kill-line)
-  (define-key evil-insert-state-map (kbd "C-t") #'transpose-chars)
-
-  (define-key evil-normal-state-map (kbd "]b") #'next-buffer)
-  (define-key evil-normal-state-map (kbd "[b") #'previous-buffer)
-  (define-key evil-normal-state-map (kbd "g1") #'avy-goto-char-timer)
-  (define-key evil-normal-state-map (kbd "g2") #'avy-goto-char-2)
-  (define-key evil-normal-state-map (kbd "g3") #'avy-goto-word-or-subword-1)
-  (define-key evil-normal-state-map (kbd "gll") #'avy-goto-line)
-  (define-key evil-normal-state-map (kbd "glj") #'avy-goto-line-below)
-  (define-key evil-normal-state-map (kbd "glk") #'avy-goto-line-above)
-  (define-key evil-normal-state-map (kbd "gle") #'avy-goto-end-of-line)
-  (define-key evil-normal-state-map (kbd "M-.") #'xref-find-definitions)
-
-  ;; I learn this trick from ReneFroger, need latest expand-region
-  ;; https://github.com/redguardtoo/evil-matchit/issues/38
-  (define-key evil-visual-state-map (kbd "v") #'er/expand-region)
 
   ;; As a general rule, mode specific evil leader keys started
   ;; with upper cased character or 'g' or special character except "=" and "-"
