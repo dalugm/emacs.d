@@ -11,17 +11,18 @@
   :hook (after-init . global-flycheck-mode)
   :config
   (setq flycheck-global-modes
-    '(not
-       text-mode
-       outline-mode
-       fundamental-mode
-       lisp-interaction-mode
-       org-mode
-       diff-mode
-       shell-mode
-       eshell-mode
-       term-mode
-       vterm-mode))
+        '(not
+           text-mode
+           outline-mode
+           fundamental-mode
+           lisp-interaction-mode
+           org-mode
+           diff-mode
+           shell-mode
+           eshell-mode
+           term-mode
+           vterm-mode
+           ))
   (setq flycheck-emacs-lisp-load-path 'inherit)
   (setq flycheck-indication-mode (if (display-graphic-p)
                                      'left-fringe
@@ -70,16 +71,16 @@
   (setq ispell-program-name "aspell")
 
   (setq wucuo-spell-check-buffer-predicate
-    (lambda ()
-      (not (memq major-mode
-             '(dired-mode
-               log-edit-mode
-               compilation-mode
-               help-mode
-               profiler-report-mode
-               speedbar-mode
-               calc-mode
-               Info-mode))))))
+        (lambda ()
+          (not (memq major-mode
+                     '(dired-mode
+                       log-edit-mode
+                       compilation-mode
+                       help-mode
+                       profiler-report-mode
+                       speedbar-mode
+                       calc-mode
+                       Info-mode))))))
 
 (provide 'init-check)
 

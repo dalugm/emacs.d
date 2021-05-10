@@ -101,7 +101,6 @@
   (require 'init-funcs)
   (require 'init-dired)
   (require 'init-org)
-  (require 'init-filetype)
   (require 'init-ibuffer)
   (require 'init-gnus)
   (require 'init-package)

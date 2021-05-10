@@ -44,8 +44,13 @@
   (setq dired-dwim-target t)
 
   (setq dired-omit-files
-    (concat dired-omit-files
-      "\\|^.DS_Store$\\|^.projectile$\\|^.git*\\|^.svn$\\|^.vscode$\\|\\.js\\.meta$\\|\\.meta$\\|\\.elc$\\|^.emacs.*")))
+        (concat dired-omit-files
+                "\\|^.DS_Store\\'"
+                "\\|^.project\\(?:ile\\)?\\'"
+                "\\|^.\\(svn\\|git\\)\\'"
+                "\\|^.ccls-cache\\'"
+                "\\|\\(?:\\.js\\)?\\.meta\\'"
+                "\\|\\.\\(?:elc\\|o\\|pyo\\|swp\\|class\\)\\'")))
 
 (defun my/ediff-files ()
   "Inspired by https://oremacs.com/2017/03/18/dired-ediff/."

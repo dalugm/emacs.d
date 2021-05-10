@@ -201,10 +201,11 @@
 ;; ---------------------------------------------------------
 
 (defun my//cycle-theme (index)
-  "According to INDEX cycle through a list of themes among `my-theme-alist'."
+  "According to INDEX cycle through `my-theme-alist'."
   (setq my-current-theme-index
     (+ index (cl-position
-               (car (mapcar #'symbol-name my-theme-alist)) my-cycle-themes :test 'equal)))
+               (car (mapcar #'symbol-name my-theme-alist))
+               my-cycle-themes :test 'equal)))
   (when (>= my-current-theme-index (length my-cycle-themes))
     (setq my-current-theme-index 0))
   (when (< my-current-theme-index 0)
@@ -219,7 +220,7 @@
 
 (defun my//random-theme (themes)
   "Pickup random color theme from a list of THEMES.
-If want to cycle through self-choose theme, e.g. `my-theme-alist',
+If want to cycle through self-choose themes, e.g. `my-theme-alist',
 then use `(my//random-theme my-theme-alist)'.  If use all available
 theme, then use `(my//random-theme (custom-available-themes))'."
   (let* ((available-themes (mapcar 'symbol-name themes))

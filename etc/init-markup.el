@@ -14,7 +14,58 @@
           ("'" . markdown-edit-code-block)
           ("f" . markdown-footnote-goto-text)
           ("r" . markdown-footnote-return))
-  :init
+  :custom
+  (markdown-enable-wiki-links t)
+  (markdown-italic-underscore t)
+  (markdown-asymmetric-header t)
+  (markdown-make-gfm-checkboxes-buttons t)
+  (markdown-gfm-uppercase-checkbox t)
+  (markdown-fontify-code-blocks-natively t)
+
+  ;; This is set to `nil' by default, which causes a wrong-type-arg error
+  ;; when you use `markdown-open'. These are more sensible defaults.
+  (markdown-open-command (cond
+                           (sys/macp "open")
+                           (sys/linuxp "xdg-open")))
+
+  (markdown-content-type "application/xhtml+xml")
+  (markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"
+                        "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"))
+  (markdown-xhtml-header-content "
+<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+<style>
+  body {
+    box-sizing: border-box;
+    max-width: 740px;
+    width: 100%;
+    margin: 40px auto;
+    padding: 0 10px;
+  }
+</style>
+
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css'>
+<script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('markdown-body');
+    document.querySelectorAll('pre code').forEach((code) => {
+      if (code.className != 'mermaid') {
+        hljs.highlightBlock(code);
+      }
+    });
+  });
+</script>
+
+<script src='https://unpkg.com/mermaid/dist/mermaid.min.js'></script>
+<script>
+  mermaid.initialize({
+    theme: 'default',  // default, forest, dark, neutral
+    startOnLoad: true
+  });
+</script>
+")
+  (markdown-gfm-additional-languages "Mermaid")
+  :config
   (defun my/markdown-demote-or-promote (&optional is-promote)
     "Demote or promote current org tree according to IS-PROMOTE."
     (interactive "P")
@@ -22,58 +73,6 @@
       (markdown-mark-subtree))
     (if is-promote (markdown-promote) (markdown-demote)))
 
-  (setq markdown-enable-wiki-links t
-        markdown-italic-underscore t
-        markdown-asymmetric-header t
-        markdown-make-gfm-checkboxes-buttons t
-        markdown-gfm-uppercase-checkbox t
-        markdown-fontify-code-blocks-natively t
-
-        ;; This is set to `nil' by default, which causes a wrong-type-arg error
-        ;; when you use `markdown-open'. These are more sensible defaults.
-        markdown-open-command
-        (cond (sys/macp "open")
-              (sys/linuxp "xdg-open"))
-
-
-        markdown-content-type "application/xhtml+xml"
-        markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"
-                             "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css")
-        markdown-xhtml-header-content "
-<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
-<style>
-body {
-  box-sizing: border-box;
-  max-width: 740px;
-  width: 100%;
-  margin: 40px auto;
-  padding: 0 10px;
-}
-</style>
-
-<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css'>
-<script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  document.body.classList.add('markdown-body');
-  document.querySelectorAll('pre code').forEach((code) => {
-    if (code.className != 'mermaid') {
-      hljs.highlightBlock(code);
-    }
-  });
-});
-</script>
-
-<script src='https://unpkg.com/mermaid/dist/mermaid.min.js'></script>
-<script>
-mermaid.initialize({
-  theme: 'default',  // default, forest, dark, neutral
-  startOnLoad: true
-});
-</script>
-"
-        markdown-gfm-additional-languages "Mermaid")
-  :config
   ;; don't wrap lines because there are tables in `markdown-mode'
   (add-hook 'markdown-mode-hook (lambda ()
                                   (setq-local truncate-lines t)))

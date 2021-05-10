@@ -26,24 +26,22 @@
          ("C-c w V" . ivy-pop-view)
          ([remap recentf-open-files] . counsel-recentf)
          ([remap switch-to-buffer] . ivy-switch-buffer))
-  :init
+  :config
   ;; press `M-n' to insert thing-at-point into minibuffer
   ;; `M-j' to extend the minibuffer input with the next word
   (setq ivy-use-virtual-buffers t)      ; enable bookmarks and recentf
   (setq enable-recursive-minibuffers t) ; allow commands in minibuffer
   (setq ivy-wrap t)                     ; make ivy wrap around results
   (setq ivy-count-format "%d/%d ")
-  ;; https://oremacs.com/2017/11/30/ivy-0.10.0/
-  ;; you can also press `C-M-j' (which bound to `ivy-immediate-done') for simple
+  ;; alternative to `C-M-j'(`ivy-immediate-done')
   (setq ivy-use-selectable-prompt t)
   ;; recenter after exiting `swiper'
   (setq swiper-action-recenter t)
 
-  ;; better performance on everything (especially windows), Ivy 0.10.0 required
+  ;; better performance on everything (especially windows)
   ;; https://github.com/abo-abo/swiper/issues/1218
   (when sys/winp
     (setq ivy-dynamic-exhibit-delay-ms 250))
-  :config
 
   ;; ---------------------------------------------------------
   ;; customize

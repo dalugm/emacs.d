@@ -272,7 +272,8 @@
   ;; Github prompt is like "Password for 'https://user@github.com/':"
   (setq comint-password-prompt-regexp
     (format "%s\\|^ *Password for .*: *$" comint-password-prompt-regexp))
-  (add-hook 'comint-output-filter-functions #'comint-watch-for-password-prompt))
+  (add-hook 'comint-output-filter-functions
+            #'comint-watch-for-password-prompt))
 
 ;; security
 (setq auth-sources '("~/.authinfo.gpg"))

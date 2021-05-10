@@ -34,7 +34,8 @@ Transparency can be toggled through `toggle-transparency'.")
 Describes the transparency level of a frame when it's inactive or deselected.
 Transparency can be toggled through `toggle-transparency'.")
 
-(defvar my-current-opacity (frame-parameter (unless 'display-graphic-p) 'alpha)
+(defvar my-current-opacity (frame-parameter (unless 'display-graphic-p)
+                                            'alpha)
   "Record current opacity.")
 
 (defun my/toggle-transparency (&optional frame)

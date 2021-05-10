@@ -94,11 +94,13 @@
                     (setq cmd (format "ffmpeg -i \"%s\" -r \"%s\" \"%s\""
                                       file
                                       rates
-                                      (format "%s.%s" (file-name-base file) fmt))))
+                                      (format "%s.%s"
+                                              (file-name-base file) fmt))))
                   (t
                     (setq cmd (format "ffmpeg -i \"%s\" \"%s\""
                                       file
-                                      (format "%s.%s" (file-name-base file) fmt)))))
+                                      (format "%s.%s"
+                                              (file-name-base file) fmt)))))
                 (async-shell-command cmd)))
         (dired-get-marked-files))
       (dired-unmark-all-marks)))

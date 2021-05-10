@@ -52,7 +52,8 @@
           (level 1)
           end)
       (unless (derived-mode-p 'org-mode)
-        (error "Target buffer \"%s\" should be in Org mode" (current-buffer)))
+        (error "Target buffer \"%s\" should be in Org mode"
+               (current-buffer)))
       ;; 移动到 buffer 的开始位置
       (goto-char (point-min))
       ;; 先定位表示年份的 headline，再定位表示月份的 headline

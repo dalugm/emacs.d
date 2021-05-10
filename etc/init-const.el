@@ -28,6 +28,9 @@
 (defconst sys/rootp (string-equal "root" (getenv "USER"))
   "Root user.")
 
+(defconst emacs/>=28p (>= emacs-major-version 28)
+  "Emacs version is 28 or above.")
+
 (defconst emacs/>=27p (>= emacs-major-version 27)
   "Emacs version is 27 or above.")
 

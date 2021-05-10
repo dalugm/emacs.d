@@ -12,12 +12,14 @@
 ;;;;;;;;
 
 (defun my/vc-rename-file-and-buffer ()
-  "Rename current buffer and if the buffer is visiting a file, rename it too."
+  "Rename current buffer.
+If current buffer is visiting a file, rename it too."
   (interactive)
   (let ((filename (buffer-file-name)))
     (if (not (and filename (file-exists-p filename)))
         (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
-      (let* ((new-name (read-from-minibuffer "New name: " filename))
+      (let* ((new-name
+              (read-from-minibuffer "New name: " filename))
              (containing-dir (file-name-directory new-name)))
         (make-directory containing-dir t)
         (cond
@@ -55,7 +57,8 @@ version control automatically."
     (when filename
       (if (vc-backend filename)
           (vc-delete-file filename)
-        (when (y-or-n-p (format "Are you sure you want to delete %s? " filename))
+        (when (y-or-n-p (format "Are you sure you want to delete %s? "
+                                filename))
           (delete-file filename delete-by-moving-to-trash)
           (message "Deleted file %s" filename)
           (kill-buffer))))))
@@ -140,6 +143,18 @@ version control automatically."
 ;; FILE ;;
 ;;;;;;;;;;
 
+(defun my/add-auto-mode (mode &rest patterns)
+  "Add entries to `auto-mode-alist'.
+Use specified MODE for all given file PATTERNS."
+  (dolist (pattern patterns)
+    (add-to-list 'auto-mode-alist (cons pattern mode))))
+
+(defun my/add-interpreter-mode (mode &rest patterns)
+  "Add entries to `interpreter-mode-alist'.
+Use specified MODE for all given file PATTERNS."
+  (dolist (pattern patterns)
+    (add-to-list 'interpreter-mode-alist (cons pattern mode))))
+
 (defun my/revert-this-buffer ()
   "Revert the current buffer."
   (interactive)
@@ -159,7 +174,8 @@ version control automatically."
           (with-current-buffer buffer
             (vc-refresh-state))))
       (when (featurep 'magit)
-        (when-let (default-directory (magit-toplevel (file-name-directory file)))
+        (when-let (default-directory (magit-toplevel
+                                      (file-name-directory file)))
           (cl-pushnew default-directory toplevels)))
       (unless (file-readable-p file)
         (when (bound-and-true-p recentf-mode)
@@ -171,7 +187,7 @@ version control automatically."
 
 (defun my/copy-this-file (new-path &optional force-p)
   "Copy current buffer's file to NEW-PATH.
-If FORCE-P, overwrite the destination file if it exists, without confirmation."
+If FORCE-P, overwrite the target file if it exists, without confirmation."
   (interactive
     (list (read-file-name "Copy file to: ")
           current-prefix-arg))
@@ -188,7 +204,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 
 (defun my/move-this-file (new-path &optional force-p)
   "Move current buffer's file to NEW-PATH.
-If FORCE-P, overwrite the destination file if it exists, without confirmation."
+If FORCE-P, overwrite the target file if it exists, without confirmation."
   (interactive
     (list (read-file-name "Move file to: ")
           current-prefix-arg))
@@ -205,7 +221,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 (global-set-key (kbd "C-c f m") #'my/move-this-file)
 
 (defun my/rename-this-file (new-name)
-  "Renames both current buffer and file it's visiting to NEW-NAME."
+  "Rename both current buffer and file to NEW-NAME."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
         (filename (buffer-file-name)))
@@ -221,7 +237,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 (global-set-key (kbd "C-c f r") #'my/rename-this-file)
 
 (defun my/copy-file-name ()
-  "Copy the current buffer file name to the clipboard."
+  "Copy current buffer file name to clipboard."
   (interactive)
   (if-let ((filename (if (equal major-mode 'dired-mode)
                          default-directory
@@ -240,7 +256,7 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
 (global-set-key (kbd "C-c f y") #'my/copy-file-name)
 
 (defun my/browse-this-file ()
-  "Open the current file as a URL using `browse-url'."
+  "Open current file as a URL using `browse-url'."
   (interactive)
   (let ((file-name (buffer-file-name)))
     (if (and (fboundp 'tramp-tramp-file-p)
@@ -270,7 +286,7 @@ With a prefix ARG always prompt for command to use."
 (global-set-key (kbd "C-c f o") #'my/open-this-file-externally)
 
 (defun my/delete-this-file ()
-  "Delete the current file, and kill the buffer."
+  "Delete current file, and kill the buffer."
   (interactive)
   (unless (buffer-file-name)
     (error "No file is currently being edited"))

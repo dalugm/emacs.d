@@ -26,11 +26,11 @@
   ;; NOT load company-mode for certain major modes.
   ;; https://github.com/company-mode/company-mode/issues/29
   (setq company-global-modes
-    '(not
-       eshell-mode
-       comint-mode
-       erc-mode
-       minibuffer-inactive-mode))
+        '(not
+           eshell-mode
+           comint-mode
+           erc-mode
+           minibuffer-inactive-mode))
 
   ;; Press SPACE will accept the highlighted candidate and insert a space
   ;; `M-x describe-variable company-auto-complete-chars' for details.

@@ -41,8 +41,8 @@
 
   ;; 模糊音设置
   (setq pyim-fuzzy-pinyin-alist
-    '(("en" "eng")
-      ("in" "ing")))
+        '(("en" "eng")
+          ("in" "ing")))
 
   ;; use memory efficient pyim engine
   (setq pyim-dcache-backend 'pyim-dregcache)
@@ -52,14 +52,14 @@
 
   ;; 根据环境自动切换输入模式
   (setq-default pyim-english-input-switch-functions
-    '(pyim-probe-dynamic-english
-      pyim-probe-isearch-mode
-      pyim-probe-program-mode
-      pyim-probe-org-structure-template))
+                '(pyim-probe-dynamic-english
+                  pyim-probe-isearch-mode
+                  pyim-probe-program-mode
+                  pyim-probe-org-structure-template))
 
   (setq-default pyim-punctuation-half-width-functions
-    '(pyim-probe-punctuation-line-beginning
-      pyim-probe-punctuation-after-punctuation))
+                '(pyim-probe-punctuation-line-beginning
+                  pyim-probe-punctuation-after-punctuation))
 
   ;; -------------------------------------------------------
   ;; dict
@@ -78,9 +78,9 @@
         disable-basedict)
     (when (and files (> (length files) 0))
       (setq pyim-dicts
-        (mapcar (lambda (f)
-                  (list :name (file-name-base f) :file f))
-          files))
+            (mapcar (lambda (f)
+                      (list :name (file-name-base f) :file f))
+              files))
       ;; disable basedict if bigdict or greatdict is used
       (dolist (f files)
         (when (or (string= "pyim-bigdict" (file-name-base f))
@@ -90,7 +90,7 @@
 
 (use-package bing-dict
   :bind ("C-c t b" . bing-dict-brief)
-  :config (setq bind-dict-vocabulary-save t))
+  :config (setq bing-dict-vocabulary-save t))
 
 (use-package avy-zh
   :after avy
