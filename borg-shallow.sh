@@ -20,16 +20,16 @@ push_remote=$(git config -f .gitmodules borg.pushDefault)
 
 toplevel=$(git rev-parse --show-toplevel)
 test -n "$toplevel" || exit 2
-cd "$toplevel"
+cd "$toplevel" || exit 2
 
 git submodule--helper list |
-while read mode sha1 stage path
+while read -r mode sha1 stage path
 do
     if test -e "$path"
     then
         name=$(git submodule--helper name "$path")
 
-        printf "\n--- [%s] ---\n\n" $name
+        printf "\n--- [%s] ---\n\n" "$name"
 
         if ! test -e "$path"/.git
         then
@@ -38,11 +38,11 @@ do
                 --path "$path" \
                 --depth 1 \
                 --no-single-branch \
-                --url $(git config -f .gitmodules submodule."$name".url)
+                --url "$(git config -f .gitmodules submodule."$name".url)"
         fi
 
         git config -f .gitmodules --get-all submodule."$name".remote |
-        while read remote remote_url
+        while read -r remote remote_url
         do
             if ! test -e "$path"/.git
             then
@@ -54,15 +54,15 @@ do
                     --url "$remote_url" &&
                 git remote rename origin "$remote"
             else
-                cd "$path"
+                cd "$path" || exit 2
                 git remote add "$remote" "$remote_url"
                 git fetch --depth 1 --no-single-branch "$remote"
-                cd "$toplevel"
+                cd "$toplevel" || exit 2
             fi
 
             if test -e "$path"/.git
             then
-                cd "$path"
+                cd "$path" || exit 2
                 if test "$remote" = "$hive_remote"
                 then
                     if test -e "$toplevel/.hive-maint"
@@ -77,20 +77,20 @@ do
                 then
                     git config remote.pushDefault "$remote"
                 fi
-                cd "$toplevel"
+                cd "$toplevel" || exit 2
             fi
         done
 
         if test -e "$path"/.git
         then
-            cd "$path"
+            cd "$path" || exit 2
             if ! git reset --hard "$sha1"
             then
                 echo >&2 "futile: Checkout of '$sha1' into submodule path '$path' failed"
                 git reset --hard HEAD
                 exit 1
             fi
-            cd "$toplevel"
+            cd "$toplevel" || exit 2
         else
             echo >&2 "futile: Clone of any remote into submodule path '$path' failed"
             exit 1

@@ -290,6 +290,7 @@
 ;;;;;;;;;;;;;;;;;
 ;; keybindings ;;
 ;;;;;;;;;;;;;;;;;
+
 (global-set-key (kbd "C-c c c") #'compile)
 (global-set-key (kbd "C-c l t") #'load-theme)
 (global-set-key (kbd "C-c f f") #'recentf-open-files)

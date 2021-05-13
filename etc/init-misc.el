@@ -116,6 +116,12 @@
   :bind (("C-c s d" . search-dired-dwim)
          ("C-c s D" . search-dired)))
 
+;; Add both site-lisp and its immediate subdirs to `load-path'
+(let ((site-lisp-dir (expand-file-name "lib/site-lisp/"
+                                       user-emacs-directory)))
+  (push site-lisp-dir load-path)
+  (my//add-subdirs-to-load-path site-lisp-dir))
+
 (provide 'init-misc)
 
 ;;; init-misc.el ends here

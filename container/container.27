@@ -1,0 +1,17 @@
+# Base image to use
+FROM ubuntu
+
+# Update the image and install configuration
+RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak \
+    && sed -i "s/\(archive\|security\).ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list \
+    && apt update \
+    && apt upgrade -y \
+    && apt install -y software-properties-common \
+    && add-apt-repository -y ppa:kelleyk/emacs \
+    && apt update \
+    && apt install -y build-essential emacs27-nox git \
+    && git clone --depth 1 https://github.com/dalugm/emacs.d.git ~/.emacs.d \
+    && cd ~/.emacs.d && make bootstrap-borg && make bootstrap
+
+ENV TERM xterm-256color
+WORKDIR /root

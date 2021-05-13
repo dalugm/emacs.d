@@ -1,14 +1,15 @@
-;;; init-build.el --- Buildsystem in Emacs -*- lexical-binding: t; -*-
+;;; init-build.el --- Build system in Emacs -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;
-;;  Buildsystem related configuration.
+;;  Build system related configuration.
 ;;
 
 ;;; Code:
 
 (use-package dockerfile-mode
-  :defer t)
+  :defer t
+  :mode "/container\\(?:\\.[^/\\]*\\)?\\'")
 
 (use-package groovy-mode
   :defer t)

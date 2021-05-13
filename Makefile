@@ -19,8 +19,8 @@ help::
 	$(info make bootstrap-shallow = shallow bootstrap configurations)
 
 bootstrap-borg:
-	@git submodule--helper clone --name borg --depth 1 --path lib/borg \
-	--no-single-branch --url https://github.com/emacscollective/borg.git
+	@git submodule--helper clone --name borg --path lib/borg \
+	--url https://github.com/emacscollective/borg.git
 	@cd lib/borg; git symbolic-ref HEAD refs/heads/master
 	@cd lib/borg; git reset --hard HEAD
 
