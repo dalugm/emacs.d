@@ -20,6 +20,7 @@
           ("glk" . avy-goto-line-above)
           ("gle" . avy-goto-end-of-line)
           ("M-." . xref-find-definitions)
+          ("C-]" . counsel-etags-find-tag-at-point)
          :map evil-insert-state-map
           ("C-n" . next-line)
           ("C-p" . previous-line)
