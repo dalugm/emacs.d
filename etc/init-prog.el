@@ -136,6 +136,16 @@ respectively."
   :mode "\\.xs\\(?:d\\|lt\\)\\'"        ; xsd, xslt
   :mode "\\.rss\\'")
 
+(use-package ggtags
+  :bind (("C-c l g" . ggtags-mode)
+         ("C-c c G" . ggtags-create-tags)
+         ("C-c c S" . ggtags-grep)
+         ("C-c c u" . ggtags-update-tags)
+         ("C-c g d" . ggtags-find-definition)
+         ("C-c g r" . ggtags-find-reference)
+         ("C-c g s" . ggtags-find-other-symbol)
+         ("C-c g t" . ggtags-find-tag-dwim)))
+
 (provide 'init-prog)
 
 ;;; init-prog.el ends here

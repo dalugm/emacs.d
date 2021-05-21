@@ -79,7 +79,8 @@
   "In dired, rename current or marked files.
 Cycling between space, hyphen - and underscore _.
 If not in `dired', do nothing.
-`http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html'"
+
+http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html."
   (interactive)
   (if (eq major-mode 'dired-mode)
       (progn
@@ -87,11 +88,17 @@ If not in `dired', do nothing.
                 (let ((x (file-name-nondirectory x)))
                   (cond
                     ((string-match " " x)
-                      (rename-file x (replace-regexp-in-string " " "-" x) nil))
+                      (rename-file x
+                                   (replace-regexp-in-string " " "-" x)
+                                   nil))
                     ((string-match "-" x)
-                      (rename-file x (replace-regexp-in-string "-" "_" x) nil))
+                      (rename-file x
+                                   (replace-regexp-in-string "-" "_" x)
+                                   nil))
                     ((string-match "_" x)
-                      (rename-file x (replace-regexp-in-string "_" " " x) nil)))))
+                      (rename-file x
+                                   (replace-regexp-in-string "_" " " x)
+                                   nil)))))
           (dired-get-marked-files))
         (revert-buffer))
     (user-error "Not in dired!")))

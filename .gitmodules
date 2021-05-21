@@ -173,6 +173,9 @@
 [submodule "general"]
 	path = lib/general
 	url = https://github.com/noctuid/general.el.git
+[submodule "ggtags"]
+	path = lib/ggtags
+	url = https://github.com/leoliu/ggtags.git
 [submodule "ghub"]
 	path = lib/ghub
 	url = https://github.com/magit/ghub.git

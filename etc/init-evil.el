@@ -99,8 +99,6 @@
   ;; evil keybinding
   ;; ---------------------------------------------------------
 
-  ;; As a general rule, mode specific evil leader keys started
-  ;; with upper cased character or 'g' or special character except "=" and "-"
   (evil-declare-key 'normal org-mode-map
     "gh" #'outline-up-heading
     "gn" #'outline-next-visible-heading
@@ -174,15 +172,20 @@
 (use-package evil-surround
   :config (global-evil-surround-mode)
 
-  ;; This macro was copied from here: https://stackoverflow.com/a/22418983/4921402
   (defmacro my|quoted-text-object (name key start-regex end-regex)
+    "Define text objects.
+ref: https://stackoverflow.com/a/22418983/4921402."
     (let ((inner-name (make-symbol (concat "evil-inner-" name)))
           (outer-name (make-symbol (concat "evil-a-" name))))
       `(progn
-         (evil-define-text-object ,inner-name (count &optional beg end type)
-           (evil-select-paren ,start-regex ,end-regex beg end type count nil))
-         (evil-define-text-object ,outer-name (count &optional beg end type)
-           (evil-select-paren ,start-regex ,end-regex beg end type count t))
+         (evil-define-text-object
+          ,inner-name (count &optional beg end type)
+          (evil-select-paren ,start-regex ,end-regex
+                             beg end type count nil))
+         (evil-define-text-object
+          ,outer-name (count &optional beg end type)
+          (evil-select-paren ,start-regex ,end-regex
+                             beg end type count t))
          (define-key evil-inner-text-objects-map ,key #',inner-name)
          (define-key evil-outer-text-objects-map ,key #',outer-name))))
 
@@ -440,6 +443,8 @@
     "lF" #'(my/load-font :which-key "font")
     "lf" #'(my/load-buffer-font :which-key "buffer-font")
     "lt" #'(load-theme :which-key "theme")
+    "ll" #'lsp
+    "lg" #'ggtags-mode
     ;; org
     "o"  #'(:ignore t :which-key "org")
     "oa" #'org-agenda
