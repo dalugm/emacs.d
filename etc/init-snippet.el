@@ -20,10 +20,12 @@
     (let ((templates
            (let (yas-choose-tables-first ; avoid prompts
                  yas-choose-keys-first)
-             (cl-loop for tpl in (yas--all-templates (yas--get-snippet-tables 'text-mode))
+             (cl-loop for tpl in (yas--all-templates
+                                  (yas--get-snippet-tables 'text-mode))
                       for uuid = (yas--template-uuid tpl)
                       if (string-prefix-p "__license-" uuid)
-                      collect (cons (string-remove-prefix "__license-" uuid) tpl)))))
+                      collect (cons (string-remove-prefix "__license-" uuid)
+                                    tpl)))))
       (when-let (uuid (yas-choose-value (mapcar #'car templates)))
         (yas-expand-snippet (cdr (assoc uuid templates))))))
 

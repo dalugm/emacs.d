@@ -12,9 +12,11 @@
 ;; more useful frame title, that show either a file or a
 ;; buffer name (if the buffer isn't visiting a file)
 (setq frame-title-format
-  `(,user-full-name " @ " (:eval (if (buffer-file-name)
-                                     (abbreviate-file-name (buffer-file-name))
-                                   "%b"))))
+      `(,user-full-name
+        " @ "
+        (:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
 
 ;; Full screen when open GUI Emacs
 (setq initial-frame-alist '((fullscreen . maximized)))

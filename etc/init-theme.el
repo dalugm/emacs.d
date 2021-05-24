@@ -24,9 +24,11 @@
                                cyberpunk
                                darktooth
                                deeper-blue
+                               doom-1337
                                doom-Iosvkem
                                doom-acario-dark
                                doom-ayu-mirage
+                               doom-badger
                                doom-challenger-deep
                                doom-city-lights
                                doom-dark+
@@ -57,6 +59,7 @@
                                doom-peacock
                                doom-plain-dark
                                doom-rouge
+                               doom-shades-of-purple
                                doom-snazzy
                                doom-solarized-dark
                                doom-sourcerer
@@ -64,6 +67,7 @@
                                doom-tomorrow-night
                                doom-vibrant
                                doom-wilmersdorf
+                               doom-xcode
                                doom-zenburn
                                dracula
                                gotham

@@ -109,14 +109,12 @@ defines the functions WRAP-WITH-PAREN and WRAP-WITH-BRACKET,
 respectively."
     `(progn
        ,@(cl-loop for (key . val) in pairs
-           collect
-           `(defun ,(read (concat
-                            "my/wrap-with-"
-                            (prin1-to-string key)
-                            "s"))
-              (&optional arg)
-              (interactive "p")
-              (sp-wrap-with-pair ,val)))))
+                  collect `(defun ,(read (concat
+                                           "my/wrap-with-"
+                                           (prin1-to-string key)
+                                           "s")) (&optional arg)
+                             (interactive "p")
+                             (sp-wrap-with-pair ,val)))))
 
   (my|def-pairs ((paren . "(")
                  (bracket . "[")

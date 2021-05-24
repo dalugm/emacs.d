@@ -10,9 +10,10 @@
 ;; show fortune in Emacs
 (with-eval-after-load 'fortune
   (when (or sys/macp sys/linuxp)
-    (let ((fortune (cond
-                     (sys/macp "/usr/local/Cellar/fortune/9708/share/games/fortunes")
-                     (sys/linuxp "/usr/share/games/fortunes"))))
+    (let ((fortune
+           (cond
+             (sys/macp "/usr/local/Cellar/fortune/9708/share/games/fortunes")
+             (sys/linuxp "/usr/share/games/fortunes"))))
       (setq fortune-file fortune))))
 
 ;; network proxy
@@ -21,25 +22,27 @@
 
 ;; allow access from `emacsclient'
 (add-hook 'after-init-hook
-  (lambda ()
-    (require 'server)
-    (unless (server-running-p)
-      (message "Starting a server...")
-      (server-start))))
+          (lambda ()
+            (require 'server)
+            (unless (server-running-p)
+              (message "Starting a server...")
+              (server-start))))
 
 ;; calendar
 (setq calendar-chinese-all-holidays-flag t)
-(setq holiday-local-holidays `((holiday-fixed 3 8  "Women's Day")
-                               (holiday-fixed 3 12 "Arbor Day")
-                               ,@(cl-loop for i from 1 to 3
-                                          collect `(holiday-fixed 5 ,i "International Workers' Day"))
-                               (holiday-fixed 5 4  "Chinese Youth Day")
-                               (holiday-fixed 6 1  "Children's Day")
-                               (holiday-fixed 9 9  "Mourn of Mao's Death")
-                               (holiday-fixed 9 10 "Teachers' Day")
-                               ,@(cl-loop for i from 1 to 7
-                                          collect `(holiday-fixed 10 ,i "National Day"))
-                               (holiday-fixed 12 26 "Mao's Birthday")))
+(setq holiday-local-holidays
+      `((holiday-fixed 3 8  "Women's Day")
+        (holiday-fixed 3 12 "Arbor Day")
+        ,@(cl-loop
+           for i from 1 to 3
+           collect `(holiday-fixed 5 ,i "International Workers' Day"))
+        (holiday-fixed 5 4  "Chinese Youth Day")
+        (holiday-fixed 6 1  "Children's Day")
+        (holiday-fixed 9 9  "Mourn of Mao's Death")
+        (holiday-fixed 9 10 "Teachers' Day")
+        ,@(cl-loop for i from 1 to 7
+                   collect `(holiday-fixed 10 ,i "National Day"))
+        (holiday-fixed 12 26 "Mao's Birthday")))
 
 (use-package exec-path-from-shell
   :defer 1
@@ -68,19 +71,20 @@
        ("TODO" warning bold)
        ;; For especially important gotchas with a given implementation.
        ("NOTE" success bold)
-       ;; For problems that will become bigger problems later if not fixed ASAP.
+       ;; For problems that will become bigger problems later
+       ;; if not fixed ASAP.
        ("FIXME" error bold)
        ;; For problems that need to pay attention especially.
        ("WARNING" error bold)
-       ;; For tidbits that are unconventional and not intended uses of the
-       ;; constituent parts, or modify function for own use, and may break in a
-       ;; future update.
+       ;; For tidbits that are unconventional and not intended uses of
+       ;; the constituent parts, or modify function for own use, and
+       ;; may break in a future update.
        ("HACK" font-lock-constant-face bold)
        ;; For things that were done for temporarily use,
        ;; It will be removed in the future.
        ("TEMP" font-lock-keyword-face bold)
-       ;; For things that were done hastily and/or hasn't been thoroughly
-       ;; tested. It may not even be necessary!
+       ;; For things that were done hastily and/or hasn't been
+       ;; thoroughly tested. It may not even be necessary!
        ("REVIEW" font-lock-keyword-face bold)
        ;; For codes that need to refactor or optimize later.
        ("XXX" font-lock-keyword-face bold)
