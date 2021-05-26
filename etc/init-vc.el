@@ -49,10 +49,10 @@
   :after magit
   :config
   (setq forge-topic-list-columns
-    '(("#" 5 forge-topic-list-sort-by-number (:right-align t) number nil)
-      ("Title" 50 t nil title  nil)
-      ("State" 10 t nil state nil)
-      ("Updated" 10 t nil updated nil))))
+        '(("#" 5 forge-topic-list-sort-by-number (:right-align t) number nil)
+          ("Title" 50 t nil title  nil)
+          ("State" 10 t nil state nil)
+          ("Updated" 10 t nil updated nil))))
 
 (use-package diff-hl
   :hook ((after-init . global-diff-hl-mode)

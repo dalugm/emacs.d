@@ -103,8 +103,8 @@
     "gh" #'outline-up-heading
     "gn" #'outline-next-visible-heading
     "gp" #'outline-previous-visible-heading
-    "$"  #'org-end-of-line              ; smarter behavior on headlines etc.
-    "^"  #'org-beginning-of-line        ; ditto
+    "$"  #'org-end-of-line
+    "^"  #'org-beginning-of-line
     "<"  (lambda () (interactive) (my/org-demote-or-promote 1)) ; outdent
     ">"  #'my/org-demote-or-promote                             ; indent
     (kbd "TAB") #'org-cycle)
@@ -306,14 +306,14 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "xs" #'save-buffer
     ;; org
     ;; toggle overview
-    "c$" #'org-archive-subtree          ; `\C-c\$'
+    "c$" #'org-archive-subtree
     ;; org-do-demote/org-do-premote support selected region
-    "c<"  #'org-do-promote     ; `\C-c\C-<'
-    "c>"  #'org-do-demote      ; `\C-c\C->'
-    "cam" #'org-tags-view      ; `\C-c\a\m': search items in org-file-apps by tag
-    "cxi" #'org-clock-in       ; `\C-c\C-x\C-i'
-    "cxo" #'org-clock-out      ; `\C-c\C-x\C-o'
-    "cxr" #'org-clock-report   ; `\C-c\C-x\C-r'
+    "c<"  #'org-do-promote
+    "c>"  #'org-do-demote
+    "cam" #'org-tags-view
+    "cxi" #'org-clock-in
+    "cxo" #'org-clock-out
+    "cxr" #'org-clock-report
     "oa"  #'org-agenda
     "ob"  #'org-switchb
     "oc"  #'org-capture
@@ -355,9 +355,9 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     ;; `fly*-checker'
     "de" #'flycheck-display-error-at-point
     "fa" #'flyspell-auto-correct-word
-    "fc" #'flycheck-buffer
+    "fc" #'flycheck-mode
     "fn" #'flyspell-goto-next-error
-    "fs" #'flyspell-buffer
+    "fs" #'flyspell-mode
     "ne" #'flycheck-next-error
     "pe" #'flycheck-previous-error
     ;; workspace
@@ -367,10 +367,10 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "kk" #'find-file-in-project-by-selected
     "fd" #'find-directory-in-project-by-selected
     ;; vc
-    "va" #'vc-next-action               ; `\C-x\v\v' in original
+    "va" #'vc-next-action
     "vc" #'my/vc-copy-file-and-rename-buffer
     "vf" #'my/vc-rename-file-and-buffer
-    "vg" #'vc-annotate                  ; `\C-x\v\g' in original
+    "vg" #'vc-annotate
     "vn" #'diff-hl-next-hunk
     "vp" #'diff-hl-previous-hunk
     ;; http://ergoemacs.org/emacs/emacs_pinky_2020.html
