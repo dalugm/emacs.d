@@ -22,8 +22,8 @@
         borg-gitmodules-file (expand-file-name ".gitmodules" my-emacs-d))
   ;; use HTTPS instead of SSH
   (setq borg-rewrite-urls-alist
-    '(("git@github.com:" . "https://github.com/")
-      ("git@gitlab.com:" . "https://gitlab.com/")))
+        '(("git@github.com:" . "https://github.com/")
+          ("git@gitlab.com:" . "https://gitlab.com/")))
   (borg-initialize))
 
 (progn                                  ; `use-package'
@@ -131,7 +131,7 @@
   :custom (zh-lib-scheme 'simplified-traditional-quanpin-all))
 
 (use-package smart-compile
-  :bind ("C-c c s" . smart-compile))
+  :bind ("C-c c c" . smart-compile))
 
 (use-package expand-region
   :bind ("C-c ;" . er/expand-region))

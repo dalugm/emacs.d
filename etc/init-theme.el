@@ -45,7 +45,10 @@
                                doom-miramare
                                doom-molokai
                                doom-monokai-classic
+                               doom-monokai-machine
+                               doom-monokai-octagon
                                doom-monokai-pro
+                               doom-monokai-ristretto
                                doom-monokai-spectrum
                                doom-moonlight
                                doom-nord
@@ -62,6 +65,7 @@
                                doom-shades-of-purple
                                doom-snazzy
                                doom-solarized-dark
+                               doom-solarized-dark-high-contrast
                                doom-sourcerer
                                doom-spacegrey
                                doom-tomorrow-night
@@ -188,7 +192,7 @@
 (defvar my-theme-alist (append my-light-theme-alist my-dark-theme-alist)
   "Total themes.")
 
-(defvar my--fallback-theme 'sinolor-dark
+(defvar my--fallback-theme 'sinolor-eva
   "Fallback theme if user theme cannot be applied.")
 
 (defvar my--current-theme nil

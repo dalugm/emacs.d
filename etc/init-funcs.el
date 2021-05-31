@@ -608,15 +608,18 @@ Do NOT mess with special buffers."
 
 (defun my/insert-date (prefix)
   "Insert the current date.
+With 1 as PREFIX, insert like ‘yyyymmdd’.
 With one PREFIX, use ISO format.
-With two PREFIX, write out the day and month name.
-With three PREFIX, insert locale's timestamp."
+With two PREFIX, use standard time format.
+With three PREFIX, insert like ‘mm/dd/yy’.
+With four PREFIX, insert locale's timestamp."
   (interactive "P")
   (let ((format (cond
                   ((not prefix) "%F %R")
+                  ((equal prefix 1) "%Y%m%d")
                   ((equal prefix '(4)) "%F")
                   ((equal prefix '(16)) "%Y-%m-%dT%H:%M:%S%:z")
-                  ((equal prefix '(64)) "%d %B %Y")
+                  ((equal prefix '(64)) "%D")
                   ((equal prefix '(256)) "%c"))))
     (insert (format-time-string format))))
 
@@ -667,32 +670,6 @@ With two PREFIX, insert variable `user-mail-address' only."
     (delete-matching-lines "^[ \t]*$" (point-min) (point-max))))
 
 (global-set-key (kbd "C-c m d") #'my/delete-visual-blank-lines)
-
-(defun my/smart-run ()
-  "Run programs according to major mode."
-  (interactive)
-  (let* ((filename (file-name-nondirectory buffer-file-name))
-         (executable (file-name-sans-extension filename))
-         (run-buffer (get-buffer-create (concat "*" executable "*")))
-         command
-         args)
-    (message (concat "Running " executable))
-    (cond
-      ((or (eq major-mode 'c-mode) (eq major-mode 'c++-mode))
-        (setq command (concat "./" executable)))
-      ((eq major-mode 'java-mode)
-        (setq command "java")
-        (setq args (list executable))))
-    (with-current-buffer run-buffer
-      (erase-buffer)
-      (insert (concat "default-directory: " default-directory "\n"))
-      (insert (concat "\n" command " " (mapconcat (lambda (arg) arg)
-                                         args " ") "\n\n"))
-      (comint-mode))
-    (comint-exec run-buffer executable command nil args)
-    (pop-to-buffer run-buffer)))
-
-(global-set-key (kbd "C-c c r") #'my/smart-run)
 
 (defun my/fixup-whitespace ()
   "Fix up white space between objects around point.

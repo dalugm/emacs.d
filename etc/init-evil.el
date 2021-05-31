@@ -298,6 +298,8 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "op" #'smart-compile
     "sc" #'shell-command
     "ss" #'counsel-grep-or-swiper
+    "tD" #'darkroom-mode
+    "td" #'darkroom-tentative-mode
     "xb" #'ivy-switch-buffer
     "xc" #'save-buffers-kill-terminal
     "xh" #'mark-whole-buffer
@@ -406,8 +408,9 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "bx" #'(my/switch-scratch-buffer :which-key "open-scratch")
     ;; code
     "c"  #'(:ignore t :which-key "code")
-    "cc" #'my/smart-run
-    "cC" #'smart-compile
+    "ck" #'compile
+    "cc" #'smart-compile
+    "cr" #'recompile
     ;; file
     "f"  #'(:ignore t :which-key "file")
     "fb" #'(my/browse-this-file :which-key "browse-this-file")
@@ -479,7 +482,9 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "si" #'imenu
     ;; toggle
     "t"  #'(:ignore t :which-key "toggle")
+    "tD" #'darkroom-mode
     "ta" #'(abbrev-mode :which-key "abbrev")
+    "td" #'darkroom-tentative-mode
     "tf" #'(display-fill-column-indicator-mode
              :which-key "fill-column-indicator")
     "th" #'(my/toggle-hl-line :which-key "hl-line")

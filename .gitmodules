@@ -268,6 +268,9 @@
 [submodule "ns-auto-titlebar"]
 	path = lib/ns-auto-titlebar
 	url = https://github.com/purcell/ns-auto-titlebar.git
+[submodule "org-html-themes"]
+	path = opt/org-html-themes
+	url = https://github.com/fniessen/org-html-themes.git
 [submodule "organic-green-theme"]
 	path = lib/organic-green-theme
 	url = https://github.com/kostafey/organic-green-theme.git
