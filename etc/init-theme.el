@@ -39,6 +39,7 @@
                                doom-henna
                                doom-homage-black
                                doom-horizon
+                               doom-ir-black
                                doom-laserwave
                                doom-manegarm
                                doom-material
@@ -131,6 +132,7 @@
                                 alect-black-alt
                                 cyberpunk
                                 doom-homage-black
+                                doom-ir-black
                                 manoj-dark
                                 modus-vivendi
                                 sanityinc-tomorrow-bright

@@ -11,10 +11,10 @@
   "Record Emacs startup time.")
 
 ;;; Packages
-;; Without this comment package.el adds (package-initialize) here
+;; Without this comment package.el adds `package-initialize' here
 ;; (package-initialize)
 
-;; to avoid warnings in Emacs 27
+;; Avoid warnings in Emacs 27
 (unless (bound-and-true-p package--initialized)
   (setq package-enable-at-startup nil))
 

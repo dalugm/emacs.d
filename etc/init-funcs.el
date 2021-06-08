@@ -300,7 +300,8 @@ With a prefix ARG always prompt for command to use."
 (defun my/delete-file (file)
   "Delete FILE under current working directory."
   (interactive "sFile name: ")
-  (shell-command (format "find . -depth -name %s -print0 | xargs -0 rm" file))
+  (shell-command
+   (format "find . -depth -name %s -print0 | xargs -0 rm" file))
   (message "‘%s’ under current working directory deleted." file))
 
 (global-set-key (kbd "C-c f D") #'my/delete-file)
@@ -346,6 +347,33 @@ With a prefix ARG always prompt for command to use."
 
 (global-set-key (kbd "C-c f u") #'my/save-file-as-utf8)
 
+(defun my/retab (arg &optional beg end)
+  "Convert tabs-to-spaces or spaces-to-tabs within BEG and END.
+Default to buffer start and end, to make indentation consistent.
+Which it does depends on the value of `indent-tab-mode'.
+
+If ARG (universal argument) is non-nil, retab the current buffer
+using the opposite indentation style."
+  (interactive "P\nr")
+  (unless (and beg end)
+    (setq beg (point-min)
+          end (point-max)))
+  (let ((indent-tabs-mode (if arg
+                              (not indent-tabs-mode)
+                            indent-tabs-mode)))
+    (if indent-tabs-mode
+        (tabify beg end)
+      (untabify beg end))))
+
+(defun my/delete-trailing-newlines ()
+  "Trim trailing newlines.
+
+Respects `require-final-newline'."
+  (interactive)
+  (save-excursion
+    (goto-char (point-max))
+    (delete-blank-lines)))
+
 (defun my/dos2unix ()
   "Convert the current buffer to UNIX file format."
   (interactive)
@@ -355,6 +383,13 @@ With a prefix ARG always prompt for command to use."
   "Convert the current buffer to DOS file format."
   (interactive)
   (set-buffer-file-coding-system 'undecided-dos nil))
+
+(defun my/toggle-indent-style ()
+  "Switch between TAB/SPACE indentation style in current buffer."
+  (interactive)
+  (setq indent-tabs-mode (not indent-tabs-mode))
+  (message "Indent style changed to %s"
+           (if indent-tabs-mode "tabs" "spaces")))
 
 (defun my/disable-final-newline ()
   "Do not add a newline automatically at the end of current buffer."

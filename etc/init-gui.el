@@ -156,6 +156,8 @@ If FRAME is nil, it defaults to the selected frame."
      (monaco-14              . (:family "Monaco" :size 14))
      (mononoki-nerd-16       . (:family "Mononoki Nerd Font" :size 16))
      (sf-mono-14             . (:family "SF Mono" :size 14))
+     (spot-mono-14           . (:family "Spot Mono" :size 14))
+     (ubuntu-mono-nerd-16    . (:family "UbuntuMono Nerd Font" :size 16))
      (victor-mono-nerd-14    . (:family "VictorMono Nerd Font" :size 14))
      (fangzheng-fangsong-16  . (:family "FZFangSong-Z02" :size 16))
      (fangzheng-heiti-16     . (:family "FZHei-B01" :size 16))
