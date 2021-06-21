@@ -17,12 +17,14 @@
 
   ;; Stores the list of IRC servers that you want to connect to with start-irc.
   (setq my-fav-irc '(
-                      "irc.freenode.net"
+                      "irc.libera.chat"
                       ;; "irc.gitter.im"
+                      ;; ;; so sad freenode is not libre anymore
+                      ;; "irc.freenode.net"
                       ))
 
   ;; Message string to be sent while quitting IRC.
-  (setq bye-irc-message "Zài Jiàn")
+  (setq bye-irc-message "孤帆远影碧空尽，唯见长江天际流")
 
   ;; ---------------------------------------------------------
   ;; functions
@@ -47,9 +49,8 @@
   (require 'erc-autoaway)
 
   (setq erc-autojoin-channels-alist '((
-                                        "freenode.net"
+                                        "libera.chat"
                                         "#nixos"
-                                        "#org-mode"
                                         "#emacs"
                                         )))
 

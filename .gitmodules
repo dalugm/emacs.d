@@ -7,6 +7,9 @@
 [submodule "alect-themes"]
 	path = lib/alect-themes
 	url = https://github.com/alezost/alect-themes.git
+[submodule "all-the-icons"]
+	path = lib/all-the-icons
+	url = https://github.com/domtronn/all-the-icons.el.git
 [submodule "ample-theme"]
 	path = lib/ample-theme
 	url = https://github.com/jordonbiondo/ample-theme.git
@@ -43,6 +46,12 @@
 [submodule "borg"]
 	path = lib/borg
 	url = https://github.com/emacscollective/borg.git
+[submodule "bui"]
+	path = lib/bui
+	url = https://github.com/alezost/bui.el.git
+[submodule "cfrs"]
+	path = lib/cfrs
+	url = https://github.com/Alexander-Miller/cfrs.git
 [submodule "challenger-deep-theme"]
 	path = lib/challenger-deep-theme
 	url = https://github.com/challenger-deep-theme/emacs.git
@@ -73,6 +82,9 @@
 [submodule "cyberpunk-theme"]
 	path = lib/cyberpunk-theme
 	url = https://github.com/n3mo/cyberpunk-theme.el.git
+[submodule "dap-mode"]
+	path = lib/dap-mode
+	url = https://github.com/emacs-lsp/dap-mode.git
 [submodule "darkroom"]
 	path = lib/darkroom
 	url = https://github.com/joaotavora/darkroom.git
@@ -225,11 +237,17 @@
 [submodule "leuven-theme"]
 	path = lib/leuven-theme
 	url = https://github.com/fniessen/emacs-leuven-theme.git
+[submodule "lsp-java"]
+	path = lib/lsp-java
+	url = https://github.com/emacs-lsp/lsp-java.git
 [submodule "lsp-mode"]
 	path = lib/lsp-mode
 	url = https://github.com/emacs-lsp/lsp-mode.git
 	load-path = .
 	load-path = clients
+[submodule "lsp-treemacs"]
+	path = lib/lsp-treemacs
+	url = https://github.com/emacs-lsp/lsp-treemacs.git
 [submodule "lsp-ui"]
 	path = lib/lsp-ui
 	url = https://github.com/emacs-lsp/lsp-ui.git
@@ -286,12 +304,18 @@
 [submodule "parchment-theme"]
 	path = lib/parchment-theme
 	url = https://github.com/ajgrf/parchment.git
+[submodule "pfuture"]
+	path = lib/pfuture
+	url = https://github.com/Alexander-Miller/pfuture.git
 [submodule "php-mode"]
 	path = lib/php-mode
 	url = https://github.com/emacs-php/php-mode.git
 [submodule "polymode"]
 	path = lib/polymode
 	url = https://github.com/polymode/polymode.git
+[submodule "posframe"]
+	path = lib/posframe
+	url = https://github.com/tumashu/posframe.git
 [submodule "prescient"]
 	path = lib/prescient
 	url = https://github.com/raxod502/prescient.el.git
@@ -381,6 +405,12 @@
 [submodule "tree-sitter-langs"]
 	path = lib/tree-sitter-langs
 	url = https://github.com/ubolonton/tree-sitter-langs.git
+[submodule "treemacs"]
+	path = lib/treemacs
+	url = https://github.com/Alexander-Miller/treemacs.git
+	load-path = src/elisp
+	load-path = src/extra
+	load-path = src/scripts
 [submodule "treepy"]
 	path = lib/treepy
 	url = https://github.com/volrath/treepy.el.git

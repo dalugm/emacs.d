@@ -23,6 +23,14 @@
   (setq winum-mode-line-position 0)
   (winum-mode +1))
 
+(use-package treemacs
+  :bind (("C-c w w" . treemacs)
+         ("C-c w b" . treemacs-bookmark)
+         ("C-c w l" . treemacs-select-window)
+         ("C-c w O" . treemacs-delete-other-windows)
+         ("C-c w C-f" . treemacs-find-file)
+         ("C-c w C-t" . treemacs-find-tag)))
+
 (use-package eyebrowse
   :hook (after-init . eyebrowse-mode)
   :init (setq eyebrowse-keymap-prefix (kbd "C-c w"))
