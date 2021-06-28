@@ -336,11 +336,6 @@
 ;; http://ergoemacs.org/emacs/emacs_align_and_sort.html
 (global-set-key (kbd "C-x \\") #'align-regexp)
 
-;; Window switching. (C-x o goes to the next window)
-(global-set-key (kbd "C-x O") (lambda ()
-                                (interactive)
-                                (other-window -1))) ; back one
-
 ;; open header file under cursor
 (global-set-key (kbd "C-x C-o") #'ffap)
 

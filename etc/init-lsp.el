@@ -28,6 +28,9 @@
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode))
 
+(use-package lsp-treemacs
+  :after (treemacs lsp))
+
 (provide 'init-lsp)
 
 ;;; init-lsp.el ends here

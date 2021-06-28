@@ -57,6 +57,20 @@
   :config (elfeed-org)
   (setq rmh-elfeed-org-files (list (concat my-optional-d "elfeed.org"))))
 
+(when (display-graphic-p)
+  (use-package pdf-view
+    :hook ((pdf-view-mode . pdf-view-midnight-minor-mode)
+           (pdf-view-mode . pdf-isearch-minor-mode))
+    :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
+    :magic ("%PDF" . pdf-view-mode)
+    :bind (:map pdf-view-mode-map
+           ("C-s" . isearch-forward)
+           ("C-r" . isearch-backward))
+    :config
+    ;; Enable hiDPI support, but at the cost of memory!
+    (setq pdf-view-use-scaling t
+          pdf-view-use-imagemagick nil)))
+
 (provide 'init-reader)
 
 ;;; init-reader.el ends here

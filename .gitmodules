@@ -304,6 +304,9 @@
 [submodule "parchment-theme"]
 	path = lib/parchment-theme
 	url = https://github.com/ajgrf/parchment.git
+[submodule "pdf-tools"]
+	path = lib/pdf-tools
+	url = https://github.com/vedang/pdf-tools.git
 [submodule "pfuture"]
 	path = lib/pfuture
 	url = https://github.com/Alexander-Miller/pfuture.git
@@ -380,6 +383,9 @@
 	path = lib/subed
 	url = https://github.com/rndusr/subed.git
 	load-path = subed
+[submodule "tablist"]
+	path = lib/tablist
+	url = https://github.com/politza/tablist.git
 [submodule "tagedit"]
 	path = lib/tagedit
 	url = https://github.com/magnars/tagedit.git
@@ -444,6 +450,9 @@
 [submodule "xr"]
 	path = lib/xr
 	url = https://github.com/mattiase/xr.git
+[submodule "yaml"]
+	path = lib/yaml
+	url = https://github.com/zkry/yaml.el.git
 [submodule "yaml-mode"]
 	path = lib/yaml-mode
 	url = https://github.com/yoshiki/yaml-mode.git
