@@ -159,6 +159,29 @@ respectively."
   :mode "\\.xs\\(?:d\\|lt\\)\\'"        ; xsd, xslt
   :mode "\\.rss\\'")
 
+(use-package citre
+  :bind (("C-c c a" . citre-ace-peek)
+         ("C-c c h" . citre-peek)
+         ("C-c c j" . citre-jump+)
+         ("C-c c J" . citre-jump-back+))
+  :config
+  (defun citre-jump+ ()
+    "Fallback to xref when citre failed."
+    (interactive)
+    (condition-case _
+        (citre-jump)
+      (error (call-interactively #'xref-find-definitions))))
+
+  (defun citre-jump-back+ ()
+    "Fallback to xref when citre failed."
+    (interactive)
+    (condition-case _
+        (citre-jump-back)
+      (error (call-interactively #'xref-pop-marker-stack))))
+
+  (with-eval-after-load 'cc-mode (require 'citre-lang-c))
+  (with-eval-after-load 'dired (require 'citre-lang-fileref)))
+
 (use-package ggtags
   :bind (("C-c l g" . ggtags-mode)
          ("C-c c G" . ggtags-create-tags)

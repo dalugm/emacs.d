@@ -26,10 +26,20 @@
   (setq lsp-enable-symbol-highlighting nil))
 
 (use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode))
+  :hook (lsp-mode . lsp-ui-mode)
+  :bind (("C-c a i" . lsp-ui-imenu)
+         :map lsp-ui-mode-map
+          ("C-c a a M-RET" . lsp-ui-sideline-apply-code-actions)
+          ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+          ([remap xref-find-references] . lsp-ui-peek-find-references)))
 
 (use-package lsp-treemacs
   :after (treemacs lsp))
+
+(use-package lsp-pyright
+  :defer t
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-pyright))))
 
 (provide 'init-lsp)
 

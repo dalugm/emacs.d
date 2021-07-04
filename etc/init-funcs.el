@@ -533,6 +533,24 @@ Including indent-buffer, which should not be called automatically on save."
 
 (global-set-key (kbd "C-c X") #'my/switch-scratch-buffer)
 
+(defun my/create-tags ()
+  "Create tags file."
+  (interactive)
+  (let* ((dir (read-directory-name "Ctags will scan code at: "))
+         (default-directory dir)
+         (name (read-string "Input tag file name (Default: tags): "
+                            nil nil "tags"))
+         (language
+          (read-string "Input language (e.g.: c,c++,... Default: all): "
+                       nil nil "all"))
+         (extra-args (read-string "Input extra arguments (e.g.: -e): ")))
+    (shell-command
+     (format "ctags -f %s --languages=%s --kinds-all='*' --fields='*' --extras='*' %s -R %s"
+             name language extra-args (directory-file-name dir)))
+    (message "Tag file %s%s was created." dir name)))
+
+(global-set-key (kbd "C-c m t") #'my/create-tags)
+
 (defun my/occur-dwim ()
   "Call `occur' with a sane default."
   (interactive)
@@ -830,33 +848,75 @@ is set to after it."
             (directory-files (expand-file-name parent-dir) t "^[^\\.]"))
            load-path))))
 
-;; Configure network proxy
-(defun my/show-proxy ()
+;; Network Proxy
+(defun my/show-http-proxy ()
   "Show http/https proxy."
   (interactive)
   (if url-proxy-services
-      (message "Current proxy is \"%s\"." my-proxy)
-    (message "No proxy.")))
+      (message "Current HTTP proxy is \"%s\"." my-http-proxy)
+    (message "No HTTP proxy.")))
 
-(defun my/set-proxy ()
-  "Set http/https proxy."
+(defun my/enable-http-proxy ()
+  "Enable HTTP/HTTPS proxy."
   (interactive)
-  (setq url-proxy-services `(("http"  . ,my-proxy)
-                             ("https" . ,my-proxy)))
-  (my/show-proxy))
+  (setq url-proxy-services
+        `(("http" . ,my-http-proxy)
+          ("https" . ,my-http-proxy)
+          ("no_proxy" . "^\\(localhost\\|192.168.*\\|10.*\\)")))
+  (my/show-http-proxy))
 
-(defun my/unset-proxy ()
-  "Unset http/https proxy."
+(defun my/disable-http-proxy ()
+  "Disable HTTP/HTTPS proxy."
   (interactive)
   (setq url-proxy-services nil)
-  (my/show-proxy))
+  (my/show-http-proxy))
 
-(defun my/toggle-proxy ()
-  "Toggle http/https proxy."
+(defun my/toggle-http-proxy ()
+  "Toggle HTTP/HTTPS proxy."
   (interactive)
   (if url-proxy-services
-      (my/unset-proxy)
-    (my/set-proxy)))
+      (my/disable-http-proxy)
+    (my/enable-http-proxy)))
+
+(defun my/show-socks-proxy ()
+  "Show SOCKS proxy."
+  (interactive)
+  (when (fboundp 'cadddr)               ; defined 25.2+
+    (if (bound-and-true-p socks-noproxy)
+        (message "Current SOCKS%d proxy is \"%s:%s\"."
+                 (cadddr socks-server)
+                 (cadr socks-server)
+                 (caddr socks-server))
+      (message "No SOCKS proxy."))))
+
+(defun my/enable-socks-proxy ()
+  "Enable SOCKS proxy."
+  (interactive)
+  (require 'socks)
+  (setq url-gateway-method 'socks
+        socks-noproxy '("localhost"))
+  (let* ((proxy (split-string my-socks-proxy ":"))
+         (host (car proxy))
+         (port (cadr  proxy)))
+    (setq socks-server `("Default server" ,host ,port 5)))
+  (setenv "all_proxy" (concat "socks5://" my-socks-proxy))
+  (my/show-socks-proxy))
+
+(defun my/disable-socks-proxy ()
+  "Disable SOCKS proxy."
+  (interactive)
+  (setq url-gateway-method 'native
+        socks-noproxy nil
+        socks-server nil)
+  (setenv "all_proxy" "")
+  (my/show-socks-proxy))
+
+(defun my/toggle-socks-proxy ()
+  "Toggle SOCKS proxy."
+  (interactive)
+  (if (bound-and-true-p socks-noproxy)
+      (my/disable-socks-proxy)
+    (my/enable-socks-proxy)))
 
 (defun my/avy-copy-thing-at-point ()
   "Copy thing at point."
@@ -864,17 +924,18 @@ is set to after it."
   (save-excursion
     (avy-goto-word-or-subword-1)
     (let ((thing
-            (cl-case (read-char
-                       (format
-                         "Copy thing at point (%s: word %s: symbol %s: list %s: url): "
-                         (propertize "w" 'face 'error)
-                         (propertize "s" 'face 'error)
-                         (propertize "l" 'face 'error)
-                         (propertize "u" 'face 'error)))
-              (?w  'word)
-              (?s  'symbol)
-              (?l  'list)
-              (?u  'url))))
+           (cl-case
+            (read-char
+             (format
+              "Copy thing at point (%s: word %s: symbol %s: list %s: url): "
+              (propertize "w" 'face 'error)
+              (propertize "s" 'face 'error)
+              (propertize "l" 'face 'error)
+              (propertize "u" 'face 'error)))
+            (?w  'word)
+            (?s  'symbol)
+            (?l  'list)
+            (?u  'url))))
       (kill-new (thing-at-point thing))
       (message "%s copied." thing))))
 

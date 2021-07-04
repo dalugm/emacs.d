@@ -33,7 +33,7 @@
 
 (use-package eyebrowse
   :hook (after-init . eyebrowse-mode)
-  :init (setq eyebrowse-keymap-prefix (kbd "C-c w"))
+  :custom (eyebrowse-keymap-prefix (kbd "C-c w"))
   :bind ("C-c w n" . eyebrowse-create-named-window-config))
 
 (use-package find-file-in-project

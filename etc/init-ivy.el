@@ -151,7 +151,7 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
   :custom (ivy-prescient-enable-filtering nil))
 
 (use-package counsel-etags
-  :bind (("C-c c j" . counsel-etags-find-tag-at-point)
+  :bind (("C-c c f" . counsel-etags-find-tag-at-point)
          ("C-c c g" . counsel-etags-scan-code))
   :hook (prog-mode . (lambda ()
                        (add-hook 'after-save-hook

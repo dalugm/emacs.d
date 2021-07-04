@@ -17,8 +17,15 @@
       (setq fortune-file fortune))))
 
 ;; network proxy
-(defvar my-proxy "127.0.0.1:1087"
-  "Network proxy.")
+(defcustom my-http-proxy "127.0.0.1:1087"
+  "Network proxy."
+  :group 'convenience
+  :type 'string)
+
+(defcustom my-socks-proxy "127.0.0.1:1080"
+  "Set SOCKS proxy."
+  :group 'convenience
+  :type 'string)
 
 ;; allow access from `emacsclient'
 (add-hook 'after-init-hook
