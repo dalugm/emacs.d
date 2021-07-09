@@ -162,6 +162,7 @@ respectively."
 (use-package citre
   :bind (("C-c c a" . citre-ace-peek)
          ("C-c c h" . citre-peek)
+         ("C-c c t" . citre-update-tags-file)
          ("C-c c j" . citre-jump+)
          ("C-c c J" . citre-jump-back+))
   :config

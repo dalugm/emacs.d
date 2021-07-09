@@ -13,7 +13,7 @@
   ;; make previous/next selection in the popup cycles
   (setq company-selection-wrap-around t)
   ;; press `M-number' to choose candidate
-  (setq company-show-numbers t)
+  (setq company-show-quick-access t)
   ;; make returned result case-sensitive
   (setq company-dabbrev-downcase nil)
   ;; align annotations to the right tooltip border

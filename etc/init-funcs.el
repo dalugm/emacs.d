@@ -638,7 +638,7 @@ Do NOT mess with special buffers."
 (global-set-key (kbd "C-c t h") #'my/toggle-hl-line)
 
 (defun my/toggle-line-number ()
-  "Show line numbers by `display-line-numbers-mode'(appeared in Emacs v26.1) or `linum-mode'."
+  "Show line numbers by `display-line-numbers-mode' (Emacs 26.1) or `linum-mode'."
   (interactive)
   (if (fboundp 'display-line-numbers-mode)
       (cond

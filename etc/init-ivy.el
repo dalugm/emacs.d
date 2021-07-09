@@ -156,7 +156,13 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
   :hook (prog-mode . (lambda ()
                        (add-hook 'after-save-hook
                                  #'counsel-etags-virtual-update-tags
-                                 'append 'local))))
+                                 'append 'local)))
+  :config
+  ;; `counsel-etags-ignore-filenames' supports wildcast
+  (push "*.json" counsel-etags-ignore-filenames)
+  ;; `counsel-etags-ignore-directories' does NOT support wildcast
+  (push "build_clang" counsel-etags-ignore-directories)
+  (push "build" counsel-etags-ignore-directories))
 
 (provide 'init-ivy)
 
