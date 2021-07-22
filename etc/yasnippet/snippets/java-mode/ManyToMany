@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: ManyToMany
+# key: mm
+# --
+@ManyToMany
+${0}

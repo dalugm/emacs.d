@@ -437,8 +437,6 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "hM" #'(my/hydra-paredit-move/body :which-key "paredit-move")
     "ht" #'(my/hydra-theme/body :which-key "theme")
     "hf" #'(my/hydra-file/body :which-key "file")
-    "hi" #'(my/hydra-erc/body :which-key "irc")
-    "hm" #'(my/hydra-misc/body :which-key "misc")
     "hp" #'(my/hydra-paredit/body :which-key "paredit")
     "hw" #'(my/hydra-window/body :which-key "window")
     ;; load

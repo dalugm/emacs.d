@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: brief
+# key: @br
+# --
+@brief ${0:Description}

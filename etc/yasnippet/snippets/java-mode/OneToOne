@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: OneToOne
+# key: oo
+# --
+@OneToOne
+${0}

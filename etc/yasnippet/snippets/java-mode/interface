@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: interface
+# key: in
+# --
+interface ${1:`(file-name-base
+                 (or (buffer-file-name)
+                     (buffer-name)))`} ${2:extends Parent} {
+  $0
+}

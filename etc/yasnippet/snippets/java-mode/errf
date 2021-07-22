@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: errf
+# key: errf
+# --
+System.err.printf("${1:Message}", ${0:exception});

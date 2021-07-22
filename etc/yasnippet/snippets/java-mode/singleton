@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: singleton
+# key: singlet
+# --
+private static class Holder {
+	private static final ${1:`(file-name-base
+                                    (or (buffer-file-name)
+                                        (buffer-name)))`} INSTANCE = new $1();
+}
+
+private $1() { }
+
+public static $1 getInstance() {
+	return Holder.INSTANCE;
+}

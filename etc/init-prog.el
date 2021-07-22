@@ -166,6 +166,8 @@ respectively."
          ("C-c c t" . citre-update-this-tags-file)
          ("C-c c j" . citre-jump+)
          ("C-c c J" . citre-jump-back+))
+  :custom
+  (citre-project-root-function #'ffip-project-root)
   :config
   (defun citre-jump+ ()
     "Fallback to xref when citre failed."
