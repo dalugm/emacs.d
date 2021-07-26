@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: class constructor
+# key: clc
+# --
+class ${1:`(file-name-base
+             (or (buffer-file-name)
+                 (buffer-name)))`} {
+                 public ${2:`(file-name-base
+                               (or (buffer-file-name)
+                                   (buffer-name)))`}() {
+                                   $0
+                                   }
+}

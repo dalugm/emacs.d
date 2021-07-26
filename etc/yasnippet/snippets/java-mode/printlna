@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: printlna
-# key: printlna
-# --
-System.out.println(Arrays.toString(${0}));

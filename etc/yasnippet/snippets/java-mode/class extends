@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: class extends
+# key: cle
+# --
+class ${1:`(file-name-base
+             (or (buffer-file-name)
+                 (buffer-name)))`} extends ${3:Parent} {
+                 $0
+}

@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: ArrayList
-# key: d.al
+# key: al
 # --
-List<${1:Object}> ${2:list} = new ArrayList<$1>();${0}
+ArrayList<$1>${0:}
