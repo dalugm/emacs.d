@@ -2,4 +2,4 @@
 # name: final
 # key: fi
 # --
-final ${0}
+final $0

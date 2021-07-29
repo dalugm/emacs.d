@@ -2,4 +2,4 @@
 # name: println
 # key: pl
 # --
-System.out.println("${0:text}");
+System.out.println($1);$0

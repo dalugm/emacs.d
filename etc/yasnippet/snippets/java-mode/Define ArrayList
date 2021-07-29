@@ -2,4 +2,4 @@
 # name: Define ArrayList
 # key: d.al
 # --
-List<${1:Object}> ${2:list} = new ArrayList<$1>();${0}
+List<${1:Object}> ${2:list} = new ArrayList<$1>();$0

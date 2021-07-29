@@ -2,4 +2,4 @@
 # name: public
 # key: pu
 # --
-public ${0}
+public $0

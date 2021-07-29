@@ -3,4 +3,4 @@
 # key: mm
 # --
 @ManyToMany
-${0}
+$0

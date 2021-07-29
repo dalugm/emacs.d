@@ -2,4 +2,4 @@
 # name: synchronized
 # key: sy
 # --
-synchronized ${0}
+synchronized $0

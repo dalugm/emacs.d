@@ -2,4 +2,4 @@
 # name: abstract
 # key: ab
 # --
-abstract ${0}
+abstract $0

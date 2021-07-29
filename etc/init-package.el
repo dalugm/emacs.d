@@ -73,6 +73,7 @@
   (which-key-add-key-based-replacements "C-c &" "yasnippet")
   (which-key-add-key-based-replacements "C-c @" "hideShow")
   (which-key-add-key-based-replacements "C-c c" "code/counsel")
+  (which-key-add-key-based-replacements "C-c c q" "quickrun")
   (which-key-add-key-based-replacements "C-c e" "edit")
   (which-key-add-key-based-replacements "C-c f" "file")
   (which-key-add-key-based-replacements "C-c g" "goto")

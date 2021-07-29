@@ -3,4 +3,4 @@
 # key: mo
 # --
 @ManyToOne
-${0}
+$0

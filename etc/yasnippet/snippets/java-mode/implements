@@ -2,4 +2,4 @@
 # name: implements
 # key: imp
 # --
-implements ${0}
+implements $0

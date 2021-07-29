@@ -2,4 +2,4 @@
 # name: extends
 # key: ext
 # --
-extends ${0}
+extends $0

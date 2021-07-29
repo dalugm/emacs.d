@@ -319,10 +319,15 @@
 ;; abbrevs
 (setq save-abbrevs 'silently)
 (define-abbrev-table 'global-abbrev-table '(
-                                             ;; signature
-                                             ("mt" "dalu")
                                              ;; Emacs regex
-                                             ("wn" "\\([A-Za-z0-9]+\\)" )
+                                             ("azdr" "\\([A-Za-z0-9]+\\)" )
+                                             ("bracketr" "\\[\\([^]]+?\\)\\]" )
+                                             ("curlyr" "“\\([^”]+?\\)”" )
+                                             ("digitsr" "\\([0-9]+\\)" )
+                                             ("dater" "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)" )
+                                             ("dotr" "\\(.\\)" )
+                                             ("strr" "\\([^\"]+?\\)" )
+                                             ("tagr" "\\([</>=\" A-Za-z0-9]+\\)" )
                                              ;; unicode
                                              ("fws" "　")
                                              )

@@ -2,4 +2,4 @@
 # name: private
 # key: pr
 # --
-private ${0}
+private $0

@@ -2,4 +2,4 @@
 # name: println ArraytoString
 # key: plas
 # --
-System.out.println(Arrays.toString(${0:text}));
+System.out.println(Arrays.toString($1));$0

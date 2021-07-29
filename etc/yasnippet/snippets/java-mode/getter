@@ -2,6 +2,6 @@
 # name: getter
 # key: get
 # --
-${1:public} ${2:String} get${3:}() {
-            return this.${0:};
+${1:public} ${2:String} get$3() {
+            return this.$0;
 }

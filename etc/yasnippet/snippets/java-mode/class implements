@@ -1,9 +1,9 @@
 # -*- mode: snippet -*-
-# name: class extends
-# key: cle
+# name: class implements
+# key: cli
 # --
 class ${1:`(file-name-base
              (or (buffer-file-name)
-                 (buffer-name)))`} extends ${2:Parent} {
+                 (buffer-name)))`} implements ${2:Interface} {
                  $0
 }

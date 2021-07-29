@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: sleep
+# key: sleep
+# --
+try {
+    Thread.sleep(${1:1000});
+} catch (InterruptedException e){
+  ${2:System.out.println("Error " + e.getMessage());
+  e.printStackTrace();}
+}

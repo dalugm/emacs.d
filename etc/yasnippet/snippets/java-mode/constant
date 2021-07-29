@@ -2,4 +2,4 @@
 # name: constant
 # key: con
 # --
-static public final ${1:String} ${2:var} = ${3};
+static public final ${1:Primitive} ${2:Var} = ${3};

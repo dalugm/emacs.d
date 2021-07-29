@@ -2,4 +2,4 @@
 # name: import
 # key: im
 # --
-import ${0}
+import $0

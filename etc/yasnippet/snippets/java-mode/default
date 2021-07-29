@@ -3,4 +3,4 @@
 # key: default
 # --
 default:
-        ${0}
+        $0

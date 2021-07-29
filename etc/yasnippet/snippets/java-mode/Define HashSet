@@ -2,4 +2,4 @@
 # name: Define HashSet
 # key: d.hs
 # --
-Set<${1:Object}> ${2:set} = new HashSet<$1>();${0}
+Set<${1:Object}> ${2:set} = new HashSet<$1>();$0

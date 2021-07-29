@@ -159,6 +159,13 @@ respectively."
   :mode "\\.xs\\(?:d\\|lt\\)\\'"        ; xsd, xslt
   :mode "\\.rss\\'")
 
+(use-package quickrun
+  :bind (("C-c c q q" . quickrun)
+         ("C-c c q a" . quickrun-with-arg)
+         ("C-c c q c" . quickrun-compile-only)
+         ("C-c c q r" . quickrun-replace-region)
+         ("C-c c q s" . quickrun-shell)))
+
 (use-package citre
   :bind (("C-c c a" . citre-ace-peek)
          ("C-c c e" . citre-edit-tags-file-recipe)
@@ -166,8 +173,8 @@ respectively."
          ("C-c c t" . citre-update-this-tags-file)
          ("C-c c j" . citre-jump+)
          ("C-c c J" . citre-jump-back+))
-  :custom
-  (citre-project-root-function #'ffip-project-root)
+  :custom (citre-project-root-function #'ffip-project-root)
+  :hook (prog-mode . citre-auto-enable-citre-mode)
   :config
   (defun citre-jump+ ()
     "Fallback to xref when citre failed."
@@ -184,6 +191,7 @@ respectively."
       (error (call-interactively #'xref-pop-marker-stack))))
 
   (with-eval-after-load 'cc-mode (require 'citre-lang-c))
+  (with-eval-after-load 'verilog-mode (require 'citre-lang-verilog))
   (with-eval-after-load 'dired (require 'citre-lang-fileref)))
 
 (use-package ggtags

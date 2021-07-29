@@ -3,4 +3,4 @@
 # key: om
 # --
 @OneToMany${1:(cascade=CascadeType.ALL)}
-${0}
+$0
