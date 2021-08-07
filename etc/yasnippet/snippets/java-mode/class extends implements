@@ -3,7 +3,7 @@
 # key: clei
 # --
 class ${1:`(file-name-base
-              (or (buffer-file-name)
-                  (buffer-name)))`} extends ${2:Parent} implements ${3:Interface} {
-                  $0
+             (or (buffer-file-name)
+                 (buffer-name)))`} extends ${2:Parent} implements ${3:Interface} {
+                 $0
 }

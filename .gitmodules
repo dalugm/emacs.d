@@ -203,9 +203,6 @@
 [submodule "go-mode"]
 	path = lib/go-mode
 	url = https://github.com/dominikh/go-mode.el.git
-[submodule "gotham-theme"]
-	path = lib/gotham-theme
-	url = https://depp.brause.cc/gotham-theme.git
 [submodule "green-is-the-new-black-theme"]
 	path = lib/green-is-the-new-black-theme
 	url = https://github.com/fredcamps/green-is-the-new-black-emacs.git
@@ -227,9 +224,6 @@
 [submodule "hydra"]
 	path = lib/hydra
 	url = https://github.com/abo-abo/hydra.git
-[submodule "inkpot-theme"]
-	path = lib/inkpot-theme
-	url = https://gitlab.com/ideasman42/emacs-inkpot-theme.git
 [submodule "ivy"]
 	path = lib/ivy
 	url = https://github.com/abo-abo/swiper.git

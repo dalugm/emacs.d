@@ -2,4 +2,4 @@
 # name: constant
 # key: con
 # --
-static public final ${1:Primitive} ${2:Var} = ${3};
+${1:$$(yas-choose-value '("public" "private" "protected" ""))} static final ${2:Primitive} ${3:Variable} = $4;

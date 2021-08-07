@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: public class constructor
+# key: pclc
+# --
+public class ${1:`(file-name-base
+                    (or (buffer-file-name)
+                        (buffer-name)))`} {
+                        public ${2:`(file-name-base
+                                      (or (buffer-file-name)
+                                          (buffer-name)))`}($3) {
+                                          $0
+                                          }
+}

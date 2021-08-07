@@ -45,7 +45,7 @@
          ("C-c p f" . find-file-in-project)
          ("C-c p F" . ffip-lisp-find-file-in-project)
          ("C-c p i" . ffip-insert-file)
-         ("C-c p p" . find-file-in-project-at-point)
+         ("C-c p p" . find-file-in-project-by-selected)
          ("C-c p r" . ffip-find-relative-path)
          ("C-c p s" . find-file-in-project-by-selected)
          ("C-c p S" . find-file-with-similar-name)

@@ -75,13 +75,11 @@
                                doom-xcode
                                doom-zenburn
                                dracula
-                               gotham
                                green-is-the-new-black
                                gruvbox
                                gruvbox-dark-hard
                                gruvbox-dark-medium
                                gruvbox-dark-soft
-                               inkpot
                                kaolin-aurora
                                kaolin-blossom
                                kaolin-bubblegum

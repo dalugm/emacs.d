@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: public class extends
+# key: pcle
+# --
+public class ${1:`(file-name-base
+                    (or (buffer-file-name)
+                        (buffer-name)))`} extends ${2:Parent} {
+                        $0
+}

@@ -743,7 +743,7 @@ Fix OLD-FUNC with ARGS."
   (cl-letf (((symbol-function 'fixup-whitespace) #'my/fixup-whitespace))
     (apply old-func args)))
 
-(advice-add #'delete-indentation :around #'my/delete-indentation)
+(advice-add 'delete-indentation :around #'my/delete-indentation)
 
 (defun my/recompile-init ()
   "Byte-compile dotfiles again."

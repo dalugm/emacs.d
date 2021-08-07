@@ -22,7 +22,7 @@
     "Save the compilation buffer to find it later."
     (setq my-last-compilation-buffer next-error-last-buffer))
 
-  (advice-add 'compilation-start :after 'my//save-compilation-buffer)
+  (advice-add 'compilation-start :after #'my//save-compilation-buffer)
 
   (defun my//find-prev-compilation (orig &optional edit-command)
     "Find the previous compilation buffer, if present, and recompile there."
@@ -34,7 +34,7 @@
           (funcall orig edit-command))
       (funcall orig edit-command)))
 
-  (advice-add 'recompile :around 'my//find-prev-compilation))
+  (advice-add 'recompile :around #'my//find-prev-compilation))
 
 (global-set-key (kbd "C-c c k") #'compile)
 (global-set-key (kbd "C-c c r") #'recompile)
@@ -167,32 +167,28 @@ respectively."
          ("C-c c q s" . quickrun-shell)))
 
 (use-package citre
-  :bind (("C-c c a" . citre-ace-peek)
-         ("C-c c e" . citre-edit-tags-file-recipe)
-         ("C-c c h" . citre-peek)
-         ("C-c c t" . citre-update-this-tags-file)
-         ("C-c c j" . citre-jump+)
-         ("C-c c J" . citre-jump-back+))
-  :custom (citre-project-root-function #'ffip-project-root)
-  :hook (prog-mode . citre-auto-enable-citre-mode)
-  :config
+  :init
+  (require 'citre-config)
+  (setq citre-auto-enable-citre-mode-modes '(prog-mode))
   (defun citre-jump+ ()
     "Fallback to xref when citre failed."
     (interactive)
     (condition-case _
         (citre-jump)
       (error (call-interactively #'xref-find-definitions))))
-
   (defun citre-jump-back+ ()
     "Fallback to xref when citre failed."
     (interactive)
     (condition-case _
         (citre-jump-back)
       (error (call-interactively #'xref-pop-marker-stack))))
-
-  (with-eval-after-load 'cc-mode (require 'citre-lang-c))
-  (with-eval-after-load 'verilog-mode (require 'citre-lang-verilog))
-  (with-eval-after-load 'dired (require 'citre-lang-fileref)))
+  :bind (("C-c c a" . citre-ace-peek)
+         ("C-c c e" . citre-edit-tags-file-recipe)
+         ("C-c c h" . citre-peek)
+         ("C-c c t" . citre-update-this-tags-file)
+         ("C-c c j" . citre-jump+)
+         ("C-c c J" . citre-jump-back+))
+  :custom (citre-project-root-function #'ffip-project-root))
 
 (use-package ggtags
   :bind (("C-c l g" . ggtags-mode)

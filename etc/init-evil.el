@@ -69,7 +69,7 @@
     (when (evil-ex-hl-active-p 'evil-ex-search)
       (evil-ex-nohighlight) t))
 
-  (advice-add #'keyboard-quit :before #'my//evil-disable-ex-highlight)
+  (advice-add 'keyboard-quit :before #'my//evil-disable-ex-highlight)
 
   (defun my//show-current-evil-state ()
     "Change modeline's face according to different evil state."
