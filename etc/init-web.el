@@ -57,6 +57,37 @@
   ;; `web-mode' has superior support for php+html.
   (setq php-mode-template-compatibility nil))
 
+(defun my/js-beautify (&optional indent-size)
+  "Beautify selected region or whole buffer with js-beautify.
+INDENT-SIZE decides the indentation level.
+Run `npm -g install js-beautify' to install js-beautify, or run
+`pip install jsbeautifier' to install a python (can only reformat
+JavaScript) version."
+  (interactive "P")
+  (let ((executable (if (executable-find "js-beautify")
+                        "js-beautify"
+                      "jsbeautify")))
+    ;; detect indentation level
+    (unless indent-size
+      (setq indent-size
+            (cond
+              ((memq major-mode '(js-mode javascript-mode))
+                js-indent-level)
+              ((memq major-mode '(typescript-mode))
+                typescript-indent-level)
+              ((memq major-mode '(web-mode))
+                web-mode-code-indent-offset)
+              (t
+                2))))
+    ;; do it!
+    (my/run-cmd-and-replace-region
+     (concat executable
+             " --stdin "
+             " --jslint-happy "
+             " --brace-style=end-expand "
+             " --keep-array-indentation "
+             (format " --indent-size=%d " indent-size)))))
+
 (provide 'init-web)
 
 ;;; init-web.el ends here

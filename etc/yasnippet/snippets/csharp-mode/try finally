@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: try finally
+# key: tryf
+# --
+try
+{
+	${0:${VISUAL}}
+}
+finally
+{
+	${1}
+}

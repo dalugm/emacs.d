@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: class constructor
+# key: clc
+# --
+class ${1:`(file-name-base
+             (or (buffer-file-name)
+                 (buffer-name)))`}
+{
+        /// <summary>
+        /// ${4:Standard Constructor}
+        /// </summary>
+        public ${2:`(file-name-base
+                      (or (buffer-file-name)
+                          (buffer-name)))`}($3)
+                          {
+                          $6
+                          }
+
+        /// <summary>
+        /// ${5:Default Destructor}
+        /// </summary>
+        public ~$2()
+        {
+        $7
+        }
+}

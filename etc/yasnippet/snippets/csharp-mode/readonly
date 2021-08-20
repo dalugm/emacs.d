@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: readonly
+# key: ro
+# --
+readonly $0

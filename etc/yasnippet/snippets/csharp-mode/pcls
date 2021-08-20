@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: pcls
+# key: pcls
+# --
+public class ${1:`(file-name-base
+                    (or (buffer-file-name)
+                        (buffer-name)))`} ${2:: Parent, Interface}
+{
+        $0
+}

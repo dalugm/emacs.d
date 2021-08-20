@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: <returns>
+# key: <re
+# --
+/// <returns>$1</returns>

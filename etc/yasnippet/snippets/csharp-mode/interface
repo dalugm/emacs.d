@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: interface
+# key: int
+# --
+interface ${1:`(file-name-base
+                 (or (buffer-file-name)
+                     (buffer-name)))`} ${2:: Parent}
+{
+        $0
+}

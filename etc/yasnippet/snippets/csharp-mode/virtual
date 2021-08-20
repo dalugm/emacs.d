@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: virtual
+# key: vi
+# --
+virtual $0

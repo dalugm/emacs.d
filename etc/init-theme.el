@@ -112,6 +112,8 @@
                                solarized-dark
                                solarized-dark-high-contrast
                                solarized-gruvbox-dark
+                               solarized-selenized-black
+                               solarized-selenized-dark
                                solarized-wombat-dark
                                solarized-zenburn
                                spacemacs-dark
@@ -177,6 +179,8 @@
                                 solarized-gruvbox-light
                                 solarized-light
                                 solarized-light-high-contrast
+                                solarized-selenized-light
+                                solarized-selenized-white
                                 spacemacs-light
                                 tango
                                 tao-yang

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: public enum
+# key: pen
+# --
+public enum $1
+{
+        $0
+}

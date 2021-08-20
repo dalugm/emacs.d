@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: internal
+# key: in
+# --
+internal $0

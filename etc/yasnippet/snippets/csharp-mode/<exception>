@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: <exception>
+# key: <ex
+# --
+/// <exception cref="$1">$2</exception>

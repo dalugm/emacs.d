@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: get
+# key: get
+# --
+get
+{
+        $0
+}

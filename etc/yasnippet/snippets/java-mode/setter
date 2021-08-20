@@ -2,6 +2,6 @@
 # name: setter
 # key: set
 # --
-${1:public} void set$3(${2:String} $0) {
+${1:public} void set$3(${2:Type} $0) {
             this.$4 = $4;
 }

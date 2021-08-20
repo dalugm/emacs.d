@@ -2,4 +2,4 @@
 # name: printf
 # key: pf
 # --
-System.out.printf("${1:Message}", ${2:Var});$0
+System.out.printf("${1:Message}", ${2:Var});

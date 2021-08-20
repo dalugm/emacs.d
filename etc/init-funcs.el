@@ -491,6 +491,15 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 ;; a no-op function to bind to if you want to set a keystroke to null
 (defun my/void () "This is a no-op." (interactive))
 
+(defun my/run-cmd-and-replace-region (cmd)
+  "Run CMD in shell on selected region or whole buffer.
+And replace it with cli output."
+  (let* ((orig-point (point))
+         (start (if (region-active-p) (region-beginning) (point-min)))
+         (end (if (region-active-p) (region-end) (point-max))))
+    (shell-command-on-region start end cmd nil t)
+    (goto-char orig-point)))
+
 (defun my/format-region-or-buffer(&optional column)
   "Perform a bunch of operations on the content of a buffer.
 Indent region/buffer with COLUMN space(s).

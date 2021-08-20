@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: transient
+# key: tr
+# --
+transient $0

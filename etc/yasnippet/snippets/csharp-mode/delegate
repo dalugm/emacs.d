@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: delegate
+# key: de
+# --
+delegate $0
