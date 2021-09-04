@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: console.warn
+# key: cwa
+# group: console
+# --
+console.warn(${1:object});

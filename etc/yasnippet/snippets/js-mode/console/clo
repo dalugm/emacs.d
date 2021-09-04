@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: console.log (formatted)
+# key: clgf
+# group: console
+# --
+console.log('$1: ', ${1:object});

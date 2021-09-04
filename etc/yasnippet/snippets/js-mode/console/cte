@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: console.timeEnd
+# key: cte
+# group: console
+# --
+console.timeEnd('${1:object}');

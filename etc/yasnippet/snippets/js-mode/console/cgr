@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: console.group
+# key: cgr
+# group: console
+# --
+console.group("${1:label}");

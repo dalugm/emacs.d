@@ -159,6 +159,9 @@ respectively."
   :mode "\\.xs\\(?:d\\|lt\\)\\'"        ; xsd, xslt
   :mode "\\.rss\\'")
 
+(use-package apheleia
+  :bind ("C-c c F" . apheleia-format-buffer))
+
 (use-package quickrun
   :bind (("C-c c q q" . quickrun)
          ("C-c c q a" . quickrun-with-arg)

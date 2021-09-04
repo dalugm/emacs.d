@@ -29,17 +29,10 @@
       (when-let (uuid (yas-choose-value (mapcar #'car templates)))
         (yas-expand-snippet (cdr (assoc uuid templates))))))
 
-  ;; https://stackoverflow.com/questions/7619640/emacs-latex-yasnippet-why-are-newlines-inserted-after-a-snippet
-  (add-hook 'snippet-mode-hook (lambda ()
-                                 (setq-local require-final-newline nil)))
-
   (setq my-private-snippet (expand-file-name "~/my-snippets"))
   (when (and (file-exists-p my-private-snippet)
              (not (member my-yasnippets yas-snippet-dirs)))
     (add-to-list 'yas-snippet-dirs my-private-snippet)))
-
-(use-package yasnippet-snippets
-  :after yasnippet)
 
 (use-package auto-yasnippet
   :after yasnippet

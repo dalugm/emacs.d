@@ -19,6 +19,9 @@
 [submodule "annalist"]
 	path = lib/annalist
 	url = https://github.com/noctuid/annalist.el.git
+[submodule "apheleia"]
+	path = lib/apheleia
+	url = https://github.com/raxod502/apheleia.git
 [submodule "async"]
 	path = lib/async
 	url = https://github.com/jwiegley/emacs-async.git
@@ -301,9 +304,6 @@
 [submodule "pangu-spacing"]
 	path = lib/pangu-spacing
 	url = https://github.com/coldnew/pangu-spacing.git
-[submodule "parchment-theme"]
-	path = lib/parchment-theme
-	url = https://github.com/ajgrf/parchment.git
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools.git
@@ -462,9 +462,6 @@
 [submodule "yasnippet"]
 	path = lib/yasnippet
 	url = https://github.com/joaotavora/yasnippet.git
-[submodule "yasnippet-snippets"]
-	path = lib/yasnippet-snippets
-	url = https://github.com/AndreaCrotti/yasnippet-snippets.git
 [submodule "zenburn-theme"]
 	path = lib/zenburn-theme
 	url = https://github.com/bbatsov/zenburn-emacs.git

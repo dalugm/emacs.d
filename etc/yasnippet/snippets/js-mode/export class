@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: export class
+# key: ecl
+# --
+export class ${1:`(string-join
+                   (split-string
+                    (capitalize
+                     (file-name-base (or (buffer-file-name)
+                                         (buffer-name))))
+                    "[\\.-]"))`} {
+                    $0
+}

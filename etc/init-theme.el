@@ -172,7 +172,6 @@
                                 modus-operandi
                                 moe-light
                                 organic-green
-                                parchment
                                 sanityinc-solarized-light
                                 sanityinc-tomorrow-day
                                 sinolor-light

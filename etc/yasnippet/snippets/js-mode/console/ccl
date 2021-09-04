@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: console.clear
+# key: ccl
+# group: console
+# --
+console.clear();

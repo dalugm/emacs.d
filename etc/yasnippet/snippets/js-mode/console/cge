@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: console.groupEnd
+# key: cge
+# group: console
+# --
+console.groupEnd();

@@ -365,15 +365,6 @@ using the opposite indentation style."
         (tabify beg end)
       (untabify beg end))))
 
-(defun my/delete-trailing-newlines ()
-  "Trim trailing newlines.
-
-Respects `require-final-newline'."
-  (interactive)
-  (save-excursion
-    (goto-char (point-max))
-    (delete-blank-lines)))
-
 (defun my/dos2unix ()
   "Convert the current buffer to UNIX file format."
   (interactive)
@@ -388,27 +379,8 @@ Respects `require-final-newline'."
   "Switch between TAB/SPACE indentation style in current buffer."
   (interactive)
   (setq indent-tabs-mode (not indent-tabs-mode))
-  (message "Indent style changed to %s"
+  (message "Indent style changed to %s."
            (if indent-tabs-mode "tabs" "spaces")))
-
-(defun my/disable-final-newline ()
-  "Do not add a newline automatically at the end of current buffer."
-  (interactive)
-  (set (make-local-variable 'require-final-newline) nil)
-  (message "No newline at the end of current buffer."))
-
-(defun my/enable-final-newline ()
-  "Do add a newline automatically at the end of current buffer."
-  (interactive)
-  (set (make-local-variable 'require-final-newline) t)
-  (message "Add newline at the end of current buffer."))
-
-(defun my/toggle-final-newline()
-  "Toggle whether add a newline at the end of current buffer."
-  (interactive)
-  (if require-final-newline
-      (my/disable-final-newline)
-    (my/enable-final-newline)))
 
 ;;;;;;;;;;;;;;
 ;; JUST4FUN ;;
@@ -427,7 +399,7 @@ Respects `require-final-newline'."
       (insert (format "%4d %c\n" i i))))
   (goto-char (point-min)))
 
-(defun my/pinganEmacs ()
+(defun my/pingan-emacs ()
   "建议击毙, @平安 Emacs."
   (interactive)
   (insert
@@ -494,9 +466,9 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 (defun my/run-cmd-and-replace-region (cmd)
   "Run CMD in shell on selected region or whole buffer.
 And replace it with cli output."
-  (let* ((orig-point (point))
-         (start (if (region-active-p) (region-beginning) (point-min)))
-         (end (if (region-active-p) (region-end) (point-max))))
+  (let ((orig-point (point))
+        (start (if (region-active-p) (region-beginning) (point-min)))
+        (end (if (region-active-p) (region-end) (point-max))))
     (shell-command-on-region start end cmd nil t)
     (goto-char orig-point)))
 
@@ -677,12 +649,10 @@ With three PREFIX, insert like ‘mm/dd/yy’.
 With four PREFIX, insert locale's timestamp."
   (interactive "P")
   (let ((format (cond
-                  ((not prefix) "%F %R")
-                  ((equal prefix 1) "%Y%m%d")
-                  ((equal prefix '(4)) "%F")
-                  ((equal prefix '(16)) "%Y-%m-%dT%H:%M:%S%:z")
-                  ((equal prefix '(64)) "%D")
-                  ((equal prefix '(256)) "%c"))))
+                  ((not prefix) "%Y%m%d")
+                  ((equal prefix '(4)) "%Y-%m-%dT%H:%M:%S%:z")
+                  ((equal prefix '(16)) "%D")
+                  ((equal prefix '(64)) "%c"))))
     (insert (format-time-string format))))
 
 (global-set-key (kbd "C-c 1") #'my/insert-date)

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: console.info
+# key: cin
+# group: console
+# --
+console.info(${1:object});

@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: export class extends
+# key: ecle
+# --
+export class ${1:`(string-join
+                   (split-string
+                    (capitalize
+                     (file-name-base (or (buffer-file-name)
+                                         (buffer-name))))
+                    "[\\.-]"))`} extends ${2:Class} {
+                    $0
+}
