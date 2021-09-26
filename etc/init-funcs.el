@@ -480,12 +480,10 @@ Including indent-buffer, which should not be called automatically on save."
   (save-excursion
     (if (region-active-p)
         (progn
-          (untabify (region-beginning) (region-end))
           (delete-trailing-whitespace (region-beginning) (region-end))
           (indent-region (region-beginning) (region-end) column)
           (message "Selected region formatted."))
       (progn
-        (untabify (point-min) (point-max))
         (delete-trailing-whitespace)
         (indent-region (point-min) (point-max) column)
         (message "Buffer formatted.")))))
@@ -651,7 +649,7 @@ With four PREFIX, insert locale's timestamp."
   (let ((format (cond
                   ((not prefix) "%Y%m%d")
                   ((equal prefix '(4)) "%Y-%m-%dT%H:%M:%S%:z")
-                  ((equal prefix '(16)) "%D")
+                  ((equal prefix '(16)) "%s")
                   ((equal prefix '(64)) "%c"))))
     (insert (format-time-string format))))
 
@@ -664,8 +662,8 @@ With two PREFIX, insert variable `user-mail-address' only."
   (interactive "P")
   (let ((format (cond
                   ((not prefix) (concat user-full-name " <" user-mail-address ">"))
-                  ((equal prefix '(4)) user-full-name)
-                  ((equal prefix '(16)) user-mail-address))))
+                  ((equal prefix '(4)) user-mail-address)
+                  ((equal prefix '(16)) user-full-name))))
     (insert format)))
 
 (global-set-key (kbd "C-c 2") #'my/insert-user-information)

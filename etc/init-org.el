@@ -26,7 +26,9 @@
 
   ;; useful initials
   (defvar my--org-task-file (concat org-directory "/task.org")
-    "Org task file")
+    "Org task file.")
+  (defvar my--org-work-file (concat org-directory "/work.org")
+    "Org work file.")
   (defvar my--org-todo-file (concat org-directory "/todo.org")
     "Org todo file.")
   (defvar my--org-inbox-file (concat org-directory "/inbox.org")
@@ -92,9 +94,11 @@
          "* TODO %^{todo}\n")
        ("td" "Daily Task" entry (file+headline my--org-task-file "Daily")
          "* TODO %^{task}\n   %?\n")
+       ("tm" "Misc Task" entry (file+headline my--org-task-file "Misc")
+         "* TODO %^{task}\n   %?\n")
        ("tp" "Project Task" entry (file+headline my--org-task-file "Project")
          "* TODO %^{project name}\n   %i\n" :clock-in t :clock-resume t)
-       ("tw" "Work Task" entry (file+headline my--org-task-file "Work")
+       ("tw" "Work Task" entry (file+headline my--org-work-file "Work")
          "* TODO %^{task name}\n   %t\n" :clock-in t :clock-resume t)
        ;; inbox
        ("i" "INBOX")
@@ -213,10 +217,6 @@
   (setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s!/!)" "HANGUP(h@)" "|" "DONE(d)" "ABORT(a@/!)")
                             (sequence "REPORT(r)" "BUG(b@)" "KNOWNCAUSE(k@)" "|" "FIXED(f!)")
                             (sequence "WAITING(w@/!)" "SOMEDAY(S@)" "PROJECT(P@)" "|" "CANCELLED(c@/!)")))
-  (setq org-todo-keyword-faces '(("TODO"    . "red")
-                                 ("STARTED" . "yellow")
-                                 ("DONE"    . "green")
-                                 ("ABORT"   . "grey")))
 
   ;; ---------------------------------------------------------
   ;; clock
@@ -301,12 +301,11 @@
   (global-set-key (kbd "C-c o l") #'org-store-link)
   (global-set-key (kbd "C-c o i") #'org-insert-structure-template)
 
-  ;; ;; after v9.2 [[https://orgmode.org/Changes.html][changlog]]
-  ;; ;; Org comes with a new template expansion mechanism `org-insert-structure-template'
-  ;; ;; Default keybinding is `\C-c\C-,'
-  ;; ;; if prefer using previous patterns, e.g. <s, goto `org-tempo.el' for more information
-  ;; ;; NOTE: I'm using `yasnippet' to handle this.
-  ;; (add-to-list 'org-modules 'org-tempo)
+  ;; after v9.2 [[https://orgmode.org/Changes.html][changlog]]
+  ;; Org comes with a new template expansion mechanism `org-insert-structure-template'
+  ;; Default keybinding is `\C-c\C-,'
+  ;; if prefer using previous patterns, e.g. <s, goto `org-tempo.el' for more information
+  (add-to-list 'org-modules 'org-tempo)
 
   ;; 让中文也可以不加空格就使用行内格式
   (setcar (nthcdr 0 org-emphasis-regexp-components) " \t('\"{[:nonascii:]")

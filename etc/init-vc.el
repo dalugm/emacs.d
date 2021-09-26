@@ -48,6 +48,9 @@
 (use-package forge
   :after magit
   :config
+  (add-to-list 'forge-alist
+               '("work.github.com" "api.github.com" "github.com"
+                 forge-github-repository))
   (setq forge-topic-list-columns
         '(("#" 5 forge-topic-list-sort-by-number (:right-align t) number nil)
           ("Title" 50 t nil title  nil)

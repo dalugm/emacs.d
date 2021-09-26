@@ -8,8 +8,7 @@
 ;;; Code:
 
 (use-package dockerfile-mode
-  :defer t
-  :mode "/container\\(?:\\.[^/\\]*\\)?\\'")
+  :defer t)
 
 (use-package groovy-mode
   :defer t)

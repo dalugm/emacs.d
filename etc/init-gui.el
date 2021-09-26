@@ -72,7 +72,7 @@ If FRAME is nil, it defaults to the selected frame."
 
 (defun my/set-transparency (value)
   "Set the VALUE of transparency of the frame window.
-0=transparent/100=opaque"
+0=transparent/100=opaque."
   (interactive "nTransparency Value 0 - 100 opaque: ")
   (set-frame-parameter (selected-frame) 'alpha value))
 
@@ -144,8 +144,10 @@ If FRAME is nil, it defaults to the selected frame."
      (anonymous-nerd-16      . (:family "Anonymice Nerd Font" :size 16))
      (blex-nerd-14           . (:family "BlexMono Nerd Font" :size 14))
      (caskaydia-nerd-14      . (:family "CaskaydiaCove Nerd Font" :size 14))
+     (firacode-14            . (:family "Fira Code" :size 14))
      (firacode-nerd-14       . (:family "FiraCode Nerd Font" :size 14))
      (gnu-unifont-16         . (:family "Unifont" :size 16))
+     (hack-14                . (:family "Hack" :size 14))
      (hack-nerd-14           . (:family "Hack Nerd Font" :size 14))
      (jetbrainsmono-nerd-14  . (:family "JetBrainsMono Nerd Font" :size 14))
      (monaco-14              . (:family "Monaco" :size 14))
