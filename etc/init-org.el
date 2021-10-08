@@ -298,6 +298,7 @@
   ;; ---------------------------------------------------------
   ;; misc
   ;; ---------------------------------------------------------
+  (global-set-key (kbd "C-c o t") #'org-toggle-link-display)
   (global-set-key (kbd "C-c o l") #'org-store-link)
   (global-set-key (kbd "C-c o i") #'org-insert-structure-template)
 

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: file name
+# key: fn
+# --
+`(string-join
+  (split-string
+   (capitalize
+    (file-name-base (or (buffer-file-name)
+                        (buffer-name))))
+   "[\\.-]"))`
