@@ -30,7 +30,7 @@
   (setq enable-recursive-minibuffers t) ; allow commands in minibuffer
   (setq ivy-wrap t)                     ; make ivy wrap around results
   (setq ivy-count-format "%d/%d ")
-  ;; alternative to `C-M-j'(`ivy-immediate-done')
+  ;; alternative to `C-M-j' (`ivy-immediate-done')
   (setq ivy-use-selectable-prompt t)
   ;; recenter after exiting `swiper'
   (setq swiper-action-recenter t)
@@ -96,26 +96,9 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
       (ivy--regex-plus str)))
   (setq ivy-re-builders-alist '((t . my//ivy--regex-plus)))
 
-  ;; Display an arrow with the selected item
-  (defun my//ivy-format-function-arrow (candidates)
-    "Transform CANDIDATES into a string for minibuffer."
-    (ivy--format-function-generic
-      (lambda (str)
-        (concat (if (and (>= (length str) 1)
-                         (string= " " (substring str 0 1)))
-                    ">"
-                  "> ")
-          (ivy--add-face str 'ivy-current-match)))
-      (lambda (str)
-        (concat (if (and (>= (length str) 1)
-                         (string= " " (substring str 0 1)))
-                    " "
-                  "  ")
-          str))
-      candidates
-      "\n"))
+  ;; highlight the selected item
   (setf (alist-get 't ivy-format-functions-alist)
-        #'my//ivy-format-function-arrow)
+        #'ivy-format-function-arrow-line)
 
   ;; ;; https://github.com/abo-abo/swiper/issues/2213
   ;; ;; Sort ivy candidates

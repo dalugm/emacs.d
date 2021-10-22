@@ -2,6 +2,6 @@
 # name: for iterator
 # key: fori
 # --
-for (${1:Object el} : ${2:iterator}) {
+for (let ${1:elem} of ${2:iterator}) {
     $0
 }

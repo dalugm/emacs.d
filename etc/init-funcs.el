@@ -423,15 +423,16 @@ using the opposite indentation style."
 
 (defvar my-search-engine-alist
   '(
-     (baidu      . "https://www.baidu.com/s?wd=")
-     (bing       . "https://www.bing.com/search?q=")
-     (duckduckgo . "https://www.duckduckgo.com/?q=")
-     (gitee      . "https://search.gitee.com/?q=")
-     (github     . "https://www.github.com/search?q=")
-     (google     . "https://www.google.com/search?q=")
-     (vocabulary . "https://www.vocabulary.com/dictionary/")
-     (wikipedia  . "https://www.wikipedia.org/wiki/Special:Search?go=Go&search=")
-     (youtube    . "https://www.youtube.com/results?search_query=")
+     (baidu          . "https://www.baidu.com/s?wd=")
+     (bing           . "https://www.bing.com/search?q=")
+     (duckduckgo     . "https://www.duckduckgo.com/?q=")
+     (gitee          . "https://search.gitee.com/?q=")
+     (github         . "https://www.github.com/search?q=")
+     (google         . "https://www.google.com/search?q=")
+     (stackoverflow  . "https://stackoverflow.com/search?q=")
+     (vocabulary     . "https://www.vocabulary.com/dictionary/")
+     (wikipedia      . "https://www.wikipedia.org/wiki/Special:Search?go=Go&search=")
+     (youtube        . "https://www.youtube.com/results?search_query=")
      )
   "An alist of all the engines you can search by.
 Key is a symbol as the name, value is a plist specifying the search url.")
