@@ -121,6 +121,16 @@
   ;; evil-initial-state
   ;; ---------------------------------------------------------
 
+  ;; https://github.com/emacs-evil/evil/issues/511
+  (defmacro my|adjust-major-mode-keymap-with-evil (mode &optional replace)
+    `(with-eval-after-load (quote ,(if replace replace mode))
+       (evil-make-overriding-map ,(intern (concat mode "-mode-map")) 'normal)
+       ;; force update evil keymaps after `mode' loaded
+       (add-hook (quote ,(intern (concat mode "-mode-hook")))
+                 #'evil-normalize-keymaps)))
+
+  (my|adjust-major-mode-keymap-with-evil "git-timemachine")
+
   ;; buffer-regexps
   (dolist (b '(
                 ("+new-snippet+"  . emacs)
@@ -131,7 +141,7 @@
     (add-to-list 'evil-buffer-regexps b))
 
   ;; hook
-  (dolist (hook '(org-capture-mode-hook cua-rectangle-mark-mode-hook))
+  (dolist (hook '(cua-rectangle-mark-mode-hook))
     (add-hook hook #'evil-emacs-state))
 
   ;; specify MAJOR mode uses Evil (vim) NORMAL state or EMACS original state.

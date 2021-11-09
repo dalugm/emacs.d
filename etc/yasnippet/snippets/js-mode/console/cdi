@@ -3,4 +3,4 @@
 # key: cdi
 # group: console
 # --
-console.dir(${1:object});
+console.dir(${1:object})

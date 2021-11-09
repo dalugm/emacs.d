@@ -3,4 +3,4 @@
 # key: cte
 # group: console
 # --
-console.timeEnd('${1:object}');
+console.timeEnd('${1:object}')

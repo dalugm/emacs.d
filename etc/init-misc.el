@@ -56,9 +56,9 @@
   :when (memq window-system '(mac ns x))
   :init (setq exec-path-from-shell-check-startup-files nil)
   :config (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-envs '("GTAGSCONF" "GTAGSLABEL" "LANG"
-                                    "GPG_AGENT_INFO" "SSH_AUTH_SOCK"))
-  (dolist (var '("PATH" "MANPATH"))
+  (dolist (var '("SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO"
+                 "LANG" "LC_CTYPE" "PATH" "MANPATH"
+                 "NIX_SSL_CERT_FILE" "NIX_PATH" "GTAGSLABEL" "GTAGSCONF"))
     (add-to-list 'exec-path-from-shell-variables var))
   (when (executable-find "gls")
     ;; Use GNU ls as `gls' from `coreutils' if available.

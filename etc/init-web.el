@@ -55,7 +55,13 @@
   :mode "\\.vue\\'"
   :mode "\\.wxml\\'"
   :mode "templates/.+\\.php\\'"
-  :mode "wp-content/themes/.+/.+\\.php\\'")
+  :mode "wp-content/themes/.+/.+\\.php\\'"
+  :custom
+  ;; `web-mode-enable-auto-*' features only enabled in graphic mode
+  ;; which is related on pasting issues on terminal
+  ;; https://github.com/fxbois/web-mode/issues/1175
+  (web-mode-enable-auto-pairing t)
+  (web-mode-enable-auto-quoting t))
 
 (provide 'init-web)
 

@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: file_description
+# key: file
+# --
+/**
+ * file ${1:`(file-name-nondirectory(buffer-file-name))`}
+ * brief ${2:A Documented file.}
+ ${3:*
+ *  ${4:Detailed description}
+ *
+}*/

@@ -3,4 +3,4 @@
 # key: cwa
 # group: console
 # --
-console.warn(${1:object});
+console.warn(${1:object})

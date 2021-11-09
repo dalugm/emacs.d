@@ -13,9 +13,6 @@
 (use-package web-mode
   :mode "\\.cshtml\\'")
 
-(use-package sharper
-  :bind ("C-c c n" . sharper-main-transient))
-
 (provide 'init-csharp)
 
 ;;; init-csharp.el ends here

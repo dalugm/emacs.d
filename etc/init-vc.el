@@ -36,8 +36,11 @@
 
 (use-package magit
   :bind (("C-x g"   . magit-status)
+         ("C-c v g" . magit-status)
          ("C-x M-g" . magit-dispatch)
-         ("C-c M-g" . magit-file-dispatch))
+         ("C-c v d" . magit-dispatch)
+         ("C-c M-g" . magit-file-dispatch)
+         ("C-c v f" . magit-file-dispatch))
   :config
   ;; add module section into the status buffer
   (magit-add-section-hook 'magit-status-sections-hook
@@ -87,6 +90,9 @@
   :bind (("C-c v l l" . git-link)
          ("C-c v l c" . git-link-commit)
          ("C-c v l h" . git-link-homepage)))
+
+(use-package git-timemachine
+  :bind ("C-c v t" . git-timemachine))
 
 (provide 'init-vc)
 

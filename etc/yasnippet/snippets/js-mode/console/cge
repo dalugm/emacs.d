@@ -3,4 +3,4 @@
 # key: cge
 # group: console
 # --
-console.groupEnd();
+console.groupEnd()

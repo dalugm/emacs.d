@@ -3,4 +3,4 @@
 # key: cin
 # group: console
 # --
-console.info(${1:object});
+console.info(${1:object})

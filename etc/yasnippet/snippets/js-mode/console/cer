@@ -3,4 +3,4 @@
 # key: cer
 # group: console
 # --
-console.error(${1:object});
+console.error(${1:object})

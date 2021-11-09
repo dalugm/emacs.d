@@ -3,4 +3,4 @@
 # key: cas
 # group: console
 # --
-console.assert(${1:expression}, ${2:object});
+console.assert(${1:expression}, ${2:object})

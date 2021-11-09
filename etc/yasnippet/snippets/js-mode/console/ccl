@@ -3,4 +3,4 @@
 # key: ccl
 # group: console
 # --
-console.clear();
+console.clear()

@@ -203,6 +203,9 @@
 [submodule "git-modes"]
 	path = lib/git-modes
 	url = https://github.com/magit/git-modes.git
+[submodule "git-timemachine"]
+	path = lib/git-timemachine
+	url = https://gitlab.com/pidu/git-timemachine.git
 [submodule "go-mode"]
 	path = lib/go-mode
 	url = https://github.com/dominikh/go-mode.el.git
@@ -352,9 +355,6 @@
 [submodule "separedit"]
 	path = lib/separedit
 	url = https://github.com/twlz0ne/separedit.el.git
-[submodule "sharper"]
-	path = lib/sharper
-	url = https://github.com/sebasmonia/sharper.git
 [submodule "sicp"]
 	path = lib/sicp
 	url = https://github.com/webframp/sicp-info.git
