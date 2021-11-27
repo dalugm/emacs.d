@@ -609,11 +609,9 @@ Do NOT mess with special buffers."
 (global-set-key (kbd "C-c m K") #'my/kill-other-buffers-with-special-ones)
 
 (defun my/toggle-hl-line ()
-  "Toggle `hl-line-mode'."
+  "Toggle function `global-hl-line-mode'."
   (interactive)
-  (if (bound-and-true-p hl-line-mode)
-      (hl-line-mode -1)
-    (hl-line-mode +1)))
+  (global-hl-line-mode 'toggle))
 
 (global-set-key (kbd "C-c t h") #'my/toggle-hl-line)
 

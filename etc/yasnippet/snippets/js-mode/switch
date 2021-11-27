@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: switch
-# key: sw
+# key: switch
 # --
 switch (${1:condition}) {
   case ${2:expression}:

@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: try catch
+# key: try
+# --
+try {
+  $1
+} catch (err) {
+  $2
+}${3: finally {
+  $4
+}}
