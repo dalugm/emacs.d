@@ -97,6 +97,9 @@
 [submodule "darktooth-theme"]
 	path = lib/darktooth-theme
 	url = https://github.com/emacsfodder/emacs-theme-darktooth.git
+[submodule "dart-mode"]
+	path = lib/dart-mode
+	url = https://github.com/bradyt/dart-mode.git
 [submodule "dash"]
 	path = lib/dash
 	url = https://github.com/magnars/dash.el.git
@@ -237,9 +240,15 @@
 [submodule "kaolin-themes"]
 	path = lib/kaolin-themes
 	url = https://github.com/ogdenwebb/emacs-kaolin-themes.git
+[submodule "kotlin-mode"]
+	path = lib/kotlin-mode
+	url = https://github.com/Emacs-Kotlin-Mode-Maintainers/kotlin-mode.git
 [submodule "leuven-theme"]
 	path = lib/leuven-theme
 	url = https://github.com/fniessen/emacs-leuven-theme.git
+[submodule "lsp-dart"]
+	path = lib/lsp-dart
+	url = https://github.com/emacs-lsp/lsp-dart.git
 [submodule "lsp-java"]
 	path = lib/lsp-java
 	url = https://github.com/emacs-lsp/lsp-java.git
@@ -319,6 +328,9 @@
 [submodule "polymode"]
 	path = lib/polymode
 	url = https://github.com/polymode/polymode.git
+[submodule "popup"]
+	path = lib/popup
+	url = https://github.com/auto-complete/popup-el.git
 [submodule "posframe"]
 	path = lib/posframe
 	url = https://github.com/tumashu/posframe.git
@@ -386,6 +398,9 @@
 	path = lib/subed
 	url = https://github.com/rndusr/subed.git
 	load-path = subed
+[submodule "swift-mode"]
+	path = lib/swift-mode
+	url = https://github.com/swift-emacs/swift-mode.git
 [submodule "tablist"]
 	path = lib/tablist
 	url = https://github.com/politza/tablist.git
@@ -432,6 +447,9 @@
 [submodule "valign"]
 	path = lib/valign
 	url = https://github.com/casouri/valign.git
+[submodule "vc-msg"]
+	path = lib/vc-msg
+	url = https://github.com/redguardtoo/vc-msg.git
 [submodule "web-mode"]
 	path = lib/web-mode
 	url = https://github.com/fxbois/web-mode.git

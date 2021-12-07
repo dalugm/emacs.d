@@ -121,11 +121,13 @@
   :hook (after-init . avy-setup-default)
   :bind (("C-c g 2" . avy-goto-char-2)
          ("C-c g c" . avy-goto-char)
-         ("C-c g g" . avy-goto-char-timer)
-         ("C-c g w" . avy-goto-word-or-subword-1)
-         ("C-c g l" . avy-goto-line)
          ("C-c g e" . avy-goto-end-of-line)
-         ("C-c g i" . avy-goto-char-in-line))
+         ("C-c g g" . avy-goto-char-timer)
+         ("C-c g i" . avy-goto-char-in-line)
+         ("C-c g j" . avy-goto-line-below)
+         ("C-c g k" . avy-goto-line-above)
+         ("C-c g l" . avy-goto-line)
+         ("C-c g w" . avy-goto-word-or-subword-1))
   :custom (avy-style 'at-full))
 
 (use-package zh-lib

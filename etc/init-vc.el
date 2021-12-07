@@ -94,6 +94,9 @@
 (use-package git-timemachine
   :bind ("C-c v t" . git-timemachine))
 
+(use-package vc-msg
+  :bind ("C-c v s" . vc-msg-show))
+
 (provide 'init-vc)
 
 ;;; init-vc.el ends here

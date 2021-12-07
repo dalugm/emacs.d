@@ -36,11 +36,6 @@
 (use-package lsp-treemacs
   :after (treemacs lsp))
 
-(use-package lsp-pyright
-  :defer t
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-pyright))))
-
 (provide 'init-lsp)
 
 ;;; init-lsp.el ends here
