@@ -10,8 +10,11 @@
 (use-package kotlin-mode
   :mode "\\.kt\\'")
 
+(use-package groovy-mode
+  :mode "\\.g\\(?:ant\\|roovy\\|radle\\)\\'")
+
 (use-package lsp-java
-  :after (lsp-mode java-mode))
+  :after (:all lsp-mode (:any java-mode kotlin-mode groovy-mode)))
 
 (provide 'init-java)
 

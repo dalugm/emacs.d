@@ -43,6 +43,8 @@
                                doom-laserwave
                                doom-manegarm
                                doom-material
+                               doom-material-dark
+                               doom-meltbus
                                doom-miramare
                                doom-molokai
                                doom-monokai-classic
@@ -69,6 +71,7 @@
                                doom-solarized-dark-high-contrast
                                doom-sourcerer
                                doom-spacegrey
+                               doom-tokyo-night
                                doom-tomorrow-night
                                doom-vibrant
                                doom-wilmersdorf
@@ -133,6 +136,7 @@
                                 cyberpunk
                                 doom-homage-black
                                 doom-ir-black
+                                doom-meltbus
                                 manoj-dark
                                 modus-vivendi
                                 sanityinc-tomorrow-bright
@@ -150,6 +154,7 @@
                                 dichromacy
                                 doom-acario-light
                                 doom-ayu-light
+                                doom-earl-grey
                                 doom-flatwhite
                                 doom-gruvbox-light
                                 doom-homage-white

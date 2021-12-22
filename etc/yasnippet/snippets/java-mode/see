@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: see
+# key: @s
+# --
+@see $0

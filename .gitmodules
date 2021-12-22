@@ -138,6 +138,9 @@
 	path = lib/emacsql
 	url = https://github.com/skeeto/emacsql.git
 	no-byte-compile = emacsql-pg.el
+[submodule "emmet-mode"]
+	path = lib/emmet-mode
+	url = https://github.com/dalugm/emmet-mode.git
 [submodule "epkg"]
 	path = lib/epkg
 	url = https://github.com/emacscollective/epkg.git

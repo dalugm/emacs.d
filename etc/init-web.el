@@ -17,6 +17,9 @@
   ;; `web-mode' has superior support for php+html.
   (setq php-mode-template-compatibility nil))
 
+(use-package emmet-mode
+  :hook (css-mode web-mode html-mode nxml-mode sgml-mode))
+
 (use-package tagedit
   :hook (html-mode . tagedit-mode)
   :bind (:map tagedit-mode-map

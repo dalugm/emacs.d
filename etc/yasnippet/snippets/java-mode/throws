@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: throws
+# key: @th
+# --
+@throws $0

@@ -36,6 +36,10 @@
 (use-package lsp-treemacs
   :after (treemacs lsp))
 
+(use-package dap-mode
+  :after lsp-mode
+  :config (dap-auto-configure-mode))
+
 (provide 'init-lsp)
 
 ;;; init-lsp.el ends here

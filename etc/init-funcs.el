@@ -638,16 +638,14 @@ Do NOT mess with special buffers."
     (message "Strfile finish: %s." dat-file)))
 
 (defun my/insert-date (prefix)
-  "Insert the current date.
-With 1 as PREFIX, insert like ‘yyyymmdd’.
+  "Insert the ISO 8601 date format (like \"%+4Y-%m-%d\").
 With one PREFIX, use ISO format.
 With two PREFIX, use standard time format.
-With three PREFIX, insert like ‘mm/dd/yy’.
-With four PREFIX, insert locale's timestamp."
+With three PREFIX, insert locale's timestamp."
   (interactive "P")
   (let ((format (cond
-                  ((not prefix) "%Y%m%d")
-                  ((equal prefix '(4)) "%Y-%m-%dT%H:%M:%S%:z")
+                  ((not prefix) "%F")
+                  ((equal prefix '(4)) "%FT%H:%M:%S%:z")
                   ((equal prefix '(16)) "%s")
                   ((equal prefix '(64)) "%c"))))
     (insert (format-time-string format))))
@@ -745,16 +743,22 @@ Fix OLD-FUNC with ARGS."
     (winner-undo)
     (message "Winner: [u]ndo [r]edo [q]uit")
     (set-transient-map
-      (let ((map (make-sparse-keymap)))
-        (define-key map [?u] #'winner-undo)
-        (define-key map [?r] #'winner-redo)
+      (let
+        ((map
+           (make-sparse-keymap)))
+        (define-key map
+          [?u]
+          #'winner-undo)
+        (define-key map
+          [?r]
+          #'winner-redo)
         map)
       t)))
 
 (global-set-key (kbd "C-x 4 u") #'my/transient-winner-undo)
 
 (defun my//calculate-time-duration (start end)
-  "Calculate seconds(format: SS) duration from START to END(format: \"HH:MM:SS\")."
+  "Calculate seconds (format: SS) duration from START to END (format: \"HH:MM:SS\")."
   (-
     (let ((end-sum 0) (end-acc 0))
       (mapc
@@ -783,7 +787,10 @@ Fix OLD-FUNC with ARGS."
     (dotimes (_ 2)
       (setq time (concat (format ":%02d" (% second 60)) time)
             second (/ second 60)))
-    (setq time (concat (format "%02d" second) time))
+    (setq time
+      (concat
+        (format "%02d" second)
+        time))
     time))
 
 (defun my//adjust-point-after-click (event &optional _)

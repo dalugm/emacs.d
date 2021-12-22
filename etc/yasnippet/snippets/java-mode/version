@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: version
+# key: @ve
+# --
+@version ${1:0.1.0}
