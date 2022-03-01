@@ -143,13 +143,13 @@ version control automatically."
 ;; FILE ;;
 ;;;;;;;;;;
 
-(defun my/add-auto-mode (mode &rest patterns)
+(defun my//add-auto-mode (mode &rest patterns)
   "Add entries to `auto-mode-alist'.
 Use specified MODE for all given file PATTERNS."
   (dolist (pattern patterns)
     (add-to-list 'auto-mode-alist (cons pattern mode))))
 
-(defun my/add-interpreter-mode (mode &rest patterns)
+(defun my//add-interpreter-mode (mode &rest patterns)
   "Add entries to `interpreter-mode-alist'.
 Use specified MODE for all given file PATTERNS."
   (dolist (pattern patterns)

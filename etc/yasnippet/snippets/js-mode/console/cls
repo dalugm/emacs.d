@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: console.log string
+# key: cls
+# group: console
+# --
+console.log("${1:string}")

@@ -121,10 +121,6 @@
   ;; ;; https://github.com/Fuco1/smartparens/issues/683
   ;; (sp-pair "(" nil :unless '(sp-in-string-p))
 
-  ;; use `web-mode' mechanism to handle auto-pair
-  (sp-local-pair 'web-mode "{" "}" :actions nil)
-  (sp-local-pair 'web-mode "<" ">" :actions nil)
-
   ;; config for `sp-wrap'
   (defmacro my|def-pairs (pairs)
     "Define functions for pairing. PAIRS is an alist of (NAME . STRING)
