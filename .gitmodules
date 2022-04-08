@@ -79,9 +79,9 @@
 [submodule "company-box"]
 	path = lib/company-box
 	url = https://github.com/sebastiencs/company-box.git
-[submodule "counsel-etags"]
-	path = lib/counsel-etags
-	url = https://github.com/redguardtoo/counsel-etags.git
+[submodule "consult"]
+	path = lib/consult
+	url = https://github.com/minad/consult.git
 [submodule "csharp-mode"]
 	path = lib/csharp-mode
 	url = https://github.com/emacs-csharp/csharp-mode.git
@@ -138,9 +138,14 @@
 	path = lib/emacsql
 	url = https://github.com/skeeto/emacsql.git
 	no-byte-compile = emacsql-pg.el
+[submodule "embark"]
+	path = lib/embark
+	url = https://github.com/oantolin/embark.git
 [submodule "emmet-mode"]
 	path = lib/emmet-mode
 	url = https://github.com/dalugm/emmet-mode.git
+	build-step = make clean
+	build-step = make
 [submodule "epkg"]
 	path = lib/epkg
 	url = https://github.com/emacscollective/epkg.git
@@ -277,6 +282,9 @@
 	url = https://github.com/magit/magit.git
 	recursive-byte-compile = true
 	info-path = Documentation
+[submodule "marginalia"]
+	path = lib/marginalia
+	url = https://github.com/minad/marginalia.git
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode.git
@@ -288,7 +296,7 @@
 	url = https://github.com/cpaulik/emacs-material-theme.git
 [submodule "modus-themes"]
 	path = lib/modus-themes
-	url = https://gitlab.com/protesilaos/modus-themes.git
+	url = https://git.sr.ht/~protesilaos/modus-themes
 [submodule "moe-theme"]
 	path = lib/moe-theme
 	url = https://github.com/kuanyui/moe-theme.el.git
@@ -304,6 +312,9 @@
 [submodule "ns-auto-titlebar"]
 	path = lib/ns-auto-titlebar
 	url = https://github.com/purcell/ns-auto-titlebar.git
+[submodule "orderless"]
+	path = lib/orderless
+	url = https://github.com/oantolin/orderless.git
 [submodule "org-html-themes"]
 	path = opt/org-html-themes
 	url = https://github.com/fniessen/org-html-themes.git
@@ -453,6 +464,9 @@
 [submodule "vc-msg"]
 	path = lib/vc-msg
 	url = https://github.com/redguardtoo/vc-msg.git
+[submodule "vertico"]
+	path = lib/vertico
+	url = https://github.com/minad/vertico.git
 [submodule "web-mode"]
 	path = lib/web-mode
 	url = https://github.com/fxbois/web-mode.git

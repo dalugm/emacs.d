@@ -13,12 +13,12 @@
   :init
   (setq url-queue-timeout 30)
   (setq elfeed-curl-program-name (executable-find "curl"))
-  :bind (:map elfeed-search-mode-map
+  :bind ((:map elfeed-search-mode-map
           ("A" . my/elfeed-show-all)
           ("B" . my/elfeed-show-blog)
           ("D" . my/elfeed-show-daily)
           ("E" . my/elfeed-show-emacs)
-          ("q" . my/elfeed-save-db-and-bury))
+          ("q" . my/elfeed-save-db-and-bury)))
   :config
   ;; http://pragmaticemacs.com/emacs/read-your-rss-feeds-in-emacs-with-elfeed/
   (defun my/elfeed-show-all()
@@ -63,9 +63,9 @@
            (pdf-view-mode . pdf-isearch-minor-mode))
     :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
     :magic ("%PDF" . pdf-view-mode)
-    :bind (:map pdf-view-mode-map
-           ("C-s" . isearch-forward)
-           ("C-r" . isearch-backward))
+    :bind ((:map pdf-view-mode-map
+            ("C-s" . isearch-forward)
+            ("C-r" . isearch-backward)))
     :config
     ;; Enable hiDPI support, but at the cost of memory!
     (setq pdf-view-use-scaling t

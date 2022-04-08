@@ -9,7 +9,7 @@
 
 (use-package evil
   :hook (after-init . evil-mode)
-  :bind (:map evil-normal-state-map
+  :bind ((:map evil-normal-state-map
           ("]b" . next-buffer)
           ("[b" . previous-buffer)
           ("g1" . avy-goto-char-timer)
@@ -19,17 +19,16 @@
           ("glj" . avy-goto-line-below)
           ("glk" . avy-goto-line-above)
           ("gle" . avy-goto-end-of-line)
-          ("M-." . xref-find-definitions)
-          ("C-]" . counsel-etags-find-tag-at-point)
-         :map evil-insert-state-map
+          ("M-." . xref-find-definitions))
+         (:map evil-insert-state-map
           ("C-n" . next-line)
           ("C-p" . previous-line)
           ("C-a" . beginning-of-line)
           ("C-e" . end-of-line)
           ("C-k" . kill-line)
-          ("C-t" . transpose-chars)
-         :map evil-visual-state-map
-          ("v" . er/expand-region))
+          ("C-t" . transpose-chars))
+         (:map evil-visual-state-map
+          ("v" . er/expand-region)))
   :config
   ;; make evil-search behave more like VIM
   (evil-select-search-module 'evil-search-module 'evil-search)
@@ -55,14 +54,16 @@
     (save-excursion (dotimes (_ count) (evil-insert-newline-above)))
     (when (bolp) (forward-char count)))
 
-  (define-key evil-normal-state-map (kbd "[ SPC") #'evil-unimpaired-insert-newline-above)
+  (define-key evil-normal-state-map (kbd "[ SPC")
+              #'evil-unimpaired-insert-newline-above)
 
   (defun evil-unimpaired-insert-newline-below (count)
     "Insert COUNT blank line(s) below current line."
     (interactive "p")
     (save-excursion (dotimes (_ count) (evil-insert-newline-below))))
 
-  (define-key evil-normal-state-map (kbd "] SPC") #'evil-unimpaired-insert-newline-below)
+  (define-key evil-normal-state-map (kbd "] SPC")
+              #'evil-unimpaired-insert-newline-below)
 
   (defun my//evil-disable-ex-highlight ()
     "Disable evil ex search buffer highlight."
@@ -246,14 +247,14 @@ ref: https://stackoverflow.com/a/22418983/4921402."
 
 ;; bundle with `evil'
 (use-package evil-nerd-commenter
-  :bind (:map evil-normal-state-map
+  :bind ((:map evil-normal-state-map
           ("gc" . evilnc-comment-operator)
           ("gp" . evilnc-copy-and-comment-operator)
-          ("gy" . evilnc-yank-and-comment-operator)
-         :map evil-motion-state-map
+          ("gy" . evilnc-yank-and-comment-operator))
+         (:map evil-motion-state-map
           ("gc" . evilnc-comment-operator)
           ("gp" . evilnc-copy-and-comment-operator)
-          ("gy" . evilnc-yank-and-comment-operator)))
+          ("gy" . evilnc-yank-and-comment-operator))))
 
 ;; https://medium.com/@schtoeffel/you-don-t-need-more-than-one-cursor-in-vim-2c44117d51db
 ;; https://macplay.github.io/posts/vim-bu-xu-yao-duo-guang-biao-bian-ji-gong-neng/
@@ -368,10 +369,11 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "de" #'flycheck-display-error-at-point
     "fa" #'flyspell-auto-correct-word
     "fc" #'flycheck-mode
+    "fm" #'flymake-mode
     "fn" #'flyspell-goto-next-error
     "fs" #'flyspell-mode
-    "ne" #'flycheck-next-error
-    "pe" #'flycheck-previous-error
+    "ne" #'flymake-goto-next-error
+    "pe" #'flymake-goto-prev-error
     ;; workspace
     "ip" #'find-file-in-project
     "tt" #'find-file-in-current-directory

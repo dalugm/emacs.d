@@ -36,10 +36,10 @@
 
 (use-package auto-yasnippet
   :after yasnippet
-  :bind (:map yas-minor-mode-map
+  :bind ((:map yas-minor-mode-map
           ("C-c e c" . aya-create)
           ("C-c e p" . aya-expand)
-          ("C-c e l" . aya-open-line)))
+          ("C-c e l" . aya-open-line))))
 
 (provide 'init-snippet)
 

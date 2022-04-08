@@ -47,9 +47,9 @@
          ("C-c p r" . ffip-find-relative-path)
          ("C-c p s" . find-file-with-similar-name)
          ("C-c p v" . ffip-show-diff)
-         :map ffip-diff-mode-map
+         (:map ffip-diff-mode-map
           ("a" . ffip-diff-apply-hunk)
-          ("q" . ffip-diff-quit))
+          ("q" . ffip-diff-quit)))
   :config
   (when (eq system-type 'windows-nt)
     (setq ffip-find-executable "c:\\\\cygwin64\\\\bin\\\\find"))

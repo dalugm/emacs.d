@@ -133,20 +133,6 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
   :hook (counsel-mode . ivy-prescient-mode)
   :custom (ivy-prescient-enable-filtering nil))
 
-(use-package counsel-etags
-  :bind (("C-c c f" . counsel-etags-find-tag-at-point)
-         ("C-c c g" . counsel-etags-scan-code))
-  :hook (prog-mode . (lambda ()
-                       (add-hook 'after-save-hook
-                                 #'counsel-etags-virtual-update-tags
-                                 'append 'local)))
-  :config
-  ;; `counsel-etags-ignore-filenames' supports wildcast
-  (push "*.json" counsel-etags-ignore-filenames)
-  ;; `counsel-etags-ignore-directories' does NOT support wildcast
-  (push "build_clang" counsel-etags-ignore-directories)
-  (push "build" counsel-etags-ignore-directories))
-
 (provide 'init-ivy)
 
 ;;; init-ivy.el ends here

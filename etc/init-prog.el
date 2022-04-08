@@ -65,7 +65,7 @@
 ;; https://ebzzry.io/en/emacs-pairs/
 (use-package smartparens
   :hook (prog-mode . smartparens-mode)
-  :bind (:map smartparens-mode-map
+  :bind ((:map smartparens-mode-map
           ("C-M-a" . sp-beginning-of-sexp)
           ("C-M-e" . sp-end-of-sexp)
           ("C-M-d" . sp-down-sexp)
@@ -95,7 +95,7 @@
           ("C-c '"  . my/wrap-with-single-quotes)
           ("C-c \"" . my/wrap-with-double-quotes)
           ("C-c _"  . my/wrap-with-underscores)
-          ("C-c `"  . my/wrap-with-back-quotes))
+          ("C-c `"  . my/wrap-with-back-quotes)))
   :config
   ;; Load default smartparens rules for various languages
   (require 'smartparens-config)
@@ -195,7 +195,7 @@ respectively."
 
 (use-package ggtags
   :bind (("C-c l g" . ggtags-mode)
-         ("C-c c G" . ggtags-create-tags)
+         ("C-c c g" . ggtags-create-tags)
          ("C-c c b" . ggtags-browse-file-as-hypertext)
          ("C-c c s" . ggtags-grep)
          ("C-c c u" . ggtags-update-tags)

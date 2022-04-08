@@ -7,9 +7,6 @@
 
 ;;; Code:
 
-(use-package typescript-mode
-  :mode "\\.ts[x]\\'")
-
 (use-package php-mode
   :mode "\\.inc\\'"
   :config
@@ -18,11 +15,11 @@
   (setq php-mode-template-compatibility nil))
 
 (use-package emmet-mode
-  :hook (css-mode web-mode html-mode nxml-mode sgml-mode))
+  :hook (js-mode css-mode web-mode html-mode nxml-mode sgml-mode))
 
 (use-package tagedit
   :hook (html-mode . tagedit-mode)
-  :bind (:map tagedit-mode-map
+  :bind ((:map tagedit-mode-map
           ("M-k" . tagedit-kill)
           ("M-K" . tagedit-kill-attribute)
           ("M-J" . tagedit-join-tags)
@@ -39,7 +36,7 @@
           ("M-s m" . te/goto-tag-match)
           ("M-s r" . tagedit-raise-tag)
           ("M-s s" . tagedit-splice-tag)
-          ("M-s t" . tagedit-toggle-multiline-tag))
+          ("M-s t" . tagedit-toggle-multiline-tag)))
   :config (tagedit-add-experimental-features))
 
 (use-package web-mode
@@ -55,11 +52,14 @@
   :mode "\\.mustache\\'"
   :mode "\\.svelte\\'"
   :mode "\\.twig\\'"
-  :mode "\\.vue\\'"
+  :mode "\\.[n]?vue\\'"
   :mode "\\.wxml\\'"
   :mode "templates/.+\\.php\\'"
   :mode "wp-content/themes/.+/.+\\.php\\'"
   :custom
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
   ;; `web-mode-enable-auto-*' features only enabled in graphic mode
   ;; which is related on pasting issues on terminal
   ;; https://github.com/fxbois/web-mode/issues/1175

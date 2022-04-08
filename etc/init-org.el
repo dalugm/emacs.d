@@ -198,25 +198,33 @@
   ;; ---------------------------------------------------------
   ;; TODO
   ;; ---------------------------------------------------------
-  ;; format `X/Y', X means action when enters the state, Y means action when leaves the state
-  ;; use `@' to add notes and status information(including time)
-  ;; use `!' to add status information only
+  ;; format `X/Y', X means action when enters the state, Y means action
+  ;; when leaves the state use `@' to add notes and status
+  ;; information(including time) use `!' to add status information only
 
   ;; | DONE(d@)   | add notes when entering                            |
   ;; | DONE(d/!)  | add status when leaving                            |
   ;; | DONE(d@/!) | add note when entering and add status when leaving |
   ;; | DONE(d@/)  | WARNING: illegal                                   |
 
-  ;; NOTE: when leaving state A to state B, if A has a leaving action and B has an entering action
-  ;; A's leaving action won't be triggered instead of executing B's entering action
+  ;; NOTE: when leaving state A to state B, if A has a leaving action
+  ;; and B has an entering action A's leaving action won't be triggered
+  ;; instead of executing B's entering action
 
   ;; ;; use `\C-c\C-t' to toggle state
   ;; default value is t after org v8
   ;; (setq org-use-fast-todo-selection t)
 
-  (setq org-todo-keywords '((sequence "TODO(t)" "STARTED(s!/!)" "HANGUP(h@)" "|" "DONE(d)" "ABORT(a@/!)")
-                            (sequence "REPORT(r)" "BUG(b@)" "KNOWNCAUSE(k@)" "|" "FIXED(f!)")
-                            (sequence "WAITING(w@/!)" "SOMEDAY(S@)" "PROJECT(P@)" "|" "CANCELLED(c@/!)")))
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "STARTED(s!/!)" "HANGUP(h@)"
+                    "|"
+                    "DONE(d)" "ABORT(a@/!)")
+          (sequence "REPORT(r)" "BUG(b@)" "KNOWNCAUSE(k@)"
+                    "|"
+                    "FIXED(f!)")
+          (sequence "WAITING(w@/!)" "SOMEDAY(S@)" "PROJECT(P@)"
+                    "|"
+                    "CANCELLED(c@/!)")))
 
   ;; ---------------------------------------------------------
   ;; clock
@@ -266,11 +274,13 @@
   (defun my/org-export-docx ()
     "Export org file as docx."
     (interactive)
-    (let ((docx-file (concat (file-name-sans-extension (buffer-file-name)) ".docx"))
+    (let ((docx-file (concat (file-name-sans-extension (buffer-file-name))
+                             ".docx"))
           (template-file (concat (file-name-as-directory my-optional-d)
                                  "template.docx")))
-      (shell-command (format "pandoc %s -o %s --reference-doc=%s" (buffer-file-name) docx-file template-file))
-      (message "Convert finish: %s." docx-file)))
+      (shell-command (format "pandoc %s -o %s --reference-doc=%s"
+                             (buffer-file-name) docx-file template-file))
+      (message "Convert finish: %s. " docx-file)))
 
   ;; ---------------------------------------------------------
   ;; LaTeX
@@ -281,9 +291,9 @@
     ;; export org-mode in Chinese into PDF
     ;; https://freizl.github.io/posts/2012-04-06-export-orgmode-file-in-Chinese.html
     (setq org-latex-pdf-process
-      '("xelatex -interaction nonstopmode -output-directory %o %f"
-        "xelatex -interaction nonstopmode -output-directory %o %f"
-        "xelatex -interaction nonstopmode -output-directory %o %f"))
+          '("xelatex -interaction nonstopmode -output-directory %o %f"
+            "xelatex -interaction nonstopmode -output-directory %o %f"
+            "xelatex -interaction nonstopmode -output-directory %o %f"))
     (add-to-list 'org-latex-classes
       '("ctexart" "\\documentclass[11pt]{ctexart}"
         ("\\section{%s}" . "\\section*{%s}")
@@ -309,9 +319,12 @@
   (add-to-list 'org-modules 'org-tempo)
 
   ;; 让中文也可以不加空格就使用行内格式
-  (setcar (nthcdr 0 org-emphasis-regexp-components) " \t('\"{[:nonascii:]")
-  (setcar (nthcdr 1 org-emphasis-regexp-components) "- \t.,:!?;'\")}\\[[:nonascii:]")
-  (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+  (setcar (nthcdr 0 org-emphasis-regexp-components)
+          " \t('\"{[:nonascii:]")
+  (setcar (nthcdr 1 org-emphasis-regexp-components)
+          "- \t.,:!?;'\")}\\[[:nonascii:]")
+  (org-set-emph-re 'org-emphasis-regexp-components
+                   org-emphasis-regexp-components)
   (org-element-update-syntax)
   ;; 规定上下标必须加 {}，否则中文使用下划线时它会以为是两个连着的下标
   (setq org-use-sub-superscripts "{}")

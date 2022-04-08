@@ -30,6 +30,12 @@
   ;; Only check while saving and opening files
   (setq flycheck-check-syntax-automatically '(save mode-enabled)))
 
+;; (use-package flymake
+;;   :bind (("C-c ! n" . flymake-goto-next-error)
+;;          ("C-c ! p" . flymake-goto-prev-error)
+;;          ("C-c ! s" . flymake-show-diagnostics-buffer)
+;;          ("C-c ! c" . flymake-start)))
+
 (use-package flyspell
   :custom
   (ispell-program-name "aspell")

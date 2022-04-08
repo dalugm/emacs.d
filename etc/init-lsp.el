@@ -18,9 +18,9 @@
                       ;; integrate with `which-key'
                       (when (featurep 'which-key)
                         (lsp-enable-which-key-integration))))
-  :bind (:map lsp-mode-map
+  :bind ((:map lsp-mode-map
           ([remap xref-find-definitions] . lsp-find-definition)
-          ([remap xref-find-references]  . lsp-find-references))
+          ([remap xref-find-references]  . lsp-find-references)))
   :config
   ;; avoid visual interference
   (setq lsp-enable-symbol-highlighting nil))
@@ -28,10 +28,10 @@
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :bind (("C-c a i" . lsp-ui-imenu)
-         :map lsp-ui-mode-map
+         (:map lsp-ui-mode-map
           ("C-c a a M-RET" . lsp-ui-sideline-apply-code-actions)
           ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-          ([remap xref-find-references] . lsp-ui-peek-find-references)))
+          ([remap xref-find-references] . lsp-ui-peek-find-references))))
 
 (use-package lsp-treemacs
   :after (treemacs lsp))

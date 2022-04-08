@@ -15,9 +15,9 @@
 (use-package pyim
   :unless (featurep 'rime)
   :bind (("C-\\" . toggle-input-method)
-         :map pyim-mode-map
+         (:map pyim-mode-map
           ("," . pyim-page-previous-page)
-          ("." . pyim-page-next-page))
+          ("." . pyim-page-next-page)))
   :custom (default-input-method "pyim")
   :config
   ;; 使用全拼
@@ -89,8 +89,7 @@
     (unless disable-basedict (pyim-basedict-enable))))
 
 (use-package bing-dict
-  :bind ("C-c t b" . bing-dict-brief)
-  :config (setq bing-dict-vocabulary-save t))
+  :bind ("C-c t b" . bing-dict-brief))
 
 (use-package avy-zh
   :after avy
