@@ -318,24 +318,25 @@
 
 ;; abbrevs
 (setq save-abbrevs 'silently)
-(define-abbrev-table 'global-abbrev-table '(
-                                             ;; Emacs regex
-                                             ("azdr" "\\([A-Za-z0-9]+\\)" )
-                                             ("bracketr" "\\[\\([^]]+?\\)\\]" )
-                                             ("curlyr" "“\\([^”]+?\\)”" )
-                                             ("digitsr" "\\([0-9]+\\)" )
-                                             ("dater" "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)" )
-                                             ("dotr" "\\(.\\)" )
-                                             ("strr" "\\([^\"]+?\\)" )
-                                             ("tagr" "\\([</>=\" A-Za-z0-9]+\\)" )
-                                             ;; unicode
-                                             ("fws" "　")
-                                             )
+(define-abbrev-table
+  'global-abbrev-table
+  '(;; Emacs regex
+    ("azdr" "\\([A-Za-z0-9]+\\)" )
+    ("bracketr" "\\[\\([^]]+?\\)\\]" )
+    ("curlyr" "“\\([^”]+?\\)”" )
+    ("digitsr" "\\([0-9]+\\)" )
+    ("dater" "\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)" )
+    ("dotr" "\\(.\\)" )
+    ("strr" "\\([^\"]+?\\)" )
+    ("tagr" "\\([</>=\" A-Za-z0-9]+\\)" )
+    ;; unicode
+    ("fws" "　"))
   "Abbrev table for my own use.")
 
 ;;; Search
 (global-set-key (kbd "C-c s d") #'find-dired)
 (global-set-key (kbd "C-c s i") #'imenu)
+(global-set-key (kbd "C-c s g") #'grep)
 
 ;; isearch
 (global-set-key (kbd "C-M-s") #'isearch-forward-regexp)

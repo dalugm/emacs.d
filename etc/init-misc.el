@@ -136,6 +136,13 @@
          ("C-c s P" . ag-project-files)
          ("C-c s E" . ag-project-regexp)))
 
+(use-package rg
+  :bind (("C-c s s" . rg-menu)))
+
+(use-package marginalia
+  :after (:any ivy vertico)
+  :config (marginalia-mode +1))
+
 ;; Add both site-lisp and its immediate subdirs to `load-path'
 (let ((site-lisp-dir (expand-file-name "lib/site-lisp/"
                                        user-emacs-directory)))

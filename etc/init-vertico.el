@@ -2,7 +2,7 @@
 
 ;;; Commentary:
 ;;
-;;  vertico + orderless + consult + embark + marginalia
+;;  vertico + orderless + consult + embark
 ;;
 
 ;;; Code:
@@ -16,7 +16,14 @@
   :custom
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
+  (completion-category-overrides '((file (styles partial-completion))))
+  :config
+  (defun my//orderless-regexp (str)
+    "Enhance `orderless-regexp' when searching STR."
+    (my|ensure 'zh-lib)
+    (setf (car str) (zh-lib-build-regexp-string (car str)))
+    str)
+  (advice-add #'orderless-regexp :filter-args #'my//orderless-regexp))
 
 (use-package consult
   :init
@@ -59,27 +66,31 @@
    ("M-g o" . consult-outline)
    ("M-g m" . consult-mark)
    ("M-g k" . consult-global-mark)
+   ("M-L" . consult-line)
+   ("M-s l" . consult-line)
+   ("M-s L" . consult-line-multi)
    ("C-c s I" . consult-imenu-multi)
-   ("C-c s l" . consult-find)
+   ("C-c s f" . my/consult-find)
+   ("C-c s F" . consult-find)
    ("C-c s L" . consult-locate)
-   ("C-c s g" . consult-grep)
-   ("C-c s G" . consult-git-grep)
+   ("C-c s g" . my/consult-grep)
+   ("C-c s G" . consult-grep)
+   ("C-c s v" . consult-git-grep)
    ("C-c s r" . my/consult-ripgrep)
    ("C-c s R" . consult-ripgrep)
-   ("C-c s l" . consult-line)
-   ("C-c s L" . consult-line-multi)
+   ("C-c s l" . consult-line-multi)
    ("C-c s m" . consult-multi-occur)
-   ("C-c s k" . consult-keep-lines)
-   ("C-c s u" . consult-focus-lines)
+   ("C-c s k" . consult-focus-lines)
+   ("C-c s K" . consult-keep-lines)
    ;; minibuffer history
    (:map minibuffer-local-map
     ([remap next-matching-history-element] . consult-history)
     ([remap previous-matching-history-element] . consult-history))
    (:map isearch-mode-map
     ("M-s e" . consult-isearch-history)
+    ("M-l" . consult-line)
     ("M-s l" . consult-line)
     ("M-s L" . consult-line-multi)
-    ([remap isearch-edit-string] . consult-isearch-history)
     ([remap isearch-edit-string] . consult-isearch-history)))
 
   ;; Enable automatic preview at point in the *Completions* buffer.
@@ -90,18 +101,24 @@
   ;; ---------------------------------------------------------
   ;; customize
   ;; ---------------------------------------------------------
+  (defun my/consult-find (&optional DIR)
+    "Modify `consult-find' functions to search files in DIR."
+    (interactive "DDirectory: ")
+    (consult-find DIR))
+
+  (defun my/consult-grep (&optional DIR)
+    "Modify `consult-grep' functions to search files in DIR."
+    (interactive "DDirectory: ")
+    (consult-grep DIR))
+
   (defun my/consult-ripgrep (&optional DIR)
     "Modify `consult-ripgrep' functions to search files in DIR."
     (interactive "DDirectory: ")
-    (consult-ripgrep nil DIR))
+    (consult-ripgrep DIR))
 
   ;; The narrowing key.
   ;; Both `<' and `C-+' work reasonably well.
   (setq consult-narrow-key "<"))
-
-(use-package marginalia
-  :after consult
-  :config (marginalia-mode))
 
 (use-package embark
   :bind

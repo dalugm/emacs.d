@@ -1,7 +1,6 @@
 # -*- mode: snippet; -*-
-# contributor: kchenphy <https://www.github.com/kchenphy>
-# name: package header
-# key: header
+# name: package
+# key: package
 # --
 ;;; ${1:name}.el --- ${2:summary} -*- lexical-binding: t -*-
 
@@ -35,7 +34,7 @@ ${9:
 
 ;;; Code:
 
-${11:(message "Hello World!")}
+$0
 
 (provide '$1)
 

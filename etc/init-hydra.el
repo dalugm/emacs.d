@@ -251,7 +251,7 @@
          (ace-window 1)
          (add-hook 'ace-window-end-once-hook
            #'my/hydra-window/body)))
-  ("b" ivy-switch-buffer)
+  ("b" switch-to-buffer)
   ("B" balance-windows)
   ("d" delete-window)
   ("D" (lambda ()
@@ -260,7 +260,7 @@
          (add-hook 'ace-window-end-once-hook
            #'my/hydra-window/body)))
   ("e" my/hydra-move-splitter-up)
-  ("f" counsel-find-file)
+  ("f" find-file)
   ("F" follow-mode)
   ("h" windmove-left)
   ("i" ace-delete-other-windows)

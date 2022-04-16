@@ -268,7 +268,7 @@ If FORCE-P, overwrite the target file if it exists, without confirmation."
 
 (defun my/open-this-file-externally (arg)
   "Open visited file in default external program.
-When in dired mode, open file under the cursor.
+When in Dired mode, open file under the cursor.
 With a prefix ARG always prompt for command to use."
   (interactive "P")
   (let* ((current-file-name
@@ -444,7 +444,8 @@ Key is a symbol as the name, value is a plist specifying the search url.")
                    (mapcar #'car my-search-engine-alist))))
   (let* ((search-engine (or search-engine my-search-engine))
          (search-url (if search-engine
-                         (alist-get (intern search-engine) my-search-engine-alist
+                         (alist-get (intern search-engine)
+                                    my-search-engine-alist
                                     nil nil #'equal)
                        (cdar my-search-engine-alist)))
          (url search-url))
@@ -453,7 +454,8 @@ Key is a symbol as the name, value is a plist specifying the search url.")
         (concat url
           (if mark-active
               (buffer-substring (region-beginning) (region-end))
-            (read-string (message "%s Search: " (capitalize search-engine)))))))))
+            (read-string
+             (message "%s Search: " (capitalize search-engine)))))))))
 
 (global-set-key (kbd "C-c s o") #'my/search-online)
 
@@ -658,7 +660,8 @@ With one PREFIX, insert variable `user-full-name' only.
 With two PREFIX, insert variable `user-mail-address' only."
   (interactive "P")
   (let ((format (cond
-                  ((not prefix) (concat user-full-name " <" user-mail-address ">"))
+                  ((not prefix) (concat user-full-name " <"
+                                        user-mail-address ">"))
                   ((equal prefix '(4)) user-mail-address)
                   ((equal prefix '(16)) user-full-name))))
     (insert format)))
@@ -675,7 +678,8 @@ With two PREFIX, insert variable `user-mail-address' only."
         (progn
           (end-of-line)
           (newline))
-      (while (not (or (search-forward-regexp "^第.\\{1,6\\}[回章话]" (line-end-position) t)
+      (while (not (or (search-forward-regexp "^第.\\{1,6\\}[回章话]"
+                                             (line-end-position) t)
                       (= (point) (point-max))))
         (forward-line))
       (forward-line -1)

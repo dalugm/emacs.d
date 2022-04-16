@@ -15,7 +15,7 @@
 (add-hook 'js-jsx-mode-hook #'my//js-mode-hook-setup)
 
 (use-package typescript-mode
-  :mode "\\.tsx?\\'"
+  :mode "\\.ts\\'"
   :custom (typescript-indent-level 2))
 
 (provide 'init-js)

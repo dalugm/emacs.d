@@ -289,10 +289,7 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "cl" #'evilnc-quick-comment-or-uncomment-to-the-line
     "cp" #'evilnc-comment-or-uncomment-paragraphs
     "cr" #'comment-or-uncomment-region
-    "cg" #'counsel-grep
     "si" #'imenu
-    "sr" #'my/counsel-rg
-    "sf" #'my/counsel-fzf
     "dd" #'pwd
     "dj" #'dired-jump
     "eb" #'eval-buffer
@@ -301,17 +298,13 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "el" #'eval-last-sexp
     "fr" #'recentf-open-files
     "fl" #'recentf-load-list
-    "gf" #'counsel-git
-    "gs" #'counsel-git-grep
-    "ir" #'ivy-resume
     "kb" #'kill-buffer-and-window
     "mf" #'mark-defun
     "op" #'smart-compile
     "sc" #'shell-command
-    "ss" #'counsel-grep-or-swiper
     "tD" #'darkroom-mode
     "td" #'darkroom-tentative-mode
-    "xb" #'ivy-switch-buffer
+    "xb" #'switch-to-buffer
     "xc" #'save-buffers-kill-terminal
     "xh" #'mark-whole-buffer
     "xf" #'find-file
@@ -332,10 +325,6 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "oc"  #'org-capture
     "ol"  #'org-store-link
     "ot"  #'org-toggle-link-display
-    "oh"  (lambda ()
-            (interactive)
-            (counsel-org-agenda-headlines)
-            :which-key "counsel-org-headlines")
     ;; window
     "0"   #'winum-select-window-0-or-10
     "1"   #'winum-select-window-1
@@ -372,8 +361,10 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "fm" #'flymake-mode
     "fn" #'flyspell-goto-next-error
     "fs" #'flyspell-mode
-    "ne" #'flymake-goto-next-error
-    "pe" #'flymake-goto-prev-error
+    ;; "ne" #'flymake-goto-next-error
+    ;; "pe" #'flymake-goto-prev-error
+    "ne" #'flycheck-next-error
+    "pe" #'flycheck-previous-error
     ;; workspace
     "ip" #'find-file-in-project
     "tt" #'find-file-in-current-directory
@@ -403,14 +394,14 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     ":"   #'eval-expression
     ;; bookmark/buffer
     "b"  #'(:ignore t :which-key "bookmark")
-    "bb" #'bookmark-jump
+    "bb" #'switch-to-buffer
+    "b/" #'switch-to-buffer-other-window
     "bd" #'bookmark-delete
     "be" #'eval-buffer
     "bj" #'bookmark-jump
     "bJ" #'bookmark-jump-other-window
     "bk" #'kill-buffer
     "bl" #'bookmark-bmenu-list
-    "bL" #'(counsel-bookmarked-directory :which-key "list-bookmarked-dir")
     "bm" #'bookmark-set
     "bo" #'(my/kill-other-buffers-without-special-ones
              :which-key "keep-this-buffer-only")
@@ -423,14 +414,19 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "ck" #'compile
     "cc" #'smart-compile
     "cr" #'recompile
+    ;; dired
+    "dj" #'dired-jump
+    "d/" #'dired-jump-other-window
+    "dd" #'pwd
     ;; file
     "f"  #'(:ignore t :which-key "file")
     "fb" #'(my/browse-this-file :which-key "browse-this-file")
     "fc" #'(my/copy-this-file :which-key "copy-this-file")
+    "ff" #'find-file
+    "f/" #'find-file-other-window
     "fy" #'(my/copy-file-name :which-key "copy-file-name")
     "fd" #'(my/delete-this-file :which-key "delete-this-file")
     "fD" #'(my/delete-file :which-key "delete-file-under-cwd")
-    "fj" #'(counsel-file-jump :which-key "file-jump")
     "fo" #'(my/open-this-file-externally :which-key "open-external")
     "fm" #'(my/move-this-file :which-key "move-this-file")
     "fr" #'(my/rename-this-file :which-key "rename-this-file")
@@ -441,8 +437,7 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "gd" #'magit-dispatch
     "gg" #'magit-status
     "gf" #'magit-file-dispatch
-    "gc" #'counsel-git
-    "gs" #'counsel-git-grep
+    "gs" #'consult-git-grep
     ;; hydra
     "h"  #'(:ignore t :which-key "hydra")
     "hE" #'(my/hydra-paredit-edit/body :which-key "paredit-edit")
@@ -483,12 +478,12 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "s"  #'(:ignore t :which-key "search")
     "sd" #'(search-dired-dwim :which-key "search-file-cwd")
     "sD" #'search-dired
-    "sf" #'(my/counsel-fzf :which-key "search-fzf")
-    "sF" #'counsel-fzf
+    "sf" #'(my/consult-find :which-key "search-find")
+    "sF" #'consult-find
     "so" #'my/search-online
-    "sr" #'(my/counsel-rg :which-key "search-rg")
-    "sR" #'counsel-rg
-    "ss" #'counsel-grep-or-swiper
+    "sr" #'(my/consult-rg :which-key "search-rg")
+    "sR" #'consult-rg
+    "ss" #'consult-line
     "si" #'imenu
     ;; toggle
     "t"  #'(:ignore t :which-key "toggle")

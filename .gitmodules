@@ -241,10 +241,6 @@
 [submodule "hydra"]
 	path = lib/hydra
 	url = https://github.com/abo-abo/hydra.git
-[submodule "ivy"]
-	path = lib/ivy
-	url = https://github.com/abo-abo/swiper.git
-	info-path = doc
 [submodule "kaolin-themes"]
 	path = lib/kaolin-themes
 	url = https://github.com/ogdenwebb/emacs-kaolin-themes.git
@@ -348,9 +344,6 @@
 [submodule "posframe"]
 	path = lib/posframe
 	url = https://github.com/tumashu/posframe.git
-[submodule "prescient"]
-	path = lib/prescient
-	url = https://github.com/raxod502/prescient.el.git
 [submodule "pyim"]
 	path = lib/pyim
 	url = https://github.com/tumashu/pyim.git
@@ -369,6 +362,9 @@
 [submodule "request"]
 	path = lib/request
 	url = https://github.com/tkf/emacs-request.git
+[submodule "rg"]
+	path = lib/rg
+	url = https://github.com/dajva/rg.el.git
 [submodule "rust-mode"]
 	path = lib/rust-mode
 	url = https://github.com/rust-lang/rust-mode.git

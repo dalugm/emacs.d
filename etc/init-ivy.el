@@ -129,9 +129,8 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
     (push (cons #'counsel-mode nil) desktop-minor-mode-table)
     (push (cons #'ivy-mode nil) desktop-minor-mode-table)))
 
-(use-package ivy-prescient
-  :hook (counsel-mode . ivy-prescient-mode)
-  :custom (ivy-prescient-enable-filtering nil))
+(use-package amx
+  :hook (counsel-mode . amx-mode))
 
 (provide 'init-ivy)
 

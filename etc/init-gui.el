@@ -123,7 +123,7 @@ If FRAME is nil, it defaults to the selected frame."
 ;; ;; NOTE: I am using `my/load-font' to handle this now
 ;; ;;
 ;; ;; Default font
-;; (set-face-attribute 'default nil :font (font-spec :family "Unifont" :size 16))
+;; (set-face-attribute 'default nil :font (font-spec :family "Fira Code" :size 14))
 ;; ;;
 ;; ;; East Asia: 你好, 早晨, こんにちは, 안녕하세요
 ;; ;;
@@ -145,6 +145,7 @@ If FRAME is nil, it defaults to the selected frame."
      (gnu-unifont-16         . (:family "Unifont" :size 16))
      (roboto-mono-14         . (:family "Roboto Mono" :size 14))
      (monaco-14              . (:family "Monaco" :size 14))
+     (menlo-14               . (:family "Menlo" :size 14))
      (spot-mono-14           . (:family "Spot Mono" :size 14))
      (sf-mono-14             . (:family "SF Mono" :size 14))
      (hack-14                . (:family "Hack" :size 14))

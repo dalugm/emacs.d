@@ -72,7 +72,7 @@
   (which-key-add-key-based-replacements "C-c !" "flycheck")
   (which-key-add-key-based-replacements "C-c &" "yasnippet")
   (which-key-add-key-based-replacements "C-c @" "hideShow")
-  (which-key-add-key-based-replacements "C-c c" "code/counsel")
+  (which-key-add-key-based-replacements "C-c c" "code")
   (which-key-add-key-based-replacements "C-c c q" "quickrun")
   (which-key-add-key-based-replacements "C-c e" "edit")
   (which-key-add-key-based-replacements "C-c f" "file")
@@ -138,10 +138,6 @@
 
 (use-package expand-region
   :bind ("C-c ;" . er/expand-region))
-
-(use-package prescient
-  :commands prescient-persist-mode
-  :init (prescient-persist-mode +1))
 
 (provide 'init-package)
 

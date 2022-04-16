@@ -34,10 +34,6 @@
   :when (display-graphic-p)
   :hook (company-mode . company-box-mode))
 
-;; Better sorting and filtering
-(use-package company-prescient
-  :hook (company-mode . company-prescient-mode))
-
 (provide 'init-company)
 
 ;;; init-company.el ends here

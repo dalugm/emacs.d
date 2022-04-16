@@ -11,7 +11,8 @@
   :mode "\\.dart\\'")
 
 (use-package lsp-dart
-  :after (lsp-mode dart-mode))
+  :after (lsp-mode dart-mode)
+  :custom (lsp-dart-sdk-dir "~/flutter/bin/cache/dart-sdk"))
 
 (provide 'init-dart)
 

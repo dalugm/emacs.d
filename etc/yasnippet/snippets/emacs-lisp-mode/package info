@@ -1,0 +1,10 @@
+# -*- mode: snippet; -*-
+# name: package info
+# key: packagei
+# --
+;; Author: ${1:`(user-full-name)`}
+;; Maintainer: ${2:`(user-full-name)`}
+;; Version: ${3:version}
+;; Package-Requires: (${4:dependencies})
+;; Homepage: ${5:homepage}
+;; Keywords: ${6:keywords}
