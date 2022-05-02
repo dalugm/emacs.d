@@ -3,4 +3,4 @@
 # key: cls
 # group: console
 # --
-console.log("${1:string}")
+console.log('${1:string}')

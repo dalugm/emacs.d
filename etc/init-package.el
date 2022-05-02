@@ -7,6 +7,7 @@
 
 ;;; Code:
 
+(add-to-list 'load-path (expand-file-name "compat" my-library-d))
 (add-to-list 'load-path (expand-file-name "packed" my-library-d))
 (add-to-list 'load-path (expand-file-name "auto-compile" my-library-d))
 
@@ -40,6 +41,8 @@
 
 (use-package epkg
   :defer t)
+
+(use-package wgrep)
 
 (use-package no-littering
   :demand t

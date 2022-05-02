@@ -250,6 +250,9 @@
 [submodule "leuven-theme"]
 	path = lib/leuven-theme
 	url = https://github.com/fniessen/emacs-leuven-theme.git
+[submodule "lib/compat"]
+	path = lib/compat
+	url = https://git.sr.ht/~pkal/compat/
 [submodule "lsp-dart"]
 	path = lib/lsp-dart
 	url = https://github.com/emacs-lsp/lsp-dart.git

@@ -3,4 +3,4 @@
 # key: cgr
 # group: console
 # --
-console.group("${1:label}")
+console.group('${1:label}')
