@@ -49,7 +49,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('markdown-body');
     document.querySelectorAll('pre code').forEach((code) => {
-      if (code.className != 'mermaid') {
+      if (code.className !== 'mermaid') {
         hljs.highlightBlock(code);
       }
     });

@@ -21,7 +21,7 @@
 	url = https://github.com/noctuid/annalist.el.git
 [submodule "apheleia"]
 	path = lib/apheleia
-	url = https://github.com/raxod502/apheleia.git
+	url = https://github.com/radian-software/apheleia.git
 [submodule "async"]
 	path = lib/async
 	url = https://github.com/jwiegley/emacs-async.git
@@ -115,7 +115,7 @@
 	url = https://github.com/spotify/dockerfile-mode.git
 [submodule "doom-themes"]
 	path = lib/doom-themes
-	url = https://github.com/hlissner/emacs-doom-themes.git
+	url = https://github.com/doomemacs/themes.git
 [submodule "dracula-theme"]
 	path = lib/dracula-theme
 	url = https://github.com/dracula/emacs.git
@@ -280,7 +280,7 @@
 	path = lib/magit
 	url = https://github.com/magit/magit.git
 	recursive-byte-compile = true
-	info-path = Documentation
+	info-path = docs
 [submodule "marginalia"]
 	path = lib/marginalia
 	url = https://github.com/minad/marginalia.git
@@ -296,6 +296,7 @@
 [submodule "modus-themes"]
 	path = lib/modus-themes
 	url = https://git.sr.ht/~protesilaos/modus-themes
+	info-path = doc
 [submodule "moe-theme"]
 	path = lib/moe-theme
 	url = https://github.com/kuanyui/moe-theme.el.git

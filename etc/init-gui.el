@@ -229,6 +229,26 @@ use it instead."
 ;; speed up font rendering for special characters, especially on Windows
 (setq inhibit-compacting-font-caches t)
 
+;; pitch-related font
+(set-face-attribute 'fixed-pitch nil
+                    :font (font-spec :family "LXGW WenKai Mono"))
+(set-face-attribute 'variable-pitch nil
+                    :font (font-spec :family "Source Han Serif SC"))
+
+;; info-related font
+(set-face-attribute 'info-menu-header nil
+                    :font (font-spec :family "Roboto Mono"))
+(set-face-attribute 'info-title-1 nil
+                    :font (font-spec :family "Roboto Mono"))
+(set-face-attribute 'info-title-2 nil
+                    :font (font-spec :family "Roboto Mono"))
+(set-face-attribute 'info-title-3 nil
+                    :font (font-spec :family "Roboto Mono"))
+(set-face-attribute 'info-title-4 nil
+                    :font (font-spec :family "Roboto Mono"))
+(set-face-attribute 'Info-quoted nil
+                    :font (font-spec :family "Roboto Mono" :size 14))
+
 (provide 'init-gui)
 
 ;;; init-gui.el ends here

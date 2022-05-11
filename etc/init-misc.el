@@ -56,10 +56,11 @@
   :when (memq window-system '(mac ns x))
   :init (setq exec-path-from-shell-check-startup-files nil)
   :config (exec-path-from-shell-initialize)
-  (dolist (var '("SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO"
-                 "LANG" "LC_CTYPE" "PATH" "MANPATH"
-                 "NIX_SSL_CERT_FILE" "NIX_PATH" "GTAGSLABEL" "GTAGSCONF"))
-    (add-to-list 'exec-path-from-shell-variables var))
+  ;; https://emacs.stackexchange.com/questions/10822/locale-when-launching-emacs-app-on-os-x
+  (exec-path-from-shell-copy-envs
+   '("SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO"
+     "NIX_SSL_CERT_FILE" "NIX_PATH" "GTAGSLABEL" "GTAGSCONF"
+     "LANG" "LC_CTYPE" "PATH" "MANPATH"))
   (when (executable-find "gls")
     ;; Use GNU ls as `gls' from `coreutils' if available.
     (setq insert-directory-program "gls")))

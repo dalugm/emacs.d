@@ -27,7 +27,6 @@
   (setq dired-recursive-copies  'always)
 
   (when sys/macp
-
     (if (executable-find "gls")
         ;; use GNU ls as `gls' from `coreutils' if available.
         (setq insert-directory-program "gls")
@@ -76,9 +75,9 @@
         (error "No more than 2 files should be marked")))))
 
 (defun my/dired-cycle-space-underscore-hyphen ()
-  "In dired, rename current or marked files.
+  "In Dired, rename current or marked files.
 Cycling between space, hyphen - and underscore _.
-If not in `dired', do nothing.
+If not in Dired, do nothing.
 
 http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html."
   (interactive)
@@ -101,10 +100,10 @@ http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html."
                                    nil)))))
           (dired-get-marked-files))
         (revert-buffer))
-    (user-error "Not in dired!")))
+    (user-error "Not in Dired!")))
 
 (defun my//dired-mode-hook-setup ()
-  "Setup for `dired'."
+  "Setup for Dired."
   (local-set-key (kbd ",") #'dired-up-directory)
   (local-set-key (kbd ";") #'avy-goto-char-2)
   (local-set-key (kbd "_") #'my/dired-cycle-space-underscore-hyphen)

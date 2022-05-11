@@ -91,8 +91,6 @@
   (which-key-add-key-based-replacements "C-c v l" "link")
   (which-key-add-key-based-replacements "C-c w" "workspace")
 
-  (which-key-add-major-mode-key-based-replacements 'emacs-lisp-mode
-    "C-c ," "overseer")
   (which-key-add-major-mode-key-based-replacements 'python-mode
     "C-c C-t" "python-skeleton")
 
