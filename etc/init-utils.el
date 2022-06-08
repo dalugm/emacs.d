@@ -271,7 +271,7 @@
                                          try-complete-lisp-symbol-partially
                                          try-complete-lisp-symbol))
 ;; use `hippie-expand' instead of `dabbrev'
-(global-set-key (kbd "M-/") #'hippie-expand)
+(global-set-key [remap dabbrev-expand] #'hippie-expand)
 
 (with-eval-after-load 'comint
   ;; Don't echo passwords when communicating with interactive programs:

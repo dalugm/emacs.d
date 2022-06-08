@@ -112,7 +112,7 @@
   (require 'init-chinese)
   (require 'init-prog)
   (require 'init-check)
-  (require 'init-company)
+  (require 'init-complete)
   (require 'init-snippet)
 
   ;; handy tools though not must have

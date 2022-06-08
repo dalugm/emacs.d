@@ -45,9 +45,6 @@
   (when (display-graphic-p)
     (setq ein:output-area-inlined-images t)))
 
-(use-package lsp-pyright
-  :after (lsp-mode python-mode))
-
 (provide 'init-python)
 
 ;;; init-python.el ends here

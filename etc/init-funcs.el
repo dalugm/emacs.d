@@ -491,7 +491,7 @@ Including indent-buffer, which should not be called automatically on save."
         (indent-region (point-min) (point-max) column)
         (message "Buffer formatted.")))))
 
-(global-set-key (kbd "C-M-\\") #'my/format-region-or-buffer)
+(global-set-key (kbd "C-c m f") #'my/format-region-or-buffer)
 
 ;; https://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
 (defun my/toggle-selective-display (column)

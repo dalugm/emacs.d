@@ -451,7 +451,6 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "lF" #'(my/load-font :which-key "font")
     "lf" #'(my/load-buffer-font :which-key "buffer-font")
     "lt" #'(load-theme :which-key "theme")
-    "ll" #'lsp
     "lg" #'ggtags-mode
     ;; org
     "o"  #'(:ignore t :which-key "org")

@@ -264,14 +264,14 @@
   ;; ---------------------------------------------------------
   ;; export
   ;; ---------------------------------------------------------
-  (my|ensure 'ox-md)
-  (my|ensure 'ox-latex)
-  (add-to-list 'org-export-backends 'md)
-  (add-to-list 'org-export-backends 'odt)
-  (setq org-export-coding-system 'utf-8
-        org-tags-column 80)
+  (with-eval-after-load 'ox
+    (my|ensure 'ox-md)
+    (my|ensure 'ox-latex)
+    (add-to-list 'org-export-backends 'md)
+    (add-to-list 'org-export-backends 'odt)
+    (setq org-export-coding-system 'utf-8))
 
-  (defun my/org-export-docx ()
+  (defun my/org-convert-docx ()
     "Export org file as docx."
     (interactive)
     (let ((docx-file (concat (file-name-sans-extension (buffer-file-name))
@@ -312,11 +312,11 @@
   (global-set-key (kbd "C-c o l") #'org-store-link)
   (global-set-key (kbd "C-c o i") #'org-insert-structure-template)
 
-  ;; after v9.2 [[https://orgmode.org/Changes.html][changlog]]
-  ;; Org comes with a new template expansion mechanism `org-insert-structure-template'
-  ;; Default keybinding is `\C-c\C-,'
-  ;; if prefer using previous patterns, e.g. <s, goto `org-tempo.el' for more information
-  (add-to-list 'org-modules 'org-tempo)
+  ;; ;; after v9.2 [[https://orgmode.org/Changes.html][changlog]]
+  ;; ;; Org comes with a new template expansion mechanism `org-insert-structure-template'
+  ;; ;; Default keybinding is `\C-c\C-,'
+  ;; ;; if prefer using previous patterns, e.g. <s, goto `org-tempo.el' for more information
+  ;; (add-to-list 'org-modules 'org-tempo)
 
   ;; 让中文也可以不加空格就使用行内格式
   (setcar (nthcdr 0 org-emphasis-regexp-components)

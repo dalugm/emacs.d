@@ -27,6 +27,7 @@
                                doom-1337
                                doom-Iosvkem
                                doom-acario-dark
+                               doom-ayu-dark
                                doom-ayu-mirage
                                doom-badger
                                doom-challenger-deep
@@ -41,6 +42,7 @@
                                doom-horizon
                                doom-ir-black
                                doom-laserwave
+                               doom-lantern
                                doom-manegarm
                                doom-material
                                doom-material-dark
@@ -55,6 +57,7 @@
                                doom-monokai-spectrum
                                doom-moonlight
                                doom-nord
+                               doom-nord-aurora
                                doom-nova
                                doom-oceanic-next
                                doom-old-hope
