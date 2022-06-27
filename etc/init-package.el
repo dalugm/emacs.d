@@ -72,7 +72,7 @@
   (which-key-add-key-based-replacements "C-x t" "tab")
   (which-key-add-key-based-replacements "C-x C-a" "edebug")
 
-  (which-key-add-key-based-replacements "C-c !" "flycheck")
+  (which-key-add-key-based-replacements "C-c !" "check")
   (which-key-add-key-based-replacements "C-c &" "yasnippet")
   (which-key-add-key-based-replacements "C-c @" "hideShow")
   (which-key-add-key-based-replacements "C-c c" "code")

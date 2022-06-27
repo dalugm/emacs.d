@@ -29,13 +29,15 @@
 *** [[https://masteringemacs.org/feed/][masteringemacs]]
 *** [[https://reddit.com/r/emacs/.rss][emacs.reddit]]
 *** [[https://emacsredux.com/][emacsredux]]
+** GOV
+*** [[http://www.stats.gov.cn/tjsj/zxfb/rss.xml][国家统计局最新发布]]
+*** [[http://www.stats.gov.cn/tjsj/sjjd/rss.xml][国家统计局数据解读]]
+** NEWS                                                                         :news:
+*** [[https://rss.slashdot.org/Slashdot/slashdotMain][Slashdot]]
+*** [[https://solidot.org/index.rss][Solidot]]
+** POLITICS
+*** [[https://www.marxists.org/chinese/feed.xml][中文马克思主义文库]]
 ** TECH                                                                         :tech:
 *** [[https://opensource.com/feed][opensource]]
 *** [[https://this-week-in-rust.org/rss.xml][this-week-in-rust]]
 *** [[https://lesswrong.com/feed.xml?view=curated-rss][LessWrong]]
-** NEWS                                                                         :news:
-*** [[https://rss.slashdot.org/Slashdot/slashdotMain][Slashdot]]
-*** [[https://solidot.org/index.rss][Solidot]]
-** GOV
-*** [[http://www.stats.gov.cn/tjsj/zxfb/rss.xml][国家统计局最新发布]]
-*** [[http://www.stats.gov.cn/tjsj/sjjd/rss.xml][国家统计局数据解读]]

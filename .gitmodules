@@ -70,6 +70,9 @@
 [submodule "color-theme-sanityinc-tomorrow"]
 	path = lib/color-theme-sanityinc-tomorrow
 	url = https://github.com/purcell/color-theme-sanityinc-tomorrow.git
+[submodule "compat"]
+	path = lib/compat
+	url = https://git.sr.ht/~pkal/compat/
 [submodule "consult"]
 	path = lib/consult
 	url = https://github.com/minad/consult.git
@@ -180,9 +183,6 @@
 [submodule "find-file-in-project"]
 	path = lib/find-file-in-project
 	url = https://github.com/redguardtoo/find-file-in-project.git
-[submodule "flycheck"]
-	path = lib/flycheck
-	url = https://github.com/flycheck/flycheck.git
 [submodule "forge"]
 	path = lib/forge
 	url = https://github.com/magit/forge.git
@@ -213,7 +213,7 @@
 	url = https://github.com/magit/git-modes.git
 [submodule "git-timemachine"]
 	path = lib/git-timemachine
-	url = https://gitlab.com/pidu/git-timemachine.git
+	url = https://codeberg.org/pidu/git-timemachine.git
 [submodule "go-mode"]
 	path = lib/go-mode
 	url = https://github.com/dominikh/go-mode.el.git
@@ -244,9 +244,6 @@
 [submodule "leuven-theme"]
 	path = lib/leuven-theme
 	url = https://github.com/fniessen/emacs-leuven-theme.git
-[submodule "lib/compat"]
-	path = lib/compat
-	url = https://git.sr.ht/~pkal/compat/
 [submodule "lua-mode"]
 	path = lib/lua-mode
 	url = https://github.com/immerrr/lua-mode.git
@@ -322,6 +319,9 @@
 [submodule "posframe"]
 	path = lib/posframe
 	url = https://github.com/tumashu/posframe.git
+[submodule "pug-mode"]
+	path = lib/pug-mode
+	url = https://github.com/hlissner/emacs-pug-mode.git
 [submodule "pyim"]
 	path = lib/pyim
 	url = https://github.com/tumashu/pyim.git

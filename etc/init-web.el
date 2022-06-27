@@ -68,6 +68,9 @@
   (web-mode-enable-auto-quoting nil)
   (web-mode-enable-auto-pairing nil))
 
+(use-package pug-mode
+  :mode "\\.pug\\'")
+
 (provide 'init-web)
 
 ;;; init-web.el ends here

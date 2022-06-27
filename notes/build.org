@@ -1,0 +1,73 @@
+#+title: BUILD
+#+author: dalu
+#+date: 2022:06:23
+#+description: build Emacs
+#+LATEX_HEADER: \usepackage{ctex}
+* Table of Contents                                               :TOC:noexport:
+- [[#emacs][Emacs]]
+  - [[#build][Build]]
+- [[#tree-sitter][tree-sitter]]
+
+* Emacs
+** Build
+
+1. Download emacs source code:
+
+   #+begin_src
+   $ git clone --depth 1 git://git.savannah.gnu.org/emacs.git
+   #+end_src
+
+2. Install dependencies
+
+   #+begin_src
+   $ brew install autoconf automake texinfo gnutls pkg-config libxml2 --debug --verbose
+   #+end_src
+
+3. Compile
+
+   #+begin_src
+   $ cd ./emacs && ./autogen.sh
+
+   $ export LDFLAGS="-L/usr/local/opt/libxml2/lib"
+   $ export CPPFLAGS="-I/usr/local/opt/libxml2/include"
+   $ export PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig"
+
+   # add --without-x --without-ns --without-imagemagick to build TUI
+   $ ./configure && make && make install
+   #+end_src
+
+   After =make=, there will be a binary at =src/emacs=.
+
+   After =make install=, binary will be copied to =/usr/local/bin/= and copy
+   various elisp files, info files, man pages, etc into various default
+   directory. You can use =./configure --prefix=<path>= to specify the
+   installation other =/usr/local/=.
+
+4. Install in launcher
+
+   #+begin_src
+   $ open -R nextstep/Emacs.app
+   #+end_src
+
+   then dragging Emacs to the ~Applications~ folder.
+
+* tree-sitter
+
+There is a scan-error when generate autoloads, here is the detailed backtraces:
+
+#+begin_example
+Error: error ("tsc-dyn.dylib:0:0: error: scan-error: (Containing expression ends prematurely 82277 82278)")
+  debug-early-backtrace()
+  debug-early(error (error "tsc-dyn.dylib:0:0: error: scan-error: (Containing expression ends prematurely 82277 82278)"))
+  error("%s:0:0: error: %s: %s" "tsc-dyn.dylib" scan-error ("Containing expression ends prematurely" 82277 82278))
+  ...
+#+end_example
+
+This is one mail list about this issue, but with no solution.
+
+- https://mail.gnu.org/archive/html/help-gnu-emacs/2016-10/msg00144.html
+
+After some debug, change suffix from ~dylib~ to ~so~ solve this issue.
+
+~so~ is also valid suffix for macOS according to
+https://www.gnu.org/software/emacs/manual/html_node/elisp/Dynamic-Modules.html

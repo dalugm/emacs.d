@@ -354,17 +354,13 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "x51" #'delete-other-frames
     "x52" #'make-frame-command
     "x5o" #'other-frame
-    ;; `fly*-checker'
-    "de" #'flycheck-display-error-at-point
+    ;; checker on the fly
     "fa" #'flyspell-auto-correct-word
-    "fc" #'flycheck-mode
     "fm" #'flymake-mode
     "fn" #'flyspell-goto-next-error
     "fs" #'flyspell-mode
-    ;; "ne" #'flymake-goto-next-error
-    ;; "pe" #'flymake-goto-prev-error
-    "ne" #'flycheck-next-error
-    "pe" #'flycheck-previous-error
+    "ne" #'flymake-goto-next-error
+    "pe" #'flymake-goto-prev-error
     ;; workspace
     "ip" #'find-file-in-project
     "tt" #'find-file-in-current-directory
