@@ -835,6 +835,29 @@ is set to after it."
             (directory-files (expand-file-name parent-dir) t "^[^\\.]"))
            load-path))))
 
+(defun my/avy-copy-thing-at-point ()
+  "Copy thing at point."
+  (interactive)
+  (save-excursion
+    (avy-goto-word-or-subword-1)
+    (let ((thing
+           (cl-case
+            (read-char
+             (format
+              "Copy thing at point (%s: word %s: symbol %s: list %s: url): "
+              (propertize "w" 'face 'error)
+              (propertize "s" 'face 'error)
+              (propertize "l" 'face 'error)
+              (propertize "u" 'face 'error)))
+            (?w  'word)
+            (?s  'symbol)
+            (?l  'list)
+            (?u  'url))))
+      (kill-new (thing-at-point thing))
+      (message "%s copied." thing))))
+
+(global-set-key (kbd "C-c m c") #'my/avy-copy-thing-at-point)
+
 ;; Network Proxy
 (defun my/show-http-proxy ()
   "Show http/https proxy."
@@ -905,28 +928,45 @@ is set to after it."
       (my/disable-socks-proxy)
     (my/enable-socks-proxy)))
 
-(defun my/avy-copy-thing-at-point ()
-  "Copy thing at point."
+(defun my/show-wsl-socks-proxy ()
+  "Show SOCKS proxy in WSL."
   (interactive)
-  (save-excursion
-    (avy-goto-word-or-subword-1)
-    (let ((thing
-           (cl-case
-            (read-char
-             (format
-              "Copy thing at point (%s: word %s: symbol %s: list %s: url): "
-              (propertize "w" 'face 'error)
-              (propertize "s" 'face 'error)
-              (propertize "l" 'face 'error)
-              (propertize "u" 'face 'error)))
-            (?w  'word)
-            (?s  'symbol)
-            (?l  'list)
-            (?u  'url))))
-      (kill-new (thing-at-point thing))
-      (message "%s copied." thing))))
+  (when (fboundp 'cadddr)               ; defined 25.2+
+    (if (bound-and-true-p socks-noproxy)
+        (message "Current SOCKS%d proxy in WSL is \"%s:%s\"."
+                 (cadddr socks-server)
+                 (cadr socks-server)
+                 (caddr socks-server))
+      (message "No SOCKS proxy in WSL."))))
 
-(global-set-key (kbd "C-c m c") #'my/avy-copy-thing-at-point)
+(defun my/enable-wsl-socks-proxy ()
+  "Enable SOCKS proxy in WSL."
+  (interactive)
+  (require 'socks)
+  (setq url-gateway-method 'socks
+        socks-noproxy '("localhost"))
+  (let* ((proxy (split-string my-wsl-socks-proxy ":"))
+         (host (car proxy))
+         (port (cadr  proxy)))
+    (setq socks-server `("Default server" ,host ,port 5)))
+  (setenv "all_proxy" (concat "socks5://" my-wsl-socks-proxy))
+  (my/show-wsl-socks-proxy))
+
+(defun my/disable-wsl-socks-proxy ()
+  "Disable SOCKS proxy in WSL."
+  (interactive)
+  (setq url-gateway-method 'native
+        socks-noproxy nil
+        socks-server nil)
+  (setenv "all_proxy" "")
+  (my/show-wsl-socks-proxy))
+
+(defun my/toggle-wsl-socks-proxy ()
+  "Toggle SOCKS proxy in WSL."
+  (interactive)
+  (if (bound-and-true-p socks-noproxy)
+      (my/disable-wsl-socks-proxy)
+    (my/enable-wsl-socks-proxy)))
 
 (provide 'init-funcs)
 

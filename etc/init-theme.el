@@ -23,6 +23,8 @@
                                chocolate
                                cyberpunk
                                darktooth
+                               darktooth-dark
+                               darktooth-darker
                                deeper-blue
                                doom-1337
                                doom-Iosvkem
@@ -137,6 +139,7 @@
                                 alect-black
                                 alect-black-alt
                                 cyberpunk
+                                darktooth-darker
                                 doom-homage-black
                                 doom-ir-black
                                 doom-meltbus

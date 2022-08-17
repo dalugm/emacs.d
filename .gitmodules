@@ -405,18 +405,6 @@
 	path = lib/transient
 	url = https://github.com/magit/transient.git
 	info-path = docs
-[submodule "tree-sitter"]
-	path = lib/tree-sitter
-	url = https://github.com/ubolonton/emacs-tree-sitter.git
-	load-path = core
-	load-path = lisp
-	load-path = langs
-[submodule "tree-sitter-indent"]
-	path = lib/tree-sitter-indent
-	url = https://codeberg.org/FelipeLema/tree-sitter-indent.el.git
-[submodule "tree-sitter-langs"]
-	path = lib/tree-sitter-langs
-	url = https://github.com/ubolonton/tree-sitter-langs.git
 [submodule "treepy"]
 	path = lib/treepy
 	url = https://github.com/volrath/treepy.el.git

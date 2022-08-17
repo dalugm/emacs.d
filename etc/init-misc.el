@@ -23,7 +23,17 @@
   :type 'string)
 
 (defcustom my-socks-proxy "127.0.0.1:1080"
-  "Set SOCKS proxy."
+  "SOCKS proxy."
+  :group 'convenience
+  :type 'string)
+
+(defcustom my-wsl-socks-proxy
+  (concat
+   (shell-command-to-string
+    "cat /etc/resolv.conf | grep nameserver | awk '{ printf $2 }'")
+   ":"
+   "10810")
+  "SOCKS proxy in WSL."
   :group 'convenience
   :type 'string)
 
