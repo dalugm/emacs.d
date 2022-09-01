@@ -20,16 +20,15 @@
           ("." . pyim-page-next-page)))
   :custom (default-input-method "pyim")
   :config
-  ;; 使用全拼
   (setq pyim-default-scheme 'quanpin)
 
-  ;; 绘制选词框
   ;; compatible with terminal
   (setq pyim-page-tooltip 'minibuffer)
-  ;; 调整 tooltip 选词框的显示样式
   (setq pyim-page-style 'two-lines)
-  ;; 选词框显示 9 个候选词
   (setq pyim-page-length 9)
+  (setq pyim-fuzzy-pinyin-alist
+        '(("en" "eng")
+          ("in" "ing")))
 
   ;; ;; Rime config
   ;; (liberime-start
@@ -39,18 +38,13 @@
   ;;   (expand-file-name "rime/" my-cache-d))
   ;; (liberime-select-schema "luna_pinyin")
 
-  ;; 模糊音设置
-  (setq pyim-fuzzy-pinyin-alist
-        '(("en" "eng")
-          ("in" "ing")))
-
   ;; use memory efficient pyim engine
   (setq pyim-dcache-backend 'pyim-dregcache)
 
-  ;; 和 `pyim-probe-dynamic-english' 配合
+  ;; cooperate with `pyim-probe-dynamic-english'
   (global-set-key (kbd "M-j") #'pyim-convert-string-at-point)
 
-  ;; 根据环境自动切换输入模式
+  ;; change input method automatically
   (setq-default pyim-english-input-switch-functions
                 '(pyim-probe-dynamic-english
                   pyim-probe-isearch-mode
@@ -89,7 +83,7 @@
     (unless disable-basedict (pyim-basedict-enable))))
 
 (use-package bing-dict
-  :bind ("C-c t b" . bing-dict-brief))
+  :bind ("C-c s b" . bing-dict-brief))
 
 (use-package avy-zh
   :after avy

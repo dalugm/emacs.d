@@ -225,17 +225,17 @@
 (defun my//cycle-theme (index)
   "According to INDEX cycle through `my-theme-alist'."
   (setq my-current-theme-index
-    (+ index (cl-position
-               (car (mapcar #'symbol-name my-theme-alist))
-               my-cycle-themes :test 'equal)))
+        (+ index (cl-position
+                  (car (mapcar #'symbol-name my-theme-alist))
+                  my-cycle-themes :test 'equal)))
   (when (>= my-current-theme-index (length my-cycle-themes))
     (setq my-current-theme-index 0))
   (when (< my-current-theme-index 0)
     (setq my-current-theme-index (- (length my-cycle-themes) 1)))
   (let* ((my--current-theme (nth my-current-theme-index my-cycle-themes))
          (progress-reporter
-           (make-progress-reporter
-             (format "Loading theme %s..." my--current-theme))))
+          (make-progress-reporter
+           (format "Loading theme %s..." my--current-theme))))
     (mapc #'disable-theme custom-enabled-themes)
     (load-theme (intern my--current-theme) t)
     (progress-reporter-done progress-reporter)))

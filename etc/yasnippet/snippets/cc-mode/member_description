@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: member_description
-# key: member
-# --
-/* ${1:Detailed description after the member} */

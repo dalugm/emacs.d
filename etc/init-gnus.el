@@ -20,7 +20,7 @@
 (setq message-send-mail-function 'smtpmail-send-it)
 
 ;; Outlook
-(setq smtpmail-smtp-user "moutong945@outlook.com"
+(setq smtpmail-smtp-user "mou.tong@outlook.com"
       smtpmail-smtp-server "smtp.office365.com"
       smtpmail-smtp-service 587
       smtpmail-stream-type 'starttls)

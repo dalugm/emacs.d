@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: deprecated doxygen
+# key: @de
+# --
+@deprecated $0

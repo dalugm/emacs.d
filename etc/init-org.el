@@ -14,14 +14,10 @@
 
 (with-eval-after-load 'org
 
-  ;; ---------------------------------------------------------
   ;; agenda
-  ;; ---------------------------------------------------------
   (setq org-agenda-files `(,org-directory))
 
-  ;; ---------------------------------------------------------
   ;; capture
-  ;; ---------------------------------------------------------
   (setq org-default-notes-file (concat org-directory "/notes.org"))
 
   ;; useful initials
@@ -56,17 +52,15 @@
       (unless (derived-mode-p 'org-mode)
         (error "Target buffer \"%s\" should be in Org mode"
                (current-buffer)))
-      ;; 移动到 buffer 的开始位置
       (goto-char (point-min))
-      ;; 先定位表示年份的 headline，再定位表示月份的 headline
+      ;; locate YEAR headline, then MONTH headline.
       (dolist (heading path)
         (let ((re (format org-complex-heading-regexp-format
                     (regexp-quote heading)))
               (cnt 0))
           (if (re-search-forward re end t)
-              ;; 如果找到了 headline 就移动到对应的位置
-              (goto-char (point-at-bol))
-            ;; 否则就新建一个 headline
+              (goto-char (line-beginning-position))
+            ;; new headline
             (progn
               (or (bolp) (insert "\n"))
               (when (/= (point) (point-min)) (org-end-of-subtree t t))
@@ -75,17 +69,16 @@
         (setq end (save-excursion (org-end-of-subtree t t))))
       (org-end-of-subtree)))
 
-  ;; |       org-capture-templates 常用选项              |
-  ;; |--------+------------------------------------------|
-  ;; | %a     | 注释，通常是由 org-store-link 创建的链接 |
-  ;; | %i     | 初始化内容，当记忆时区域被 C-u 调用      |
-  ;; | %g     | tag 标签                                 |
-  ;; | %t     | 时间戳，只带有日期                       |
-  ;; | %T     | 带有日期和时间的时间戳                   |
-  ;; | %u，%U | 同上，但是时间戳不激活                   |
-  ;; | %?     | 输入完成后光标所在位置                   |
-
-  ;; NOTE: 未激活的时间戳不会加入到 agenda 中
+  ;; |                org-capture-templates common used entry               |
+  ;; |--------+-------------------------------------------------------------|
+  ;; | %a     | annotation, normally the link created with `org-store-link' |
+  ;; | %i     | initial content, copied from the active region              |
+  ;; | %^g    | tag                                                         |
+  ;; | %t     | timestamp, date only                                        |
+  ;; | %T     | timestamp, with date and time                               |
+  ;; | %u，%U | timestamp, but inactive                                     |
+  ;; | %?     | cursor location after completing the template               |
+  ;; NOTE: inactive timestamp will not be added to agenda
 
   (setq org-capture-templates
     `(;; tasks
@@ -124,9 +117,9 @@
             "#+begin_export html\n"
             "---\n"
             "layout     : post\n"
-            "title      : %^{标题}\n"
-            "categories : %^{类别}\n"
-            "tags       : %^{标签}\n"
+            "title      : %^{title}\n"
+            "categories : %^{category}\n"
+            "tags       : %^{tag}\n"
             "---\n"
             "#+end_export\n"
             "#+TOC: headlines 2\n"))
@@ -286,7 +279,7 @@
   ;; LaTeX
   ;; ---------------------------------------------------------
   (with-eval-after-load 'ox-latex
-    ;; 放大预览倍数
+    ;; enlarge the preview magnification
     (plist-put org-format-latex-options :scale 1.5)
     ;; export org-mode in Chinese into PDF
     ;; https://freizl.github.io/posts/2012-04-06-export-orgmode-file-in-Chinese.html
@@ -313,12 +306,13 @@
   (global-set-key (kbd "C-c o i") #'org-insert-structure-template)
 
   ;; ;; after v9.2 [[https://orgmode.org/Changes.html][changlog]]
-  ;; ;; Org comes with a new template expansion mechanism `org-insert-structure-template'
-  ;; ;; Default keybinding is `\C-c\C-,'
-  ;; ;; if prefer using previous patterns, e.g. <s, goto `org-tempo.el' for more information
+  ;; ;; Org comes with a new template expansion mechanism
+  ;; ;; `org-insert-structure-template'. Default keybinding is `\C-c\C-,'.
+  ;; ;; If prefer using previous patterns, e.g. `<s',
+  ;; ;; check `org-tempo.el' for more information
   ;; (add-to-list 'org-modules 'org-tempo)
 
-  ;; 让中文也可以不加空格就使用行内格式
+  ;; use inline format without space in Chinese
   (setcar (nthcdr 0 org-emphasis-regexp-components)
           " \t('\"{[:nonascii:]")
   (setcar (nthcdr 1 org-emphasis-regexp-components)
@@ -326,7 +320,8 @@
   (org-set-emph-re 'org-emphasis-regexp-components
                    org-emphasis-regexp-components)
   (org-element-update-syntax)
-  ;; 规定上下标必须加 {}，否则中文使用下划线时它会以为是两个连着的下标
+  ;; {} must be added to the subscript, otherwise Emacs will think it is two
+  ;; consecutive subscripts when using underscores in Chinese
   (setq org-use-sub-superscripts "{}")
 
   (setq org-tag-alist '(("@work" . ?w) ("@home" . ?h) ("@school" . ?s)

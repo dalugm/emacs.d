@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: document (/* ... */)
+# key: doc
+# --
+/*
+ * $0
+ */

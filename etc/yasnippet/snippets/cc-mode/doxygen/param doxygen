@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: param doxygen
+# key: @pa
+# --
+@param ${1:param}

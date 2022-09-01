@@ -575,8 +575,9 @@ Including indent-buffer, which should not be called automatically on save."
 (defun my/load-theme (x)
   "Disable current theme and load theme X."
   (interactive (list
-                 (completing-read "Choose a theme: "
-                   (mapcar #'symbol-name (custom-available-themes)))))
+                (completing-read
+                 "Choose a theme: "
+                 (mapcar #'symbol-name (custom-available-themes)))))
   (condition-case nil
       (progn
         (mapc #'disable-theme custom-enabled-themes)
@@ -888,6 +889,9 @@ is set to after it."
       (my/disable-http-proxy)
     (my/enable-http-proxy)))
 
+(global-set-key (kbd "C-c t p h") #'my/toggle-http-proxy)
+(global-set-key (kbd "C-c t p H") #'my/show-http-proxy)
+
 (defun my/show-socks-proxy ()
   "Show SOCKS proxy."
   (interactive)
@@ -928,6 +932,9 @@ is set to after it."
       (my/disable-socks-proxy)
     (my/enable-socks-proxy)))
 
+(global-set-key (kbd "C-c t p s") #'my/toggle-socks-proxy)
+(global-set-key (kbd "C-c t p S") #'my/show-socks-proxy)
+
 (defun my/show-wsl-socks-proxy ()
   "Show SOCKS proxy in WSL."
   (interactive)
@@ -967,6 +974,9 @@ is set to after it."
   (if (bound-and-true-p socks-noproxy)
       (my/disable-wsl-socks-proxy)
     (my/enable-wsl-socks-proxy)))
+
+(global-set-key (kbd "C-c t p w") #'my/toggle-wsl-socks-proxy)
+(global-set-key (kbd "C-c t p W") #'my/show-wsl-socks-proxy)
 
 (provide 'init-funcs)
 

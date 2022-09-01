@@ -23,7 +23,7 @@
      (message "%.06fs" (float-time (time-since time)))))
 
 (setq user-full-name "dalu")
-(setq user-mail-address "moutong945@outlook.com")
+(setq user-mail-address "mou.tong@outlook.com")
 
 ;;; env
 (set-language-environment "UTF-8")
