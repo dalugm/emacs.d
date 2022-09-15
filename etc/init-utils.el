@@ -7,20 +7,26 @@
 
 ;;; Code:
 
-(require 'init-const)
+(defconst my-linux-p (eq system-type 'gnu/linux)
+  "Running on GNU/Linux.")
 
-(defmacro my|ensure (feature)
-  "Make sure FEATURE is required."
-  `(unless (featurep ,feature)
-     (condition-case nil
-       (require ,feature)
-       (error nil))))
+(defconst my-mac-p (eq system-type 'darwin)
+  "Running on Mac system.")
 
-(defmacro my|measure-time (&rest body)
-  "Measure the time takes to evaluate BODY."
-  `(let ((time (current-time)))
-     ,@body
-     (message "%.06fs" (float-time (time-since time)))))
+(defconst my-cygwin-p (eq system-type 'cygwin)
+  "Running on Cygwin system.")
+
+(defconst my-win-p (eq system-type 'windows-nt)
+  "Running on Windows system.")
+
+(defconst my-mac-x-p (and (display-graphic-p) my-mac-p)
+  "Running under X on Mac system.")
+
+(defconst my-linux-x-p (and (display-graphic-p) my-linux-p)
+  "Running under X on GNU/Linux system.")
+
+(defconst my-root-p (string-equal "root" (getenv "USER"))
+  "Root user.")
 
 (setq user-full-name "dalu")
 (setq user-mail-address "mou.tong@outlook.com")
@@ -43,27 +49,27 @@
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-echo-area-message t)
 
-(defun my//show-scratch-buffer-message ()
+(defun my--show-scratch-buffer-message ()
   "Customize `initial-scratch-message'."
   (let ((fortune-prog (or (executable-find "fortune-zh")
                           (executable-find "fortune"))))
     (cond
-      (fortune-prog
-        (format
-          ";; %s\n\n"
-          (replace-regexp-in-string
-            "\n" "\n;; "                ; comment each line
-            (replace-regexp-in-string
-              ;; remove trailing line break
-              "\\(\n$\\|\\|\\[m *\\|\\[[0-9][0-9]m *\\)" ""
-              (shell-command-to-string fortune-prog)))))
-      (t
-        (concat ";; Happy hacking "
-          (or user-full-name "")
-          "\n;; - Le vent se lève"
-          "\n;; - il faut tenter de vivre\n\n")))))
+     (fortune-prog
+      (format
+       ";; %s\n\n"
+       (replace-regexp-in-string
+        "\n" "\n;; "                ; comment each line
+        (replace-regexp-in-string
+         ;; remove trailing line break
+         "\\(\n$\\|\\|\\[m *\\|\\[[0-9][0-9]m *\\)" ""
+         (shell-command-to-string fortune-prog)))))
+     (t
+      (concat ";; Happy hacking "
+              (or user-full-name "")
+              "\n;; - Le vent se lève"
+              "\n;; - il faut tenter de vivre\n\n")))))
 
-(setq-default initial-scratch-message (my//show-scratch-buffer-message))
+(setq-default initial-scratch-message (my--show-scratch-buffer-message))
 
 ;; nice scrolling
 (setq scroll-margin 0)
@@ -114,19 +120,19 @@
 (setq tab-always-indent 'complete)
 
 ;; reply y/n instead of yes/no
-(fset 'yes-or-no-p 'y-or-n-p)
+(fset #'yes-or-no-p #'y-or-n-p)
 
 ;; enable narrowing commands
-(put 'narrow-to-region 'disabled nil)
-(put 'narrow-to-page 'disabled nil)
-(put 'narrow-to-defun 'disabled nil)
+(put #'narrow-to-region 'disabled nil)
+(put #'narrow-to-page 'disabled nil)
+(put #'narrow-to-defun 'disabled nil)
 
 ;; enabled change region case commands
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
+(put #'upcase-region 'disabled nil)
+(put #'downcase-region 'disabled nil)
 
 ;; enable erase-buffer command
-(put 'erase-buffer 'disabled nil)
+(put #'erase-buffer 'disabled nil)
 
 ;; disable annoying blink
 (when (fboundp 'blink-cursor-mode)
@@ -148,13 +154,13 @@
 
 ;; https://www.emacswiki.org/emacs/SavePlace
 (cond
-  ((fboundp 'save-place-mode)
-    (save-place-mode +1))
-  (t
-    (require 'saveplace)
-    (setq-default save-place t)))
+ ((fboundp 'save-place-mode)
+  (save-place-mode +1))
+ (t
+  (require 'saveplace)
+  (setq-default save-place t)))
 
-(unless (or sys/cygwinp sys/winp)
+(unless (or my-cygwin-p my-win-p)
   ;; Takes ages to start Emacs.
   ;; Got error `Socket /tmp/fam-cb/fam- has wrong permissions` in Cygwin ONLY!
   ;; reproduced with Emacs 26.1 and Cygwin upgraded at 2019-02-26
@@ -185,10 +191,10 @@
 (require 'whitespace)
 (setq whitespace-line-column 80)        ; limit line length
 (setq whitespace-style '(face indentation
-                         tabs tab-mark
-                         spaces space-mark
-                         newline newline-mark
-                         trailing lines-tail))
+                              tabs tab-mark
+                              spaces space-mark
+                              newline newline-mark
+                              trailing lines-tail))
 (setq whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
                                     (space-mark ?\  [?·] [?.])
                                     (newline-mark ?\n [?¬ ?\n])))
@@ -197,9 +203,9 @@
 (with-eval-after-load 'tramp
   (push (cons tramp-file-name-regexp nil) backup-directory-alist)
 
-;; ;; https://github.com/syl20bnr/spacemacs/issues/1921
-;; ;; If you tramp is hanging, you can uncomment below line.
-;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+  ;; ;; https://github.com/syl20bnr/spacemacs/issues/1921
+  ;; ;; If you tramp is hanging, you can uncomment below line.
+  ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 
   (setq tramp-chunksize 8192))
 
@@ -210,17 +216,17 @@
 ;; NO scroll-bar, tool-bar
 (when window-system
   (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1))
-    (tool-bar-mode -1))
+       (tool-bar-mode -1))
   (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1))
-    (scroll-bar-mode -1))
+       (scroll-bar-mode -1))
   (when (fboundp 'horizontal-scroll-bar-mode)
     (horizontal-scroll-bar-mode -1)))
 
 ;; NO menu-bar
 ;; BUT there's no point in hiding the menu bar on mac, so let's not do it
-(unless sys/mac-x-p
+(unless my-mac-x-p
   (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1))
-    (menu-bar-mode -1)))
+       (menu-bar-mode -1)))
 
 ;; recentf
 (require 'recentf)
@@ -277,7 +283,7 @@
   ;; Don't echo passwords when communicating with interactive programs:
   ;; Github prompt is like "Password for 'https://user@github.com/':"
   (setq comint-password-prompt-regexp
-    (format "%s\\|^ *Password for .*: *$" comint-password-prompt-regexp))
+        (format "%s\\|^ *Password for .*: *$" comint-password-prompt-regexp))
   (add-hook 'comint-output-filter-functions
             #'comint-watch-for-password-prompt))
 
@@ -288,7 +294,7 @@
   ;; with GPG 2.1+, this forces gpg-agent to use the Emacs minibuffer to prompt
   ;; for the key passphrase.
   ;; `epa-pinentry-mode' is obsolete since Emacs 27.1
-  (set (if emacs/>=27p
+  (set (if (>= emacs-major-version 27)
            'epg-pinentry-mode
          'epa-pinentry-mode)
        'loopback))

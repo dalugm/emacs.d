@@ -27,7 +27,7 @@
           ("git@gitlab.com:" . "https://gitlab.com/")))
   (borg-initialize))
 
-(progn                                  ; `use-package'
+(eval-and-compile                       ; `use-package'
   (require 'use-package)
   (setq use-package-verbose t))
 
@@ -40,7 +40,12 @@
   (auto-compile-update-autoloads             t))
 
 (use-package epkg
-  :defer t)
+  :defer t
+  :init
+  (setq epkg-database-connector
+        (if (>= emacs-major-version 29)
+            'sqlite-builtin
+          'sqlite-module)))
 
 (use-package wgrep)
 

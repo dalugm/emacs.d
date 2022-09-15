@@ -16,7 +16,9 @@
   ;; `TeX-engine-alist', `TeX-engine-in-engine-alist'
   (setq TeX-engine 'xetex)
   (setq TeX-command "xelatex")
-  (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t)))
+  (add-to-list
+   'TeX-command-list
+   '("XeLaTeX" "%`xelatex --synctex=1%(mode)%' %t" TeX-run-TeX nil t)))
 
 (provide 'init-tex)
 

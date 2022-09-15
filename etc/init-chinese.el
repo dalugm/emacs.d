@@ -16,8 +16,8 @@
   :unless (featurep 'rime)
   :bind (("C-\\" . toggle-input-method)
          (:map pyim-mode-map
-          ("," . pyim-page-previous-page)
-          ("." . pyim-page-next-page)))
+               ("," . pyim-page-previous-page)
+               ("." . pyim-page-next-page)))
   :custom (default-input-method "pyim")
   :config
   (setq pyim-default-scheme 'quanpin)
@@ -32,7 +32,7 @@
 
   ;; ;; Rime config
   ;; (liberime-start
-  ;;   (if sys/macp
+  ;;   (if my-mac-p
   ;;       "/Library/Input Methods/Squirrel.app/Contents/SharedSupport"
   ;;     "/usr/share/rime-data")
   ;;   (expand-file-name "rime/" my-cache-d))
@@ -74,7 +74,7 @@
       (setq pyim-dicts
             (mapcar (lambda (f)
                       (list :name (file-name-base f) :file f))
-              files))
+                    files))
       ;; disable basedict if bigdict or greatdict is used
       (dolist (f files)
         (when (or (string= "pyim-bigdict" (file-name-base f))

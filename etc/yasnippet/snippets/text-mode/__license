@@ -2,4 +2,4 @@
 # name: Insert a license
 # type: command
 # --
-(my/insert-license)
+(my-insert-license)

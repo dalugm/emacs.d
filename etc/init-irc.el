@@ -15,32 +15,28 @@
     "The nickname used to login into ERC"
     :type 'string)
 
-  ;; Stores the list of IRC servers that you want to connect to with start-irc.
-  (setq my-fav-irc '(
-                      "irc.libera.chat"
-                      ;; "irc.gitter.im"
-                      ;; ;; so sad freenode is not libre anymore
-                      ;; "irc.freenode.net"
-                      ))
+  (defvar my-fav-irc '(
+                       "irc.libera.chat"
+                       ;; "irc.gitter.im"
+                       ;; ;; so sad freenode is not libre anymore
+                       ;; "irc.freenode.net"
+                       )
+    "The list of IRC servers that want to connect to with `my-start-irc.'")
 
-  ;; Message string to be sent while quitting IRC.
-  (setq bye-irc-message "孤帆远影碧空尽，唯见长江天际流")
+  (defvar bye-irc-message "孤帆远影碧空尽，唯见长江天际流"
+    "Message string to be sent while quitting IRC.")
 
-  ;; ---------------------------------------------------------
-  ;; functions
-  ;; ---------------------------------------------------------
-
-  (defun my/connect-irc (server)
+  (defun my-connect-irc (server)
     "Connects securely to IRC SERVER over TLS at port 6697."
     (erc-tls :server server
              :port 6697
              :nick my-irc-nick))
 
-  (defun my/start-irc ()
+  (defun my-start-irc ()
     "Connect to IRC?"
     (interactive)
     (when (y-or-n-p "Do you want to start IRC? ")
-      (mapcar 'my/connect-irc my-fav-irc)))
+      (mapcar #'my-connect-irc my-fav-irc)))
 
   :config
   (require 'erc-log)
@@ -49,10 +45,10 @@
   (require 'erc-autoaway)
 
   (setq erc-autojoin-channels-alist '((
-                                        "libera.chat"
-                                        "#nixos"
-                                        "#emacs"
-                                        )))
+                                       "libera.chat"
+                                       "#nixos"
+                                       "#emacs"
+                                       )))
 
   ;; Interpret mIRC-style color commands in IRC chats
   (setq erc-interpret-mirc-color t)
@@ -85,26 +81,22 @@
   (setq erc-autoaway-idle-seconds 600)
   (setq erc-autoaway-use-emacs-idle t)
 
-  ;; ---------------------------------------------------------
-  ;; functions
-  ;; ---------------------------------------------------------
-
-  (defun my/filter-server-buffers ()
+  (defun my-filter-server-buffers ()
     "Filter all irc servers."
     (delq nil
-      (mapcar
-        (lambda (x) (and (erc-server-buffer-p x) x))
-        (buffer-list))))
+          (mapcar
+           (lambda (x) (and (erc-server-buffer-p x) x))
+           (buffer-list))))
 
-  (defun my/stop-irc ()
+  (defun my-stop-irc ()
     "Disconnect from all irc servers."
     (interactive)
-    (dolist (buffer (my/filter-server-buffers))
+    (dolist (buffer (my-filter-server-buffers))
       (message "Server buffer: %s" (buffer-name buffer))
       (with-current-buffer buffer
         (erc-quit-server bye-irc-message))))
 
-  (defun my/erc-browse-last-url ()
+  (defun my-erc-browse-last-url ()
     "Search backwards through an ERC buffer, looking for a URL.
 When a URL is found, it prompts you to open it."
     (interactive)
@@ -112,7 +104,7 @@ When a URL is found, it prompts you to open it."
       (let ((ffap-url-regexp "\\(https?://\\)."))
         (ffap-next-url t t))))
 
-  (defun my/erc-count-users ()
+  (defun my-erc-count-users ()
     "Display the number of users and ops connected on the current channel."
     (interactive)
     (if (get-buffer "irc.freenode.net:6667")
@@ -124,17 +116,17 @@ When a URL is found, it prompts you to open it."
                     (ops 0))
                 (maphash (lambda (k v)
                            (when (member (current-buffer)
-                                   (erc-server-user-buffers v))
+                                         (erc-server-user-buffers v))
                              (cl-incf users))
                            (when (erc-channel-user-op-p k)
                              (cl-incf ops)))
-                  hash-table)
+                         hash-table)
                 (message "%d users (%s ops) are online on %s"
                          users ops channel))
             (user-error "The current buffer is not a channel")))
       (user-error "You must first be connected on IRC")))
 
-  (defun my/erc-get-ops ()
+  (defun my-erc-get-ops ()
     "Display the names of ops users on the current channel."
     (interactive)
     (if (get-buffer "irc.freenode.net:6667")
@@ -145,15 +137,15 @@ When a URL is found, it prompts you to open it."
                            (when (and (cdr cdata)
                                       (erc-channel-user-op (cdr cdata)))
                              (setq ops (cons nick ops))))
-                  erc-channel-users)
+                         erc-channel-users)
                 (if ops
                     (message "The online ops users are: %s"
-                             (mapconcat 'identity ops " "))
+                             (mapconcat #'identity ops " "))
                   (message "There are no ops users online on %s" channel)))
             (user-error "The current buffer is not a channel")))
       (user-error "You must first be connected on IRC")))
 
-  (defun my/erc-notify (nickname message)
+  (defun my-erc-notify (nickname message)
     "Display a notification MESSAGE for ERC according to NICKNAME."
     (let* ((channel (buffer-name))
            (nick (erc-hl-nicks-trim-irc-nick nickname))
@@ -162,7 +154,7 @@ When a URL is found, it prompts you to open it."
                     (concat nick " (" channel ")")))
            (msg (s-trim (s-collapse-whitespace message))))
       (alert (concat nick ": " msg) :title title)))
-  (add-hook 'ercn-notify-hook #'my/erc-notify)
+  (add-hook 'ercn-notify-hook #'my-erc-notify)
 
   ;; ------------------------------------------------------------
   ;; misc

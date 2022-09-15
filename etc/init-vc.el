@@ -20,7 +20,7 @@
 
 ;; ;; Solution 3: setup `vc-handled-backends' per project
 ;; (setq vc-handled-backends nil)
-;; (defun my/setup-develop-environment ()
+;; (defun my-setup-develop-environment ()
 ;;   "Default configuration for project under vcs."
 ;;   (interactive)
 ;;   (cond
@@ -32,7 +32,7 @@
 ;; (dolist (hook '(java-mode-hook emacs-lisp-mode-hook org-mode-hook
 ;;                 js-mode-hook javascript-mode-hook web-mode-hook
 ;;                 c++-mode-hook c-mode-hook))
-;;   (add-hook hook #'my/setup-develop-environment))
+;;   (add-hook hook #'my-setup-develop-environment))
 
 (use-package magit
   :bind (("C-x g"   . magit-status)
@@ -68,8 +68,8 @@
   (diff-hl-flydiff-mode +1)
 
   (setq diff-hl-margin-symbols-alist
-    '((insert . "+") (delete . "-") (change . "=")
-      (unknown . "?") (ignored . "!")))
+        '((insert . "+") (delete . "-") (change . "=")
+          (unknown . "?") (ignored . "!")))
 
   (unless (display-graphic-p)
     ;; fall back to margin since fringe is unavailable in terminal

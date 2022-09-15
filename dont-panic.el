@@ -16,14 +16,14 @@
 ;; test Lisp downloaded from Internet here
 (setq test-elisp-dir (expand-file-name "test" user-emacs-directory))
 (unless (file-exists-p (expand-file-name test-elisp-dir))
-    (make-directory (expand-file-name test-elisp-dir)))
+  (make-directory (expand-file-name test-elisp-dir)))
 
 (setq load-path
       (append
-        (cl-loop for dir in (directory-files test-elisp-dir)
-                 unless (string-match "^\\." dir)
-                 collecting (expand-file-name (concat test-elisp-dir dir)))
-        load-path))
+       (cl-loop for dir in (directory-files test-elisp-dir)
+                unless (string-match "^\\." dir)
+                collecting (expand-file-name (concat test-elisp-dir dir)))
+       load-path))
 
 ;; Packages
 ;; Without this comment package.el adds (package-initialize) here
@@ -36,15 +36,15 @@
                       (not (gnutls-available-p))))
          (proto (if no-ssl "http" "https")))
     (setq package-archives
-      `(;; emacs-china
-         ,(cons "gnu"   (concat proto "://elpa.emacs-china.org/gnu/"))
-         ,(cons "melpa" (concat proto "://elpa.emacs-china.org/melpa/"))
-         ,(cons "org"   (concat proto "://elpa.emacs-china.org/org/"))
-         ;; official
-         ;; ,(cons "gnu"   (concat proto "://elpa.gnu.org/packages/"))
-         ;; ,(cons "melpa" (concat proto "://melpa.org/packages/"))
-         ;; ,(cons "org"   (concat proto "://orgmode.org/elpa/"))
-         ))))
+          `(;; emacs-china
+            ,(cons "gnu"   (concat proto "://elpa.emacs-china.org/gnu/"))
+            ,(cons "melpa" (concat proto "://elpa.emacs-china.org/melpa/"))
+            ,(cons "org"   (concat proto "://elpa.emacs-china.org/org/"))
+            ;; official
+            ;; ,(cons "gnu"   (concat proto "://elpa.gnu.org/packages/"))
+            ;; ,(cons "melpa" (concat proto "://melpa.org/packages/"))
+            ;; ,(cons "org"   (concat proto "://orgmode.org/elpa/"))
+            ))))
 
 ;; Explicitly set the preferred coding systems to avoid annoying prompt
 ;; from Emacs (especially on Microsoft Windows)
@@ -109,18 +109,18 @@
 ;; IDO
 (if (fboundp 'fido-mode)
     (progn
-      (fido-mode 1)
+      (fido-mode +1)
 
       (defun fido-recentf-open ()
-      "Use `completing-read' to find a recent file."
-      (interactive)
-      (if (find-file (completing-read "Find recent file: " recentf-list))
-          (message "Opening file...")
-        (message "Aborting")))
-    (global-set-key (kbd "C-x C-r") 'fido-recentf-open))
+        "Use `completing-read' to find a recent file."
+        (interactive)
+        (if (find-file (completing-read "Find recent file: " recentf-list))
+            (message "Opening file...")
+          (message "Aborting")))
+      (global-set-key (kbd "C-x C-r") 'fido-recentf-open))
   (progn
-    (ido-mode 1)
-    (ido-everywhere 1)
+    (ido-mode +1)
+    (ido-everywhere +1)
 
     (setq ido-use-virtual-buffers t)
     (setq ido-use-filename-at-point 'guess)
@@ -148,7 +148,7 @@
   (revert-buffer t t))
 (global-set-key (kbd "<f5>") #'revert-current-buffer)
 
-(defun my/eval-last-sexp ()
+(defun my-eval-last-sexp ()
   "Evaluate the last symbolic expression at the point.
 With nil `C-u' prefix, insert output below following an arrow.
 With one `C-u' prefix, insert output in current position.
@@ -158,26 +158,26 @@ With two `C-u' prefix, insert output in current position and delete sexp."
         (clisp (eq major-mode 'common-lisp-mode))
         (scheme (eq major-mode 'scheme-mode)))
     (cond
-      (elisp
-        (let ((value (eval (elisp--preceding-sexp))))
-          (save-excursion
-            (cond
-              ((equal current-prefix-arg nil) ; no prefix
-                (newline-and-indent)
-                (insert (format "%s%S" ";; => " value)))
-              ((equal current-prefix-arg '(4)) ; one prefix
-                (newline-and-indent)
-                (insert (format "%S" value)))
-              ((equal current-prefix-arg '(16)) ; two prefix
-                (backward-kill-sexp)
-                (insert (format "%S" value)))))))
-      (clisp
-        (message "Common Lisp mode is NOT supported yet!"))
-      (scheme
-        (message "Scheme mode is NOT supported yet!"))
-      (t
-        (message "This mode is NOT a symbolic expression related mode!")))))
-(global-set-key (kbd "C-c C-e") 'my/eval-last-sexp)
+     (elisp
+      (let ((value (eval (elisp--preceding-sexp))))
+        (save-excursion
+          (cond
+           ((equal current-prefix-arg nil) ; no prefix
+            (newline-and-indent)
+            (insert (format "%s%S" ";; => " value)))
+           ((equal current-prefix-arg '(4)) ; one prefix
+            (newline-and-indent)
+            (insert (format "%S" value)))
+           ((equal current-prefix-arg '(16)) ; two prefix
+            (backward-kill-sexp)
+            (insert (format "%S" value)))))))
+     (clisp
+      (message "Common Lisp mode is NOT supported yet!"))
+     (scheme
+      (message "Scheme mode is NOT supported yet!"))
+     (t
+      (message "This mode is NOT a symbolic expression related mode!")))))
+(global-set-key (kbd "C-c C-e") 'my-eval-last-sexp)
 
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()

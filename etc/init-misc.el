@@ -9,11 +9,11 @@
 
 ;; show fortune in Emacs
 (with-eval-after-load 'fortune
-  (when (or sys/macp sys/linuxp)
+  (when (or my-mac-p my-linux-p)
     (let ((fortune
            (cond
-             (sys/macp "/usr/local/Cellar/fortune/9708/share/games/fortunes")
-             (sys/linuxp "/usr/share/games/fortunes"))))
+            (my-mac-p "/usr/local/Cellar/fortune/9708/share/games/fortunes")
+            (my-linux-p "/usr/share/games/fortunes"))))
       (setq fortune-file fortune))))
 
 ;; network proxy
@@ -37,7 +37,7 @@
   :group 'convenience
   :type 'string)
 
-;; allow access from `emacsclient'
+;; allow access from emacsclient
 (add-hook 'after-init-hook
           (lambda ()
             (require 'server)
@@ -63,7 +63,7 @@
 
 (use-package exec-path-from-shell
   :defer 1
-  :when (memq window-system '(mac ns x))
+  :when my-mac-x-p
   :init (setq exec-path-from-shell-check-startup-files nil)
   :config (exec-path-from-shell-initialize)
   ;; https://emacs.stackexchange.com/questions/10822/locale-when-launching-emacs-app-on-os-x
@@ -82,40 +82,35 @@
 (use-package hl-todo
   :hook (after-init . global-hl-todo-mode)
   :bind (:map hl-todo-mode-map
-          ("M-s M-o" . hl-todo-occur))
+              ("M-s M-o" . hl-todo-occur))
   :config
   (setq hl-todo-highlight-punctuation ":")
   (setq hl-todo-keyword-faces
-    `(;; For things that need to be done, just not today.
-       ("TODO" warning bold)
-       ;; For especially important gotchas with a given implementation.
-       ("NOTE" success bold)
-       ;; For problems that will become bigger problems later
-       ;; if not fixed ASAP.
-       ("FIXME" error bold)
-       ;; For problems that need to pay attention especially.
-       ("WARNING" error bold)
-       ;; For tidbits that are unconventional and not intended uses of
-       ;; the constituent parts, or modify function for own use, and
-       ;; may break in a future update.
-       ("HACK" font-lock-constant-face bold)
-       ;; For things that were done for temporarily use,
-       ;; It will be removed in the future.
-       ("TEMP" font-lock-keyword-face bold)
-       ;; For things that were done hastily and/or hasn't been
-       ;; thoroughly tested. It may not even be necessary!
-       ("REVIEW" font-lock-keyword-face bold)
-       ;; For codes that need to refactor or optimize later.
-       ("XXX" font-lock-keyword-face bold)
-       ;; For things that has abandoned but should not removed.
-       ("ABANDONED" font-lock-doc-face bold)
-       ;; For things that just gotta go and will soon be gone.
-       ("DEPRECATED" font-lock-doc-face bold))))
-
-(use-package evil-nerd-commenter
-  :bind (("C-c c l" . evilnc-comment-or-uncomment-lines)
-         ("C-c c d" . evilnc-copy-and-comment-lines)
-         ("C-c c p" . evilnc-comment-or-uncomment-paragraphs)))
+        `(;; For things that need to be done, just not today.
+          ("TODO" warning bold)
+          ;; For especially important gotchas with a given implementation.
+          ("NOTE" success bold)
+          ;; For problems that will become bigger problems later
+          ;; if not fixed ASAP.
+          ("FIXME" error bold)
+          ;; For problems that need to pay attention especially.
+          ("WARNING" error bold)
+          ;; For tidbits that are unconventional and not intended uses of
+          ;; the constituent parts, or modify function for own use, and
+          ;; may break in a future update.
+          ("HACK" font-lock-constant-face bold)
+          ;; For things that were done for temporarily use,
+          ;; It will be removed in the future.
+          ("TEMP" font-lock-keyword-face bold)
+          ;; For things that were done hastily and/or hasn't been
+          ;; thoroughly tested. It may not even be necessary!
+          ("REVIEW" font-lock-keyword-face bold)
+          ;; For codes that need to refactor or optimize later.
+          ("XXX" font-lock-keyword-face bold)
+          ;; For things that has abandoned but should not removed.
+          ("ABANDONED" font-lock-doc-face bold)
+          ;; For things that just gotta go and will soon be gone.
+          ("DEPRECATED" font-lock-doc-face bold))))
 
 (use-package darkroom
   :bind (("C-c t d" . darkroom-tentative-mode)
@@ -158,7 +153,7 @@
 (let ((site-lisp-dir (expand-file-name "lib/site-lisp/"
                                        user-emacs-directory)))
   (push site-lisp-dir load-path)
-  (my//add-subdirs-to-load-path site-lisp-dir))
+  (my--add-subdirs-to-load-path site-lisp-dir))
 
 (provide 'init-misc)
 

@@ -13,6 +13,9 @@
 ;; initialization, so we must prevent Emacs from doing it early!
 (setq package-enable-at-startup nil)
 
+;; Prevents outdated byte code files from being loaded
+(setq load-prefer-newer t)
+
 ;; Faster to disable these here (before they've been initialized)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)

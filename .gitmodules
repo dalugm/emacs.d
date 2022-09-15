@@ -128,6 +128,9 @@
 [submodule "editorconfig"]
 	path = lib/editorconfig
 	url = https://github.com/editorconfig/editorconfig-emacs.git
+[submodule "ef-themes"]
+	path = lib/ef-themes
+	url = https://git.sr.ht/~protesilaos/ef-themes
 [submodule "ein"]
 	path = lib/ein
 	url = https://github.com/millejoh/emacs-ipython-notebook.git
@@ -141,6 +144,9 @@
 	path = lib/emacsql
 	url = https://github.com/skeeto/emacsql.git
 	no-byte-compile = emacsql-pg.el
+[submodule "emacsql-sqlite-builtin"]
+	path = lib/emacsql-sqlite-builtin
+	url = https://github.com/emacscollective/emacsql-sqlite-builtin.git
 [submodule "embark"]
 	path = lib/embark
 	url = https://github.com/oantolin/embark.git
@@ -355,15 +361,9 @@
 [submodule "separedit"]
 	path = lib/separedit
 	url = https://github.com/twlz0ne/separedit.el.git
-[submodule "sicp"]
-	path = lib/sicp
-	url = https://github.com/webframp/sicp-info.git
 [submodule "sinolor-themes"]
 	path = lib/sinolor-themes
 	url = https://github.com/dalugm/sinolor-themes.git
-[submodule "slime"]
-	path = lib/slime
-	url = https://github.com/slime/slime.git
 [submodule "smart-compile"]
 	path = lib/smart-compile
 	url = https://github.com/emacsmirror/smart-compile.git
@@ -376,6 +376,10 @@
 [submodule "spacemacs-theme"]
 	path = lib/spacemacs-theme
 	url = https://github.com/nashamri/spacemacs-theme.git
+[submodule "sqlite3"]
+	path = lib/sqlite3
+	url = https://github.com/pekingduck/emacs-sqlite3-api.git
+	build-step = make
 [submodule "srcery-theme"]
 	path = lib/srcery-theme
 	url = https://github.com/srcery-colors/srcery-emacs.git

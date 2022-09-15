@@ -17,7 +17,7 @@
 
 ;; send mail through SMTP
 (require 'smtpmail)
-(setq message-send-mail-function 'smtpmail-send-it)
+(setq message-send-mail-function #'smtpmail-send-it)
 
 ;; Outlook
 (setq smtpmail-smtp-user "mou.tong@outlook.com"

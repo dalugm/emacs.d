@@ -10,25 +10,25 @@
 (use-package evil
   :hook (after-init . evil-mode)
   :bind ((:map evil-normal-state-map
-          ("]b" . next-buffer)
-          ("[b" . previous-buffer)
-          ("g1" . avy-goto-char-timer)
-          ("g2" . avy-goto-char-2)
-          ("g3" . avy-goto-word-or-subword-1)
-          ("gll" . avy-goto-line)
-          ("glj" . avy-goto-line-below)
-          ("glk" . avy-goto-line-above)
-          ("gle" . avy-goto-end-of-line)
-          ("M-." . xref-find-definitions))
+               ("]b" . next-buffer)
+               ("[b" . previous-buffer)
+               ("g1" . avy-goto-char-timer)
+               ("g2" . avy-goto-char-2)
+               ("g3" . avy-goto-word-or-subword-1)
+               ("gll" . avy-goto-line)
+               ("glj" . avy-goto-line-below)
+               ("glk" . avy-goto-line-above)
+               ("gle" . avy-goto-end-of-line)
+               ("M-." . xref-find-definitions))
          (:map evil-insert-state-map
-          ("C-n" . next-line)
-          ("C-p" . previous-line)
-          ("C-a" . beginning-of-line)
-          ("C-e" . end-of-line)
-          ("C-k" . kill-line)
-          ("C-t" . transpose-chars))
+               ("C-n" . next-line)
+               ("C-p" . previous-line)
+               ("C-a" . beginning-of-line)
+               ("C-e" . end-of-line)
+               ("C-k" . kill-line)
+               ("C-t" . transpose-chars))
          (:map evil-visual-state-map
-          ("v" . er/expand-region)))
+               ("v" . er/expand-region)))
   :config
   ;; make evil-search behave more like VIM
   (evil-select-search-module 'evil-search-module 'evil-search)
@@ -43,6 +43,8 @@
   (setq evil-move-cursor-back t)
   ;; make cursor move as Emacs
   (setq evil-move-beyond-eol t)
+  ;; make evil search like vim
+  (setq evil-ex-search-vim-style-regexp t)
 
   ;; ---------------------------------------------------------
   ;; evil enhance
@@ -54,7 +56,8 @@
     (save-excursion (dotimes (_ count) (evil-insert-newline-above)))
     (when (bolp) (forward-char count)))
 
-  (define-key evil-normal-state-map (kbd "[ SPC")
+  (define-key evil-normal-state-map
+              (kbd "[ SPC")
               #'evil-unimpaired-insert-newline-above)
 
   (defun evil-unimpaired-insert-newline-below (count)
@@ -62,26 +65,73 @@
     (interactive "p")
     (save-excursion (dotimes (_ count) (evil-insert-newline-below))))
 
-  (define-key evil-normal-state-map (kbd "] SPC")
+  (define-key evil-normal-state-map
+              (kbd "] SPC")
               #'evil-unimpaired-insert-newline-below)
 
-  (defun my//evil-disable-ex-highlight ()
+  (defun my--evil-disable-ex-highlight ()
     "Disable evil ex search buffer highlight."
     (when (evil-ex-hl-active-p 'evil-ex-search)
       (evil-ex-nohighlight) t))
 
-  (advice-add 'keyboard-quit :before #'my//evil-disable-ex-highlight)
+  (advice-add #'keyboard-quit :before #'my--evil-disable-ex-highlight)
 
-  (defun my//show-current-evil-state ()
+  ;; http://blog.binchen.org/posts/code-faster-by-extending-emacs-evil-text-object
+  (defun my--evil-paren-range (count beg end type inclusive)
+    "Get minimum range of paren text object.
+COUNT, BEG, END, TYPE is used to identify the text object.
+If INCLUSIVE is t, the text object is inclusive."
+    (let ((parens
+           '("()" "[]" "{}" "<>"
+             "（）" "《》" "「」" "『』" "【】" "〖〗"
+             "“”" "‘’" "［］" "〔〕" "｛｝"))
+          range
+          found-range)
+      (dolist (paren parens)
+        (condition-case nil
+            (setq range (evil-select-paren
+                         (aref paren 0)
+                         (aref paren 1)
+                         beg
+                         end
+                         type
+                         count
+                         inclusive))
+          (error nil))
+        (when range
+          (cond
+           (found-range
+            (when (< (- (nth 1 range) (nth 0 range))
+                     (- (nth 1 found-range) (nth 0 found-range)))
+              (setf (nth 0 found-range) (nth 0 range))
+              (setf (nth 1 found-range) (nth 1 range))))
+           (t
+            (setq found-range range)))))
+      found-range))
+
+  (evil-define-text-object my--evil-a-paren (count &optional beg end type)
+    "Select a text object."
+    :extend-selection t
+    (my--evil-paren-range count beg end type t))
+
+  (evil-define-text-object my--evil-inner-paren (count &optional beg end type)
+    "Select inner text object."
+    :extend-selection nil
+    (my--evil-paren-range count beg end type nil))
+
+  (define-key evil-outer-text-objects-map "a" #'my--evil-a-paren)
+  (define-key evil-inner-text-objects-map "a" #'my--evil-inner-paren)
+
+  (defun my--show-current-evil-state ()
     "Change modeline's face according to different evil state."
     (let ((color (cond
-                   ((minibufferp)          my-default-color)
-                   ((evil-emacs-state-p)   '("#7e1671" . "#f8f4ed"))
-                   ((evil-insert-state-p)  '("#20894d" . "#f8f4ed"))
-                   ((evil-visual-state-p)  '("#ffd111" . "#f8f4ed"))
-                   ((evil-replace-state-p) '("#de1c31" . "#f8f4ed"))
-                   ((buffer-modified-p)    '("#1772b4" . "#f8f4ed"))
-                   (t                      my-default-color))))
+                  ((minibufferp)          my-default-color)
+                  ((evil-emacs-state-p)   '("#7e1671" . "#f8f4ed"))
+                  ((evil-insert-state-p)  '("#20894d" . "#f8f4ed"))
+                  ((evil-visual-state-p)  '("#ffd111" . "#f8f4ed"))
+                  ((evil-replace-state-p) '("#de1c31" . "#f8f4ed"))
+                  ((buffer-modified-p)    '("#1772b4" . "#f8f4ed"))
+                  (t                      my-default-color))))
       (set-face-background 'mode-line (car color))
       (set-face-foreground 'mode-line (cdr color))))
 
@@ -93,8 +143,8 @@
                                      (face-foreground 'mode-line))
       "Default modeline color.")
     (if my-modeline-evil-indicator-mode
-        (add-hook 'post-command-hook #'my//show-current-evil-state)
-      (remove-hook 'post-command-hook #'my//show-current-evil-state)))
+        (add-hook 'post-command-hook #'my--show-current-evil-state)
+      (remove-hook 'post-command-hook #'my--show-current-evil-state)))
 
   ;; ---------------------------------------------------------
   ;; evil keybinding
@@ -106,16 +156,16 @@
     "gp" #'outline-previous-visible-heading
     "$"  #'org-end-of-line
     "^"  #'org-beginning-of-line
-    "<"  (lambda () (interactive) (my/org-demote-or-promote 1)) ; outdent
-    ">"  #'my/org-demote-or-promote                             ; indent
+    "<"  (lambda () (interactive) (my-org-demote-or-promote 1)) ; outdent
+    ">"  #'my-org-demote-or-promote                             ; indent
     (kbd "TAB") #'org-cycle)
 
   (evil-declare-key 'normal markdown-mode-map
     "gh" #'outline-up-heading
     "gn" #'outline-next-visible-heading
     "gp" #'outline-previous-visible-heading
-    "<"  (lambda () (interactive) (my/markdown-demote-or-promote 1)) ; outdent
-    ">"  #'my/markdown-demote-or-promote                             ; indent
+    "<"  (lambda () (interactive) (my-markdown-demote-or-promote 1)) ; outdent
+    ">"  #'my-markdown-demote-or-promote                             ; indent
     (kbd "TAB") #'markdown-cycle)
 
   ;; ---------------------------------------------------------
@@ -123,22 +173,22 @@
   ;; ---------------------------------------------------------
 
   ;; https://github.com/emacs-evil/evil/issues/511
-  (defmacro my|adjust-major-mode-keymap-with-evil (mode &optional replace)
+  (defmacro my--adjust-major-mode-keymap-with-evil (mode &optional replace)
     `(with-eval-after-load (quote ,(if replace replace mode))
        (evil-make-overriding-map ,(intern (concat mode "-mode-map")) 'normal)
        ;; force update evil keymaps after `mode' loaded
        (add-hook (quote ,(intern (concat mode "-mode-hook")))
                  #'evil-normalize-keymaps)))
 
-  (my|adjust-major-mode-keymap-with-evil "git-timemachine")
+  (my--adjust-major-mode-keymap-with-evil "git-timemachine")
 
   ;; buffer-regexps
   (dolist (b '(
-                ("+new-snippet+"  . emacs)
-                ("\\*.*\\*"       . emacs)
-                (".*MSG.*"        . emacs)
-                ("\\*scratch\\*"  . normal)
-                ))
+               ("+new-snippet+"  . emacs)
+               ("\\*.*\\*"       . emacs)
+               (".*MSG.*"        . emacs)
+               ("\\*scratch\\*"  . normal)
+               ))
     (add-to-list 'evil-buffer-regexps b))
 
   ;; hook
@@ -147,85 +197,85 @@
 
   ;; specify MAJOR mode uses Evil (vim) NORMAL state or EMACS original state.
   (dolist (p '(
-                (Info-mode                . emacs)
-                (Man-mode                 . emacs)
-                (apropos-mode             . emacs)
-                (calendar-mode            . emacs)
-                (compilation-mode         . emacs)
-                (dired-mode               . emacs)
-                (elfeed-search-mode       . emacs)
-                (elfeed-show-mode         . emacs)
-                (epa-key-list-mode        . emacs)
-                (erc-mode                 . emacs)
-                (eshell-mode              . emacs)
-                (fundamental-mode         . normal)
-                (forge-post-mode          . emacs)
-                (grep-mode                . emacs)
-                (help-mode                . emacs)
-                (ivy-occur-grep-mode      . emacs)
-                (ivy-occur-mode           . emacs)
-                (magit-mode               . emacs)
-                (message-mode             . emacs)
-                (messages-buffer-mode     . normal)
-                (minibuffer-inactive-mode . emacs)
-                (profiler-report-mode     . emacs)
-                (shell-mode               . emacs)
-                (special-mode             . emacs)
-                (sr-mode                  . emacs)
-                (term-mode                . emacs)
-                (vc-log-edit-mode         . emacs)
-                (w3m-mode                 . emacs)
-                (woman-mode               . emacs)
-                (xref--xref-buffer-mode   . emacs)
-                ))
+               (Info-mode                . emacs)
+               (Man-mode                 . emacs)
+               (apropos-mode             . emacs)
+               (calendar-mode            . emacs)
+               (compilation-mode         . emacs)
+               (dired-mode               . emacs)
+               (elfeed-search-mode       . emacs)
+               (elfeed-show-mode         . emacs)
+               (epa-key-list-mode        . emacs)
+               (erc-mode                 . emacs)
+               (eshell-mode              . emacs)
+               (forge-post-mode          . emacs)
+               (grep-mode                . emacs)
+               (help-mode                . emacs)
+               (ivy-occur-grep-mode      . emacs)
+               (ivy-occur-mode           . emacs)
+               (magit-mode               . emacs)
+               (message-mode             . emacs)
+               (minibuffer-inactive-mode . emacs)
+               (profiler-report-mode     . emacs)
+               (shell-mode               . emacs)
+               (special-mode             . emacs)
+               (sr-mode                  . emacs)
+               (term-mode                . emacs)
+               (vc-log-edit-mode         . emacs)
+               (w3m-mode                 . emacs)
+               (woman-mode               . emacs)
+               (xref--xref-buffer-mode   . emacs)
+               (fundamental-mode         . normal)
+               (messages-buffer-mode     . normal)
+               ))
     (evil-set-initial-state (car p) (cdr p))))
 
 (use-package evil-surround
   :config (global-evil-surround-mode)
 
-  (defmacro my|quoted-text-object (name key start-regex end-regex)
+  (defmacro my--quoted-text-object (name key start-regex end-regex)
     "Define text objects.
 ref: https://stackoverflow.com/a/22418983/4921402."
     (let ((inner-name (make-symbol (concat "evil-inner-" name)))
           (outer-name (make-symbol (concat "evil-a-" name))))
       `(progn
          (evil-define-text-object
-          ,inner-name (count &optional beg end type)
-          (evil-select-paren ,start-regex ,end-regex
-                             beg end type count nil))
+           ,inner-name (count &optional beg end type)
+           (evil-select-paren ,start-regex ,end-regex
+                              beg end type count nil))
          (evil-define-text-object
-          ,outer-name (count &optional beg end type)
-          (evil-select-paren ,start-regex ,end-regex
-                             beg end type count t))
+           ,outer-name (count &optional beg end type)
+           (evil-select-paren ,start-regex ,end-regex
+                              beg end type count t))
          (define-key evil-inner-text-objects-map ,key #',inner-name)
          (define-key evil-outer-text-objects-map ,key #',outer-name))))
 
   ;; NOTE: do NOT use text-object such as `w' `p'
-  (my|quoted-text-object "ShuMingHao" "q" "《" "》")
-  (my|quoted-text-object "ShuangYinHao" "e" "“" "”")
-  (my|quoted-text-object "DanYinHao" "d" "‘" "’")
-  (my|quoted-text-object "ZhiJiaoYinHao" "r" "「" "」")
-  (my|quoted-text-object "ZhiJiaoShuangYinHao" "f" "『" "』")
-  (my|quoted-text-object "FangTouKuoHao" "t" "【" "】")
-  (my|quoted-text-object "KongXinFangTouKuoHao" "g" "〖" "〗")
-  (my|quoted-text-object "YuanKuoHao" "y" "（" "）")
-  (my|quoted-text-object "QuanJiaoFangKuoHao" "u" "［" "］")
-  (my|quoted-text-object "QuanJiaoWanKuoHao" "i" "〔" "〕")
-  (my|quoted-text-object "QuanJiaoHuaKuoHao" "o" "｛" "｝")
+  (my--quoted-text-object "ShuMingHao" "q" "《" "》")
+  (my--quoted-text-object "ShuangYinHao" "e" "“" "”")
+  (my--quoted-text-object "DanYinHao" "d" "‘" "’")
+  (my--quoted-text-object "ZhiJiaoYinHao" "r" "「" "」")
+  (my--quoted-text-object "ZhiJiaoShuangYinHao" "f" "『" "』")
+  (my--quoted-text-object "FangTouKuoHao" "t" "【" "】")
+  (my--quoted-text-object "KongXinFangTouKuoHao" "g" "〖" "〗")
+  (my--quoted-text-object "YuanKuoHao" "y" "（" "）")
+  (my--quoted-text-object "QuanJiaoFangKuoHao" "u" "［" "］")
+  (my--quoted-text-object "QuanJiaoWanKuoHao" "i" "〔" "〕")
+  (my--quoted-text-object "QuanJiaoHuaKuoHao" "o" "｛" "｝")
 
   (dolist (char '(
-                   (?Q . ("《 " . " 》")) (?q . ("《" . "》"))
-                   (?E . ("“ "  . " ”" )) (?e . ("“"  . "”" ))
-                   (?D . ("‘ "  . " ’" )) (?d . ("‘"  . "’" ))
-                   (?R . ("「 " . " 」")) (?r . ("「" . "」"))
-                   (?F . ("『 " . " 』")) (?f . ("『" . "』"))
-                   (?T . ("【 " . " 】")) (?t . ("【" . "】"))
-                   (?G . ("〖 " . " 〗")) (?g . ("〖" . "〗"))
-                   (?Y . ("（ " . " ）")) (?y . ("（" . "）"))
-                   (?U . ("［ " . " ］")) (?u . ("［" . "］"))
-                   (?I . ("〔 " . " 〕")) (?i . ("〔" . "〕"))
-                   (?O . ("｛ " . " ｝")) (?o . ("｛" . "｝"))
-                   ))
+                  (?Q . ("《 " . " 》")) (?q . ("《" . "》"))
+                  (?E . ("“ "  . " ”" )) (?e . ("“"  . "”" ))
+                  (?D . ("‘ "  . " ’" )) (?d . ("‘"  . "’" ))
+                  (?R . ("「 " . " 」")) (?r . ("「" . "」"))
+                  (?F . ("『 " . " 』")) (?f . ("『" . "』"))
+                  (?T . ("【 " . " 】")) (?t . ("【" . "】"))
+                  (?G . ("〖 " . " 〗")) (?g . ("〖" . "〗"))
+                  (?Y . ("（ " . " ）")) (?y . ("（" . "）"))
+                  (?U . ("［ " . " ］")) (?u . ("［" . "］"))
+                  (?I . ("〔 " . " 〕")) (?i . ("〔" . "〕"))
+                  (?O . ("｛ " . " ｝")) (?o . ("｛" . "｝"))
+                  ))
     (setq-default evil-surround-pairs-alist
                   (cons char evil-surround-pairs-alist)))
 
@@ -248,13 +298,13 @@ ref: https://stackoverflow.com/a/22418983/4921402."
 ;; bundle with `evil'
 (use-package evil-nerd-commenter
   :bind ((:map evil-normal-state-map
-          ("gc" . evilnc-comment-operator)
-          ("gp" . evilnc-copy-and-comment-operator)
-          ("gy" . evilnc-yank-and-comment-operator))
+               ("gc" . evilnc-comment-operator)
+               ("gp" . evilnc-copy-and-comment-operator)
+               ("gy" . evilnc-yank-and-comment-operator))
          (:map evil-motion-state-map
-          ("gc" . evilnc-comment-operator)
-          ("gp" . evilnc-copy-and-comment-operator)
-          ("gy" . evilnc-yank-and-comment-operator))))
+               ("gc" . evilnc-comment-operator)
+               ("gp" . evilnc-copy-and-comment-operator)
+               ("gy" . evilnc-yank-and-comment-operator))))
 
 ;; https://medium.com/@schtoeffel/you-don-t-need-more-than-one-cursor-in-vim-2c44117d51db
 ;; https://macplay.github.io/posts/vim-bu-xu-yao-duo-guang-biao-bian-ji-gong-neng/
@@ -336,15 +386,15 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "7"   #'winum-select-window-7
     "8"   #'winum-select-window-8
     "9"   #'winum-select-window-9
-    "ff"  #'(my/toggle-full-window :which-key "toggle-full-window")
+    "ff"  #'(my-toggle-full-window :which-key "toggle-full-window")
     "oo"  #'delete-other-windows
     "sa"  #'split-window-vertically
     "sd"  #'split-window-horizontally
     "sh"  #'split-window-below
     "sq"  #'delete-window
     "sv"  #'split-window-right
-    "xr"  #'(my/rotate-windows :which-key "rotate window")
-    "xt"  #'(my/toggle-two-split-window :which-key "toggle window split")
+    "xr"  #'(my-rotate-windows :which-key "rotate window")
+    "xt"  #'(my-toggle-two-split-window :which-key "toggle window split")
     "xo"  #'ace-window
     "x0"  #'delete-window
     "x1"  #'delete-other-windows
@@ -369,15 +419,14 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "fd" #'find-directory-in-project-by-selected
     ;; vc
     "va" #'vc-next-action
-    "vc" #'my/vc-copy-file-and-rename-buffer
-    "vf" #'my/vc-rename-file-and-buffer
+    "vc" #'my-vc-copy-file-and-rename-buffer
+    "vf" #'my-vc-rename-file-and-buffer
     "vg" #'vc-annotate
     "vn" #'diff-hl-next-hunk
     "vp" #'diff-hl-previous-hunk
     ;; http://ergoemacs.org/emacs/emacs_pinky_2020.html
-    ;; `keyfreq-show' proved sub-window operations happen most.
-    "xx" #'my/kill-other-buffers-without-special-ones
-    "zz" #'my/switch-to-shell)
+    "xx" #'my-kill-other-buffers-without-special-ones
+    "zz" #'my-switch-to-shell)
 
   ;; Use `SPC' as leader key
   ;; all keywords arguments are still supported
@@ -399,12 +448,12 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "bk" #'kill-buffer
     "bl" #'bookmark-bmenu-list
     "bm" #'bookmark-set
-    "bo" #'(my/kill-other-buffers-without-special-ones
-             :which-key "keep-this-buffer-only")
-    "bO" #'(my/kill-other-buffers-with-special-ones
-             :which-key "keep-this-buffer-only")
+    "bo" #'(my-kill-other-buffers-without-special-ones
+            :which-key "keep-this-buffer-only")
+    "bO" #'(my-kill-other-buffers-with-special-ones
+            :which-key "keep-this-buffer-only")
     "bs" #'bookmark-save
-    "bx" #'(my/switch-scratch-buffer :which-key "open-scratch")
+    "bx" #'(my-switch-scratch-buffer :which-key "open-scratch")
     ;; code
     "c"  #'(:ignore t :which-key "code")
     "ck" #'compile
@@ -416,18 +465,18 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "dd" #'pwd
     ;; file
     "f"  #'(:ignore t :which-key "file")
-    "fb" #'(my/browse-this-file :which-key "browse-this-file")
-    "fc" #'(my/copy-this-file :which-key "copy-this-file")
+    "fb" #'(my-browse-this-file :which-key "browse-this-file")
+    "fc" #'(my-copy-this-file :which-key "copy-this-file")
     "ff" #'find-file
     "f/" #'find-file-other-window
-    "fy" #'(my/copy-file-name :which-key "copy-file-name")
-    "fd" #'(my/delete-this-file :which-key "delete-this-file")
-    "fD" #'(my/delete-file :which-key "delete-file-under-cwd")
-    "fo" #'(my/open-this-file-externally :which-key "open-external")
-    "fm" #'(my/move-this-file :which-key "move-this-file")
-    "fr" #'(my/rename-this-file :which-key "rename-this-file")
-    "fs" #'(my/sudo-edit-file :which-key "sudo-edit")
-    "fS" #'(my/sudo-find-file :which-key "sudo-find")
+    "fy" #'(my-copy-file-name :which-key "copy-file-name")
+    "fd" #'(my-delete-this-file :which-key "delete-this-file")
+    "fD" #'(my-delete-file :which-key "delete-file-under-cwd")
+    "fo" #'(my-open-this-file-externally :which-key "open-external")
+    "fm" #'(my-move-this-file :which-key "move-this-file")
+    "fr" #'(my-rename-this-file :which-key "rename-this-file")
+    "fs" #'(my-sudo-edit-file :which-key "sudo-edit")
+    "fS" #'(my-sudo-find-file :which-key "sudo-find")
     ;; git
     "g"  #'(:ignore t :which-key "git")
     "gd" #'magit-dispatch
@@ -436,16 +485,16 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "gs" #'consult-git-grep
     ;; hydra
     "h"  #'(:ignore t :which-key "hydra")
-    "hE" #'(my/hydra-paredit-edit/body :which-key "paredit-edit")
-    "hM" #'(my/hydra-paredit-move/body :which-key "paredit-move")
-    "ht" #'(my/hydra-theme/body :which-key "theme")
-    "hf" #'(my/hydra-file/body :which-key "file")
-    "hp" #'(my/hydra-paredit/body :which-key "paredit")
-    "hw" #'(my/hydra-window/body :which-key "window")
+    "hE" #'(my-hydra-paredit-edit/body :which-key "paredit-edit")
+    "hM" #'(my-hydra-paredit-move/body :which-key "paredit-move")
+    "ht" #'(my-hydra-theme/body :which-key "theme")
+    "hf" #'(my-hydra-file/body :which-key "file")
+    "hp" #'(my-hydra-paredit/body :which-key "paredit")
+    "hw" #'(my-hydra-window/body :which-key "window")
     ;; load
     "l"  #'(:ignore t :which-key "load")
-    "lF" #'(my/load-font :which-key "font")
-    "lf" #'(my/load-buffer-font :which-key "buffer-font")
+    "lF" #'(my-load-font :which-key "font")
+    "lf" #'(my-load-buffer-font :which-key "buffer-font")
     "lt" #'(load-theme :which-key "theme")
     "lg" #'ggtags-mode
     ;; org
@@ -460,7 +509,7 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "pc" #'(ffip-create-project-file :which-key "create-project-file")
     "pd" #'(find-file-in-current-directory :which-key "ffip-cwd")
     "pD" #'(find-file-in-current-directory-by-selected
-             :which-key "ffip-cwd-by-select")
+            :which-key "ffip-cwd-by-select")
     "pf" #'(find-file-in-project :which-key "ffip")
     "pF" #'(ffip-lisp-find-file-in-project :which-key "ffip-lisp-ffip")
     "pi" #'(ffip-insert-file :which-key "ffip-insert-file")
@@ -473,10 +522,10 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "s"  #'(:ignore t :which-key "search")
     "sd" #'(search-dired-dwim :which-key "search-file-cwd")
     "sD" #'search-dired
-    "sf" #'(my/consult-find :which-key "search-find")
+    "sf" #'(my-consult-find :which-key "search-find")
     "sF" #'consult-find
-    "so" #'my/search-online
-    "sr" #'(my/consult-rg :which-key "search-rg")
+    "so" #'my-search-online
+    "sr" #'(my-consult-rg :which-key "search-rg")
     "sR" #'consult-rg
     "ss" #'consult-line
     "si" #'imenu
@@ -486,11 +535,11 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "ta" #'(abbrev-mode :which-key "abbrev")
     "td" #'darkroom-tentative-mode
     "tf" #'(display-fill-column-indicator-mode
-             :which-key "fill-column-indicator")
-    "th" #'(my/toggle-hl-line :which-key "hl-line")
+            :which-key "fill-column-indicator")
+    "th" #'(my-toggle-hl-line :which-key "hl-line")
     "tj" #'toggle-truncate-lines
-    "tl" #'(my/toggle-line-number :which-key "line-number")
-    "tp" #'(my/transient-transparency :which-key "transparency")
+    "tl" #'(my-toggle-line-number :which-key "line-number")
+    "tp" #'(my-transient-transparency :which-key "transparency")
     "tv" #'(visual-line-mode :which-key "visual-line")
     "tw" #'(whitespace-mode :which-key "whitespace")
     ;; window

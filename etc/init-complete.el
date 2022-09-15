@@ -14,9 +14,9 @@
 (use-package corfu-doc
   :hook (corfu-mode . corfu-doc-mode)
   :bind (:map corfu-map
-         ("M-n" . corfu-doc-scroll-up)
-         ("M-p" . corfu-doc-scroll-down)
-         ("M-d" . corfu-doc-toggle)))
+              ("M-n" . corfu-doc-scroll-up)
+              ("M-p" . corfu-doc-scroll-down)
+              ("M-d" . corfu-doc-toggle)))
 
 (use-package corfu-terminal
   :unless (display-graphic-p)

@@ -11,9 +11,9 @@
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
   :bind (:map markdown-mode-command-map
-          ("'" . markdown-edit-code-block)
-          ("f" . markdown-footnote-goto-text)
-          ("r" . markdown-footnote-return))
+              ("'" . markdown-edit-code-block)
+              ("f" . markdown-footnote-goto-text)
+              ("r" . markdown-footnote-return))
   :custom
   (markdown-enable-wiki-links t)
   (markdown-italic-underscore t)
@@ -25,8 +25,8 @@
   ;; This is set to `nil' by default, which causes a wrong-type-arg error
   ;; when you use `markdown-open'. These are more sensible defaults.
   (markdown-open-command (cond
-                           (sys/macp "open")
-                           (sys/linuxp "xdg-open")))
+                          (my-mac-p "open")
+                          (my-linux-p "xdg-open")))
 
   (markdown-content-type "application/xhtml+xml")
   (markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"
@@ -66,7 +66,7 @@
 ")
   (markdown-gfm-additional-languages "Mermaid")
   :config
-  (defun my/markdown-demote-or-promote (&optional is-promote)
+  (defun my-markdown-demote-or-promote (&optional is-promote)
     "Demote or promote current org tree according to IS-PROMOTE."
     (interactive "P")
     (unless (region-active-p)
@@ -83,7 +83,7 @@
 (use-package markdown-toc
   :after markdown-mode
   :bind (:map markdown-mode-command-map
-          ("g" . markdown-toc-generate-or-refresh-toc)))
+              ("g" . markdown-toc-generate-or-refresh-toc)))
 
 (use-package yaml-mode
   :mode "\\.\\(yml\\|yaml\\)\\'")
@@ -107,12 +107,12 @@ Show the heading too, if it is currently invisible."
     (save-excursion
       (outline-back-to-heading t)
       (outline-flag-region (max (point-min) (1- (point)))
-        (progn
-          (outline-next-preface)
-          (if (= 1 (- (point-max) (point)))
-              (point-max)
-            (point)))
-        nil))))
+                           (progn
+                             (outline-next-preface)
+                             (if (= 1 (- (point-max) (point)))
+                                 (point-max)
+                               (point)))
+                           nil))))
 
 (provide 'init-markup)
 

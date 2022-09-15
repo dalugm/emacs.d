@@ -40,13 +40,13 @@
   (defvar my--org-blog-dir (concat org-directory "/blog/")
     "My org blog directory.")
 
-  (defun my//get-year-and-month ()
+  (defun my--get-year-and-month ()
     "Get current year and month."
     (list (format-time-string "%Y") (format-time-string "%m")))
 
-  (defun my//find-month-tree ()
+  (defun my--find-month-tree ()
     "Go to current month heading."
-    (let ((path (my//get-year-and-month))
+    (let ((path (my--get-year-and-month))
           (level 1)
           end)
       (unless (derived-mode-p 'org-mode)
@@ -56,7 +56,7 @@
       ;; locate YEAR headline, then MONTH headline.
       (dolist (heading path)
         (let ((re (format org-complex-heading-regexp-format
-                    (regexp-quote heading)))
+                          (regexp-quote heading)))
               (cnt 0))
           (if (re-search-forward re end t)
               (goto-char (line-beginning-position))
@@ -81,50 +81,63 @@
   ;; NOTE: inactive timestamp will not be added to agenda
 
   (setq org-capture-templates
-    `(;; tasks
-       ("t" "TASK")
-       ("tt" "Todo" entry (file+headline my--org-todo-file "Todo")
-         "* TODO %^{todo}\n")
-       ("td" "Daily Task" entry (file+headline my--org-task-file "Daily")
-         "* TODO %^{task}\n   %?\n")
-       ("tm" "Misc Task" entry (file+headline my--org-task-file "Misc")
-         "* TODO %^{task}\n   %?\n")
-       ("tp" "Project Task" entry (file+headline my--org-task-file "Project")
-         "* TODO %^{project name}\n   %i\n" :clock-in t :clock-resume t)
-       ("tw" "Work Task" entry (file+headline my--org-work-file "Work")
-         "* TODO %^{task name}\n   %t\n" :clock-in t :clock-resume t)
-       ;; inbox
-       ("i" "INBOX")
-       ("ii" "Inbox" entry (file+headline my--org-inbox-file "Inbox")
-         "* %T - %^{inbox} %^g\n   %?\n")
-       ("ie" "Event" entry (file+headline my--org-inbox-file "Event")
-         "* %T - %^{event} %^g\n   %?\n")
-       ("in" "Note" entry (file+headline my--org-inbox-file "Note")
-         "* %^{notes} %t %^g\n   %?\n")
-       ;; misc
-       ("m" "MISC")
-       ("mr" "Read" entry (file+headline my--org-read-file "Book")
-         "* TODO %^{book name}\n   %u\n" :clock-in t :clock-resume t)
-       ("mb" "Bill" plain (file+function my--org-bill-file my//find-month-tree)
-         " | %U | %^{category} | %^{desc} | %^{price} |" :kill-buffer t)
-       ("ms" "Someday" entry (file+headline my--org-someday-file "Someday")
-         "* Someday %?\n   %i\n")
+        `(;; tasks
+          ("t" "TASK")
+          ("tt" "Todo" entry
+           (file+headline my--org-todo-file "Todo")
+           "* TODO %^{todo}\n")
+          ("td" "Daily Task" entry
+           (file+headline my--org-task-file "Daily")
+           "* TODO %^{task}\n   %?\n")
+          ("tm" "Misc Task" entry
+           (file+headline my--org-task-file "Misc")
+           "* TODO %^{task}\n   %?\n")
+          ("tp" "Project Task" entry
+           (file+headline my--org-task-file "Project")
+           "* TODO %^{project name}\n   %i\n" :clock-in t :clock-resume t)
+          ("tw" "Work Task" entry
+           (file+headline my--org-work-file "Work")
+           "* TODO %^{task name}\n   %t\n" :clock-in t :clock-resume t)
+          ;; inbox
+          ("i" "INBOX")
+          ("ii" "Inbox" entry
+           (file+headline my--org-inbox-file "Inbox")
+           "* %T - %^{inbox} %^g\n   %?\n")
+          ("ie" "Event" entry
+           (file+headline my--org-inbox-file "Event")
+           "* %T - %^{event} %^g\n   %?\n")
+          ("in" "Note" entry
+           (file+headline my--org-inbox-file "Note")
+           "* %^{notes} %t %^g\n   %?\n")
+          ;; misc
+          ("m" "MISC")
+          ("mr" "Read" entry
+           (file+headline my--org-read-file "Book")
+           "* TODO %^{book name}\n   %u\n" :clock-in t :clock-resume t)
+          ("mb" "Bill" plain
+           (file+function my--org-bill-file my--find-month-tree)
+           " | %U | %^{category} | %^{desc} | %^{price} |" :kill-buffer t)
+          ("ms" "Someday" entry
+           (file+headline my--org-someday-file "Someday")
+           "* Someday %?\n   %i\n")
 
-       ("b" "BLOG" plain (file ,(concat my--org-blog-dir
-                                  (format-time-string "%Y-%m-%d.org")))
-         ,(concat "#+startup: showall\n"
-            "#+options: toc:nil\n"
-            "#+begin_export html\n"
-            "---\n"
-            "layout     : post\n"
-            "title      : %^{title}\n"
-            "categories : %^{category}\n"
-            "tags       : %^{tag}\n"
-            "---\n"
-            "#+end_export\n"
-            "#+TOC: headlines 2\n"))
-       ("j" "JOURNAL" entry (file+olp+datetree my--org-journal-file)
-         "* - %^U - %^{heading}\n %?")))
+          ("b" "BLOG" plain
+           (file ,(concat my--org-blog-dir
+                          (format-time-string "%Y-%m-%d.org")))
+           ,(concat "#+startup: showall\n"
+                    "#+options: toc:nil\n"
+                    "#+begin_export html\n"
+                    "---\n"
+                    "layout     : post\n"
+                    "title      : %^{title}\n"
+                    "categories : %^{category}\n"
+                    "tags       : %^{tag}\n"
+                    "---\n"
+                    "#+end_export\n"
+                    "#+TOC: headlines 2\n"))
+          ("j" "JOURNAL" entry
+           (file+olp+datetree my--org-journal-file)
+           "* - %^U - %^{heading}\n %?")))
 
   ;; ---------------------------------------------------------
   ;; Enhance org
@@ -132,7 +145,7 @@
   ;; make Emacs respect kinsoku rules when wrapping lines visually
   (setq word-wrap-by-category t)
 
-  (defun my/org-demote-or-promote (&optional is-promote)
+  (defun my-org-demote-or-promote (&optional is-promote)
     "Demote or promote current org tree according to IS-PROMOTE."
     (interactive "P")
     (unless (region-active-p)
@@ -149,10 +162,10 @@
       (save-excursion
         (backward-char)
         (insert " "
-          (string-trim-right
-            (match-string 1 org-read-date-final-answer))))))
+                (string-trim-right
+                 (match-string 1 org-read-date-final-answer))))))
 
-  (defun my/org-show-current-heading-tidily ()
+  (defun my-org-show-current-heading-tidily ()
     "Show next entry, keeping other entries closed."
     (interactive)
     (if (save-excursion (end-of-line) (outline-invisible-p))
@@ -167,7 +180,7 @@
       (org-show-entry)
       (show-children)))
 
-  (global-set-key (kbd "C-c o o") #'my/org-show-current-heading-tidily)
+  (global-set-key (kbd "C-c o o") #'my-org-show-current-heading-tidily)
 
   ;; ---------------------------------------------------------
   ;; babel
@@ -178,15 +191,15 @@
 
   ;; add SRC_BLOCK supported src
   (org-babel-do-load-languages
-    'org-babel-load-languages
-    '((emacs-lisp . t)
-      (calc . t)
-      (shell . t)
-      (C . t)
-      (python . t)
-      (ruby . t)
-      (latex . t)
-      (org . t)))
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (calc . t)
+     (shell . t)
+     (C . t)
+     (python . t)
+     (ruby . t)
+     (latex . t)
+     (org . t)))
 
   ;; ---------------------------------------------------------
   ;; TODO
@@ -232,24 +245,24 @@
   ;; ---------------------------------------------------------
   ;; archive
   ;; ---------------------------------------------------------
-  (defun my/org-archive-done-tasks ()
+  (defun my-org-archive-done-tasks ()
     "Archive DONE tasks."
     (interactive)
     (org-map-entries
-      (lambda ()
-        (org-archive-subtree)
-        (setq org-map-continue-from (outline-previous-heading)))
-      "/DONE" 'file)
+     (lambda ()
+       (org-archive-subtree)
+       (setq org-map-continue-from (outline-previous-heading)))
+     "/DONE" 'file)
     (org-map-entries
-      (lambda ()
-        (org-archive-subtree)
-        (setq org-map-continue-from (outline-previous-heading)))
-      "/ABORT" 'file)
+     (lambda ()
+       (org-archive-subtree)
+       (setq org-map-continue-from (outline-previous-heading)))
+     "/ABORT" 'file)
     (org-map-entries
-      (lambda ()
-        (org-archive-subtree)
-        (setq org-map-continue-from (outline-previous-heading)))
-      "/CANCELLED" 'file))
+     (lambda ()
+       (org-archive-subtree)
+       (setq org-map-continue-from (outline-previous-heading)))
+     "/CANCELLED" 'file))
 
   (setq org-archive-mark-done nil)
   (setq org-archive-location "%s_archive::* Archive")
@@ -258,13 +271,13 @@
   ;; export
   ;; ---------------------------------------------------------
   (with-eval-after-load 'ox
-    (my|ensure 'ox-md)
-    (my|ensure 'ox-latex)
+    (require 'ox-md)
+    (require 'ox-latex)
     (add-to-list 'org-export-backends 'md)
     (add-to-list 'org-export-backends 'odt)
     (setq org-export-coding-system 'utf-8))
 
-  (defun my/org-convert-docx ()
+  (defun my-org-convert-docx ()
     "Export org file as docx."
     (interactive)
     (let ((docx-file (concat (file-name-sans-extension (buffer-file-name))
@@ -288,12 +301,12 @@
             "xelatex -interaction nonstopmode -output-directory %o %f"
             "xelatex -interaction nonstopmode -output-directory %o %f"))
     (add-to-list 'org-latex-classes
-      '("ctexart" "\\documentclass[11pt]{ctexart}"
-        ("\\section{%s}" . "\\section*{%s}")
-        ("\\subsection{%s}" . "\\subsection*{%s}")
-        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-        ("\\paragraph{%s}" . "\\paragraph*{%s}")
-        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+                 '("ctexart" "\\documentclass[11pt]{ctexart}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
     (setq org-latex-default-class "ctexart")
     ;; Compared to `pdflatex', `xelatex' supports unicode and can use system's font
     (setq org-latex-compiler "xelatex"))
