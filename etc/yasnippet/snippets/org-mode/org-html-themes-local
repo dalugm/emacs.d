@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: org-html-themes-local
-# key: <ohml
+# key: ohml
 # --
 #+SETUPFILE: `my-optional-d`org-html-themes/org/theme-${1:bigblow|readtheorg}-local.setup
 $0

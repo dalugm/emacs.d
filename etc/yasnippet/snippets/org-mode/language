@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: language
-# key: <lan
+# key: lan
 # --
-#+language: ${1:en}
+#+LANGUAGE: ${1:en}

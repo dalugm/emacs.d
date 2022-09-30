@@ -17,28 +17,6 @@
 (use-package emmet-mode
   :hook (js-mode css-mode web-mode html-mode nxml-mode sgml-mode))
 
-(use-package tagedit
-  :hook (html-mode . tagedit-mode)
-  :bind ((:map tagedit-mode-map
-               ("M-k" . tagedit-kill)
-               ("M-K" . tagedit-kill-attribute)
-               ("M-J" . tagedit-join-tags)
-               ("M-R" . tagedit-raise-tag)
-               ("M-S" . tagedit-split-tag)
-               ("M-?" . tagedit-convolute-tags)
-               ("M-)" . tagedit-forward-slurp-tag)
-               ("M-+" . tagedit-forward-barf-tag)
-               ("M-s a" . te/goto-tag-begging)
-               ("M-s e" . te/goto-tag-end)
-               ("M-s g" . tagedit-goto-tag-content)
-               ("M-s j" . tagedit-join-tags)
-               ("M-s k" . te/kill-current-tag)
-               ("M-s m" . te/goto-tag-match)
-               ("M-s r" . tagedit-raise-tag)
-               ("M-s s" . tagedit-splice-tag)
-               ("M-s t" . tagedit-toggle-multiline-tag)))
-  :config (tagedit-add-experimental-features))
-
 (use-package web-mode
   :mode "\\.[px]?html?\\'"
   :mode "\\.\\(?:tpl\\|blade\\)\\(?:\\.php\\)?\\'"
@@ -64,7 +42,6 @@
   ;; `web-mode-enable-auto-*' features only enabled in graphic mode
   ;; which is related on pasting issues on terminal
   ;; https://github.com/fxbois/web-mode/issues/1175
-  ;; let `smartparents' handle this
   (web-mode-enable-auto-quoting nil)
   (web-mode-enable-auto-pairing nil))
 

@@ -50,15 +50,22 @@
 ;; from Emacs (especially on Microsoft Windows)
 (prefer-coding-system 'utf-8)
 
-;; Misc
-(setq uniquify-buffer-name-style 'post-forward-angle-brackets) ; Show path if names are same
+;; Better defaults
+(setq inhibit-splash-screen t)
+;; Show path if names are same
+(setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 (setq adaptive-fill-regexp "[ t]+|[ t]*([0-9]+.|*+)[ t]*")
 (setq adaptive-fill-first-line-regexp "^* *$")
-(setq delete-by-moving-to-trash t)   ; Deleting files go to OS's trash folder
-(setq make-backup-files nil)         ; Forbid to make backup files
-(setq auto-save-default nil)         ; Disable auto save
-(setq set-mark-command-repeat-pop t) ; Repeating C-SPC after popping mark pops it again
-(setq kill-whole-line t)             ; Kill line including '\n'
+;; Deleting files go to OS's trash folder
+(setq delete-by-moving-to-trash t)
+;; Forbid to make backup files
+(setq make-backup-files nil)
+;; Disable auto save
+(setq auto-save-default nil)
+;; Repeating C-SPC after popping mark pops it again
+(setq set-mark-command-repeat-pop t)
+;; Kill line including '\n'
+(setq kill-whole-line t)
 
 (setq-default major-mode 'text-mode)
 
@@ -83,41 +90,37 @@
 (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1))
      (menu-bar-mode -1))
 
-(global-hl-line-mode)
-
-(if (fboundp 'display-line-numbers-mode)
-    (global-display-line-numbers-mode)
-  (global-linum-mode))
-
 ;; Basic modes
-(recentf-mode)
-(ignore-errors (savehist-mode))
-(save-place-mode)
-(show-paren-mode)
-(delete-selection-mode)
-(global-auto-revert-mode)
+(recentf-mode +1)
+(ignore-errors (savehist-mode +1))
+(save-place-mode +1)
+(show-paren-mode +1)
+(delete-selection-mode +1)
+(global-auto-revert-mode +1)
 
 (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
-(electric-pair-mode)
-
-;; reply y/n instead of yes/no
-(fset 'yes-or-no-p 'y-or-n-p)
+(electric-pair-mode +1)
 
 (add-hook 'prog-mode-hook #'subword-mode)
 (add-hook 'minibuffer-setup-hook #'subword-mode)
 
-;; IDO
+;; reply y/n instead of yes/no
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Completion
 (if (fboundp 'fido-mode)
     (progn
       (fido-mode +1)
+      (when (fboundp 'fido-vertical-mode)
+        (fido-vertical-mode +1))
 
-      (defun fido-recentf-open ()
+      (defun my-fido-recentf-open ()
         "Use `completing-read' to find a recent file."
         (interactive)
         (if (find-file (completing-read "Find recent file: " recentf-list))
             (message "Opening file...")
-          (message "Aborting")))
-      (global-set-key (kbd "C-x C-r") 'fido-recentf-open))
+          (message "Abort.")))
+      (global-set-key (kbd "C-x C-r") #'my-fido-recentf-open))
   (progn
     (ido-mode +1)
     (ido-everywhere +1)
@@ -127,26 +130,17 @@
     (setq ido-create-new-buffer 'always)
     (setq ido-enable-flex-matching t)
 
-    (defun ido-recentf-open ()
+    (defun my-ido-recentf-open ()
       "Use `ido-completing-read' to find a recent file."
       (interactive)
       (if (find-file (ido-completing-read "Find recent file: " recentf-list))
           (message "Opening file...")
         (message "Aborting")))
-    (global-set-key (kbd "C-x C-r") 'ido-recentf-open)))
+    (global-set-key (kbd "C-x C-r") #'my-ido-recentf-open)))
 
 ;; Keybindings
-(global-set-key (kbd "C-.") #'imenu)
-(global-set-key (kbd "<C-return>") #'rectangle-mark-mode)
-
-(defun revert-current-buffer ()
-  "Revert the current buffer."
-  (interactive)
-  (message "Revert this buffer")
-  (text-scale-set 0)
-  (widen)
-  (revert-buffer t t))
-(global-set-key (kbd "<f5>") #'revert-current-buffer)
+(global-set-key (kbd "C-c i") #'imenu)
+(global-set-key (kbd "C-c r") #'rectangle-mark-mode)
 
 (defun my-eval-last-sexp ()
   "Evaluate the last symbolic expression at the point.
@@ -154,30 +148,22 @@ With nil `C-u' prefix, insert output below following an arrow.
 With one `C-u' prefix, insert output in current position.
 With two `C-u' prefix, insert output in current position and delete sexp."
   (interactive)
-  (let ((elisp (or (eq major-mode 'emacs-lisp-mode) (eq major-mode 'lisp-interaction-mode)))
-        (clisp (eq major-mode 'common-lisp-mode))
-        (scheme (eq major-mode 'scheme-mode)))
-    (cond
-     (elisp
-      (let ((value (eval (elisp--preceding-sexp))))
-        (save-excursion
-          (cond
-           ((equal current-prefix-arg nil) ; no prefix
-            (newline-and-indent)
-            (insert (format "%s%S" ";; => " value)))
-           ((equal current-prefix-arg '(4)) ; one prefix
-            (newline-and-indent)
-            (insert (format "%S" value)))
-           ((equal current-prefix-arg '(16)) ; two prefix
-            (backward-kill-sexp)
-            (insert (format "%S" value)))))))
-     (clisp
-      (message "Common Lisp mode is NOT supported yet!"))
-     (scheme
-      (message "Scheme mode is NOT supported yet!"))
-     (t
-      (message "This mode is NOT a symbolic expression related mode!")))))
-(global-set-key (kbd "C-c C-e") 'my-eval-last-sexp)
+  (let ((value (eval (elisp--preceding-sexp))))
+    (save-excursion
+      (cond
+       ((equal current-prefix-arg nil) ; no prefix
+        (newline-and-indent)
+        (insert (format "%s%S" ";; => " value)))
+       ((equal current-prefix-arg '(4)) ; one prefix
+        (newline-and-indent)
+        (insert (format "%S" value)))
+       ((equal current-prefix-arg '(16)) ; two prefix
+        (backward-kill-sexp)
+        (insert (format "%S" value)))))))
+
+(dolist (map (list emacs-lisp-mode-map
+                   lisp-interaction-mode-map))
+  (define-key map (kbd "C-c C-e") #'my-eval-last-sexp))
 
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
@@ -186,4 +172,3 @@ With two `C-u' prefix, insert output in current position and delete sexp."
             (local-set-key (kbd "C-c C-b") #'eval-buffer)))
 
 ;; ==== put your code below this line!
-

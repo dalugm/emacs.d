@@ -1,9 +1,6 @@
 [submodule "ace-window"]
 	path = lib/ace-window
 	url = https://github.com/abo-abo/ace-window.git
-[submodule "ag"]
-	path = lib/ag
-	url = https://github.com/Wilfred/ag.el.git
 [submodule "alect-themes"]
 	path = lib/alect-themes
 	url = https://github.com/alezost/alect-themes.git
@@ -16,6 +13,9 @@
 [submodule "anaphora"]
 	path = lib/anaphora
 	url = https://github.com/rolandwalker/anaphora.git
+[submodule "anti-zenburn-theme"]
+	path = lib/anti-zenburn-theme
+	url = https://github.com/m00natic/anti-zenburn-theme.git
 [submodule "apheleia"]
 	path = lib/apheleia
 	url = https://github.com/radian-software/apheleia.git
@@ -40,18 +40,12 @@
 [submodule "avy-zh"]
 	path = lib/avy-zh
 	url = https://github.com/dalugm/avy-zh.git
-[submodule "bing-dict"]
-	path = lib/bing-dict
-	url = https://github.com/cute-jumper/bing-dict.el.git
 [submodule "borg"]
 	path = lib/borg
 	url = https://github.com/emacscollective/borg.git
 [submodule "cape"]
 	path = lib/cape
 	url = https://github.com/minad/cape.git
-[submodule "cfrs"]
-	path = lib/cfrs
-	url = https://github.com/Alexander-Miller/cfrs.git
 [submodule "challenger-deep-theme"]
 	path = lib/challenger-deep-theme
 	url = https://github.com/challenger-deep-theme/emacs.git
@@ -64,6 +58,9 @@
 [submodule "closql"]
 	path = lib/closql
 	url = https://github.com/emacscollective/closql.git
+[submodule "color-rg"]
+	path = lib/color-rg
+	url = https://github.com/manateelazycat/color-rg.git
 [submodule "color-theme-sanityinc-solarized"]
 	path = lib/color-theme-sanityinc-solarized
 	url = https://github.com/purcell/color-theme-sanityinc-solarized.git
@@ -146,7 +143,7 @@
 	no-byte-compile = emacsql-pg.el
 [submodule "emacsql-sqlite-builtin"]
 	path = lib/emacsql-sqlite-builtin
-	url = https://github.com/emacscollective/emacsql-sqlite-builtin.git
+	url = https://github.com/emacsmirror/emacsql-sqlite-builtin.git
 [submodule "embark"]
 	path = lib/embark
 	url = https://github.com/oantolin/embark.git
@@ -162,9 +159,6 @@
 [submodule "evil"]
 	path = lib/evil
 	url = https://github.com/emacs-evil/evil.git
-[submodule "evil-matchit"]
-	path = lib/evil-matchit
-	url = https://github.com/redguardtoo/evil-matchit.git
 [submodule "evil-nerd-commenter"]
 	path = lib/evil-nerd-commenter
 	url = https://github.com/redguardtoo/evil-nerd-commenter.git
@@ -186,9 +180,6 @@
 [submodule "f"]
 	path = lib/f
 	url = https://github.com/rejeep/f.el.git
-[submodule "find-file-in-project"]
-	path = lib/find-file-in-project
-	url = https://github.com/redguardtoo/find-file-in-project.git
 [submodule "forge"]
 	path = lib/forge
 	url = https://github.com/magit/forge.git
@@ -223,6 +214,9 @@
 [submodule "go-mode"]
 	path = lib/go-mode
 	url = https://github.com/dominikh/go-mode.el.git
+[submodule "grammatical-edit"]
+	path = lib/grammatical-edit
+	url = https://github.com/manateelazycat/grammatical-edit.git
 [submodule "green-is-the-new-black-theme"]
 	path = lib/green-is-the-new-black-theme
 	url = https://github.com/fredcamps/green-is-the-new-black-emacs.git
@@ -238,9 +232,6 @@
 [submodule "htmlize"]
 	path = lib/htmlize
 	url = https://github.com/hniksic/emacs-htmlize.git
-[submodule "hydra"]
-	path = lib/hydra
-	url = https://github.com/abo-abo/hydra.git
 [submodule "kaolin-themes"]
 	path = lib/kaolin-themes
 	url = https://github.com/ogdenwebb/emacs-kaolin-themes.git
@@ -319,9 +310,6 @@
 [submodule "popon"]
 	path = lib/popon
 	url = https://codeberg.org/akib/emacs-popon.git
-[submodule "popup"]
-	path = lib/popup
-	url = https://github.com/auto-complete/popup-el.git
 [submodule "posframe"]
 	path = lib/posframe
 	url = https://github.com/tumashu/posframe.git
@@ -334,9 +322,6 @@
 [submodule "pyim-basedict"]
 	path = lib/pyim-basedict
 	url = https://github.com/tumashu/pyim-basedict.git
-[submodule "quickrun"]
-	path = lib/quickrun
-	url = https://github.com/emacsorphanage/quickrun.git
 [submodule "rainbow-delimiters"]
 	path = lib/rainbow-delimiters
 	url = https://github.com/Fanael/rainbow-delimiters.git
@@ -346,9 +331,6 @@
 [submodule "request"]
 	path = lib/request
 	url = https://github.com/tkf/emacs-request.git
-[submodule "rg"]
-	path = lib/rg
-	url = https://github.com/dajva/rg.el.git
 [submodule "rust-mode"]
 	path = lib/rust-mode
 	url = https://github.com/rust-lang/rust-mode.git
@@ -364,12 +346,6 @@
 [submodule "sinolor-themes"]
 	path = lib/sinolor-themes
 	url = https://github.com/dalugm/sinolor-themes.git
-[submodule "smart-compile"]
-	path = lib/smart-compile
-	url = https://github.com/emacsmirror/smart-compile.git
-[submodule "smartparens"]
-	path = lib/smartparens
-	url = https://github.com/Fuco1/smartparens.git
 [submodule "solarized-theme"]
 	path = lib/solarized-theme
 	url = https://github.com/bbatsov/solarized-emacs.git
@@ -393,9 +369,6 @@
 [submodule "tablist"]
 	path = lib/tablist
 	url = https://github.com/politza/tablist.git
-[submodule "tagedit"]
-	path = lib/tagedit
-	url = https://github.com/magnars/tagedit.git
 [submodule "tao-theme"]
 	path = lib/tao-theme
 	url = https://github.com/11111000000/tao-theme-emacs.git
@@ -409,6 +382,15 @@
 	path = lib/transient
 	url = https://github.com/magit/transient.git
 	info-path = docs
+[submodule "tree-sitter"]
+	path = lib/tree-sitter
+	load-path = core
+	load-path = lisp
+	load-path = langs
+	url = https://github.com/emacs-tree-sitter/elisp-tree-sitter.git
+[submodule "tree-sitter-langs"]
+	path = lib/tree-sitter-langs
+	url = https://github.com/emacs-tree-sitter/tree-sitter-langs.git
 [submodule "treepy"]
 	path = lib/treepy
 	url = https://github.com/volrath/treepy.el.git
@@ -421,9 +403,6 @@
 [submodule "valign"]
 	path = lib/valign
 	url = https://github.com/casouri/valign.git
-[submodule "vc-msg"]
-	path = lib/vc-msg
-	url = https://github.com/redguardtoo/vc-msg.git
 [submodule "vertico"]
 	path = lib/vertico
 	url = https://github.com/minad/vertico.git
@@ -436,9 +415,6 @@
 [submodule "wgrep"]
 	path = lib/wgrep
 	url = https://github.com/mhayashi1120/Emacs-wgrep.git
-[submodule "which-key"]
-	path = lib/which-key
-	url = https://github.com/justbur/emacs-which-key.git
 [submodule "winum"]
 	path = lib/winum
 	url = https://github.com/deb0ch/emacs-winum.git

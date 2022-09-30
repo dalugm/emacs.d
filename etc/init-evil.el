@@ -8,6 +8,9 @@
 ;;; Code:
 
 (use-package evil
+  :init
+  ;; use Emacs keys in INSERT state
+  (setq evil-disable-insert-state-bindings t)
   :hook (after-init . evil-mode)
   :bind ((:map evil-normal-state-map
                ("]b" . next-buffer)
@@ -20,13 +23,6 @@
                ("glk" . avy-goto-line-above)
                ("gle" . avy-goto-end-of-line)
                ("M-." . xref-find-definitions))
-         (:map evil-insert-state-map
-               ("C-n" . next-line)
-               ("C-p" . previous-line)
-               ("C-a" . beginning-of-line)
-               ("C-e" . end-of-line)
-               ("C-k" . kill-line)
-               ("C-t" . transpose-chars))
          (:map evil-visual-state-map
                ("v" . er/expand-region)))
   :config
@@ -46,9 +42,9 @@
   ;; make evil search like vim
   (setq evil-ex-search-vim-style-regexp t)
 
-  ;; ---------------------------------------------------------
+  ;; ------------
   ;; evil enhance
-  ;; ---------------------------------------------------------
+  ;; ------------
 
   (defun evil-unimpaired-insert-newline-above (count)
     "Insert COUNT blank line(s) above current line."
@@ -74,7 +70,7 @@
     (when (evil-ex-hl-active-p 'evil-ex-search)
       (evil-ex-nohighlight) t))
 
-  (advice-add #'keyboard-quit :before #'my--evil-disable-ex-highlight)
+  (advice-add 'keyboard-quit :before #'my--evil-disable-ex-highlight)
 
   ;; http://blog.binchen.org/posts/code-faster-by-extending-emacs-evil-text-object
   (defun my--evil-paren-range (count beg end type inclusive)
@@ -82,23 +78,25 @@
 COUNT, BEG, END, TYPE is used to identify the text object.
 If INCLUSIVE is t, the text object is inclusive."
     (let ((parens
-           '("()" "[]" "{}" "<>"
+           '("()" "[]" "{}" "<>" "\"\"" "''" "``"
              "（）" "《》" "「」" "『』" "【】" "〖〗"
              "“”" "‘’" "［］" "〔〕" "｛｝"))
+          (pos (point))
           range
           found-range)
       (dolist (paren parens)
         (condition-case nil
-            (setq range (evil-select-paren
-                         (aref paren 0)
-                         (aref paren 1)
-                         beg
-                         end
-                         type
-                         count
-                         inclusive))
+            (let ((char1 (aref paren 0))
+                  (char2 (aref paren 1)))
+              (setq range (if (eq char1 char2)
+                              (evil-select-quote char1
+                                                 beg end
+                                                 type count inclusive)
+                            (evil-select-paren char1 char2
+                                               beg end
+                                               type count inclusive))))
           (error nil))
-        (when range
+        (when (and range (<= (nth 0 range) pos) (< pos (nth 1 range)))
           (cond
            (found-range
             (when (< (- (nth 1 range) (nth 0 range))
@@ -211,15 +209,12 @@ If INCLUSIVE is t, the text object is inclusive."
                (forge-post-mode          . emacs)
                (grep-mode                . emacs)
                (help-mode                . emacs)
-               (ivy-occur-grep-mode      . emacs)
-               (ivy-occur-mode           . emacs)
                (magit-mode               . emacs)
                (message-mode             . emacs)
                (minibuffer-inactive-mode . emacs)
                (profiler-report-mode     . emacs)
                (shell-mode               . emacs)
                (special-mode             . emacs)
-               (sr-mode                  . emacs)
                (term-mode                . emacs)
                (vc-log-edit-mode         . emacs)
                (w3m-mode                 . emacs)
@@ -289,9 +284,6 @@ ref: https://stackoverflow.com/a/22418983/4921402."
               (push '(?v . ("=" . "=")) evil-surround-pairs-alist)
               )))
 
-(use-package evil-matchit
-  :config (global-evil-matchit-mode))
-
 (use-package evil-zh
   :config (global-evil-zh-mode))
 
@@ -332,8 +324,7 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "as" #'ace-swap-window
     "aw" #'avy-goto-word-or-subword-1
     "bb" (lambda ()
-           (interactive) (switch-to-buffer nil) :which-key "prev-buffer")
-    "bu" #'backward-up-list
+           (interactive) (switch-to-buffer nil))
     "cc" #'evilnc-comment-or-uncomment-lines
     "cd" #'evilnc-copy-and-comment-lines
     "cl" #'evilnc-quick-comment-or-uncomment-to-the-line
@@ -344,18 +335,12 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "dj" #'dired-jump
     "eb" #'eval-buffer
     "ee" #'eval-expression
-    "ef" #'end-of-defun
     "el" #'eval-last-sexp
-    "fr" #'recentf-open-files
-    "fl" #'recentf-load-list
     "kb" #'kill-buffer-and-window
-    "mf" #'mark-defun
-    "op" #'smart-compile
     "sc" #'shell-command
     "tD" #'darkroom-mode
     "td" #'darkroom-tentative-mode
     "xb" #'switch-to-buffer
-    "xc" #'save-buffers-kill-terminal
     "xh" #'mark-whole-buffer
     "xf" #'find-file
     "xk" #'kill-buffer
@@ -386,15 +371,15 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "7"   #'winum-select-window-7
     "8"   #'winum-select-window-8
     "9"   #'winum-select-window-9
-    "ff"  #'(my-toggle-full-window :which-key "toggle-full-window")
+    "ff"  #'my-toggle-full-window
     "oo"  #'delete-other-windows
     "sa"  #'split-window-vertically
     "sd"  #'split-window-horizontally
     "sh"  #'split-window-below
     "sq"  #'delete-window
     "sv"  #'split-window-right
-    "xr"  #'(my-rotate-windows :which-key "rotate window")
-    "xt"  #'(my-toggle-two-split-window :which-key "toggle window split")
+    "xr"  #'my-rotate-windows
+    "xt"  #'my-toggle-two-split-window
     "xo"  #'ace-window
     "x0"  #'delete-window
     "x1"  #'delete-other-windows
@@ -411,12 +396,6 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "fs" #'flyspell-mode
     "ne" #'flymake-goto-next-error
     "pe" #'flymake-goto-prev-error
-    ;; workspace
-    "ip" #'find-file-in-project
-    "tt" #'find-file-in-current-directory
-    "jj" #'find-file-in-project-at-point
-    "kk" #'find-file-in-project-by-selected
-    "fd" #'find-directory-in-project-by-selected
     ;; vc
     "va" #'vc-next-action
     "vc" #'my-vc-copy-file-and-rename-buffer
@@ -438,7 +417,7 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "SPC" #'execute-extended-command
     ":"   #'eval-expression
     ;; bookmark/buffer
-    "b"  #'(:ignore t :which-key "bookmark")
+    "b"  #'(:ignore t)
     "bb" #'switch-to-buffer
     "b/" #'switch-to-buffer-other-window
     "bd" #'bookmark-delete
@@ -448,102 +427,77 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "bk" #'kill-buffer
     "bl" #'bookmark-bmenu-list
     "bm" #'bookmark-set
-    "bo" #'(my-kill-other-buffers-without-special-ones
-            :which-key "keep-this-buffer-only")
-    "bO" #'(my-kill-other-buffers-with-special-ones
-            :which-key "keep-this-buffer-only")
+    "bo" #'my-kill-other-buffers-without-special-ones
+    "bO" #'my-kill-other-buffers-with-special-ones
     "bs" #'bookmark-save
-    "bx" #'(my-switch-scratch-buffer :which-key "open-scratch")
+    "bx" #'my-switch-scratch-buffer
     ;; code
-    "c"  #'(:ignore t :which-key "code")
+    "c"  #'(:ignore t)
     "ck" #'compile
-    "cc" #'smart-compile
     "cr" #'recompile
     ;; dired
     "dj" #'dired-jump
     "d/" #'dired-jump-other-window
     "dd" #'pwd
     ;; file
-    "f"  #'(:ignore t :which-key "file")
-    "fb" #'(my-browse-this-file :which-key "browse-this-file")
-    "fc" #'(my-copy-this-file :which-key "copy-this-file")
+    "f"  #'(:ignore t)
+    "fb" #'my-browse-this-file
+    "fc" #'my-copy-this-file
     "ff" #'find-file
     "f/" #'find-file-other-window
-    "fy" #'(my-copy-file-name :which-key "copy-file-name")
-    "fd" #'(my-delete-this-file :which-key "delete-this-file")
-    "fD" #'(my-delete-file :which-key "delete-file-under-cwd")
-    "fo" #'(my-open-this-file-externally :which-key "open-external")
-    "fm" #'(my-move-this-file :which-key "move-this-file")
-    "fr" #'(my-rename-this-file :which-key "rename-this-file")
-    "fs" #'(my-sudo-edit-file :which-key "sudo-edit")
-    "fS" #'(my-sudo-find-file :which-key "sudo-find")
+    "fy" #'my-copy-file-name
+    "fd" #'my-delete-this-file
+    "fD" #'my-delete-file
+    "fo" #'my-open-this-file-externally
+    "fm" #'my-move-this-file
+    "fr" #'my-rename-this-file
+    "fs" #'my-sudo-edit-file
+    "fS" #'my-sudo-find-file
     ;; git
-    "g"  #'(:ignore t :which-key "git")
+    "g"  #'(:ignore t)
     "gd" #'magit-dispatch
     "gg" #'magit-status
     "gf" #'magit-file-dispatch
     "gs" #'consult-git-grep
-    ;; hydra
-    "h"  #'(:ignore t :which-key "hydra")
-    "hE" #'(my-hydra-paredit-edit/body :which-key "paredit-edit")
-    "hM" #'(my-hydra-paredit-move/body :which-key "paredit-move")
-    "ht" #'(my-hydra-theme/body :which-key "theme")
-    "hf" #'(my-hydra-file/body :which-key "file")
-    "hp" #'(my-hydra-paredit/body :which-key "paredit")
-    "hw" #'(my-hydra-window/body :which-key "window")
     ;; load
-    "l"  #'(:ignore t :which-key "load")
-    "lF" #'(my-load-font :which-key "font")
-    "lf" #'(my-load-buffer-font :which-key "buffer-font")
-    "lt" #'(load-theme :which-key "theme")
+    "l"  #'(:ignore t)
+    "lF" #'my-load-font
+    "lf" #'my-load-default-font
+    "lt" #'load-theme
     "lg" #'ggtags-mode
     ;; org
-    "o"  #'(:ignore t :which-key "org")
+    "o"  #'(:ignore t)
     "oa" #'org-agenda
     "ob" #'org-switchb
     "oc" #'org-capture
-    "ot" #'(org-toggle-link-display :which-key "toggle-link-display")
-    ;; project
-    "p"  #'(:ignore t :which-key "project")
-    "pa" #'(find-file-in-project-at-point :which-key "ffip-at-point")
-    "pc" #'(ffip-create-project-file :which-key "create-project-file")
-    "pd" #'(find-file-in-current-directory :which-key "ffip-cwd")
-    "pD" #'(find-file-in-current-directory-by-selected
-            :which-key "ffip-cwd-by-select")
-    "pf" #'(find-file-in-project :which-key "ffip")
-    "pF" #'(ffip-lisp-find-file-in-project :which-key "ffip-lisp-ffip")
-    "pi" #'(ffip-insert-file :which-key "ffip-insert-file")
-    "pp" #'(find-file-in-project-at-point :which-key "ffip-at-point")
-    "pr" #'(ffip-find-relative-path :which-key "ffip-find-relative-path")
-    "ps" #'(find-file-in-project-by-selected :which-key "ffip-by-select")
-    "pS" #'(find-file-with-similar-name :which-key "ffip-with-similar-name")
-    "pv" #'(ffip-show-diff :which-key "ffip-show-diff")
+    "ot" #'org-toggle-link-display
     ;; search
-    "s"  #'(:ignore t :which-key "search")
-    "sd" #'(search-dired-dwim :which-key "search-file-cwd")
+    "s"  #'(:ignore t)
+    "sd" #'search-dired-dwim
     "sD" #'search-dired
-    "sf" #'(my-consult-find :which-key "search-find")
+    "sf" #'my-consult-find
     "sF" #'consult-find
     "so" #'my-search-online
-    "sr" #'(my-consult-rg :which-key "search-rg")
+    "sr" #'my-consult-rg
     "sR" #'consult-rg
     "ss" #'consult-line
     "si" #'imenu
     ;; toggle
-    "t"  #'(:ignore t :which-key "toggle")
+    "t"  #'(:ignore t)
+    "tA" #'abbrev-mode
     "tD" #'darkroom-mode
-    "ta" #'(abbrev-mode :which-key "abbrev")
+    "ta" #'auto-fill-mode
     "td" #'darkroom-tentative-mode
-    "tf" #'(display-fill-column-indicator-mode
-            :which-key "fill-column-indicator")
-    "th" #'(my-toggle-hl-line :which-key "hl-line")
+    "tf" #'display-fill-column-indicator-mode
+    "th" #'global-hl-line-mode
     "tj" #'toggle-truncate-lines
-    "tl" #'(my-toggle-line-number :which-key "line-number")
-    "tp" #'(my-transient-transparency :which-key "transparency")
-    "tv" #'(visual-line-mode :which-key "visual-line")
-    "tw" #'(whitespace-mode :which-key "whitespace")
+    "tk" #'visual-line-mode
+    "tl" #'display-line-numbers-mode
+    "ts" #'subword-mode
+    "tv" #'view-mode
+    "tw" #'whitespace-mode
     ;; window
-    "w"   #'(:ignore t :which-key "window")
+    "w"   #'(:ignore t)
     "w'"  #'eyebrowse-last-window-config
     "w,"  #'eyebrowse-rename-window-config
     "w."  #'eyebrowse-switch-to-window-config

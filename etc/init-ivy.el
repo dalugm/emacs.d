@@ -126,8 +126,10 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
   (with-eval-after-load 'desktop
     ;; prevent old minibuffer completion system being reactivated in
     ;; buffers restored via `desktop.el'
-    (push (cons #'counsel-mode nil) desktop-minor-mode-table)
-    (push (cons #'ivy-mode nil) desktop-minor-mode-table)))
+    (add-to-list 'desktop-minor-mode-table
+                 '(counsel-mode nil))
+    (add-to-list 'desktop-minor-mode-table
+                 '(ivy-mode nil))))
 
 (use-package amx
   :hook (counsel-mode . amx-mode))

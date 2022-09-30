@@ -2,9 +2,9 @@
 # name: entry
 # key: entry_
 # --
-#+begin_html
+#+BEGIN_HTML
 ---
 layout: ${1:default}
 title: ${2:title}
 ---
-#+end_html
+#+END_HTML

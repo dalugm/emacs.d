@@ -38,12 +38,12 @@
   :type 'string)
 
 ;; allow access from emacsclient
-(add-hook 'after-init-hook
-          (lambda ()
-            (require 'server)
-            (unless (server-running-p)
-              (message "Starting a server...")
-              (server-start))))
+(run-with-idle-timer 3 nil
+                     (lambda ()
+                       (require 'server)
+                       (unless (server-running-p)
+                         (message "Starting a server...")
+                         (server-start))))
 
 ;; calendar
 (setq calendar-chinese-all-holidays-flag t)
@@ -133,17 +133,6 @@
 (use-package search-dired
   :bind (("C-c s d" . search-dired-dwim)
          ("C-c s D" . search-dired)))
-
-(use-package ag
-  :bind (("C-c s a" . ag)
-         ("C-c s t" . ag-files)
-         ("C-c s e" . ag-regexp)
-         ("C-c s p" . ag-project)
-         ("C-c s P" . ag-project-files)
-         ("C-c s E" . ag-project-regexp)))
-
-(use-package rg
-  :bind (("C-c s s" . rg-menu)))
 
 (use-package marginalia
   :after (:any ivy vertico)

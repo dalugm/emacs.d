@@ -143,18 +143,6 @@ version control automatically."
 ;; FILE ;;
 ;;;;;;;;;;
 
-(defun my--add-auto-mode (mode &rest patterns)
-  "Add entries to `auto-mode-alist'.
-Use specified MODE for all given file PATTERNS."
-  (dolist (pattern patterns)
-    (add-to-list 'auto-mode-alist (cons pattern mode))))
-
-(defun my--add-interpreter-mode (mode &rest patterns)
-  "Add entries to `interpreter-mode-alist'.
-Use specified MODE for all given file PATTERNS."
-  (dolist (pattern patterns)
-    (add-to-list 'interpreter-mode-alist (cons pattern mode))))
-
 (defun my-revert-this-buffer ()
   "Revert the current buffer."
   (interactive)
@@ -287,31 +275,12 @@ With a prefix ARG always prompt for command to use."
          (program (if (or arg (not open))
                       (read-shell-command "Open current file with: ")
                     open)))
+    ;; buggy when under wsl
+    (when (executable-find "explorer.exe")
+      (setq current-file-dir "."))
     (call-process program nil 0 nil current-file-dir)))
 
 (global-set-key (kbd "C-c f o") #'my-open-this-file-externally)
-
-(defun my-open-this-file-dir-externally (arg)
-  "Open visited file in default external program.
-When in Dired mode, open file under the cursor.
-With a prefix ARG always prompt for command to use."
-  (interactive "P")
-  (let* ((current-file-name
-          (if (eq major-mode 'dired-mode)
-              (dired-get-file-for-visit)
-            buffer-file-name))
-         (current-file-dir (file-name-directory current-file-name))
-         (open (pcase system-type
-                 (`darwin "open")
-                 ((or `gnu `gnu/linux `gnu/kfreebsd)
-                  ;; wsl
-                  (if (executable-find "explorer.exe")
-                      "explorer.exe"
-                    "xdg-open"))
-                 (`windows-nt "explorer.exe"))))
-    (call-process open nil 0 nil current-file-dir)))
-
-(global-set-key (kbd "C-c f O") #'my-open-this-file-dir-externally)
 
 (defun my-delete-this-file ()
   "Delete current file, and kill the buffer."
@@ -414,7 +383,6 @@ using the opposite indentation style."
 ;; JUST4FUN ;;
 ;;;;;;;;;;;;;;
 
-;; show ascii table
 (defun my-ascii-table ()
   "Print the ascii table."
   (interactive)
@@ -491,9 +459,6 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 ;; DAILY USE ;;
 ;;;;;;;;;;;;;;;
 
-;; a no-op function to bind to if you want to set a keystroke to null
-(defun my-void () "This is a no-op." (interactive))
-
 (defun my-run-cmd-and-replace-region (cmd)
   "Run CMD in shell on selected region or whole buffer.
 And replace it with cli output."
@@ -502,24 +467,6 @@ And replace it with cli output."
         (end (if (region-active-p) (region-end) (point-max))))
     (shell-command-on-region start end cmd nil t)
     (goto-char orig-point)))
-
-(defun my-format-region-or-buffer(&optional column)
-  "Perform a bunch of operations on the content of a buffer.
-Indent region/buffer with COLUMN space(s).
-Including indent-buffer, which should not be called automatically on save."
-  (interactive "P")
-  (save-excursion
-    (if (region-active-p)
-        (progn
-          (delete-trailing-whitespace (region-beginning) (region-end))
-          (indent-region (region-beginning) (region-end) column)
-          (message "Selected region formatted."))
-      (progn
-        (delete-trailing-whitespace)
-        (indent-region (point-min) (point-max) column)
-        (message "Buffer formatted.")))))
-
-(global-set-key (kbd "C-c m f") #'my-format-region-or-buffer)
 
 ;; https://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
 (defun my-toggle-selective-display (column)
@@ -532,7 +479,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; https://www.emacswiki.org/emacs/RecreateScratchBuffer
 (defun my-switch-scratch-buffer ()
-  "Create or switch to a *scratch* buffer."
+  "Create or switch to the *scratch* buffer."
   (interactive)
   (if (get-buffer "*scratch*")
       (switch-to-buffer "*scratch*")
@@ -542,6 +489,17 @@ Including indent-buffer, which should not be called automatically on save."
       (insert initial-scratch-message))))
 
 (global-set-key (kbd "C-c X") #'my-switch-scratch-buffer)
+
+(defun my-switch-messages-buffer ()
+  "Create or switch to the *Message* buffer."
+  (interactive)
+  (if (get-buffer "*Messages*")
+      (switch-to-buffer "*Messages*")
+    (progn
+      (switch-to-buffer (get-buffer-create "*Messages*"))
+      (messages-buffer-mode))))
+
+(global-set-key (kbd "C-c M") #'my-switch-messages-buffer)
 
 (defun my-create-tags ()
   "Create tags file."
@@ -612,6 +570,8 @@ Including indent-buffer, which should not be called automatically on save."
         (load-theme (intern x) t))
     (error "Problem loading theme %s!" x)))
 
+(global-set-key (kbd "C-c m l") #'my-load-theme)
+
 (defun my-emacs-default-theme ()
   "Load default Emacs theme."
   (interactive)
@@ -639,28 +599,6 @@ Do NOT mess with special buffers."
 
 (global-set-key (kbd "C-c m K") #'my-kill-other-buffers-with-special-ones)
 
-(defun my-toggle-hl-line ()
-  "Toggle function `global-hl-line-mode'."
-  (interactive)
-  (global-hl-line-mode 'toggle))
-
-(global-set-key (kbd "C-c t h") #'my-toggle-hl-line)
-
-(defun my-toggle-line-number ()
-  "Show line numbers by `display-line-numbers-mode' (Emacs 26.1) or `linum-mode'."
-  (interactive)
-  (if (fboundp 'display-line-numbers-mode)
-      (cond
-       (display-line-numbers (display-line-numbers-mode -1))
-       (t (display-line-numbers-mode +1)))
-    (if (bound-and-true-p linum-mode)
-        (linum-mode -1)
-      (progn
-        (linum-mode +1)
-        (setq linum-format "%4d ")))))
-
-(global-set-key (kbd "C-c t l") #'my-toggle-line-number)
-
 (defun my-strfile2dat ()
   "Strfile current file to make it readable by `fortune'."
   (interactive)
@@ -675,10 +613,9 @@ With two PREFIX, use standard time format.
 With three PREFIX, insert locale's timestamp."
   (interactive "P")
   (let ((format (cond
-                 ((not prefix) "%F")
-                 ((equal prefix '(4)) "%FT%H:%M:%S%:z")
-                 ((equal prefix '(16)) "%s")
-                 ((equal prefix '(64)) "%c"))))
+                 ((not prefix) "%FT%T%z")
+                 ((equal prefix '(4)) "%s")
+                 ((equal prefix '(16)) "%c"))))
     (insert (format-time-string format))))
 
 (global-set-key (kbd "C-c 1") #'my-insert-date)
@@ -750,7 +687,7 @@ Fix OLD-FUNC with ARGS."
   (cl-letf (((symbol-function 'fixup-whitespace) #'my-fixup-whitespace))
     (apply old-func args)))
 
-(advice-add #'delete-indentation :around #'my-delete-indentation)
+(advice-add 'delete-indentation :around #'my-delete-indentation)
 
 (defun my-recompile-init ()
   "Byte-compile dotfiles again."
@@ -767,7 +704,6 @@ Fix OLD-FUNC with ARGS."
 (global-set-key (kbd "C-M-z") #'my-indent-defun)
 
 ;; https://emacs-china.org/t/emacs-builtin-mode/11937/63
-;; press u undo and r to redo
 (defun my-transient-winner-undo ()
   "Transient version of `winner-undo'."
   (interactive)
@@ -844,8 +780,8 @@ is set to after it."
   :global t
   :lighter ""
   (if my-delicate-click-mode
-      (advice-add #'mouse-set-point :after #'my--adjust-point-after-click)
-    (advice-remove #'mouse-set-point #'my--adjust-point-after-click)))
+      (advice-add 'mouse-set-point :after #'my--adjust-point-after-click)
+    (advice-remove 'mouse-set-point #'my--adjust-point-after-click)))
 
 (defun my--add-subdirs-to-load-path (parent-dir)
   "Add every non-hidden subdir of PARENT-DIR to `load-path'."
@@ -856,29 +792,6 @@ is set to after it."
             #'file-directory-p
             (directory-files (expand-file-name parent-dir) t "^[^\\.]"))
            load-path))))
-
-(defun my-avy-copy-thing-at-point ()
-  "Copy thing at point."
-  (interactive)
-  (save-excursion
-    (avy-goto-word-or-subword-1)
-    (let ((thing
-           (cl-case
-               (read-char
-                (format
-                 "Copy thing at point (%s: word %s: symbol %s: list %s: url): "
-                 (propertize "w" 'face 'error)
-                 (propertize "s" 'face 'error)
-                 (propertize "l" 'face 'error)
-                 (propertize "u" 'face 'error)))
-             (?w  'word)
-             (?s  'symbol)
-             (?l  'list)
-             (?u  'url))))
-      (kill-new (thing-at-point thing))
-      (message "%s copied." thing))))
-
-(global-set-key (kbd "C-c m c") #'my-avy-copy-thing-at-point)
 
 ;; Network Proxy
 (defun my-show-http-proxy ()
@@ -916,13 +829,12 @@ is set to after it."
 (defun my-show-socks-proxy ()
   "Show SOCKS proxy."
   (interactive)
-  (when (fboundp 'cadddr)               ; defined 25.2+
-    (if (bound-and-true-p socks-noproxy)
-        (message "Current SOCKS%d proxy is \"%s:%s\"."
-                 (cadddr socks-server)
-                 (cadr socks-server)
-                 (caddr socks-server))
-      (message "No SOCKS proxy."))))
+  (if (bound-and-true-p socks-noproxy)
+      (message "Current SOCKS%d proxy is \"%s:%s\"."
+               (cadddr socks-server)
+               (cadr socks-server)
+               (caddr socks-server))
+    (message "No SOCKS proxy.")))
 
 (defun my-enable-socks-proxy ()
   "Enable SOCKS proxy."
@@ -959,13 +871,12 @@ is set to after it."
 (defun my-show-wsl-socks-proxy ()
   "Show SOCKS proxy in WSL."
   (interactive)
-  (when (fboundp 'cadddr)               ; defined 25.2+
-    (if (bound-and-true-p socks-noproxy)
-        (message "Current SOCKS%d proxy in WSL is \"%s:%s\"."
-                 (cadddr socks-server)
-                 (cadr socks-server)
-                 (caddr socks-server))
-      (message "No SOCKS proxy in WSL."))))
+  (if (bound-and-true-p socks-noproxy)
+      (message "Current SOCKS%d proxy in WSL is \"%s:%s\"."
+               (cadddr socks-server)
+               (cadr socks-server)
+               (caddr socks-server))
+    (message "No SOCKS proxy in WSL.")))
 
 (defun my-enable-wsl-socks-proxy ()
   "Enable SOCKS proxy in WSL."

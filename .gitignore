@@ -13,6 +13,7 @@
 /places
 /projectile*
 /recentf
+/projects
 /tramp
 /viper
 /README.html
@@ -29,5 +30,8 @@
 /url/
 /var/
 /tramp/
+/eshell/
 /games/
 /lib/site-lisp/*/
+/server/
+/eln-cache/

@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
 # name: export
-# key: <ex
+# key: ex
 # --
-#+begin_export ${1:type}
+#+BEGIN_EXPORT ${1:type}
 $0
-#+end_export
+#+END_EXPORT

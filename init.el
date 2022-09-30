@@ -21,14 +21,36 @@
                       (not (gnutls-available-p))))
          (proto (if no-ssl "http" "https")))
     (setq package-archives
-          `(;; emacs-china
-            ,(cons "gnu"   (concat proto "://elpa.emacs-china.org/gnu/"))
-            ,(cons "melpa" (concat proto "://elpa.emacs-china.org/melpa/"))
-            ,(cons "org"   (concat proto "://elpa.emacs-china.org/org/"))
-            ;; official
-            ;; ,(cons "gnu"   (concat proto "://elpa.gnu.org/packages/"))
-            ;; ,(cons "melpa" (concat proto "://melpa.org/packages/"))
-            ;; ,(cons "org"   (concat proto "://orgmode.org/elpa/"))
+          `(
+
+            ;; ;; official
+            ;; ,(cons "gnu"    (concat proto "://elpa.gnu.org/packages/"))
+            ;; ,(cons "nongnu" (concat proto "://elpa.nongnu.org/nongnu/"))
+            ;; ,(cons "melpa"  (concat proto "://melpa.org/packages/"))
+            ;; ;; ,(cons "melpa-stable" (concat proto "://stable.melpa.org/packages/"))
+            ;; ,(cons "org"    (concat proto "://orgmode.org/elpa/"))
+
+            ;; ;; emacs-china
+            ;; ,(cons "gnu"    (concat proto "://elpa.emacs-china.org/gnu/"))
+            ;; ,(cons "nongnu" (concat proto "://elpa.emacs-china.org/nongnu/"))
+            ;; ,(cons "melpa"  (concat proto "://elpa.emacs-china.org/melpa/"))
+            ;; ;; ,(cons "melpa-stable" (concat proto "://elpa.emacs-china.org/stable-melpa/"))
+            ;; ,(cons "org"    (concat proto "://elpa.emacs-china.org/org/"))
+
+            ;; ;; 163
+            ;; ,(cons "gnu"    (concat proto "://mirrors.163.com/elpa/gnu/"))
+            ;; ,(cons "nongnu" (concat proto "://mirrors.163.com/elpa/nongnu/"))
+            ;; ,(cons "melpa"  (concat proto "://mirrors.163.com/elpa/melpa/"))
+            ;; ;; ,(cons "melpa-stable" (concat proto "://mirrors.163.com/elpa/stable-melpa/"))
+            ;; ,(cons "org"    (concat proto "://mirrors.163.com/elpa/org/"))
+
+            ;; tuna
+            ,(cons "gnu"    (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
+            ,(cons "nongnu" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/"))
+            ,(cons "melpa"  (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
+            ;; ,(cons "melpa-stable" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/"))
+            ,(cons "org"    (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/org/"))
+
             ))))
 
 ;;; Define necessary directories
@@ -93,11 +115,11 @@
 (require 'init-ibuffer)
 (require 'init-gnus)
 (require 'init-package)
+(require 'init-edit)
 (require 'init-vc)
 (require 'init-tex)
 (require 'init-vertico)
 ;; (require 'init-ivy)
-(require 'init-theme)
 (require 'init-chinese)
 (require 'init-prog)
 (require 'init-check)
@@ -112,7 +134,6 @@
 (require 'init-workspace)
 (require 'init-reader)
 (require 'init-irc)
-(require 'init-hydra)
 (require 'init-evil)
 
 ;; program

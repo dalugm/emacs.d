@@ -22,7 +22,7 @@
     (require 'zh-lib)
     (setf (car str) (zh-lib-build-regexp-string (car str)))
     str)
-  (advice-add #'orderless-regexp :filter-args #'my--orderless-regexp))
+  (advice-add 'orderless-regexp :filter-args #'my--orderless-regexp))
 
 (use-package consult
   :init
@@ -33,7 +33,7 @@
         register-preview-function #'consult-register-format)
   ;; Optionally tweak the register preview window.
   ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
+  (advice-add 'register-preview :override #'consult-register-window)
   ;; Use Consult to select xref locations with preview
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
@@ -97,6 +97,28 @@
   ;; ---------------------------------------------------------
   ;; customize
   ;; ---------------------------------------------------------
+  (defun my--consult-zh-builder (input)
+    "Add Zhongwen support for `consult' when searching INPUT."
+    (require 'zh-lib)
+    (let* ((str (car input))
+           (len (length str)))
+      (cond
+       ;; do nothing
+       ((<= len 0))
+       ;; Detect the first character entered, if it matches `:',
+       ;; convert the subsequent characters into Zhongwen regexp.
+       ;; For expmale, input `:zw' matches ‘中文’, ‘植物’ and etc.
+       ((string= (substring str 0 1) ":")
+        (setf (car input) (zh-lib-build-regexp-string
+                           (substring str 1 len))))))
+    input)
+
+  (advice-add 'consult--find-builder :filter-args #'my--consult-zh-builder)
+  (advice-add 'consult--git-grep-builder :filter-args #'my--consult-zh-builder)
+  (advice-add 'consult--grep-builder :filter-args #'my--consult-zh-builder)
+  (advice-add 'consult--locate-builder :filter-args #'my--consult-zh-builder)
+  (advice-add 'consult--ripgrep-builder :filter-args #'my--consult-zh-builder)
+
   (defun my-consult-find (&optional DIR)
     "Modify `consult-find' functions to search files in DIR."
     (interactive "DDirectory: ")
@@ -115,26 +137,6 @@
   ;; The narrowing key.
   ;; Both `<' and `C-+' work reasonably well.
   (setq consult-narrow-key "<"))
-
-(use-package embark
-  :bind
-  (("M-A" . embark-act)
-   ("M-E" . embark-export)
-   ("M-D" . embark-dwim)
-   ([remap describe-bindings] . embark-bindings)
-   (:map minibuffer-local-map
-         ("C-c C-a" . embark-act)
-         ("C-c C-o" . embark-export)
-         ("C-c C-c" . embark-dwim)))
-  :custom
-  ;; Optionally replace the key help with a completing-read interface
-  (prefix-help-command #'embark-prefix-help-command)
-  :config
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
 
 (use-package embark-consult
   :demand t

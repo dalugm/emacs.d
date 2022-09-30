@@ -16,7 +16,7 @@
   (require 'dired-aux)
 
   ;; reuse current buffer by pressing `a'
-  (put #'dired-find-alternate-file 'disabled nil)
+  (put 'dired-find-alternate-file 'disabled nil)
   (define-key dired-mode-map (kbd "RET") #'dired-find-alternate-file)
 
   ;; search file name only when focus is over file

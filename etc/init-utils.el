@@ -31,7 +31,7 @@
 (setq user-full-name "dalu")
 (setq user-mail-address "mou.tong@outlook.com")
 
-;;; env
+;; env
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
@@ -51,8 +51,7 @@
 
 (defun my--show-scratch-buffer-message ()
   "Customize `initial-scratch-message'."
-  (let ((fortune-prog (or (executable-find "fortune-zh")
-                          (executable-find "fortune"))))
+  (let ((fortune-prog (executable-find "fortune")))
     (cond
      (fortune-prog
       (format
@@ -82,34 +81,44 @@
 (setq make-backup-files nil)
 (setq vc-make-backup-files nil)
 
+;; recentf
+(require 'recentf)
+(setq recentf-max-saved-items 200)
+;; simplify save path
+(setq recentf-filename-handlers '(abbreviate-file-name))
+(add-to-list 'recentf-exclude
+             '("^/\\(?:ssh\\|su\\|sudo\\)?:"
+               "/TAGS\\'" "/tags\\'"))
+;; disable `recentf-cleanup' on recentf start,
+;; because it can be laggy with remote files
+(setq recentf-auto-cleanup 'never)
+(recentf-mode +1)
+
 (setq-default buffers-menu-max-size 30
-              fill-column 80
+              fill-column 72
               case-fold-search t
-              compilation-scroll-output t
-              ediff-split-window-function 'split-window-horizontally
-              ediff-window-setup-function 'ediff-setup-windows-plain
               grep-highlight-matches t
               grep-scroll-output t
-              line-spacing 0
               mouse-yank-at-point t
               set-mark-command-repeat-pop t
               tooltip-delay 1.5
 
-              ;; ;; new line at the end of file
-              ;; ;; the POSIX standard defines a line is "a sequence of zero or more non-newline
-              ;; ;; characters followed by a terminating newline", so files should end in a
-              ;; ;; newline. Windows doesn't respect this (because it's Windows), but we should,
-              ;; ;; since programmers' tools tend to be POSIX compliant.
+              ;; ;; new line at the end of file the POSIX standard
+              ;; ;; defines a line is "a sequence of zero or more
+              ;; ;; non-newline characters followed by a terminating
+              ;; ;; newline", so files should end in a newline. Windows
+              ;; ;; doesn't respect this (because it's Windows), but we
+              ;; ;; should, since programmers' tools tend to be POSIX
+              ;; ;; compliant.
               ;; ;; NOTE: This could accidentally edit others' code
               ;; require-final-newline t
 
               truncate-lines nil
               truncate-partial-width-windows nil
-              ;; visible-bell has some issue
-              ;; https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/issues/9#issuecomment-97848938
-              visible-bell nil
+              ediff-split-window-function #'split-window-horizontally
+              ediff-window-setup-function #'ediff-setup-windows-plain
               ;; disable the annoying bell ring
-              ring-bell-function 'ignore)
+              ring-bell-function #'ignore)
 
 ;;; Tab and Space
 ;; indent with spaces
@@ -120,19 +129,19 @@
 (setq tab-always-indent 'complete)
 
 ;; reply y/n instead of yes/no
-(fset #'yes-or-no-p #'y-or-n-p)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; enable narrowing commands
-(put #'narrow-to-region 'disabled nil)
-(put #'narrow-to-page 'disabled nil)
-(put #'narrow-to-defun 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-defun 'disabled nil)
 
 ;; enabled change region case commands
-(put #'upcase-region 'disabled nil)
-(put #'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 
 ;; enable erase-buffer command
-(put #'erase-buffer 'disabled nil)
+(put 'erase-buffer 'disabled nil)
 
 ;; disable annoying blink
 (when (fboundp 'blink-cursor-mode)
@@ -141,73 +150,17 @@
 ;; delete the selection with a key press
 (delete-selection-mode +1)
 
-;; show matching parentheses
-(show-paren-mode +1)
-(setq show-paren-delay 0.1
-      show-paren-highlight-openparen t
-      show-paren-when-point-inside-paren t
-      show-paren-when-point-in-periphery t)
-
 ;; fix Emacs performance when edit so-long files
-(when (fboundp 'so-long-enable)
-  (add-hook 'after-init-hook #'so-long-enable))
+(when (fboundp 'global-so-long-mode)
+  (global-so-long-mode +1))
 
 ;; https://www.emacswiki.org/emacs/SavePlace
-(cond
- ((fboundp 'save-place-mode)
-  (save-place-mode +1))
- (t
-  (require 'saveplace)
-  (setq-default save-place t)))
+(save-place-mode +1)
 
-(unless (or my-cygwin-p my-win-p)
-  ;; Takes ages to start Emacs.
-  ;; Got error `Socket /tmp/fam-cb/fam- has wrong permissions` in Cygwin ONLY!
-  ;; reproduced with Emacs 26.1 and Cygwin upgraded at 2019-02-26
-  ;;
-  ;; Although win64 is fine. It still slows down generic performance.
-  ;; https://stackoverflow.com/questions/3589535/why-reload-notification-slow-in-emacs-when-files-are-modified-externally
-  ;; So no `auto-revert-mode' on Windows/Cygwin
-  (global-auto-revert-mode +1)
-  (setq global-auto-revert-non-file-buffers t)
-  (setq auto-revert-verbose nil))
-
-;; clean up obsolete buffers automatically
-(require 'midnight)
-
-;; "Undo"(and "redo") changes in the window configuration with the key commands.
-(require 'winner)
-(setq winner-boring-buffers
-      '("*Completions*"
-        "*Compile-Log*"
-        "*inferior-lisp*"
-        "*Apropos*"
-        "*Help*"
-        "*Buffer List*"
-        "*Ibuffer*"))
-(winner-mode +1)
-
-;; `whitespace-mode' config
-(require 'whitespace)
-(setq whitespace-line-column 80)        ; limit line length
-(setq whitespace-style '(face indentation
-                              tabs tab-mark
-                              spaces space-mark
-                              newline newline-mark
-                              trailing lines-tail))
-(setq whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
-                                    (space-mark ?\  [?·] [?.])
-                                    (newline-mark ?\n [?¬ ?\n])))
-
-;; `tramp-mode' config
-(with-eval-after-load 'tramp
-  (push (cons tramp-file-name-regexp nil) backup-directory-alist)
-
-  ;; ;; https://github.com/syl20bnr/spacemacs/issues/1921
-  ;; ;; If you tramp is hanging, you can uncomment below line.
-  ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
-
-  (setq tramp-chunksize 8192))
+;; automatically reload files was modified by external program
+(global-auto-revert-mode +1)
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
 
 ;; NOTE: `tool-bar-mode' and `scroll-bar-mode' are not defined in some cases
 ;; https://emacs-china.org/t/topic/5159/12
@@ -228,23 +181,53 @@
   (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1))
        (menu-bar-mode -1)))
 
-;; recentf
-(require 'recentf)
-(setq recentf-max-saved-items 200)
-(setq recentf-max-menu-items 15)
+;; pairs...
+(electric-pair-mode +1)
 
-;; disable `recentf-cleanup' on Emacs start,
-;; because it can cause problems with remote files
-(setq recentf-auto-cleanup 'never)
+;; show matching parentheses
+(show-paren-mode +1)
+(when (boundp 'show-paren-context-when-offscreen)
+  (setq show-paren-context-when-offscreen 'overlay))
 
-;; Simplify save path
-(setq recentf-filename-handlers '(abbreviate-file-name))
+;; clean up obsolete buffers automatically
+(require 'midnight)
 
-(add-to-list 'recentf-exclude
-             '("^/\\(?:ssh\\|su\\|sudo\\)?:"
-               "/TAGS\\'" "/tags\\'"))
+;; undo (and redo) changes about the window
+(require 'winner)
+(setq winner-boring-buffers
+      '("*Completions*"
+        "*Compile-Log*"
+        "*inferior-lisp*"
+        "*Apropos*"
+        "*Help*"
+        "*Buffer List*"
+        "*Ibuffer*"))
+(winner-mode +1)
 
-(recentf-mode +1)
+;; whitespace
+(require 'whitespace)
+(setq whitespace-style '(face indentation
+                              tabs tab-mark
+                              spaces space-mark
+                              newline newline-mark
+                              trailing lines-tail))
+(setq whitespace-display-mappings '((tab-mark ?\t [?› ?\t])
+                                    (space-mark ?\  [?·] [?.])
+                                    (newline-mark ?\n [?¬ ?\n])))
+
+;; meaningful names for buffers with the same name
+(require 'uniquify)
+(setq uniquify-after-kill-buffer-p t)    ; rename after killing uniquified
+(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+
+(with-eval-after-load 'tramp
+  (push (cons tramp-file-name-regexp nil) backup-directory-alist)
+
+  ;; ;; https://github.com/syl20bnr/spacemacs/issues/1921
+  ;; ;; If you tramp is hanging, you can uncomment below line.
+  ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+
+  (setq tramp-chunksize 8192))
 
 ;; eldoc
 (with-eval-after-load 'eldoc
@@ -255,15 +238,6 @@
 ;; tags
 ;; Don't ask before rereading the TAGS files if they have changed
 (setq tags-revert-without-query t)
-
-;; meaningful names for buffers with the same name
-(require 'uniquify)
-(setq uniquify-after-kill-buffer-p t)    ; rename after killing uniquified
-(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
-
-;; bookmark
-(require 'bookmark)
-(setq bookmark-save-flag 1)
 
 ;; hippie-expand
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev
@@ -313,14 +287,17 @@
                                   (insert "　")))
 
 ;; toggle
-(global-set-key (kbd "C-c t a") #'abbrev-mode)
+(global-set-key (kbd "C-c t A") #'abbrev-mode)
+(global-set-key (kbd "C-c t a") #'auto-fill-mode)
 (global-set-key (kbd "C-c t f") #'display-fill-column-indicator-mode)
 (global-set-key (kbd "C-c t g") #'glasses-mode)
+(global-set-key (kbd "C-c t h") #'global-hl-line-mode)
 (global-set-key (kbd "C-c t j") #'toggle-truncate-lines)
+(global-set-key (kbd "C-c t k") #'visual-line-mode)
+(global-set-key (kbd "C-c t l") #'display-line-numbers-mode)
 (global-set-key (kbd "C-c t r") #'cua-rectangle-mark-mode)
 (global-set-key (kbd "C-c t s") #'subword-mode)
-(global-set-key (kbd "C-c t v") #'visual-line-mode)
-(global-set-key (kbd "C-c t w") #'whitespace-mode)
+(global-set-key (kbd "C-c t v") #'view-mode)
 
 ;; abbrevs
 (setq save-abbrevs 'silently)
@@ -339,7 +316,7 @@
     ("fws" "　"))
   "Abbrev table for my own use.")
 
-;;; Search
+;; search
 (global-set-key (kbd "C-c s d") #'find-dired)
 (global-set-key (kbd "C-c s i") #'imenu)
 (global-set-key (kbd "C-c s g") #'grep)

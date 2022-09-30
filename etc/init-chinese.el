@@ -13,13 +13,13 @@
 
 ;; ----- pyim ----------------------------------------------
 (use-package pyim
-  :unless (featurep 'rime)
   :bind (("C-\\" . toggle-input-method)
          (:map pyim-mode-map
                ("," . pyim-page-previous-page)
                ("." . pyim-page-next-page)))
   :custom (default-input-method "pyim")
   :config
+  (pyim-isearch-mode +1)
   (setq pyim-default-scheme 'quanpin)
 
   ;; compatible with terminal
@@ -68,7 +68,9 @@
   ;; automatically load all "*.pyim" under `my-cache-d'
   ;; `directory-files-recursively' requires Emacs 25
   (let ((files (and (file-exists-p my-pyim-directory)
-                    (directory-files-recursively my-pyim-directory "\.pyim$")))
+                    (directory-files-recursively
+                     my-pyim-directory
+                     "\\.pyim\\'")))
         disable-basedict)
     (when (and files (> (length files) 0))
       (setq pyim-dicts
@@ -81,9 +83,6 @@
                   (string= "pyim-greatdict" (file-name-base f)))
           (setq disable-basedict t))))
     (unless disable-basedict (pyim-basedict-enable))))
-
-(use-package bing-dict
-  :bind ("C-c s b" . bing-dict-brief))
 
 (use-package avy-zh
   :after avy

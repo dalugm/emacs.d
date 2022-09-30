@@ -19,6 +19,7 @@
       (insert "'"))))
 
 (define-key emacs-lisp-mode-map "#" #'my-endless-sharp)
+(define-key lisp-interaction-mode-map "#" #'my-endless-sharp)
 
 (defun my-eval-last-sexp ()
   "Evaluate the last symbolic expression at the point.

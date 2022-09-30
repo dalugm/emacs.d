@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: include
-# key: <i
+# key: i
 # --
-#+include: $0
+#+INCLUDE: $0

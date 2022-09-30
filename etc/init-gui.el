@@ -21,96 +21,34 @@
 ;; Full screen when open GUI Emacs
 (setq initial-frame-alist '((fullscreen . maximized)))
 
+;; move more smoothly
+(when (fboundp 'pixel-scroll-precision-mode)
+  (pixel-scroll-precision-mode +1))
+
 (use-package ns-auto-titlebar
   :when my-mac-x-p
   :config (ns-auto-titlebar-mode +1))
 
-;;; transparency
-(defvar my-active-transparency 90
-  "A value from the range (0..100), in increasing opacity.
-Describes the transparency level of a frame when it's active or selected.
-Transparency can be toggled through `toggle-transparency'.")
-
-(defvar my-inactive-transparency 90
-  "A value from the range (0..100), in increasing opacity.
-Describes the transparency level of a frame when it's inactive or deselected.
-Transparency can be toggled through `toggle-transparency'.")
-
-(defvar my-current-opacity (frame-parameter (unless 'display-graphic-p)
-                                            'alpha)
-  "Record current opacity.")
-
-(defun my-toggle-transparency (&optional frame)
-  "Toggle between transparent and opaque state for FRAME.
-If FRAME is nil, it defaults to the selected frame."
-  (interactive)
-  (let ((alpha (frame-parameter frame 'alpha))
-        (setting (cons my-active-transparency
-                       my-inactive-transparency)))
-    (if (equal alpha setting)
-        (my-disable-transparency frame)
-      (my-enable-transparency frame setting))))
-
-(defun my-enable-transparency (&optional frame alpha)
-  "Enable transparency for FRAME.
-If FRAME is nil, it defaults to the selected frame.
-ALPHA is a pair of active and inactive transparency values.
-The default value for ALPHA is based on
-`my-active-transparency' and
-`my-inactive-transparency'."
-  (interactive)
-  (let ((alpha-setting (or alpha
-                           (cons my-active-transparency
-                                 my-inactive-transparency))))
-    (set-frame-parameter frame 'alpha alpha-setting)))
-
-(defun my-disable-transparency (&optional frame)
-  "Disable transparency for FRAME.
-If FRAME is nil, it defaults to the selected frame."
-  (interactive)
-  (set-frame-parameter frame 'alpha '(100 . 100)))
-
-(defun my-set-transparency (value)
-  "Set the VALUE of transparency of the frame window.
-0=transparent/100=opaque."
-  (interactive "nTransparency Value 0 - 100 opaque: ")
+(defun my-set-window-transparency (value)
+  "Set the VALUE of transparency of the frame window."
+  (interactive "nSet transparency (0 is transparent- 100 is opaque): ")
   (set-frame-parameter (selected-frame) 'alpha value))
 
-(defun my-increase-transparency (&optional frame)
-  "Increase transparency for FRAME.
-If FRAME is nil, it defaults to the selected frame."
-  (interactive)
-  (let* ((current-alpha (or (car (frame-parameter frame 'alpha)) 100))
-         (increased-alpha (- current-alpha 5)))
-    (when (>= increased-alpha frame-alpha-lower-limit)
-      (set-frame-parameter frame 'alpha
-                           (cons increased-alpha increased-alpha)))))
+(global-set-key (kbd "C-c w p") #'my-set-window-transparency)
 
-(defun my-decrease-transparency (&optional frame)
-  "Decrease transparency for FRAME.
-If FRAME is nil, it defaults to the selected frame."
-  (interactive)
-  (let* ((current-alpha (or (car (frame-parameter frame 'alpha)) 100))
-         (decreased-alpha (+ current-alpha 5)))
-    (when (<= decreased-alpha 100)
-      (set-frame-parameter frame 'alpha
-                           (cons decreased-alpha decreased-alpha)))))
+(defun my-set-window-margins (margin)
+  "Set the MARGIN of the currrent window."
+  (interactive "nMargin Value: ")
+  (set-window-margins (selected-window) margin margin))
 
-(defun my-transient-transparency ()
-  "Transient version of transparency."
-  (interactive)
-  (let ((echo-keystrokes nil))
-    (message "Transparency: [s]et [t]oggle [-] [=]")
-    (set-transient-map
-     (let ((map (make-sparse-keymap)))
-       (define-key map [?s] #'my-set-transparency)
-       (define-key map [?t] #'my-toggle-transparency)
-       (define-key map [?-] #'my-increase-transparency)
-       (define-key map [?=] #'my-decrease-transparency)
-       map)
-     t)))
+(global-set-key (kbd "C-c w m") #'my-set-window-margins)
 
-(global-set-key (kbd "C-c t P") #'my-transient-transparency)
+(defun my-set-line-spacing (space)
+  "Set the line SPACE of the current window."
+  (interactive "nLine Space: ")
+  (setq line-spacing space))
+
+(global-set-key (kbd "C-c w l") #'my-set-line-spacing)
 
 ;; ----- Font ----------------------------------------------
 
@@ -133,122 +71,198 @@ If FRAME is nil, it defaults to the selected frame."
 ;; (set-fontset-font t 'kana "Sarasa Mono Slab J")
 ;; (set-fontset-font t 'hangul "Sarasa Mono Slab K")
 
-(defcustom my-font nil
-  "Used to cache font configuration across sessions."
-  :type 'string
-  :group 'convenience)
+(defvar my-font-settings nil
+  "A list of (FACE . FONT-NAME).
+FONT-NAMEs are keys in `my-font-alist'.")
+
+(defvar my-cjk-rescale-alist
+  '(("Source Han Serif SC" . 1.3)
+    ("Source Han Sans SC" . 1.3))
+  "A list of font names that should be rescaled.")
 
 (defvar my-font-alist
-  '(
-    (lxgw-mono-16           . (:family "LXGW WenKai Mono" :size 16))
-    (lxgw-mono-28           . (:family "LXGW WenKai Mono" :size 28))
-    (firacode-14            . (:family "Fira Code" :size 14))
-    (gnu-unifont-16         . (:family "Unifont" :size 16))
-    (roboto-mono-14         . (:family "Roboto Mono" :size 14))
-    (monaco-14              . (:family "Monaco" :size 14))
-    (menlo-14               . (:family "Menlo" :size 14))
-    (spot-mono-14           . (:family "Spot Mono" :size 14))
-    (sf-mono-14             . (:family "SF Mono" :size 14))
-    (hack-14                . (:family "Hack" :size 14))
-    (sarasa-mono-sc-16      . (:family "Sarasa Mono SC" :size 16))
-    (sarasa-mono-slab-sc-16 . (:family "Sarasa Mono Slab SC" :size 16))
-    (wenquanyi-16           . (:family "WenQuanYi Zen Hei Mono" :size 16))
-    (roboto-16              . (:family "Roboto" :size 16))
-    (fangzheng-fangsong-16  . (:family "FZFangSong-Z02" :size 16))
-    (fangzheng-gwfs-16      . (:family "FZDocFangSong" :size 16))
-    (fangzheng-gwhw-16      . (:family "FZDocHei" :size 16))
-    (fangzheng-gwkt-16      . (:family "FZDocKai" :size 16))
-    (fangzheng-gwxbs-16     . (:family "FZDocXiaoBiaoSong" :size 16))
-    (fangzheng-heiti-16     . (:family "FZHei-B01" :size 16))
-    (fangzheng-kaiti-16     . (:family "FZKai-Z03" :size 16))
-    (fangzheng-pxys-16      . (:family "FZPingXianYaSong-R-GBK" :size 16))
-    (fangzheng-shusong-16   . (:family "FZShuSong-Z01" :size 16))
-    (hiragino-sans-cns      . (:family "Hiragino Sans CNS" :size 16))
-    (hiragino-sans-gb       . (:family "Hiragino Sans GB" :size 16))
-    (huawen-kaiti-sc-16     . (:family "Kaiti SC" :size 16))
-    (huawen-kaiti-tc-16     . (:family "Kaiti TC" :size 16))
-    (lantinghei-sc-16       . (:family "Lantinghei SC" :size 16))
-    (lantinghei-tc-16       . (:family "Lantinghei TC" :size 16))
-    (lxgw-16                . (:family "LXGW WenKai" :size 16))
-    (sarasa-gothic-sc-16    . (:family "Sarasa Gothic SC" :size 16))
-    (sarasa-ui-sc-16        . (:family "Sarasa UI SC" :size 16))
-    (source-han-sans-sc-16  . (:family "Source Han Sans SC" :size 16))
-    (source-han-sans-tc-16  . (:family "Source Han Sans TC" :size 16))
-    (source-han-serif-sc-16 . (:family "Source Han Serif SC" :size 16))
-    (source-han-serif-tc-16 . (:family "Source Han Serif TC" :size 16))
-    )
+  '(("霞鹜文楷等宽"      . ("LXGW WenKai Mono" nil 1))
+    ("等距更纱黑体"      . ("Sarasa Mono SC" nil 1))
+    ("等距更纱黑体 Slab" . ("Sarasa Mono Slab SC" nil 1))
+    ("文泉驿等宽正黑"    . ("WenQuanYi Zen Hei Mono" nil 1))
+    ("Unifont"           . ("Unifont" nil 1))
+    ("Hack"              . ("Hack" "Sarasa Mono Slab SC" 1))
+    ("Roboto Mono"       . ("Roboto Mono" "Sarasa Mono Slab SC" 1))
+    ("Fira Code"         . ("Fira Code" "Sarasa Mono Slab SC" 1))
+    ("Monaco"            . ("Monaco" "LXGW WenKai Mono" 1))
+    ("Menlo"             . ("Menlo" "Sarasa Mono Slab SC" 1))
+    ("Spot Mono"         . ("Spot Mono" "Sarasa Mono SC" 1))
+    ("SF Mono"           . ("SF Mono" "LXGW WenKai Mono" 1))
+    ("Roboto"            . ("Roboto" "Sarasa Mono Slab SC" 1))
+    ("方正公文仿宋"      . (nil "FZDocFangSong" 1))
+    ("方正公文黑体"      . (nil "FZDocHei" 1))
+    ("方正公文楷体"      . (nil "FZDocKai" 1))
+    ("方正公文小标宋"    . (nil "FZDocXiaoBiaoSong" 1))
+    ("方正仿宋"          . (nil "FZFangSong Z02" 1))
+    ("方正屏显雅宋"      . (nil "FZPingXianYaSong R GBK" 1))
+    ("方正书宋"          . (nil "FZShuSong Z01" 1))
+    ("方正黑体"          . (nil "FZHei B01" 1))
+    ("方正楷体"          . (nil "FZKai Z03" 1))
+    ("冬青黑体 简"       . (nil "Hiragino Sans GB" 1))
+    ("冬青黑体 繁"       . (nil "Hiragino Sans CNS" 1))
+    ("华文楷体 简"       . (nil "Kaiti SC" 1))
+    ("华文楷体 繁"       . (nil "Kaiti TC" 1))
+    ("方正兰亭黑 简"     . (nil "Lantinghei SC" 1))
+    ("方正兰亭黑 繁"     . (nil "Lantinghei TC" 1))
+    ("霞鹜文楷"          . (nil "LXGW WenKai" 1))
+    ("更纱黑体 Gothic"   . (nil "Sarasa Gothic SC" 1))
+    ("更纱黑体 UI"       . (nil "Sarasa UI SC" 1))
+    ("思源黑体 简"       . (nil "Source Han Sans SC" 1))
+    ("思源黑体 繁"       . (nil "Source Han Sans TC" 1))
+    ("思源宋体 简"       . (nil "Source Han Serif SC" 1))
+    ("思源宋体 繁"       . (nil "Source Han Serif TC" 1))
+    ("思源黑体 简 全"    . ("Source Han Sans SC" nil 1))
+    ("思源黑体 繁 全"    . ("Source Han Sans TC" nil 1))
+    ("思源宋体 简 全"    . ("Source Han Serif SC" nil 1))
+    ("思源宋体 繁 全"    . ("Source Han Serif TC" nil 1))
+    ("SF Mono Light 14"  . ("SF Mono" "LXGW WenKai Mono" 1
+                            :size 14 :weight light)))
   "An alist of all the fonts you can switch between by `my-load-font'.
-Key is a symbol as the name, value is a plist specifying the font spec.
-More info about spec in `font-spec'.")
+Each element is like
 
-(defun my-load-buffer-font (&optional font-name)
-  "Prompt for a FONT-NAME and set it for current buffer.
-Fonts are specified in `my-font-alist'."
-  (interactive (list
-                (completing-read "Choose a font for current buffer: "
-                                 (mapcar #'car my-font-alist))))
-  (let* ((font-name (or font-name my-font))
-         (font (apply #'font-spec
-                      (if font-name
-                          (alist-get (intern font-name) my-font-alist
-                                     nil nil #'equal)
-                        (cdar my-font-alist)))))
-    ;; use `face-remapping-alist' instead of `buffer-face-mode-face'
-    (set (make-local-variable 'face-remapping-alist)
-         (copy-tree `((default :font ,font
-                        :height ,(* 10 (font-get `,font ':size))))))))
+    (FONT-NAME . (ASCII-NAME CJK-NAME CJK-SCALE))
 
-(global-set-key (kbd "C-c l f") #'my-load-buffer-font)
+FONT-NAME is the display name, ASCII-NAME is the ASCII font
+family name, CJK-NAME is the CJK font family name, CJK-SCALE is
+the CJK font rescale ratio.")
 
-(defun my-load-font (&optional font-name)
-  "Prompt for a FONT-NAME and set it.
-Fonts are specified in `my-font-alist'.  If FONT-NAME non-nil,
-use it instead."
-  (interactive (list
-                (completing-read "Choose a font: "
-                                 (mapcar #'car my-font-alist))))
-  (let* ((font-name (or font-name my-font))
-         (font (apply #'font-spec
-                      (if font-name
-                          (alist-get (intern font-name) my-font-alist
-                                     nil nil #'equal)
-                        ;; If font-name is nil (loading from local file and don't
-                        ;; have it saved), use the first font spec.
-                        (cdar my-font-alist)))))
-    (set-frame-font font nil t)
-    ;; seems that there isn't a good way to get font-object directly
-    (add-to-list 'default-frame-alist
-                 `(font . ,(face-attribute 'default :font)))
-    (when (or font-name (not (custom-variable-p my-font)))
-      (customize-set-variable 'my-font font-name))))
+(defun my--create-fontset (ascii-spec cjk-spec)
+  "Create a fontset NAME with ASCII-SPEC and CJK-SPEC font."
+  (let* ((fontset-name
+          (concat "fontset-" (downcase (plist-get ascii-spec :family))))
+         ;; ASCII font.
+         (fontset
+          (create-fontset-from-fontset-spec
+           (font-xlfd-name
+            (apply #'font-spec :registry fontset-name ascii-spec)))))
+    ;; CJK font.
+    (dolist (charset '(kana han cjk-misc))
+      (set-fontset-font fontset charset (apply #'font-spec cjk-spec)))
+    fontset))
+
+(defun my-font-name-to-spec (font-name size &rest attrs)
+  "Translate FONT-NAME, SIZE and ATTRS to (ASCII-SPEC CJK-SPEC)."
+  (let* ((font-spec (if (null font-name)
+                        (cdar my-font-alist)
+                      (alist-get font-name my-font-alist
+                                 nil nil #'equal)))
+         (ascii-family (nth 0 font-spec))
+         (cjk-family (nth 1 font-spec))
+         (cjk-scale (nth 2 font-spec))
+         (rest-spec (append (nthcdr 3 font-spec) attrs))
+         ;; (rest-spec (setf (plist-get rest-spec :size) size))
+         (ascii-rest-spec (append `(:size ,size) rest-spec))
+         (cjk-rest-spec (append `(:size ,(* cjk-scale size))
+                                rest-spec))
+         (ascii-spec (and ascii-family
+                          `(:family ,ascii-family ,@ascii-rest-spec)))
+         (cjk-spec (and cjk-family
+                        `(:family ,cjk-family ,@cjk-rest-spec))))
+    (list ascii-spec cjk-spec)))
+
+(defun my-load-default-font (font-name size &rest attrs)
+  "Set font for default face to FONT-NAME with SIZE and ATTRS.
+See `my-load-font'."
+  ;; We use a separate function for default font because Emacs has a
+  ;; bug that prevents us from setting a fontset for the default face
+  ;; (although `set-frame-parameter' works). So we just set default
+  ;; face with ASCII font and use default fontset for Unicode font.
+  (interactive
+   (list (completing-read
+          "Font: " (mapcar #'car my-font-alist))
+         (string-to-number (completing-read
+                            "Size: " nil nil nil nil nil "14"))))
+  (let* ((specs (apply #'my-font-name-to-spec font-name size attrs))
+         (ascii (apply #'font-spec (car specs)))
+         (cjk (apply #'font-spec (cadr specs))))
+    (set-face-attribute 'default nil :font ascii)
+    (set-fontset-font t 'kana cjk)
+    (set-fontset-font t 'han cjk)
+    (set-fontset-font t 'cjk-misc cjk)
+    (set-fontset-font t 'symbol cjk nil 'append)))
+
+(global-set-key (kbd "C-c l f") #'my-load-default-font)
+
+(defun my-load-font (face font-name size &rest attrs)
+  "Set font for FACE to FONT-NAME.
+If FONT-NAME is nil, use the first font in `my-font-alist'.
+SIZE is the font size in pt. Add additional face attributes in
+ATTRS.
+
+Use `my-save-font-settings' to save font settings and use
+`my-load-saved-font' to load them next time."
+  (interactive
+   (list (intern (completing-read
+                  "Face: " (face-list)))
+         (completing-read
+          "Font: " (mapcar #'car my-font-alist))
+         (string-to-number (completing-read
+                            "Size: " nil nil nil nil nil "14"))))
+  (if (and (eq face 'default))
+      (apply #'my-load-default-font font-name size attrs)
+    (let* ((fontset
+            (apply #'my--create-fontset
+                   (apply #'my-font-name-to-spec font-name size attrs))))
+      (apply #'set-face-attribute face nil
+             :font fontset
+             :fontset fontset
+             attrs)))
+  ;; Save the settings.
+  (setf (alist-get face my-font-settings) `(,font-name ,size ,@attrs))
+  (custom-set-variables
+   `(my-font-settings
+     ',my-font-settings
+     nil nil "Automatically saved by `my-load-font'")))
 
 (global-set-key (kbd "C-c l F") #'my-load-font)
 
-(my-load-font)
+(defun my-save-font-settings ()
+  "Save font-settings set by `my-load-font'."
+  (interactive)
+  (custom-save-all))
+
+(defun my-load-saved-font ()
+  "Load font settings saved in `my-font-settings'."
+  (interactive)
+  (dolist (setting my-font-settings)
+    (apply #'my-load-font setting)))
+
+(define-minor-mode my-scale-cjk-mode
+  "Scale CJK font to align CJK font and ASCII font."
+  :lighter ""
+  :global t
+  :group 'convenience
+  (dolist (setting my-cjk-rescale-alist)
+    (setf (alist-get (car setting)
+                     face-font-rescale-alist nil nil #'equal)
+	  (if my-scale-cjk-mode (cdr setting) nil))))
+
+(defun my-enable-apple-emoji ()
+  "Enable Apple emoji display."
+  (set-fontset-font t 'emoji (font-spec :family "Apple Color Emoji")
+                    nil 'prepend))
+
+(my-enable-apple-emoji)
+
+(cond
+ ;; 4k
+ ((>= (display-pixel-width) 3840)
+  (my-load-font 'default nil 28))
+ ;; 2k
+ ((>= (display-pixel-width) 2560)
+  (my-load-font 'default nil 20))
+ ;; 1080
+ (t
+  (my-load-font 'default nil 14)))
 
 ;; https://www.reddit.com/r/emacs/comments/988paa/emacs_on_windows_seems_lagging/
 ;; speed up font rendering for special characters, especially on Windows
 (setq inhibit-compacting-font-caches t)
-
-;; pitch-related font
-(set-face-attribute 'fixed-pitch nil
-                    :font (font-spec :family "LXGW WenKai Mono"))
-(set-face-attribute 'variable-pitch nil
-                    :font (font-spec :family "Source Han Serif SC"))
-
-;; info-related font
-(set-face-attribute 'info-menu-header nil
-                    :font (font-spec :family "Roboto Mono"))
-(set-face-attribute 'info-title-1 nil
-                    :font (font-spec :family "Roboto Mono"))
-(set-face-attribute 'info-title-2 nil
-                    :font (font-spec :family "Roboto Mono"))
-(set-face-attribute 'info-title-3 nil
-                    :font (font-spec :family "Roboto Mono"))
-(set-face-attribute 'info-title-4 nil
-                    :font (font-spec :family "Roboto Mono"))
-(set-face-attribute 'Info-quoted nil
-                    :font (font-spec :family "Roboto Mono" :size 14))
 
 (provide 'init-gui)
 

@@ -76,7 +76,8 @@
     (diff-hl-margin-mode +1)
     ;; avoid restoring `diff-hl-margin-mode' when using `desktop.el'
     (with-eval-after-load 'desktop
-      (push (cons #'diff-hl-margin-mode nil) desktop-minor-mode-table)))
+      (add-to-list 'desktop-minor-mode-table
+                   '(diff-hl-margin-mode nil))))
 
   ;; integration with `magit'
   (with-eval-after-load 'magit
@@ -93,9 +94,6 @@
 
 (use-package git-timemachine
   :bind ("C-c v t" . git-timemachine))
-
-(use-package vc-msg
-  :bind ("C-c v s" . vc-msg-show))
 
 (provide 'init-vc)
 

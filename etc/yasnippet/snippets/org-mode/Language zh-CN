@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: Language zh-CN
-# key: <lanz
+# key: lanz
 # --
 #+LANGUAGE: ${1:zh-CN}

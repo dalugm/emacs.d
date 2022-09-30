@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: org-html-themes
-# key: <ohm
+# key: ohm
 # --
 #+SETUPFILE: `my-optional-d`org-html-themes/org/theme-${1:bigblow|readtheorg}.setup
 $0
