@@ -94,9 +94,9 @@
   :hook (completion-list-mode . consult-preview-at-point-mode)
 
   :config
-  ;; ---------------------------------------------------------
+  ;; ---------
   ;; customize
-  ;; ---------------------------------------------------------
+  ;; ---------
   (defun my--consult-zh-builder (input)
     "Add Zhongwen support for `consult' when searching INPUT."
     (require 'zh-lib)
@@ -113,11 +113,12 @@
                            (substring str 1 len))))))
     input)
 
-  (advice-add 'consult--find-builder :filter-args #'my--consult-zh-builder)
-  (advice-add 'consult--git-grep-builder :filter-args #'my--consult-zh-builder)
-  (advice-add 'consult--grep-builder :filter-args #'my--consult-zh-builder)
-  (advice-add 'consult--locate-builder :filter-args #'my--consult-zh-builder)
-  (advice-add 'consult--ripgrep-builder :filter-args #'my--consult-zh-builder)
+  (dolist (func '(consult--find-builder
+                  consult--git-grep-builder
+                  consult--grep-builder
+                  consult--locate-builder
+                  consult--ripgrep-builder))
+    (advice-add func :filter-args #'my--consult-zh-builder))
 
   (defun my-consult-find (&optional DIR)
     "Modify `consult-find' functions to search files in DIR."
@@ -134,12 +135,31 @@
     (interactive "DDirectory: ")
     (consult-ripgrep DIR))
 
+  (when my-win-p
+
+    ;; ;; if Windows does not support utf-8 globally in CN environment
+    ;; (add-to-list 'process-coding-system-alist
+    ;;              '("[rR][gG]" . (utf-8 . gbk-dos)))
+
+    ;; https://github.com/minad/consult/issues/475
+    (defun my--consult-find-win (&optional dir initial)
+      "Use `consult-find' in Windows with msys2."
+      (let* ((w32-quote-process-args ?\\)  ; or (w32-quote-process-args ?*)
+             (consult-find-args "C:\\msys64\\usr\\bin\\find.exe . -not ( -wholename */.* -prune )")
+             (prompt-dir (consult--directory-prompt "Find" dir))
+             (default-directory (cdr prompt-dir)))
+        (find-file (consult--find
+                    (car prompt-dir)
+                    #'consult--find-builder
+                    initial))))
+    (advice-add 'consult-find :override #'my--consult-find-win))
+
   ;; The narrowing key.
   ;; Both `<' and `C-+' work reasonably well.
   (setq consult-narrow-key "<"))
 
 (use-package embark-consult
-  :demand t
+  :after (embark consult)
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (provide 'init-vertico)

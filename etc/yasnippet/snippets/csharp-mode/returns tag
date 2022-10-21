@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: <returns>
+# name: returns tag
 # key: <re
 # --
 /// <returns>$1</returns>

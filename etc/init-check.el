@@ -8,12 +8,15 @@
 ;;; Code:
 
 (use-package flymake
+  :hook ((c-mode c++-mode) . flymake-mode)
   :bind (("C-c ! n" . flymake-goto-next-error)
          ("C-c ! p" . flymake-goto-prev-error)
-         ("C-c ! d" . flymake-show-diagnostics-buffer)
+         ("C-c ! d" . flymake-show-buffer-diagnostics)
+         ("C-c ! D" . flymake-show-project-diagnostics)
          ("C-c ! s" . flymake-start)))
 
 (use-package flyspell
+  :when (executable-find "aspell")
   :custom
   (ispell-program-name "aspell")
   (ispell-extra-args

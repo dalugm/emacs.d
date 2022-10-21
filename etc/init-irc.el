@@ -156,9 +156,9 @@ When a URL is found, it prompts you to open it."
       (alert (concat nick ": " msg) :title title)))
   (add-hook 'ercn-notify-hook #'my-erc-notify)
 
-  ;; ------------------------------------------------------------
+  ;; ----
   ;; misc
-  ;; ------------------------------------------------------------
+  ;; ----
 
   ;; utf-8 always and forever
   (setq erc-server-coding-system '(utf-8 . utf-8)))

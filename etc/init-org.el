@@ -186,19 +186,23 @@
   ;; -----
   ;; fontify source code in code blocks
   ;; default value is nil after Emacs v24.1
+  ;; then becomes t after Emacs v26.1
+  ;; to keep this always t, we set this explicitly
   (setq org-src-fontify-natively t)
 
-  ;; add SRC_BLOCK supported src
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (calc . t)
-     (shell . t)
-     (C . t)
-     (python . t)
-     (ruby . t)
-     (latex . t)
-     (org . t)))
+  (defun my-org-babel-load-languages ()
+    "Add src_block supproted src."
+    (interactive)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (calc . t)
+       (shell . t)
+       (C . t)
+       (python . t)
+       (ruby . t)
+       (latex . t)
+       (org . t))))
 
   ;; ----
   ;; TODO
@@ -290,7 +294,7 @@
         '((dvisvgm
            :programs ("xelatex" "dvisvgm")
            :description "xdv > svg"
-           :message "you need to install the programs: latex and dvisvgm."
+           :message "you need to install the programs: xelatex and dvisvgm."
            :image-input-type "xdv"
            :image-output-type "svg"
            :image-size-adjust (1.7 . 1.5)
@@ -299,6 +303,17 @@
            :image-converter
            ;; set `dvisvgm' with --exact option
            ("dvisvgm %f -e -n -b min -c %S -o %O"))
+          (dvipng
+           :programs ("latex" "dvipng")
+           :description "dvi > png"
+           :message "you need to install the programs: latex and dvipng."
+           :image-input-type "dvi"
+           :image-output-type "png"
+           :image-size-adjust (1.0 . 1.0)
+           :latex-compiler
+           ("latex -interaction nonstopmode -output-directory %o %f")
+           :image-converter
+           ("dvipng -D %D -T tight -bg Transparent -o %O %f"))
           (imagemagick
            :programs ("latex" "convert")
            :description "pdf > png"
@@ -313,6 +328,112 @@
 
   ;; ;; enlarge the preview magnification
   ;; (plist-put org-format-latex-options :scale 1.5)
+
+  ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview-fragments-in-org-mode/
+  ;; use center or right, anything else means left-justified as the default
+  (plist-put org-format-latex-options :justify 'right)
+
+  (defun my--org-justify-fragment-overlay-h (beg end image imagetype)
+    "Adjust the justification of a LaTeX fragment horizontally.
+The justification is set by :justify in `org-format-latex-options'.
+Only equations at the beginning of a line are justified."
+    (let* ((position (plist-get org-format-latex-options :justify))
+           (img (create-image image 'svg t))
+           (ov (car (overlays-at (/ (+ beg end) 2) t)))
+           (width (car (image-display-size (overlay-get ov 'display))))
+           offset)
+      (cond
+       ((and (eq 'center position)
+             (= beg (line-beginning-position)))
+        (setq offset (floor (- (/ fill-column 2)
+                               (/ width 2))))
+        (when (< offset 0)
+          (setq offset 0))
+        (overlay-put ov 'before-string (make-string offset ? )))
+       ((and (eq 'right position)
+             (= beg (line-beginning-position)))
+        (setq offset (floor (- fill-column
+                               width)))
+        (when (< offset 0)
+          (setq offset 0))
+        (overlay-put ov 'before-string (make-string offset ? ))))))
+
+  (advice-add 'org--make-preview-overlay :after #'my--org-justify-fragment-overlay-h)
+
+  (defun my-org-toggle-justify-fragment-overlay-h ()
+    "Toggle justify LaTeX fragment horizontally."
+    (interactive)
+    (if (advice-member-p #'my--org-justify-fragment-overlay-h 'org--make-preview-overlay)
+        (advice-remove 'org--make-preview-overlay #'my--org-justify-fragment-overlay-h)
+      (advice-add 'org--make-preview-overlay :after #'my--org-justify-fragment-overlay-h)))
+
+  (defun my--org-justify-fragment-overlay-v (beg end &rest _args)
+    "Adjust the justification of a LaTeX fragment vertically."
+    (let* ((ov (car (overlays-at (/ (+ beg end) 2) t)))
+           (img (cdr (overlay-get ov 'display)))
+           (new-img (plist-put img :ascent 95)))
+      (overlay-put ov 'display (cons 'image new-img))))
+
+  (defun my-org-toggle-justify-fragment-overlay-v ()
+    "Toggle justify LaTeX fragment vertically."
+    (interactive)
+    (if (advice-member-p #'my--org-justify-fragment-overlay-v 'org--make-preview-overlay)
+        (advice-remove 'org--make-preview-overlay #'my--org-justify-fragment-overlay-v)
+      (advice-add 'org--make-preview-overlay :after #'my--org-justify-fragment-overlay-v)))
+
+  ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/
+  (defun my--org-renumber-fragment (orig-func &rest args)
+    "Number equations in LaTeX fragment."
+    (let ((results '())
+          (counter -1)
+          (numberp))
+      (setq results (cl-loop for (begin .  env) in
+                             (org-element-map
+                                 (org-element-parse-buffer)
+                                 'latex-environment
+                               (lambda (env)
+                                 (cons
+                                  (org-element-property :begin env)
+                                  (org-element-property :value env))))
+                             collect
+                             (cond
+                              ((and (string-match "\\\\begin{equation}" env)
+                                    (not (string-match "\\\\tag{" env)))
+                               (cl-incf counter)
+                               (cons begin counter))
+                              ((and (string-match "\\\\begin{align}" env)
+                                    (string-match "\\\\notag" env))
+                               (cl-incf counter)
+                               (cons begin counter))
+                              ((string-match "\\\\begin{align}" env)
+                               (prog2
+                                   (cl-incf counter)
+                                   (cons begin counter)
+                                 (with-temp-buffer
+                                   (insert env)
+                                   (goto-char (point-min))
+                                   ;; \\ is used for a new line
+                                   ;; Each one leads to a number
+                                   (cl-incf counter (count-matches "\\\\$"))
+                                   ;; unless there are nonumbers
+                                   (goto-char (point-min))
+                                   (cl-decf counter
+                                            (count-matches "\\nonumber")))))
+                              (t
+                               (cons begin nil)))))
+      (when (setq numberp (cdr (assoc (point) results)))
+        (setf (car args)
+              (concat
+               (format "\\setcounter{equation}{%s}\n" numberp)
+               (car args)))))
+    (apply orig-func args))
+
+  (defun my-org-toggle-renumber-fragment ()
+    "Toggle renumber LaTeX fragment behavior."
+    (interactive)
+    (if (advice-member-p #'my--org-renumber-fragment 'org-create-formula-image)
+        (advice-remove 'org-create-formula-image #'my--org-renumber-fragment)
+      (advice-add 'org-create-formula-image :around #'my--org-renumber-fragment)))
 
   ;; ----
   ;; misc
@@ -413,12 +534,13 @@
 
   (advice-add 'org-do-emphasis-faces :override #'my--org-do-emphasis-faces)
 
-  ;; {} must be added to the subscript, otherwise Emacs will think it is two
-  ;; consecutive subscripts when using underscores in Chinese
-  (setq org-use-sub-superscripts "{}")
+  ;; {} must exist to denote this is a subscript
+  (setq org-use-sub-superscripts (quote {}))
+  (setq org-export-with-sub-superscripts (quote {}))
 
-  (setq org-tag-alist '(("@work" . ?w) ("@home" . ?h) ("@school" . ?s)
-                        ("@code" . ?c) ("TOC" . ?T) ("noexport" . ?n)))
+  (add-to-list 'org-tag-alist
+               '(("@work" . ?w) ("@home" . ?h) ("@school" . ?s)
+                 ("@code" . ?c) ("TOC" . ?T) ("noexport" . ?n)))
 
   ;; ------
   ;; export

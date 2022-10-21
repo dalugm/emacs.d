@@ -7,7 +7,6 @@
 
 ;;; Code:
 
-;; markdown
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
   :bind (:map markdown-mode-command-map
@@ -80,11 +79,6 @@
   (when (executable-find "multimarkdown")
     (setq markdown-command "multimarkdown")))
 
-(use-package markdown-toc
-  :after markdown-mode
-  :bind (:map markdown-mode-command-map
-              ("g" . markdown-toc-generate-or-refresh-toc)))
-
 (use-package yaml-mode
   :mode "\\.\\(yml\\|yaml\\)\\'")
 
@@ -92,14 +86,25 @@
   :after ox)
 
 (use-package toc-org
-  :hook (org-mode . toc-org-mode))
+  :hook ((org-mode markdown-mode) . toc-org-mode)
+  :config
+  (with-eval-after-load 'markdown-mode
+    (define-key markdown-mode-map
+                (kbd "C-c C-o")
+                #'toc-org-markdown-follow-thing-at-point)))
 
-;; valign: Pixel alignment for org/markdown tables
+;; Pixel-perfect visual alignment for Org and Markdown tables.
 (use-package valign
   :when (display-graphic-p)
-  :hook ((markdown-mode org-mode) . valign-mode)
+  :hook ((org-mode markdown-mode) . valign-mode)
   :config
-  ;; compatible with outline mode
+  (defun my-valign-fancy-bar ()
+    "Toggle valign fancy bar."
+    (interactive)
+    (setq valign-fancy-bar
+          (not valign-fancy-bar)))
+
+  ;; compatible with `outline-mode'
   (define-advice outline-show-entry (:override nil)
     "Show the body directly following this heading.
 Show the heading too, if it is currently invisible."

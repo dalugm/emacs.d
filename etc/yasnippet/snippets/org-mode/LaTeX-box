@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: LaTeX-box
+# key: ltx-b
+# --
+#+latex: \resizebox{\textwidth}{!}{
+
+${1:box}
+
+#+latex: }

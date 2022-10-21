@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: LaTeX two side
-# key: lts
-# --
-#+LATEX_CLASS_OPTIONS: [a4paper,twoside,twocolumn]

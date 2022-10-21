@@ -126,7 +126,10 @@
 ;; but maintain correct appearance
 (setq-default tab-width 8)
 ;; smart tab behavior - indent or complete
+;; `completion-at-point' is often bound to M-TAB.
 (setq tab-always-indent 'complete)
+;; TAB cycle if there are only few candidates
+(setq completion-cycle-threshold 3)
 
 ;; reply y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -298,6 +301,7 @@
 (global-set-key (kbd "C-c t r") #'cua-rectangle-mark-mode)
 (global-set-key (kbd "C-c t s") #'subword-mode)
 (global-set-key (kbd "C-c t v") #'view-mode)
+(global-set-key (kbd "C-c t w") #'whitespace-mode)
 
 ;; abbrevs
 (setq save-abbrevs 'silently)
@@ -353,6 +357,9 @@
 
 (global-set-key (kbd "M-z") #'zap-up-to-char)
 (global-set-key (kbd "M-Z") #'zap-to-char)
+
+(global-set-key (kbd "M-s M-j") #'scroll-other-window)
+(global-set-key (kbd "M-s M-k") #'scroll-other-window-down)
 
 (provide 'init-utils)
 

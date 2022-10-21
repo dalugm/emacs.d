@@ -75,10 +75,6 @@
     ;; Use GNU ls as `gls' from `coreutils' if available.
     (setq insert-directory-program "gls")))
 
-(use-package editorconfig
-  :hook (after-init . editorconfig-mode)
-  :bind ("C-c e a" . editorconfig-apply))
-
 (use-package hl-todo
   :hook (after-init . global-hl-todo-mode)
   :bind (:map hl-todo-mode-map
@@ -119,30 +115,21 @@
 (use-package separedit
   :bind ("C-c e e" . separedit)
   :init
-  (defun separedit/eval-last-sexp-in-comment ()
+  (defun my-eval-last-sexp-in-comment ()
+    "Eval last sexp in comment by using `separedit'."
     (interactive)
+    (require 'separedit)
     (let ((separedit-default-mode 'emacs-lisp-mode))
       (with-current-buffer (separedit)
         (prog1 (call-interactively #'eval-last-sexp)
           (execute-kbd-macro (kbd "C-c C-k"))))))
-
   (dolist (map (list emacs-lisp-mode-map
                      lisp-interaction-mode-map))
-    (define-key map (kbd "C-c C-r") #'separedit/eval-last-sexp-in-comment)))
+    (define-key map (kbd "C-c C-r") #'my-eval-last-sexp-in-comment)))
 
 (use-package search-dired
   :bind (("C-c s d" . search-dired-dwim)
          ("C-c s D" . search-dired)))
-
-(use-package marginalia
-  :after (:any ivy vertico)
-  :config (marginalia-mode +1))
-
-;; Add both site-lisp and its immediate subdirs to `load-path'
-(let ((site-lisp-dir (expand-file-name "lib/site-lisp/"
-                                       user-emacs-directory)))
-  (push site-lisp-dir load-path)
-  (my--add-subdirs-to-load-path site-lisp-dir))
 
 (provide 'init-misc)
 

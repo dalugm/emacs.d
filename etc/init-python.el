@@ -7,15 +7,9 @@
 
 ;;; Code:
 
-(defun my--python-mode-hook-setup ()
-  "Default configuration for python."
-  ;; Disable readline based native completion
-  (setq python-shell-completion-native-enable nil)
-  (setq python-indent-offset 4)
-  (with-eval-after-load 'exec-path-from-shell
-    (exec-path-from-shell-copy-env "PYTHONPATH")))
-
-(add-hook 'python-mode-hook #'my--python-mode-hook-setup)
+(with-eval-after-load 'python
+  (setq python-indent-guess-indent-offset nil)
+  (setq python-indent-offset 4))
 
 ;; To switch kernels first run
 ;;

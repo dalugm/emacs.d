@@ -40,9 +40,9 @@
   (when my-win-p
     (setq ivy-dynamic-exhibit-delay-ms 250))
 
-  ;; ---------------------------------------------------------
+  ;; ---------
   ;; customize
-  ;; ---------------------------------------------------------
+  ;; ---------
 
   (defun my-counsel-rg (&optional DIR)
     "Modify `counsel-rg' functions to search files in DIR."
@@ -108,9 +108,9 @@ Search Chinese starting with ‘:’ by building regex using `zh-lib'."
   ;;     (ivy-switch-buffer . ivy-sort-function-buffer)
   ;;     (counsel-find-file . ivy--shorter-matches-first)))
 
-  ;; -------------------------------------------------------
+  ;; -----------
   ;; keybindings
-  ;; -------------------------------------------------------
+  ;; -----------
 
   ;; https://oremacs.com/2015/07/23/ivy-multiaction/
   ;; press `M-o' to execute `ivy-dispatching-done'

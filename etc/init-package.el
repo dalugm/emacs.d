@@ -7,25 +7,24 @@
 
 ;;; Code:
 
-(add-to-list 'load-path (expand-file-name "compat" my-library-d))
-(add-to-list 'load-path (expand-file-name "packed" my-library-d))
-(add-to-list 'load-path (expand-file-name "auto-compile" my-library-d))
-
-(require 'auto-compile)
-(auto-compile-on-load-mode +1)
-(auto-compile-on-save-mode +1)
-
-(progn                                  ; `borg'
+(eval-and-compile                       ; `borg'
   (add-to-list 'load-path (expand-file-name "borg" my-library-d))
   (require 'borg)
   (setq borg-drones-directory my-library-d
-        borg-user-emacs-directory my-emacs-d
-        borg-gitmodules-file (expand-file-name ".gitmodules" my-emacs-d))
+        borg-user-emacs-directory user-emacs-directory
+        borg-gitmodules-file (expand-file-name ".gitmodules"
+                                               user-emacs-directory))
   ;; use HTTPS instead of SSH
   (setq borg-rewrite-urls-alist
         '(("git@github.com:" . "https://github.com/")
           ("git@gitlab.com:" . "https://gitlab.com/")))
   (borg-initialize))
+
+;; Add both site-lisp and its subdirs to `load-path'
+(let ((site-lisp-dir (expand-file-name "lib/site-lisp/"
+                                       user-emacs-directory)))
+  (push site-lisp-dir load-path)
+  (my--add-subdirs-to-load-path site-lisp-dir))
 
 (eval-and-compile                       ; `use-package'
   (require 'use-package)
@@ -37,7 +36,10 @@
   (auto-compile-mode-line-counter            t)
   (auto-compile-source-recreate-deletes-dest t)
   (auto-compile-toggle-deletes-nonlib-dest   t)
-  (auto-compile-update-autoloads             t))
+  (auto-compile-update-autoloads             t)
+  :config
+  (auto-compile-on-load-mode +1)
+  (auto-compile-on-save-mode +1))
 
 (use-package epkg
   :defer t
@@ -47,7 +49,11 @@
             'sqlite-builtin
           'sqlite-module)))
 
-(use-package wgrep)
+(use-package epkg-marginalia
+  :after epkg
+  :config
+  (cl-pushnew 'epkg-marginalia-annotate-package
+              (alist-get 'package marginalia-annotator-registry)))
 
 (use-package no-littering
   :demand t
@@ -57,35 +63,6 @@
   :config
   (add-to-list 'recentf-exclude no-littering-var-directory)
   (add-to-list 'recentf-exclude no-littering-etc-directory))
-
-;;; Useful packages
-;; which should be loaded before any other packages
-
-(use-package embark
-  :bind
-  (("M-A" . embark-act)
-   ("M-E" . embark-export)
-   ("M-D" . embark-dwim)
-   ([remap describe-bindings] . embark-bindings)
-   (:map minibuffer-local-map
-         ("M-a" . embark-act)
-         ("M-e" . embark-export)
-         ("M-d" . embark-dwim)
-         ("C-c C-a" . embark-act)
-         ("C-c C-o" . embark-export)
-         ("C-c C-c" . embark-dwim)))
-  :custom
-  ;; Optionally replace the key help with a completing-read interface
-  (prefix-help-command #'embark-prefix-help-command)
-  :config
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
-
-(use-package zh-lib
-  :custom (zh-lib-scheme 'simplified-traditional-quanpin-all))
 
 (provide 'init-package)
 

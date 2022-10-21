@@ -57,10 +57,10 @@ version control automatically."
     (when filename
       (if (vc-backend filename)
           (vc-delete-file filename)
-        (when (y-or-n-p (format "Are you sure you want to delete %s? "
+        (when (y-or-n-p (format "Are you sure you want to delete ‘%s’? "
                                 filename))
           (delete-file filename delete-by-moving-to-trash)
-          (message "Deleted file %s" filename)
+          (message "Deleted file ‘%s’." filename)
           (kill-buffer))))))
 
 (global-set-key (kbd "C-c v d") #'my-vc-delete-file-and-buffer)
@@ -68,14 +68,6 @@ version control automatically."
 ;;;;;;;;;;;;
 ;; Window ;;
 ;;;;;;;;;;;;
-
-(defun my-scroll-other-window-up ()
-  "Scroll other window up forward."
-  (interactive)
-  (scroll-other-window '-))
-
-(global-set-key (kbd "M-s M-j") #'scroll-other-window)
-(global-set-key (kbd "M-s M-k") #'my-scroll-other-window-up)
 
 (defun my-toggle-two-split-window ()
   "Toggle two window layout vertically or horizontally."
@@ -143,105 +135,36 @@ version control automatically."
 ;; FILE ;;
 ;;;;;;;;;;
 
-(defun my-revert-this-buffer ()
-  "Revert the current buffer."
-  (interactive)
-  (unless (minibuffer-window-active-p (selected-window))
-    (revert-buffer t t)
-    (message "Buffer reverted.")))
-
-(global-set-key [remap revert-buffer] #'my-revert-this-buffer)
-
-(defun my--update-files (&rest files)
-  "Ensure FILES are updated in `recentf', `magit' and `save-place'."
-  (let (toplevels)
-    (dolist (file files)
-      (when (featurep 'vc)
-        (vc-file-clearprops file)
-        (when-let (buffer (get-file-buffer file))
-          (with-current-buffer buffer
-            (vc-refresh-state))))
-      (when (featurep 'magit)
-        (when-let (default-directory (magit-toplevel
-                                      (file-name-directory file)))
-          (cl-pushnew default-directory toplevels)))
-      (unless (file-readable-p file)
-        (when (bound-and-true-p recentf-mode)
-          (recentf-remove-if-non-kept file))))
-    (dolist (default-directory toplevels)
-      (magit-refresh))
-    (when (bound-and-true-p save-place-mode)
-      (save-place-forget-unreadable-files))))
-
-(defun my-copy-this-file (new-path &optional force-p)
-  "Copy current buffer's file to NEW-PATH.
-If FORCE-P, overwrite the target file if it exists, without confirmation."
-  (interactive
-   (list (read-file-name "Copy file to: ")
-         current-prefix-arg))
-  (unless (and buffer-file-name (file-exists-p buffer-file-name))
-    (user-error "Buffer is not visiting any file"))
-  (let ((old-path (buffer-file-name (buffer-base-buffer)))
-        (new-path (expand-file-name new-path)))
-    (make-directory (file-name-directory new-path) 't)
-    (copy-file old-path new-path (or force-p 1))
-    (my--update-files old-path new-path)
-    (message "File copied to %S" (abbreviate-file-name new-path))))
-
-(global-set-key (kbd "C-c f c") #'my-copy-this-file)
-
-(defun my-move-this-file (new-path &optional force-p)
-  "Move current buffer's file to NEW-PATH.
-If FORCE-P, overwrite the target file if it exists, without confirmation."
-  (interactive
-   (list (read-file-name "Move file to: ")
-         current-prefix-arg))
-  (unless (and buffer-file-name (file-exists-p buffer-file-name))
-    (user-error "Buffer is not visiting any file"))
-  (let ((old-path (buffer-file-name (buffer-base-buffer)))
-        (new-path (expand-file-name new-path)))
-    (make-directory (file-name-directory new-path) 't)
-    (rename-file old-path new-path (or force-p 1))
-    (set-visited-file-name new-path t t)
-    (my--update-files old-path new-path)
-    (message "File moved to %S" (abbreviate-file-name new-path))))
-
-(global-set-key (kbd "C-c f m") #'my-move-this-file)
-
-(defun my-rename-this-file (new-name)
-  "Rename both current buffer and file to NEW-NAME."
-  (interactive "sNew name: ")
+(defun my-rename-this-file (&optional prefix)
+  "Rename both current buffer and file."
+  (interactive "P")
   (let ((name (buffer-name))
         (filename (buffer-file-name)))
     (unless filename
-      (error "Buffer '%s' is not visiting a file!" name))
-    (progn
-      (when (file-exists-p filename)
-        (rename-file filename new-name 1))
-      (set-visited-file-name new-name)
-      (rename-buffer new-name)))
-  (save-buffer))
+      (error "Buffer ‘%s’ is not visiting a file!" name))
+    (let ((new-name (read-string "New name: " (when prefix name))))
+      (progn
+        (when (file-exists-p filename)
+          (rename-file filename new-name +1))
+        (set-visited-file-name new-name)
+        (rename-buffer new-name)))
+    (save-buffer)))
 
 (global-set-key (kbd "C-c f r") #'my-rename-this-file)
 
 (defun my-copy-file-name ()
-  "Copy current buffer file name to clipboard."
+  "Copy file name to clipboard."
   (interactive)
-  (if-let ((filename (if (equal major-mode 'dired-mode)
-                         default-directory
-                       (buffer-file-name))))
-      (cond
-       ((equal current-prefix-arg nil)   ; no prefix
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (if filename
         (progn
           (kill-new (file-name-nondirectory filename))
-          (message "Copied [%s]" (file-name-nondirectory filename))))
-       (t                                ; others
-        (progn
-          (kill-new filename)
-          (message "Copied [%s]" filename))))
-    (message "WARNING: Current buffer is not attached to a file!")))
+          (message "Copied ‘%s’." (file-name-nondirectory filename)))
+      (warn "Current buffer is not attached to a file!"))))
 
-(global-set-key (kbd "C-c f y") #'my-copy-file-name)
+(global-set-key (kbd "C-c f c") #'my-copy-file-name)
 
 (defun my-browse-this-file ()
   "Open current file as a URL using `browse-url'."
@@ -335,50 +258,6 @@ With a prefix ARG always prompt for command to use."
 
 (global-set-key (kbd "C-c f S") #'my-sudo-find-file)
 
-(defun my-save-file-as-utf8 (coding-system)
-  "Revert a buffer with CODING-SYSTEM and save as UTF-8."
-  (interactive "zCoding system for visited file (default nil):")
-  (revert-buffer-with-coding-system coding-system)
-  (set-buffer-file-coding-system 'utf-8)
-  (save-buffer))
-
-(global-set-key (kbd "C-c f u") #'my-save-file-as-utf8)
-
-(defun my-retab (arg &optional beg end)
-  "Convert tabs-to-spaces or spaces-to-tabs within BEG and END.
-Default to buffer start and end, to make indentation consistent.
-Which it does depends on the value of `indent-tab-mode'.
-
-If ARG (universal argument) is non-nil, retab the current buffer
-using the opposite indentation style."
-  (interactive "P\nr")
-  (unless (and beg end)
-    (setq beg (point-min)
-          end (point-max)))
-  (let ((indent-tabs-mode (if arg
-                              (not indent-tabs-mode)
-                            indent-tabs-mode)))
-    (if indent-tabs-mode
-        (tabify beg end)
-      (untabify beg end))))
-
-(defun my-dos2unix ()
-  "Convert the current buffer to UNIX file format."
-  (interactive)
-  (set-buffer-file-coding-system 'undecided-unix nil))
-
-(defun my-unix2dos ()
-  "Convert the current buffer to DOS file format."
-  (interactive)
-  (set-buffer-file-coding-system 'undecided-dos nil))
-
-(defun my-toggle-indent-style ()
-  "Switch between TAB/SPACE indentation style in current buffer."
-  (interactive)
-  (setq indent-tabs-mode (not indent-tabs-mode))
-  (message "Indent style changed to %s."
-           (if indent-tabs-mode "tabs" "spaces")))
-
 ;;;;;;;;;;;;;;
 ;; JUST4FUN ;;
 ;;;;;;;;;;;;;;
@@ -419,16 +298,18 @@ using the opposite indentation style."
 
 (defvar my-search-engine-alist
   '(
-    (baidu          . "https://www.baidu.com/s?wd=")
-    (bing           . "https://www.bing.com/search?q=")
-    (duckduckgo     . "https://www.duckduckgo.com/?q=")
-    (gitee          . "https://search.gitee.com/?q=")
-    (github         . "https://www.github.com/search?q=")
-    (google         . "https://www.google.com/search?q=")
-    (stackoverflow  . "https://stackoverflow.com/search?q=")
-    (vocabulary     . "https://www.vocabulary.com/dictionary/")
-    (wikipedia      . "https://www.wikipedia.org/wiki/Special:Search?go=Go&search=")
-    (youtube        . "https://www.youtube.com/results?search_query=")
+    (baidu         . "https://www.baidu.com/s?wd=")
+    (bilibili      . "https://search.bilibili.com/all?keyword=")
+    (bing          . "https://www.bing.com/search?q=")
+    (duckduckgo    . "https://www.duckduckgo.com/?q=")
+    (github        . "https://www.github.com/search?q=")
+    (google        . "https://www.google.com/search?q=")
+    (longman       . "https://www.ldoceonline.com/dictionary/")
+    (stackoverflow . "https://stackoverflow.com/search?q=")
+    (vocabulary    . "https://www.vocabulary.com/dictionary/")
+    (wikipedia     . "https://www.wikipedia.org/wiki/Special:Search?go=Go&search=")
+    (youtube       . "https://www.youtube.com/results?search_query=")
+    (zhihu         . "https://www.zhihu.com/search?type=content&q=")
     )
   "An alist of all the engines you can search by.
 Key is a symbol as the name, value is a plist specifying the search url.")
@@ -458,15 +339,6 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 ;;;;;;;;;;;;;;;
 ;; DAILY USE ;;
 ;;;;;;;;;;;;;;;
-
-(defun my-run-cmd-and-replace-region (cmd)
-  "Run CMD in shell on selected region or whole buffer.
-And replace it with cli output."
-  (let ((orig-point (point))
-        (start (if (region-active-p) (region-beginning) (point-min)))
-        (end (if (region-active-p) (region-end) (point-max))))
-    (shell-command-on-region start end cmd nil t)
-    (goto-char orig-point)))
 
 ;; https://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
 (defun my-toggle-selective-display (column)
@@ -532,7 +404,7 @@ And replace it with cli output."
         regexp-history)
   (call-interactively #'occur))
 
-(global-set-key (kbd "M-s o") #'my-occur-dwim)
+(global-set-key (kbd "C-c m o") #'my-occur-dwim)
 
 (defun my-hide-dos-eol ()
   "Do not show  in files containing mixed UNIX and DOS line endings."
@@ -546,17 +418,6 @@ And replace it with cli output."
   (interactive)
   (goto-char (point-min))
   (while (search-forward "\r" nil t) (replace-match "")))
-
-(defun my-switch-to-shell ()
-  "Switch to built-in or 3rd party shell."
-  (interactive)
-  (cond
-   ((display-graphic-p)
-    (switch-to-builtin-shell))
-   (t
-    (suspend-frame))))
-
-(global-set-key (kbd "C-c m z") #'my-switch-to-shell)
 
 (defun my-load-theme (x)
   "Disable current theme and load theme X."
@@ -586,7 +447,9 @@ Do NOT mess with special buffers."
   (interactive)
   (when (y-or-n-p "Are you sure you want to kill all buffers but the current with special ones? ")
     (seq-each #'kill-buffer
-              (delete (current-buffer) (seq-filter #'buffer-file-name (buffer-list))))))
+              (delete
+               (current-buffer)
+               (seq-filter #'buffer-file-name (buffer-list))))))
 
 (global-set-key (kbd "C-c m k") #'my-kill-other-buffers-without-special-ones)
 
@@ -606,46 +469,56 @@ Do NOT mess with special buffers."
     (shell-command (format "strfile %s %s" (buffer-file-name) dat-file))
     (message "Strfile finish: %s." dat-file)))
 
-(defun my-insert-date (prefix)
-  "Insert the ISO 8601 date format (like \"%+4Y-%m-%d\").
-With one PREFIX, use ISO format.
-With two PREFIX, use standard time format.
-With three PREFIX, insert locale's timestamp."
+(defun my-insert-date (&optional arg)
+  "Insert current date at point.
+
+Without ARG, use full ISO 8601 format.
+With a `\\[universal-argument]' prefix argument ARG, use unix timestamp.
+With a `\\[universal-argument] \\[universal-argument]' prefix \
+argument ARG, use common timestamp.
+With a `\\[universal-argument] \\[universal-argument] \
+\\[universal-argument]' prefix argument ARG, use locale's timestamp."
   (interactive "P")
   (let ((format (cond
-                 ((not prefix) "%FT%T%z")
-                 ((equal prefix '(4)) "%s")
-                 ((equal prefix '(16)) "%c"))))
+                 ((not arg) "%FT%T%z")
+                 ((equal arg '(4)) "%s")
+                 ((equal arg '(16)) "%a %b %e %T %Y %z")
+                 ((equal arg '(64)) "%c"))))
     (insert (format-time-string format))))
 
 (global-set-key (kbd "C-c 1") #'my-insert-date)
 
-(defun my-insert-user-information (prefix)
-  "Insert user information.
-With one PREFIX, insert variable `user-full-name' only.
-With two PREFIX, insert variable `user-mail-address' only."
+(defun my-insert-user-information (arg)
+  "Insert user information at point.
+
+Without ARG, insert user's name and email.
+With a `\\[universal-argument]' prefix argument ARG, insert email only.
+With a `\\[universal-argument] \\[universal-argument]' prefix \
+argument ARG, insert name only."
   (interactive "P")
   (let ((format (cond
-                 ((not prefix) (concat user-full-name " <"
-                                       user-mail-address ">"))
-                 ((equal prefix '(4)) user-mail-address)
-                 ((equal prefix '(16)) user-full-name))))
+                 ((not arg) (concat user-full-name " <"
+                                    user-mail-address ">"))
+                 ((equal arg '(4)) user-mail-address)
+                 ((equal arg '(16)) user-full-name))))
     (insert format)))
-
-(global-set-key (kbd "C-c 2") #'my-insert-user-information)
 
 (defun my-divide-file-chapter ()
   "Divide FILE according to specified word."
   (interactive)
+  (goto-char (point-max))
+  ;; make sure final newline exist
+  (unless (bolp)
+    (newline))
   (goto-char (point-min))
   (while (< (point) (point-max))
     (beginning-of-line)
-    (if (search-forward-regexp "^第.\\{1,6\\}[回章话]" (line-end-position) t)
+    (if (re-search-forward "^第.\\{1,6\\}[回章话]" (line-end-position) t)
         (progn
           (end-of-line)
           (newline))
-      (while (not (or (search-forward-regexp "^第.\\{1,6\\}[回章话]"
-                                             (line-end-position) t)
+      (while (not (or (re-search-forward "^第.\\{1,6\\}[回章话]"
+                                         (line-end-position) t)
                       (= (point) (point-max))))
         (forward-line))
       (forward-line -1)
@@ -655,39 +528,50 @@ With two PREFIX, insert variable `user-mail-address' only."
       (end-of-line)))
   (when (= (point) (point-max))
     (forward-line -1)
+    ;; remove all blank lines at eof
     (delete-blank-lines)
     (delete-blank-lines)
     (forward-line)))
 
+(defun my-delete-blank-lines ()
+  "Delete blank lines.
+When region is active, delete the blank lines in region only."
+  (interactive)
+  (if (region-active-p)
+      (delete-matching-lines "^[[:space:]]*$" (region-beginning) (region-end))
+    (delete-matching-lines "^[[:space:]]*$" (point-min) (point-max))))
+
+(global-set-key (kbd "C-c m d") #'my-delete-blank-lines)
+
 (defun my-delete-visual-blank-lines ()
-  "Delete all visual blank line."
+  "Delete all visual blank lines."
   (interactive)
   (save-restriction
     (narrow-to-region (window-start) (window-end))
-    (delete-matching-lines "^[ \t]*$" (point-min) (point-max))))
+    (delete-matching-lines "^[[:space:]]*$" (point-min) (point-max))))
 
-(global-set-key (kbd "C-c m d") #'my-delete-visual-blank-lines)
+(global-set-key (kbd "C-c m D") #'my-delete-visual-blank-lines)
 
 (defun my-fixup-whitespace ()
-  "Fix up white space between objects around point.
-Leave one space or none, according to the context."
+  "Add Chinese characters support for `fixup-whitespace'."
   (interactive "*")
   (save-excursion
     (delete-horizontal-space)
     (if (or (looking-at "^\\|\\s)")
             (save-excursion (forward-char -1)
-                            ;; we adapted the regexp here:
                             (looking-at "\\cc\\|$\\|\\s(\\|\\s'")))
         nil
       (insert ?\s))))
 
-(defun my-delete-indentation (old-func &rest args)
+;; use `cl-lef' to change the behavior of `fixup-whitespace' only when
+;; called from `delete-indentation'
+(defun my--delete-indentation (old-func &rest args)
   "My modified `delete-indentation'.
 Fix OLD-FUNC with ARGS."
   (cl-letf (((symbol-function 'fixup-whitespace) #'my-fixup-whitespace))
     (apply old-func args)))
 
-(advice-add 'delete-indentation :around #'my-delete-indentation)
+(advice-add 'delete-indentation :around #'my--delete-indentation)
 
 (defun my-recompile-init ()
   "Byte-compile dotfiles again."
@@ -702,58 +586,6 @@ Fix OLD-FUNC with ARGS."
     (indent-region (region-beginning) (region-end))))
 
 (global-set-key (kbd "C-M-z") #'my-indent-defun)
-
-;; https://emacs-china.org/t/emacs-builtin-mode/11937/63
-(defun my-transient-winner-undo ()
-  "Transient version of `winner-undo'."
-  (interactive)
-  (let ((echo-keystrokes nil))
-    (winner-undo)
-    (message "Winner: [u]ndo [r]edo [q]uit")
-    (set-transient-map
-     (let ((map (make-sparse-keymap)))
-       (define-key map [?u] #'winner-undo)
-       (define-key map [?r] #'winner-redo)
-       map)
-     t)))
-
-(global-set-key (kbd "C-x 4 u") #'my-transient-winner-undo)
-
-(defun my--calculate-time-duration (start end)
-  "Calculate seconds (format: SS) duration from START to END (format: \"HH:MM:SS\")."
-  (-
-   (let ((end-sum 0) (end-acc 0))
-     (mapc
-      (lambda (x)
-        (if (and (<= (- x ?0) 9) (>= (- x ?0) 0))
-            (setq end-acc (+ (* 10 end-acc) (- x ?0)))
-          (setq end-sum (+ (* end-sum 60) end-acc)
-                end-acc 0)))
-      end)
-     (setq end-sum (+ (* end-sum 60) end-acc))
-     end-sum)
-   (let ((start-sum 0) (start-acc 0))
-     (mapc
-      (lambda (x)
-        (if (and (<= (- x ?0) 9) (>= (- x ?0) 0))
-            (setq start-acc (+ (* 10 start-acc) (- x ?0)))
-          (setq start-sum (+ (* start-sum 60) start-acc)
-                start-acc 0)))
-      start)
-     (setq start-sum (+ (* start-sum 60) start-acc))
-     start-sum)))
-
-(defun my--convert-second-to-time-format (second)
-  "Convert input SECOND(SS) to time format(\"HH:MM:SS\")."
-  (let (time)
-    (dotimes (_ 2)
-      (setq time (concat (format ":%02d" (% second 60)) time)
-            second (/ second 60)))
-    (setq time
-          (concat
-           (format "%02d" second)
-           time))
-    time))
 
 (defun my--adjust-point-after-click (event &optional _)
   "Adjust point.  Click more accurate in line with intuition.
@@ -779,19 +611,91 @@ That is, if you click on the right half of a character, the point
 is set to after it."
   :global t
   :lighter ""
+  :group 'convenience
   (if my-delicate-click-mode
       (advice-add 'mouse-set-point :after #'my--adjust-point-after-click)
     (advice-remove 'mouse-set-point #'my--adjust-point-after-click)))
 
-(defun my--add-subdirs-to-load-path (parent-dir)
-  "Add every non-hidden subdir of PARENT-DIR to `load-path'."
-  (let ((default-directory parent-dir))
-    (setq load-path
-          (append
-           (cl-remove-if-not
-            #'file-directory-p
-            (directory-files (expand-file-name parent-dir) t "^[^\\.]"))
-           load-path))))
+(defcustom my-pangu-spacing-excluded-puncuation
+  "，。！？、；：‘’“”『』「」【】（）《》"
+  "Excluded puncuation when pangu spacing buffer."
+  :group 'convenience
+  :type 'string)
+
+(defvar my-pangu-spacing-regexp
+  (rx-to-string
+   `(or (and (or (group-n 3 (any ,my-pangu-spacing-excluded-puncuation))
+                 (group-n 1 (or (category chinese-two-byte)
+                                (category japanese-hiragana-two-byte)
+                                (category japanese-katakana-two-byte)
+                                (category korean-hangul-two-byte))))
+             (group-n 2 (in "a-zA-Z0-9")))
+        (and (group-n 1 (in "a-zA-Z0-9"))
+             (or (group-n 3 (any ,my-pangu-spacing-excluded-puncuation))
+                 (group-n 2 (or (category chinese-two-byte)
+                                (category japanese-hiragana-two-byte)
+                                (category japanese-katakana-two-byte)
+                                (category korean-hangul-two-byte))))))
+   t)
+  "Regexp to find Chinese character around English character.
+
+Group 1 contains the character before the potential pangu
+spacing, and group 2 the character after that. A space is needed
+when both group 1 and group 2 are non-nil. Group 3 exists as a
+workaround for excluded puncuation.
+
+Since rx does not support matching text that satisfy two regexp
+at the same time (we want to match all Chinese two byte
+characters, but not the punctuation), we first try to match
+excluded puncuation, then the characters that need
+pangu-spacing. The excluded puncuation will be matched to group
+3, and shortcut the matching for Chinese characters.  Thus group
+1 and group 2 will both be non nil when a pangu space is needed.")
+
+(defun my-pangu-spacing-current-buffer ()
+  "Pangu space current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward my-pangu-spacing-regexp nil t)
+      (when (and (match-beginning 1)
+                 (match-beginning 2))
+        (replace-match "\\1 \\2" nil nil)
+        (backward-char))))
+  ;; nil must be returned to allow use in write file hooks
+  nil)
+
+(global-set-key (kbd "C-c m p") #'my-pangu-spacing-current-buffer)
+
+(defun my--add-subdirs-to-load-path (search-dir)
+  "Add every subdir of SEARCH-DIR to `load-path'."
+  (let ((dir (file-name-as-directory search-dir)))
+    (dolist (subdir
+             ;; filter out unnecessary dirs
+             (cl-remove-if
+              (lambda (subdir)
+                (or
+                 ;; remove if not directory
+                 (not (file-directory-p (concat dir subdir)))
+                 ;; remove dirs such as parent dir, programming language
+                 ;; related dir and version control dir.
+                 (member subdir '("." ".."
+                                  "dist" "node_modules" "__pycache__"
+                                  "RCS" "CVS" "rcs" "cvs"
+                                  ".git" ".github"))))
+              (directory-files dir)))
+      (let ((subdir-path (concat dir (file-name-as-directory subdir))))
+        (when (cl-some (lambda (subdir-file)
+                         (and (file-regular-p
+                               (concat subdir-path subdir-file))
+                              ;; .so .dll are Emacs dynamic library
+                              ;; written in non emacs-lisp
+                              (member (file-name-extension subdir-file)
+                                      '("el" "so" "dll"))))
+                       (directory-files subdir-path))
+          (add-to-list 'load-path subdir-path t))
+        ;; recursively search subdirectories
+        (my--add-subdirs-to-load-path subdir-path)))))
 
 ;; Network Proxy
 (defun my-show-http-proxy ()

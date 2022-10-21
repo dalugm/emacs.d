@@ -85,7 +85,7 @@ If INCLUSIVE is t, the text object is inclusive."
           range
           found-range)
       (dolist (paren parens)
-        (condition-case nil
+        (condition-case _
             (let ((char1 (aref paren 0))
                   (char2 (aref paren 1)))
               (setq range (if (eq char1 char2)
@@ -144,9 +144,9 @@ If INCLUSIVE is t, the text object is inclusive."
         (add-hook 'post-command-hook #'my--show-current-evil-state)
       (remove-hook 'post-command-hook #'my--show-current-evil-state)))
 
-  ;; ---------------------------------------------------------
+  ;; ---------------
   ;; evil keybinding
-  ;; ---------------------------------------------------------
+  ;; ---------------
 
   (evil-declare-key 'normal org-mode-map
     "gh" #'outline-up-heading
@@ -166,9 +166,9 @@ If INCLUSIVE is t, the text object is inclusive."
     ">"  #'my-markdown-demote-or-promote                             ; indent
     (kbd "TAB") #'markdown-cycle)
 
-  ;; ---------------------------------------------------------
+  ;; ------------------
   ;; evil-initial-state
-  ;; ---------------------------------------------------------
+  ;; ------------------
 
   ;; https://github.com/emacs-evil/evil/issues/511
   (defmacro my--adjust-major-mode-keymap-with-evil (mode &optional replace)
@@ -216,6 +216,7 @@ If INCLUSIVE is t, the text object is inclusive."
                (shell-mode               . emacs)
                (special-mode             . emacs)
                (term-mode                . emacs)
+               (view-mode                . emacs)
                (vc-log-edit-mode         . emacs)
                (w3m-mode                 . emacs)
                (woman-mode               . emacs)
@@ -226,7 +227,7 @@ If INCLUSIVE is t, the text object is inclusive."
     (evil-set-initial-state (car p) (cdr p))))
 
 (use-package evil-surround
-  :config (global-evil-surround-mode)
+  :config (global-evil-surround-mode +1)
 
   (defmacro my--quoted-text-object (name key start-regex end-regex)
     "Define text objects.
@@ -285,7 +286,7 @@ ref: https://stackoverflow.com/a/22418983/4921402."
               )))
 
 (use-package evil-zh
-  :config (global-evil-zh-mode))
+  :config (global-evil-zh-mode +1))
 
 ;; bundle with `evil'
 (use-package evil-nerd-commenter
@@ -404,8 +405,7 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "vn" #'diff-hl-next-hunk
     "vp" #'diff-hl-previous-hunk
     ;; http://ergoemacs.org/emacs/emacs_pinky_2020.html
-    "xx" #'my-kill-other-buffers-without-special-ones
-    "zz" #'my-switch-to-shell)
+    "xx" #'my-kill-other-buffers-without-special-ones)
 
   ;; Use `SPC' as leader key
   ;; all keywords arguments are still supported
@@ -442,14 +442,12 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     ;; file
     "f"  #'(:ignore t)
     "fb" #'my-browse-this-file
-    "fc" #'my-copy-this-file
     "ff" #'find-file
     "f/" #'find-file-other-window
-    "fy" #'my-copy-file-name
+    "fc" #'my-copy-file-name
     "fd" #'my-delete-this-file
     "fD" #'my-delete-file
     "fo" #'my-open-this-file-externally
-    "fm" #'my-move-this-file
     "fr" #'my-rename-this-file
     "fs" #'my-sudo-edit-file
     "fS" #'my-sudo-find-file

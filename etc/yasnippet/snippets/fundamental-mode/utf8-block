@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: utf8-block
+# key: ublock
+# --
+┌────
+│ $0
+└────

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: LaTeX-chinese-indent
+# key: ltx-ci
+# --
+#+latex: \begin{adjustwidth}{1.2em}{0em}
+
+${1:something}
+
+#+latex: \end{adjustwidth}

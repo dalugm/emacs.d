@@ -58,19 +58,16 @@
 (setq user-init-file (or load-file-name buffer-file-name))
 (setq user-emacs-directory (file-name-directory user-init-file))
 
-(defvar my-emacs-d (file-name-as-directory user-emacs-directory)
-  "Directory of Emacs configurations.")
-
-(defvar my-config-d (expand-file-name "etc/" my-emacs-d)
+(defvar my-config-d (expand-file-name "etc/" user-emacs-directory)
   "Directory of configuration files.")
 
-(defvar my-library-d (expand-file-name "lib/" my-emacs-d)
+(defvar my-library-d (expand-file-name "lib/" user-emacs-directory)
   "Directory of packages, whether from ELPA or Github.")
 
-(defvar my-optional-d (expand-file-name "opt/" my-emacs-d)
-  "Directory of third party tools.")
+(defvar my-optional-d (expand-file-name "opt/" user-emacs-directory)
+  "Directory of optional files.")
 
-(defvar my-cache-d (expand-file-name "var/" my-emacs-d)
+(defvar my-cache-d (expand-file-name "var/" user-emacs-directory)
   "Directory of dotfiles created by packages.")
 
 (unless (file-directory-p my-cache-d) (mkdir my-cache-d))
@@ -117,13 +114,12 @@
 (require 'init-package)
 (require 'init-edit)
 (require 'init-vc)
-(require 'init-tex)
+;; (require 'init-ido)
 (require 'init-vertico)
 ;; (require 'init-ivy)
-(require 'init-chinese)
+(require 'init-complete)
 (require 'init-prog)
 (require 'init-check)
-(require 'init-complete)
 (require 'init-snippet)
 
 ;; handy tools though not must have
@@ -131,14 +127,16 @@
   (require 'init-gui))
 (require 'init-misc)
 (require 'init-term)
-(require 'init-workspace)
 (require 'init-reader)
 (require 'init-irc)
 (require 'init-evil)
+(require 'init-markup)
+(require 'init-chinese)
 
 ;; program
 (require 'init-sexp)
 (require 'init-lsp)
+(require 'init-tex)
 (require 'init-cc)
 (require 'init-go)
 (require 'init-js)
@@ -152,7 +150,6 @@
 (require 'init-swift)
 (require 'init-build)
 (require 'init-python)
-(require 'init-markup)
 (require 'init-csharp)
 
 ;; personal setup, other major-mode specific setup need it.
@@ -161,7 +158,7 @@
 ;; https://www.reddit.com/r/emacs/comments/4q4ixw/how_to_forbid_emacs_to_touch_configuration_files/
 ;; See `custom-file' for details.
 (load (setq custom-file
-            (expand-file-name (concat my-emacs-d
+            (expand-file-name (concat user-emacs-directory
                                       "custom-set-variables.el")))
       t t)
 

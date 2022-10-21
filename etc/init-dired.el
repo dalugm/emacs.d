@@ -105,7 +105,6 @@ http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html."
 (defun my--dired-mode-hook-setup ()
   "Setup for Dired."
   (local-set-key (kbd ",") #'dired-up-directory)
-  (local-set-key (kbd ";") #'avy-goto-char-2)
   (local-set-key (kbd "_") #'my-dired-cycle-space-underscore-hyphen)
   (local-set-key (kbd "C-c C-e") #'my-ediff-files)
   (local-set-key (kbd "C-c C-p") #'wdired-change-to-wdired-mode))

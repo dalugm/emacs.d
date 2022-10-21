@@ -7,12 +7,9 @@
 
 ;;; Code:
 
-(defun my--js-mode-hook-setup ()
-  "Default configuration for javascript."
-  (setq js-indent-level 2))
-
-(add-hook 'js-mode-hook #'my--js-mode-hook-setup)
-(add-hook 'js-jsx-mode-hook #'my--js-mode-hook-setup)
+(use-package js
+  :mode ("\\.\\(m\\|c\\)?js\\'" . js-mode)
+  :custom (js-indent-level 2))
 
 (use-package typescript-mode
   :mode "\\.ts\\'"

@@ -21,20 +21,11 @@ bootstrap-borg:
 	@cd lib/borg; git symbolic-ref HEAD refs/heads/master
 	@cd lib/borg; git reset --hard HEAD
 
-bootstrap-shallow:
-	@printf "\n=== Running 'git submodule init' ===\n\n"
-	@git submodule init
-	@printf "\n=== Running 'borg-shallow.sh' ===\n"
-	@./borg-shallow.sh
-	@printf "\n=== Running 'make build' ===\n\n"
-	@make build
-
 helpall::
 	$(info Test and fix targets)
 	$(info --------------------)
-	$(info make bootstrap-shallow	= shallow bootstrap configurations)
-	$(info make codespell-dry	= run codespell, dry run)
-	$(info make codespell-fix	= run codespell, write fixes)
+	$(info make codespell-dry     = run codespell, dry run)
+	$(info make codespell-fix     = run codespell, write fixes)
 	$(info )
 
 codespell-dry:

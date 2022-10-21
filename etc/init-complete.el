@@ -9,7 +9,26 @@
 
 (use-package corfu
   :hook (after-init . global-corfu-mode)
-  :custom (corfu-auto t))
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t)
+  ;; (corfu-separator ?\s)          ; orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ; never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ; never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ; disable current candidate preview
+  ;; (corfu-preselect-first nil)    ; disable candidate preselection
+  ;; (corfu-on-exact-match nil)     ; configure handling of exact matches
+  ;; (corfu-echo-documentation nil) ; disable documentation in the echo area
+  ;; (corfu-scroll-margin 5)        ; use scroll margin
+  :config
+  ;; use Dabbrev with Corfu!
+  (use-package dabbrev
+    ;; Swap M-/ and C-M-/
+    :bind (("M-/" . dabbrev-completion)
+           ("C-M-/" . dabbrev-expand))
+    ;; other useful Dabbrev configurations.
+    :custom
+    (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'"))))
 
 (use-package corfu-doc
   :hook (corfu-mode . corfu-doc-mode)

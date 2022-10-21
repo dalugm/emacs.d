@@ -139,11 +139,7 @@
 	url = https://github.com/remyhonig/elfeed-org.git
 [submodule "emacsql"]
 	path = lib/emacsql
-	url = https://github.com/skeeto/emacsql.git
-	no-byte-compile = emacsql-pg.el
-[submodule "emacsql-sqlite-builtin"]
-	path = lib/emacsql-sqlite-builtin
-	url = https://github.com/emacsmirror/emacsql-sqlite-builtin.git
+	url = https://github.com/magit/emacsql.git
 [submodule "embark"]
 	path = lib/embark
 	url = https://github.com/oantolin/embark.git
@@ -156,6 +152,9 @@
 	path = lib/epkg
 	url = https://github.com/emacscollective/epkg.git
 	makeinfo = epkg.texi
+[submodule "epkg-marginalia"]
+	path = lib/epkg-marginalia
+	url = https://github.com/emacscollective/epkg-marginalia.git
 [submodule "evil"]
 	path = lib/evil
 	url = https://github.com/emacs-evil/evil.git
@@ -214,6 +213,9 @@
 [submodule "go-mode"]
 	path = lib/go-mode
 	url = https://github.com/dominikh/go-mode.el.git
+[submodule "goto-chg"]
+	path = lib/goto-chg
+	url = https://github.com/emacs-evil/goto-chg.git
 [submodule "grammatical-edit"]
 	path = lib/grammatical-edit
 	url = https://github.com/manateelazycat/grammatical-edit.git
@@ -255,9 +257,6 @@
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode.git
-[submodule "markdown-toc"]
-	path = lib/markdown-toc
-	url = https://github.com/ardumont/markdown-toc.git
 [submodule "material-theme"]
 	path = lib/material-theme
 	url = https://github.com/cpaulik/emacs-material-theme.git
@@ -295,9 +294,6 @@
 [submodule "packed"]
 	path = lib/packed
 	url = https://github.com/emacscollective/packed.git
-[submodule "pangu-spacing"]
-	path = lib/pangu-spacing
-	url = https://github.com/coldnew/pangu-spacing.git
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools.git

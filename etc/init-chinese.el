@@ -7,19 +7,18 @@
 
 ;;; Code:
 
-;; ---------------------------------------------------------
+;; ---------
 ;; Emacs IME
-;; ---------------------------------------------------------
+;; ---------
 
-;; ----- pyim ----------------------------------------------
 (use-package pyim
   :bind (("C-\\" . toggle-input-method)
+         ("M-j" . pyim-convert-string-at-point)
          (:map pyim-mode-map
                ("," . pyim-page-previous-page)
                ("." . pyim-page-next-page)))
   :custom (default-input-method "pyim")
   :config
-  (pyim-isearch-mode +1)
   (setq pyim-default-scheme 'quanpin)
 
   ;; compatible with terminal
@@ -39,10 +38,8 @@
   ;; (liberime-select-schema "luna_pinyin")
 
   ;; use memory efficient pyim engine
+  (require 'pyim-dregcache)
   (setq pyim-dcache-backend 'pyim-dregcache)
-
-  ;; cooperate with `pyim-probe-dynamic-english'
-  (global-set-key (kbd "M-j") #'pyim-convert-string-at-point)
 
   ;; change input method automatically
   (setq-default pyim-english-input-switch-functions
@@ -55,38 +52,32 @@
                 '(pyim-probe-punctuation-line-beginning
                   pyim-probe-punctuation-after-punctuation))
 
-  ;; -------------------------------------------------------
+  ;; ----
   ;; dict
-  ;; -------------------------------------------------------
+  ;; ----
   (defvar my-pyim-directory (expand-file-name "pyim/" my-cache-d)
-    "The directory containing pyim dictionaries.")
+    "The directory containing pyim related files.")
+
+  (unless (file-directory-p my-pyim-directory) (mkdir my-pyim-directory))
 
   ;; pyim-bigdict is recommended (20M).
   ;; There are too many useless words in pyim-greatdict
   ;; which also slows down pyim performance.
-  ;; `curl -L https://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz | zcat > path/to/pyim-bigdict.pyim`
-  ;; automatically load all "*.pyim" under `my-cache-d'
-  ;; `directory-files-recursively' requires Emacs 25
-  (let ((files (and (file-exists-p my-pyim-directory)
-                    (directory-files-recursively
-                     my-pyim-directory
-                     "\\.pyim\\'")))
+  ;; curl -L https://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz | zcat > path/to/my-pyim-directory/pyim-bigdict.pyim
+  ;; load all "*.pyim" under `my-pyim-directory'.
+  (let ((files (directory-files-recursively
+                my-pyim-directory
+                "\\.pyim\\'"))
         disable-basedict)
     (when (and files (> (length files) 0))
       (setq pyim-dicts
-            (mapcar (lambda (f)
-                      (list :name (file-name-base f) :file f))
-                    files))
-      ;; disable basedict if bigdict or greatdict is used
-      (dolist (f files)
-        (when (or (string= "pyim-bigdict" (file-name-base f))
-                  (string= "pyim-greatdict" (file-name-base f)))
-          (setq disable-basedict t))))
+            (mapcar
+             (lambda (f)
+               (list :name (file-name-base f) :file f))
+             files))
+      ;; disable basedict if a local dict is used
+      (setq disable-basedict t))
     (unless disable-basedict (pyim-basedict-enable))))
-
-(use-package avy-zh
-  :after avy
-  :config (global-avy-zh-mode))
 
 (provide 'init-chinese)
 
