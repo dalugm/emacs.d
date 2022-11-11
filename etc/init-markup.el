@@ -64,17 +64,17 @@
 </script>
 ")
   (markdown-gfm-additional-languages "Mermaid")
+  :hook (markdown-mode . (lambda ()
+                           "Don't wrap lines because there are tables in `markdown-mode'"
+                           (setq-local truncate-lines t)))
   :config
   (defun my-markdown-demote-or-promote (&optional is-promote)
-    "Demote or promote current org tree according to IS-PROMOTE."
+    "Demote or promote current markdown tree according to IS-PROMOTE."
     (interactive "P")
     (unless (region-active-p)
       (markdown-mark-subtree))
     (if is-promote (markdown-promote) (markdown-demote)))
 
-  ;; don't wrap lines because there are tables in `markdown-mode'
-  (add-hook 'markdown-mode-hook (lambda ()
-                                  (setq-local truncate-lines t)))
   ;; `multimarkdown' is necessary for `highlight.js' and `mermaid.js'
   (when (executable-find "multimarkdown")
     (setq markdown-command "multimarkdown")))

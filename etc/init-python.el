@@ -7,9 +7,11 @@
 
 ;;; Code:
 
-(with-eval-after-load 'python
-  (setq python-indent-guess-indent-offset nil)
-  (setq python-indent-offset 4))
+(use-package python
+  :mode "\\.\\(c\\|i\\|r\\)?.py\\'"
+  :custom
+  (python-indent-guess-indent-offset nil)
+  (python-indent-offset 4))
 
 ;; To switch kernels first run
 ;;

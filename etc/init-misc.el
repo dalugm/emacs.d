@@ -114,6 +114,7 @@
 
 (use-package separedit
   :bind ("C-c e e" . separedit)
+  :custom (separedit-remove-trailing-spaces-in-comment t)
   :init
   (defun my-eval-last-sexp-in-comment ()
     "Eval last sexp in comment by using `separedit'."

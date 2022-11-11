@@ -486,8 +486,11 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "tD" #'darkroom-mode
     "ta" #'auto-fill-mode
     "td" #'darkroom-tentative-mode
-    "tf" #'display-fill-column-indicator-mode
+    "tff" #'toggle-frame-fullscreen
+    "tfm" #'toggle-frame-maximized
+    "tg" #'glasses-mode
     "th" #'global-hl-line-mode
+    "ti" #'display-fill-column-indicator-mode
     "tj" #'toggle-truncate-lines
     "tk" #'visual-line-mode
     "tl" #'display-line-numbers-mode

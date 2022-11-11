@@ -18,16 +18,26 @@
                    (abbreviate-file-name (buffer-file-name))
                  "%b"))))
 
-;; Full screen when open GUI Emacs
-(setq initial-frame-alist '((fullscreen . maximized)))
-
 ;; move more smoothly
 (when (fboundp 'pixel-scroll-precision-mode)
   (pixel-scroll-precision-mode +1))
 
-(use-package ns-auto-titlebar
-  :when my-mac-x-p
-  :config (ns-auto-titlebar-mode +1))
+(when (featurep 'ns)
+  (defun my--set-frame-ns-titlebar (frame &rest _)
+    "Set ns-appearance frame parameter for FRAME."
+    (when (display-graphic-p frame)
+      (let ((mode (frame-parameter frame 'background-mode)))
+        (modify-frame-parameters
+         frame
+         `((ns-transparent-titlebar . t) (ns-appearance . ,mode))))))
+
+  (defun my--set-all-frams-ns-titlebar (&rest _)
+    "Set ns-appearance frame parameter for all frames."
+    (mapc #'my--set-frame-ns-titlebar (frame-list)))
+
+  (add-hook 'after-init-hook #'my--set-all-frams-ns-titlebar)
+  (add-hook 'after-make-frame-functions #'my--set-frame-ns-titlebar)
+  (advice-add 'frame-set-background-mode :after #'my--set-frame-ns-titlebar))
 
 (defun my-set-window-transparency (value)
   "Set the VALUE of transparency of the frame window."
@@ -83,45 +93,46 @@ FONT-NAMEs are keys in `my-font-alist'.")
 (defvar my-font-alist
   '(("霞鹜文楷等宽"      . ("LXGW WenKai Mono" nil 1))
     ("等距更纱黑体"      . ("Sarasa Mono SC" nil 1))
-    ("等距更纱黑体 Slab" . ("Sarasa Mono Slab SC" nil 1))
     ("文泉驿等宽正黑"    . ("WenQuanYi Zen Hei Mono" nil 1))
-    ("Unifont"           . ("Unifont" nil 1))
-    ("Hack"              . ("Hack" "Sarasa Mono Slab SC" 1))
-    ("Roboto Mono"       . ("Roboto Mono" "Sarasa Mono Slab SC" 1))
     ("Fira Code"         . ("Fira Code" "Sarasa Mono Slab SC" 1))
-    ("Monaco"            . ("Monaco" "LXGW WenKai Mono" 1))
+    ("Hack"              . ("Hack" "Sarasa Mono Slab SC" 1))
+    ("Jetbrains Mono"    . ("Jetbrains Mono" "Sarasa Mono SC" 1))
     ("Menlo"             . ("Menlo" "Sarasa Mono Slab SC" 1))
-    ("Spot Mono"         . ("Spot Mono" "Sarasa Mono SC" 1))
-    ("SF Mono"           . ("SF Mono" "LXGW WenKai Mono" 1))
+    ("Monaco"            . ("Monaco" "LXGW WenKai Mono" 1))
+    ("Monego"            . ("Monego" "LXGW WenKai Mono" 1))
+    ("Roboto Mono"       . ("Roboto Mono" "Sarasa Mono Slab SC" 1))
     ("Roboto"            . ("Roboto" "Sarasa Mono Slab SC" 1))
-    ("方正公文仿宋"      . (nil "FZDocFangSong" 1))
-    ("方正公文黑体"      . (nil "FZDocHei" 1))
-    ("方正公文楷体"      . (nil "FZDocKai" 1))
-    ("方正公文小标宋"    . (nil "FZDocXiaoBiaoSong" 1))
-    ("方正仿宋"          . (nil "FZFangSong Z02" 1))
-    ("方正屏显雅宋"      . (nil "FZPingXianYaSong R GBK" 1))
-    ("方正书宋"          . (nil "FZShuSong Z01" 1))
-    ("方正黑体"          . (nil "FZHei B01" 1))
-    ("方正楷体"          . (nil "FZKai Z03" 1))
+    ("SF Mono Light 14"  . ("SF Mono" "LXGW WenKai Mono" 1 :size 14 :weight light))
+    ("SF Mono"           . ("SF Mono" "LXGW WenKai Mono" 1))
+    ("Spot Mono"         . ("Spot Mono" "Sarasa Mono SC" 1))
+    ("Unifont"           . ("Unifont" nil 1))
     ("冬青黑体 简"       . (nil "Hiragino Sans GB" 1))
     ("冬青黑体 繁"       . (nil "Hiragino Sans CNS" 1))
     ("华文楷体 简"       . (nil "Kaiti SC" 1))
     ("华文楷体 繁"       . (nil "Kaiti TC" 1))
-    ("方正兰亭黑 简"     . (nil "Lantinghei SC" 1))
-    ("方正兰亭黑 繁"     . (nil "Lantinghei TC" 1))
-    ("霞鹜文楷"          . (nil "LXGW WenKai" 1))
-    ("更纱黑体 Gothic"   . (nil "Sarasa Gothic SC" 1))
-    ("更纱黑体 UI"       . (nil "Sarasa UI SC" 1))
-    ("思源黑体 简"       . (nil "Source Han Sans SC" 1))
-    ("思源黑体 繁"       . (nil "Source Han Sans TC" 1))
+    ("思源宋体 简 全"    . ("Source Han Serif SC" nil 1))
     ("思源宋体 简"       . (nil "Source Han Serif SC" 1))
+    ("思源宋体 繁 全"    . ("Source Han Serif TC" nil 1))
     ("思源宋体 繁"       . (nil "Source Han Serif TC" 1))
     ("思源黑体 简 全"    . ("Source Han Sans SC" nil 1))
+    ("思源黑体 简"       . (nil "Source Han Sans SC" 1))
     ("思源黑体 繁 全"    . ("Source Han Sans TC" nil 1))
-    ("思源宋体 简 全"    . ("Source Han Serif SC" nil 1))
-    ("思源宋体 繁 全"    . ("Source Han Serif TC" nil 1))
-    ("SF Mono Light 14"  . ("SF Mono" "LXGW WenKai Mono" 1
-                            :size 14 :weight light)))
+    ("思源黑体 繁"       . (nil "Source Han Sans TC" 1))
+    ("方正书宋"          . (nil "FZShuSong Z01" 1))
+    ("方正仿宋"          . (nil "FZFangSong Z02" 1))
+    ("方正公文仿宋"      . (nil "FZDocFangSong" 1))
+    ("方正公文小标宋"    . (nil "FZDocXiaoBiaoSong" 1))
+    ("方正公文楷体"      . (nil "FZDocKai" 1))
+    ("方正公文黑体"      . (nil "FZDocHei" 1))
+    ("方正兰亭黑 简"     . (nil "Lantinghei SC" 1))
+    ("方正兰亭黑 繁"     . (nil "Lantinghei TC" 1))
+    ("方正屏显雅宋"      . (nil "FZPingXianYaSong R GBK" 1))
+    ("方正楷体"          . (nil "FZKai Z03" 1))
+    ("方正黑体"          . (nil "FZHei B01" 1))
+    ("更纱黑体 Gothic"   . (nil "Sarasa Gothic SC" 1))
+    ("更纱黑体 UI"       . (nil "Sarasa UI SC" 1))
+    ("等距更纱黑体 Slab" . ("Sarasa Mono Slab SC" nil 1))
+    ("霞鹜文楷"          . (nil "LXGW WenKai" 1)))
   "An alist of all the fonts you can switch between by `my-load-font'.
 Each element is like
 

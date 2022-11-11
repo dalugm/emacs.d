@@ -7,98 +7,38 @@
 
 ;;; Code:
 
-;;; Packages
-;; Without this comment package.el adds `package-initialize' here
-;; (package-initialize)
+(setq user-init-file (or load-file-name buffer-file-name))
+(setq user-emacs-directory (file-name-directory user-init-file))
 
 (when (< emacs-major-version 27)
   (load-file (expand-file-name "early-init.el" user-emacs-directory)))
 
-;; HTTPS URLs should be used where possible
-;; as they offer superior security
-(with-eval-after-load 'package
-  (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                      (not (gnutls-available-p))))
-         (proto (if no-ssl "http" "https")))
-    (setq package-archives
-          `(
-
-            ;; ;; official
-            ;; ,(cons "gnu"    (concat proto "://elpa.gnu.org/packages/"))
-            ;; ,(cons "nongnu" (concat proto "://elpa.nongnu.org/nongnu/"))
-            ;; ,(cons "melpa"  (concat proto "://melpa.org/packages/"))
-            ;; ;; ,(cons "melpa-stable" (concat proto "://stable.melpa.org/packages/"))
-            ;; ,(cons "org"    (concat proto "://orgmode.org/elpa/"))
-
-            ;; ;; emacs-china
-            ;; ,(cons "gnu"    (concat proto "://elpa.emacs-china.org/gnu/"))
-            ;; ,(cons "nongnu" (concat proto "://elpa.emacs-china.org/nongnu/"))
-            ;; ,(cons "melpa"  (concat proto "://elpa.emacs-china.org/melpa/"))
-            ;; ;; ,(cons "melpa-stable" (concat proto "://elpa.emacs-china.org/stable-melpa/"))
-            ;; ,(cons "org"    (concat proto "://elpa.emacs-china.org/org/"))
-
-            ;; ;; 163
-            ;; ,(cons "gnu"    (concat proto "://mirrors.163.com/elpa/gnu/"))
-            ;; ,(cons "nongnu" (concat proto "://mirrors.163.com/elpa/nongnu/"))
-            ;; ,(cons "melpa"  (concat proto "://mirrors.163.com/elpa/melpa/"))
-            ;; ;; ,(cons "melpa-stable" (concat proto "://mirrors.163.com/elpa/stable-melpa/"))
-            ;; ,(cons "org"    (concat proto "://mirrors.163.com/elpa/org/"))
-
-            ;; tuna
-            ,(cons "gnu"    (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
-            ,(cons "nongnu" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/"))
-            ,(cons "melpa"  (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
-            ;; ,(cons "melpa-stable" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/"))
-            ,(cons "org"    (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/org/"))
-
-            ))))
-
-;;; Define necessary directories
-
-(setq user-init-file (or load-file-name buffer-file-name))
-(setq user-emacs-directory (file-name-directory user-init-file))
-
-(defvar my-config-d (expand-file-name "etc/" user-emacs-directory)
+(defconst my-config-d (expand-file-name "etc/" user-emacs-directory)
   "Directory of configuration files.")
 
-(defvar my-library-d (expand-file-name "lib/" user-emacs-directory)
+(defconst my-library-d (expand-file-name "lib/" user-emacs-directory)
   "Directory of packages, whether from ELPA or Github.")
 
-(defvar my-optional-d (expand-file-name "opt/" user-emacs-directory)
+(defconst my-optional-d (expand-file-name "opt/" user-emacs-directory)
   "Directory of optional files.")
 
-(defvar my-cache-d (expand-file-name "var/" user-emacs-directory)
+(defconst my-cache-d (expand-file-name "var/" user-emacs-directory)
   "Directory of dotfiles created by packages.")
 
 (unless (file-directory-p my-cache-d) (mkdir my-cache-d))
 
-;;; Garbage Collection
-;; https://www.reddit.com/r/emacs/comments/brc05y/is_lspmode_too_slow_to_use_for_anyone_else/eofulix/
-(defvar my--gc-cons-threshold-up-limit (* 100 1024 1024)
-  "Best up-limit GC threshold value.  Should NOT be too big!")
-
-(defvar my--gc-cons-threshold-default (* 20 1024 1024)
-  "Default GC threshold value.")
-
-(defun my--inc-gc-cons-threshold ()
-  "Increase `gc-cons-threshold' to `my--gc-cons-threshold-up-limit'."
-  (setq gc-cons-threshold my--gc-cons-threshold-up-limit))
-
-(defun my--reset-gc-cons-threshold ()
-  "Rest `gc-cons-threshold' to `my--gc-cons-threshold-default'."
-  (setq gc-cons-threshold my--gc-cons-threshold-default))
-
-;; Avoid Emacs do GC during the initializing
-;; https://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
-(progn
-  (my--inc-gc-cons-threshold)
+(let ((old-file-name-handler-alist file-name-handler-alist)
+      (old-gc-cons-threshold gc-cons-threshold))
+  (setq file-name-handler-alist nil)
+  (setq gc-cons-threshold most-positive-fixnum)
   (add-hook 'emacs-startup-hook
             (lambda ()
-              (my--reset-gc-cons-threshold)
-              (add-hook 'minibuffer-setup-hook
-                        #'my--inc-gc-cons-threshold)
-              (add-hook 'minibuffer-exit-hook
-                        #'my--reset-gc-cons-threshold))))
+              "Speed up startup."
+              (setq file-name-handler-alist
+                    (delete-dups (append file-name-handler-alist
+                                         old-file-name-handler-alist)))
+              ;; if x10, half of cpu time is spent on gc when scrolling
+              (setq gc-cons-threshold (* 100 old-gc-cons-threshold)))))
 
 ;;; Configuration
 (push (expand-file-name my-config-d) load-path)
@@ -110,7 +50,7 @@
 (require 'init-dired)
 (require 'init-org)
 (require 'init-ibuffer)
-(require 'init-gnus)
+
 (require 'init-package)
 (require 'init-edit)
 (require 'init-vc)
@@ -126,7 +66,6 @@
 (when (display-graphic-p)
   (require 'init-gui))
 (require 'init-misc)
-(require 'init-term)
 (require 'init-reader)
 (require 'init-irc)
 (require 'init-evil)

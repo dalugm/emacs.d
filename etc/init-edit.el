@@ -111,7 +111,9 @@
                ("C-c e j" . grammatical-edit-jump-up))))
 
 (use-package color-rg
-  :custom (color-rg-recenter-match-line t)
+  :custom
+  (color-rg-recenter-match-line t)
+  (color-rg-mac-load-path-from-shell nil)
   :bind
   (("C-c s s" . color-rg-search-input)
    ("C-c s c" . color-rg-search-input-in-current-file)
@@ -173,7 +175,7 @@
   :config (global-avy-zh-mode +1))
 
 (use-package expand-region
-  :bind ("C-c ;" . er/expand-region))
+  :bind ("C-c e ;" . er/expand-region))
 
 (use-package ace-window
   :bind (([remap other-window] . ace-window)

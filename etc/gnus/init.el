@@ -1,4 +1,4 @@
-;;; init-gnus.el --- email configuration -*- lexical-binding: t; -*-
+;;; init.el --- gnus configuration -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;
@@ -6,14 +6,6 @@
 ;;
 
 ;;; Code:
-
-;; Patch security vulnerability in Emacs versions older than 25.3
-;; https://bugs.debian.org/766397
-;; https://www.cvedetails.com/cve/CVE-2017-14482/
-(when (version< emacs-version "25.3")
-  (with-eval-after-load 'enriched
-    (defun enriched-decode-display-prop (start end &optional _param)
-      (list start end))))
 
 ;; send mail through SMTP
 (require 'smtpmail)
@@ -26,18 +18,13 @@
       smtpmail-stream-type 'starttls)
 
 (with-eval-after-load 'gnus
-
-  ;; Fetch only part of the article if we can.
+  ;; fetch only part of the article if we can.
   (setq gnus-read-active-file 'some)
-
-  ;; Delete mail
   (setq nnmail-expiry-wait 'never)
   (setq nnmail-expiry-target "Deleted Messages"))
 
-;; ;; DeBUG
+;; ;; debug
 ;; (setq smtpmail-debug-info t)
 ;; (setq smtpmail-debug-verb t)
 
-(provide 'init-gnus)
-
-;;; init-gnus.el ends here
+;;; init.el ends here

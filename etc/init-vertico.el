@@ -66,14 +66,12 @@
    ("M-s l" . consult-line)
    ("M-s L" . consult-line-multi)
    ("C-c s I" . consult-imenu-multi)
-   ("C-c s f" . my-consult-find)
+   ("C-c s f" . my-consult-fd)
    ("C-c s F" . consult-find)
    ("C-c s L" . consult-locate)
-   ("C-c s g" . my-consult-grep)
-   ("C-c s G" . consult-grep)
+   ("C-c s g" . consult-grep)
    ("C-c s v" . consult-git-grep)
-   ("C-c s r" . my-consult-ripgrep)
-   ("C-c s R" . consult-ripgrep)
+   ("C-c s r" . consult-ripgrep)
    ("C-c s l" . consult-line-multi)
    ("C-c s m" . consult-multi-occur)
    ("C-c s k" . consult-focus-lines)
@@ -113,27 +111,47 @@
                            (substring str 1 len))))))
     input)
 
+  (defcustom my--consult--fd-command "fd"
+    "The default command used to run fd."
+    :group 'convenience
+    :type 'string)
+
+  (defun my--consult--fd-builder (input)
+    "Build command line given INPUT."
+    (unless my--consult--fd-command
+      (setq my--consult--fd-command
+            (if (eq 0 (call-process-shell-command "fdfind"))
+                "fdfind"
+              "fd")))
+    (pcase-let* ((`(,arg . ,opts) (consult--command-split input))
+                 (`(,re . ,hl) (funcall consult--regexp-compiler
+                                        arg 'extended t)))
+      (when re
+        (list :command (append
+                        (list my--consult--fd-command
+                              "--color=never" "--full-path"
+                              (consult--join-regexps re 'extended))
+                        opts)
+              :highlight hl))))
+
   (dolist (func '(consult--find-builder
+                  my--consult--fd-builder
                   consult--git-grep-builder
                   consult--grep-builder
                   consult--locate-builder
                   consult--ripgrep-builder))
     (advice-add func :filter-args #'my--consult-zh-builder))
 
-  (defun my-consult-find (&optional DIR)
-    "Modify `consult-find' functions to search files in DIR."
-    (interactive "DDirectory: ")
-    (consult-find DIR))
-
-  (defun my-consult-grep (&optional DIR)
-    "Modify `consult-grep' functions to search files in DIR."
-    (interactive "DDirectory: ")
-    (consult-grep DIR))
-
-  (defun my-consult-ripgrep (&optional DIR)
-    "Modify `consult-ripgrep' functions to search files in DIR."
-    (interactive "DDirectory: ")
-    (consult-ripgrep DIR))
+  (defun my-consult-fd (&optional dir initial)
+    "Search with `fd' for files in DIR where the content matches a regexp.
+The initial input is given by the INITIAL argument.  See
+`consult-grep' for more details."
+    (interactive "P")
+    (let* ((prompt-dir (consult--directory-prompt "Fd" dir))
+           (default-directory (cdr prompt-dir)))
+      (find-file (consult--find (car prompt-dir)
+                                #'my--consult--fd-builder
+                                initial))))
 
   (when my-win-p
 

@@ -52,71 +52,6 @@
     (:name "VC status")
     (ibuffer-vc--status-string))
 
-  (setq ibuffer-expert t
-        ibuffer-show-empty-filter-groups nil
-        ibuffer-display-summary nil)
-
-  (setq ibuffer-saved-filter-groups
-        '(("default"
-           ("Dired" (mode . dired-mode))
-           ("Emacs" (name . "^\\*[^forge].*\\*$"))
-           ("Lisp" (or (mode . lisp-mode)
-                       (mode . emacs-lisp-mode)
-                       (mode . common-lisp-mode)
-                       (mode . elisp-byte-code-mode)
-                       (mode . lisp-interaction-mode)))
-           ("Scheme" (or (mode . scheme-mode)
-                         (mode . racket-mode)))
-           ("Org" (mode . org-mode))
-           ("TeX" (or (mode . tex-mode)
-                      (mode . plain-tex-mode)
-                      (mode . latex-mode)
-                      (mode . slitex-mode)
-                      (mode . tex-shell)
-                      (mode . doctex-mode)))
-           ("Magit" (or (name . "^magit[:-].*")
-                        (name . "^\\*forge[:-].*\\*$")))
-           ("Git" (or (mode . gitconfig-mode)
-                      (mode . gitignore-mode)
-                      (mode . gitattributes-mode)))
-           ("C/C++" (or (mode . c-mode)
-                        (mode . c++-mode)))
-           ("C#" (or (mode . csharp-mode)
-                     (mode . csharp-tree-sitter-mode)))
-           ("ObjC" (mode . objc-mode))
-           ("Rust" (mode . rust-mode))
-           ("Java" (mode . java-mode))
-           ("Go" (or (mode . go-mode)
-                     (mode . godoc-mode)
-                     (mode . go-dot-mod-mode)))
-           ("Python" (or (mode . python-mode)
-                         (mode . ipython-mode)
-                         (mode . ipynb-mode)
-                         (mode . ein:notebooklist-mode)
-                         (mode . inferior-python-mode)))
-           ("FrontEnd" (or (mode . typescript-mode)
-                           (mode . js-mode)
-                           (mode . css-mode)
-                           (mode . web-mode)
-                           (mode . sass-mode)
-                           (mode . scss-mode)
-                           (mode . html-mode)
-                           (mode . mhtml-mode)
-                           (mode . less-css-mode)))
-           ("Ruby" (or (mode . ruby-mode)
-                       (mode . enh-ruby-mode)
-                       (mode . inf-ruby-mode)))
-           ("Sh" (mode . sh-mode))
-           ("Terminal" (or (mode . eshell-mode)
-                           (mode . shell-mode)
-                           (mode . term-mode)))
-           ("Markdown" (or (mode . markdown-mode)
-                           (mode . gfm-mode)))
-           ("Yaml" (mode . yaml-mode))
-           ("Snippet" (mode . snippet-mode))
-           ("ReStructText" (mode . rst-mode))
-           ("Txt" (mode . text-mode)))))
-
   ;; Modify the default ibuffer-formats
   (setq ibuffer-formats
         '((mark modified read-only vc-status-mini " "
@@ -130,13 +65,65 @@
                 " "
                 filename-and-process)))
 
+  (defun my--ibuffer-get-major-modes-list ()
+    "Get all major modes based on opened buffers."
+    (mapcar
+     (lambda (buffer)
+       (buffer-local-value 'major-mode (get-buffer buffer)))
+     (buffer-list (selected-frame))))
+
+  (defun my--ibuffer-generate-filter-groups-alist (mm-list result-list)
+    "Create an alist of filtering groups to switch between."
+    (if mm-list
+        (let* ((cur-mm (car mm-list))
+               (next-res-list-el `(,(capitalize
+                                     ;; trim `-mode' string
+                                     (substring (symbol-name cur-mm) 0 -5))
+                                   (mode . ,cur-mm))))
+          (my--ibuffer-generate-filter-groups-alist
+           (cdr mm-list) (cons next-res-list-el result-list)))
+      result-list))
+
+  (defun my--ibuffer-generate-filter-groups-by-major-mode ()
+    "Generate `ibuffer-saved-filter-groups' by major mode."
+    (let* ((ignore-modes '(Buffer-menu-mode
+                           compilation-mode
+                           minibuffer-inactive-mode
+                           ibuffer-mode
+                           magit-process-mode
+                           messages-buffer-mode
+                           fundamental-mode
+                           completion-list-mode
+                           help-mode
+                           Info-mode))
+           (groups
+            (list
+             (cons "default"
+                   (my--ibuffer-generate-filter-groups-alist
+                    ;; created by major mode
+                    (cl-set-difference
+                     (cl-remove-duplicates
+                      (my--ibuffer-get-major-modes-list))
+                     ignore-modes)
+                    ;; manually created add here
+                    '(("Modified" (predicate buffer-modified-p
+                                             (current-buffer)))))))))
+      (setq ibuffer-saved-filter-groups groups)
+      (ibuffer-switch-to-saved-filter-groups "default")))
+
+  (setq ibuffer-expert t
+        ibuffer-show-empty-filter-groups nil
+        ibuffer-display-summary nil)
+
   (defun my--ibuffer-mode-hook-setup ()
     "`ibuffer-mode' configuration."
     (unless (eq ibuffer-sorting-mode 'filename/process)
       (ibuffer-do-sort-by-filename/process))
     (ibuffer-switch-to-saved-filter-groups "default"))
 
-  (add-hook 'ibuffer-mode-hook #'my--ibuffer-mode-hook-setup))
+  (add-hook 'ibuffer-mode-hook #'my--ibuffer-mode-hook-setup)
+  ;; update filter group when calling `ibuffer'
+  (add-hook 'ibuffer-hook #'my--ibuffer-generate-filter-groups-by-major-mode))
 
 ;; replace `buffer-menu' with `ibuffer'
 (global-set-key [remap list-buffers] #'ibuffer)

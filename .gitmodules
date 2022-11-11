@@ -57,7 +57,7 @@
 	url = https://github.com/universal-ctags/citre.git
 [submodule "closql"]
 	path = lib/closql
-	url = https://github.com/emacscollective/closql.git
+	url = https://github.com/magit/closql.git
 [submodule "color-rg"]
 	path = lib/color-rg
 	url = https://github.com/manateelazycat/color-rg.git
@@ -276,9 +276,6 @@
 [submodule "nord-theme"]
 	path = lib/nord-theme
 	url = https://github.com/arcticicestudio/nord-emacs.git
-[submodule "ns-auto-titlebar"]
-	path = lib/ns-auto-titlebar
-	url = https://github.com/purcell/ns-auto-titlebar.git
 [submodule "orderless"]
 	path = lib/orderless
 	url = https://github.com/oantolin/orderless.git

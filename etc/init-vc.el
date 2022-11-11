@@ -88,9 +88,17 @@
   :mode ("/\\.dockerignore\\'" . gitignore-mode))
 
 (use-package git-link
+  :init
+  ;; make the following lambda work without initialize.
+  (setq git-link-use-commit nil)
   :bind (("C-c v l l" . git-link)
          ("C-c v l c" . git-link-commit)
-         ("C-c v l h" . git-link-homepage)))
+         ("C-c v l h" . git-link-homepage)
+         ("C-c v l t" . (lambda ()
+                          "Toggle `git-link-use-commit'."
+                          (interactive)
+                          (setq git-link-use-commit
+                                (not git-link-use-commit))))))
 
 (use-package git-timemachine
   :bind ("C-c v t" . git-timemachine))

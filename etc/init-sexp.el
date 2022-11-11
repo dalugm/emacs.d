@@ -20,22 +20,23 @@
 
 (define-key emacs-lisp-mode-map "#" #'my-endless-sharp)
 
-(defun my-eval-last-sexp ()
-  "Evaluate the last symbolic expression at the point.
-With nil `C-u' prefix, insert output below following an arrow.
-With one `C-u' prefix, insert output in current position.
-With two `C-u' prefix, insert output in current position and delete sexp."
-  (interactive)
+(defun my-eval-last-sexp (&optional arg)
+  "Evaluate sexp before point, insert output below following an arrow.
+With a `\\[universal-argument]' prefix argument ARG, delete the
+sexp before point and insert output into current position."
+  (interactive "P")
   (let ((value (eval (elisp--preceding-sexp))))
     (save-excursion
       (cond
-       ((equal current-prefix-arg nil) ; no prefix
+       ((not arg)
         (newline-and-indent)
-        (insert (format "%s%S" ";; => " value)))
-       ((equal current-prefix-arg '(4)) ; one prefix
-        (newline-and-indent)
-        (insert (format "%S" value)))
-       ((equal current-prefix-arg '(16)) ; two prefix
+        (if (and (stringp value) (string-match-p "\n" value))
+            ;; if return value is a multiline string
+            (insert (format
+                     ";; =>\n;; %S"
+                     (replace-regexp-in-string "\n" "\n;; " value)))
+          (insert (format "%s%S" ";; => " value))))
+       ((equal arg '(4))
         (backward-kill-sexp)
         (insert (format "%S" value)))))))
 
