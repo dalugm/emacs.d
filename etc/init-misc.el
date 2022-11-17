@@ -120,13 +120,11 @@
     "Eval last sexp in comment by using `separedit'."
     (interactive)
     (require 'separedit)
-    (let ((separedit-default-mode 'emacs-lisp-mode))
+    (let ((separedit-default-mode 'emacs-lisp-mode)
+          (separedit-inhibit-edit-window-p t))
       (with-current-buffer (separedit)
-        (prog1 (call-interactively #'eval-last-sexp)
-          (execute-kbd-macro (kbd "C-c C-k"))))))
-  (dolist (map (list emacs-lisp-mode-map
-                     lisp-interaction-mode-map))
-    (define-key map (kbd "C-c C-r") #'my-eval-last-sexp-in-comment)))
+        (unwind-protect (call-interactively #'eval-last-sexp)
+          (separedit-abort))))))
 
 (use-package search-dired
   :bind (("C-c s d" . search-dired-dwim)

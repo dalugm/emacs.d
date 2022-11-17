@@ -2,21 +2,14 @@
 
 ;;; Commentary:
 ;;
-;; configuration for GUI Emacs.
+;; configuration for GUI.
 ;;
 
 ;;; Code:
 
 ;; ----- Frame ---------------------------------------------
 
-;; more useful frame title, that show either a file or a
-;; buffer name (if the buffer isn't visiting a file)
-(setq frame-title-format
-      `(,user-full-name
-        " @ "
-        (:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b"))))
+(setq-default frame-title-format `(,user-full-name " %@ %b"))
 
 ;; move more smoothly
 (when (fboundp 'pixel-scroll-precision-mode)
@@ -31,11 +24,11 @@
          frame
          `((ns-transparent-titlebar . t) (ns-appearance . ,mode))))))
 
-  (defun my--set-all-frams-ns-titlebar (&rest _)
+  (defun my--set-all-frames-ns-titlebar (&rest _)
     "Set ns-appearance frame parameter for all frames."
     (mapc #'my--set-frame-ns-titlebar (frame-list)))
 
-  (add-hook 'after-init-hook #'my--set-all-frams-ns-titlebar)
+  (add-hook 'after-init-hook #'my--set-all-frames-ns-titlebar)
   (add-hook 'after-make-frame-functions #'my--set-frame-ns-titlebar)
   (advice-add 'frame-set-background-mode :after #'my--set-frame-ns-titlebar))
 
@@ -71,15 +64,15 @@
 ;; ;; NOTE: I am using `my-load-font' to handle this now
 ;; ;;
 ;; ;; Default font
-;; (set-face-attribute 'default nil :font (font-spec :family "Fira Code" :size 14))
+;; (set-face-attribute 'default nil :font (font-spec :family "Unifont" :size 16))
 ;; ;;
-;; ;; East Asia: 你好, 早晨, こんにちは, 안녕하세요
+;; ;; East Asia: 你好，こんにちは，안녕하세요
 ;; ;;
 ;; ;; ¯\_(ツ)_/¯
 ;; (dolist (charset '(han cjk-misc))
-;;   (set-fontset-font t charset "Sarasa Mono Slab SC"))
-;; (set-fontset-font t 'kana "Sarasa Mono Slab J")
-;; (set-fontset-font t 'hangul "Sarasa Mono Slab K")
+;;   (set-fontset-font t charset "LXGW WenKai Mono"))
+;; (set-fontset-font t 'kana "LXGW WenKai Mono")
+;; (set-fontset-font t 'hangul "LXGW WenKai Mono")
 
 (defvar my-font-settings nil
   "A list of (FACE . FONT-NAME).
@@ -92,9 +85,10 @@ FONT-NAMEs are keys in `my-font-alist'.")
 
 (defvar my-font-alist
   '(("霞鹜文楷等宽"      . ("LXGW WenKai Mono" nil 1))
-    ("等距更纱黑体"      . ("Sarasa Mono SC" nil 1))
-    ("文泉驿等宽正黑"    . ("WenQuanYi Zen Hei Mono" nil 1))
-    ("Fira Code"         . ("Fira Code" "Sarasa Mono Slab SC" 1))
+    ("Unifont"           . ("Unifont" nil 1))
+    ("Cascadia Code"     . ("Cascadia Code" "Sarasa Mono SC" 1))
+    ("Cascadia Mono"     . ("Cascadia Mono" "Sarasa Mono SC" 1))
+    ("Fira Code"         . ("Fira Code" "Sarasa Mono SC" 1))
     ("Hack"              . ("Hack" "Sarasa Mono Slab SC" 1))
     ("Jetbrains Mono"    . ("Jetbrains Mono" "Sarasa Mono SC" 1))
     ("Menlo"             . ("Menlo" "Sarasa Mono Slab SC" 1))
@@ -105,7 +99,6 @@ FONT-NAMEs are keys in `my-font-alist'.")
     ("SF Mono Light 14"  . ("SF Mono" "LXGW WenKai Mono" 1 :size 14 :weight light))
     ("SF Mono"           . ("SF Mono" "LXGW WenKai Mono" 1))
     ("Spot Mono"         . ("Spot Mono" "Sarasa Mono SC" 1))
-    ("Unifont"           . ("Unifont" nil 1))
     ("冬青黑体 简"       . (nil "Hiragino Sans GB" 1))
     ("冬青黑体 繁"       . (nil "Hiragino Sans CNS" 1))
     ("华文楷体 简"       . (nil "Kaiti SC" 1))
@@ -118,6 +111,7 @@ FONT-NAMEs are keys in `my-font-alist'.")
     ("思源黑体 简"       . (nil "Source Han Sans SC" 1))
     ("思源黑体 繁 全"    . ("Source Han Sans TC" nil 1))
     ("思源黑体 繁"       . (nil "Source Han Sans TC" 1))
+    ("文泉驿等宽正黑"    . ("WenQuanYi Zen Hei Mono" nil 1))
     ("方正书宋"          . (nil "FZShuSong Z01" 1))
     ("方正仿宋"          . (nil "FZFangSong Z02" 1))
     ("方正公文仿宋"      . (nil "FZDocFangSong" 1))
@@ -132,6 +126,7 @@ FONT-NAMEs are keys in `my-font-alist'.")
     ("更纱黑体 Gothic"   . (nil "Sarasa Gothic SC" 1))
     ("更纱黑体 UI"       . (nil "Sarasa UI SC" 1))
     ("等距更纱黑体 Slab" . ("Sarasa Mono Slab SC" nil 1))
+    ("等距更纱黑体"      . ("Sarasa Mono SC" nil 1))
     ("霞鹜文楷"          . (nil "LXGW WenKai" 1)))
   "An alist of all the fonts you can switch between by `my-load-font'.
 Each element is like
@@ -152,7 +147,7 @@ the CJK font rescale ratio.")
            (font-xlfd-name
             (apply #'font-spec :registry fontset-name ascii-spec)))))
     ;; CJK font.
-    (dolist (charset '(kana han cjk-misc))
+    (dolist (charset '(han kana hangul cjk-misc))
       (set-fontset-font fontset charset (apply #'font-spec cjk-spec)))
     fontset))
 
@@ -187,13 +182,22 @@ See `my-load-font'."
    (list (completing-read
           "Font: " (mapcar #'car my-font-alist))
          (string-to-number (completing-read
-                            "Size: " nil nil nil nil nil "14"))))
+                            "Size: " nil nil nil nil nil
+                            ;; default value
+                            (cond
+                             ;; 4k
+                             ((>= (display-pixel-width) 3840) "28")
+                             ;; 2k
+                             ((>= (display-pixel-width) 2560) "20")
+                             ;; 1080
+                             (t "14"))))))
   (let* ((specs (apply #'my-font-name-to-spec font-name size attrs))
          (ascii (apply #'font-spec (car specs)))
          (cjk (apply #'font-spec (cadr specs))))
     (set-face-attribute 'default nil :font ascii)
-    (set-fontset-font t 'kana cjk)
     (set-fontset-font t 'han cjk)
+    (set-fontset-font t 'kana cjk)
+    (set-fontset-font t 'hangul cjk)
     (set-fontset-font t 'cjk-misc cjk)
     (set-fontset-font t 'symbol cjk nil 'append)))
 
@@ -213,7 +217,15 @@ Use `my-save-font-settings' to save font settings and use
          (completing-read
           "Font: " (mapcar #'car my-font-alist))
          (string-to-number (completing-read
-                            "Size: " nil nil nil nil nil "14"))))
+                            "Size: " nil nil nil nil nil
+                            ;; default value
+                            (cond
+                             ;; 4k
+                             ((>= (display-pixel-width) 3840) "28")
+                             ;; 2k
+                             ((>= (display-pixel-width) 2560) "20")
+                             ;; 1080
+                             (t "14"))))))
   (if (and (eq face 'default))
       (apply #'my-load-default-font font-name size attrs)
     (let* ((fontset

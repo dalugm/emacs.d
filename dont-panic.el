@@ -2,7 +2,7 @@
 
 ;;; Commentary:
 ;;
-;; Don't panic, use this minimal configuration for troubleshooting
+;; Don't panic, use this minimal configuration for troubleshooting.
 ;;
 
 ;;; Code:
@@ -10,11 +10,10 @@
 (eval-when-compile (require 'cl-lib))
 
 ;; Load path
-(push (expand-file-name "site-lisp" user-emacs-directory) load-path)
-(push (expand-file-name "lisp" user-emacs-directory) load-path)
+(push (expand-file-name "etc" user-emacs-directory) load-path)
 
 ;; test Lisp downloaded from Internet here
-(setq test-elisp-dir (expand-file-name "test" user-emacs-directory))
+(setq test-elisp-dir (expand-file-name "lib/site-lisp" user-emacs-directory))
 (unless (file-exists-p (expand-file-name test-elisp-dir))
   (make-directory (expand-file-name test-elisp-dir)))
 
@@ -30,20 +29,42 @@
 ;; (package-initialize)
 
 ;; HTTPS URLs should be used where possible
-;; as they offer superior security.
+;; as they offer superior security
 (with-eval-after-load 'package
   (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                       (not (gnutls-available-p))))
          (proto (if no-ssl "http" "https")))
     (setq package-archives
-          `(;; emacs-china
-            ,(cons "gnu"   (concat proto "://elpa.emacs-china.org/gnu/"))
-            ,(cons "melpa" (concat proto "://elpa.emacs-china.org/melpa/"))
-            ,(cons "org"   (concat proto "://elpa.emacs-china.org/org/"))
-            ;; official
-            ;; ,(cons "gnu"   (concat proto "://elpa.gnu.org/packages/"))
-            ;; ,(cons "melpa" (concat proto "://melpa.org/packages/"))
-            ;; ,(cons "org"   (concat proto "://orgmode.org/elpa/"))
+          `(
+
+            ;; ;; official
+            ;; ,(cons "gnu"    (concat proto "://elpa.gnu.org/packages/"))
+            ;; ,(cons "nongnu" (concat proto "://elpa.nongnu.org/nongnu/"))
+            ;; ,(cons "melpa"  (concat proto "://melpa.org/packages/"))
+            ;; ;; ,(cons "melpa-stable" (concat proto "://stable.melpa.org/packages/"))
+            ;; ,(cons "org"    (concat proto "://orgmode.org/elpa/"))
+
+            ;; ;; emacs-china
+            ;; ,(cons "gnu"    (concat proto "://elpa.emacs-china.org/gnu/"))
+            ;; ,(cons "nongnu" (concat proto "://elpa.emacs-china.org/nongnu/"))
+            ;; ,(cons "melpa"  (concat proto "://elpa.emacs-china.org/melpa/"))
+            ;; ;; ,(cons "melpa-stable" (concat proto "://elpa.emacs-china.org/stable-melpa/"))
+            ;; ,(cons "org"    (concat proto "://elpa.emacs-china.org/org/"))
+
+            ;; ;; 163
+            ;; ,(cons "gnu"    (concat proto "://mirrors.163.com/elpa/gnu/"))
+            ;; ,(cons "nongnu" (concat proto "://mirrors.163.com/elpa/nongnu/"))
+            ;; ,(cons "melpa"  (concat proto "://mirrors.163.com/elpa/melpa/"))
+            ;; ;; ,(cons "melpa-stable" (concat proto "://mirrors.163.com/elpa/stable-melpa/"))
+            ;; ,(cons "org"    (concat proto "://mirrors.163.com/elpa/org/"))
+
+            ;; tuna
+            ,(cons "gnu"    (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
+            ,(cons "nongnu" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/"))
+            ,(cons "melpa"  (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
+            ;; ,(cons "melpa-stable" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/"))
+            ,(cons "org"    (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/org/"))
+
             ))))
 
 ;; Explicitly set the preferred coding systems to avoid annoying prompt
@@ -142,28 +163,29 @@
 (global-set-key (kbd "C-c i") #'imenu)
 (global-set-key (kbd "C-c r") #'rectangle-mark-mode)
 
-(defun my-eval-last-sexp ()
-  "Evaluate the last symbolic expression at the point.
-With nil `C-u' prefix, insert output below following an arrow.
-With one `C-u' prefix, insert output in current position.
-With two `C-u' prefix, insert output in current position and delete sexp."
-  (interactive)
+(defun my-eval-print-last-sexp (&optional arg)
+  "Evaluate sexp before point, insert output below following an arrow.
+With a `\\[universal-argument]' prefix argument ARG, delete the
+sexp before point and insert output into current position."
+  (interactive "P")
   (let ((value (eval (elisp--preceding-sexp))))
     (save-excursion
       (cond
-       ((equal current-prefix-arg nil) ; no prefix
+       ((not arg)
         (newline-and-indent)
-        (insert (format "%s%S" ";; => " value)))
-       ((equal current-prefix-arg '(4)) ; one prefix
-        (newline-and-indent)
-        (insert (format "%S" value)))
-       ((equal current-prefix-arg '(16)) ; two prefix
+        (if (and (stringp value) (string-match-p "\n" value))
+            ;; if return value is a multiline string
+            (insert (format
+                     ";; =>\n;; %S"
+                     (replace-regexp-in-string "\n" "\n;; " value)))
+          (insert (format "%s%S" ";; => " value))))
+       ((equal arg '(4))
         (backward-kill-sexp)
         (insert (format "%S" value)))))))
 
 (dolist (map (list emacs-lisp-mode-map
                    lisp-interaction-mode-map))
-  (define-key map (kbd "C-c C-e") #'my-eval-last-sexp))
+  (define-key map (kbd "C-c C-p") #'my-eval-print-last-sexp))
 
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()

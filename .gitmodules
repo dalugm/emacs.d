@@ -71,23 +71,18 @@
 	path = lib/compat
 	url = https://git.sr.ht/~pkal/compat/
 [submodule "consult"]
+	no-byte-compile = consult-icomplete
+	no-byte-compile = consult-selectrum
 	path = lib/consult
 	url = https://github.com/minad/consult.git
 [submodule "corfu"]
+	load-path = .
+	load-path = extensions
 	path = lib/corfu
 	url = https://github.com/minad/corfu.git
-[submodule "corfu-doc"]
-	path = lib/corfu-doc
-	url = https://github.com/galeo/corfu-doc.git
-[submodule "corfu-doc-terminal"]
-	path = lib/corfu-doc-terminal
-	url = https://codeberg.org/akib/emacs-corfu-doc-terminal.git
 [submodule "corfu-terminal"]
 	path = lib/corfu-terminal
 	url = https://codeberg.org/akib/emacs-corfu-terminal.git
-[submodule "csharp-mode"]
-	path = lib/csharp-mode
-	url = https://github.com/emacs-csharp/csharp-mode.git
 [submodule "cyberpunk-theme"]
 	path = lib/cyberpunk-theme
 	url = https://github.com/n3mo/cyberpunk-theme.el.git
@@ -110,9 +105,6 @@
 [submodule "diff-hl"]
 	path = lib/diff-hl
 	url = https://github.com/dgutov/diff-hl.git
-[submodule "dockerfile-mode"]
-	path = lib/dockerfile-mode
-	url = https://github.com/spotify/dockerfile-mode.git
 [submodule "doom-themes"]
 	path = lib/doom-themes
 	url = https://github.com/doomemacs/themes.git
@@ -216,15 +208,9 @@
 [submodule "goto-chg"]
 	path = lib/goto-chg
 	url = https://github.com/emacs-evil/goto-chg.git
-[submodule "grammatical-edit"]
-	path = lib/grammatical-edit
-	url = https://github.com/manateelazycat/grammatical-edit.git
 [submodule "green-is-the-new-black-theme"]
 	path = lib/green-is-the-new-black-theme
 	url = https://github.com/fredcamps/green-is-the-new-black-emacs.git
-[submodule "groovy-mode"]
-	path = lib/groovy-mode
-	url = https://github.com/Groovy-Emacs-Modes/groovy-emacs-modes.git
 [submodule "gruvbox-theme"]
 	path = lib/gruvbox-theme
 	url = https://github.com/greduan/emacs-theme-gruvbox.git
@@ -237,9 +223,6 @@
 [submodule "kaolin-themes"]
 	path = lib/kaolin-themes
 	url = https://github.com/ogdenwebb/emacs-kaolin-themes.git
-[submodule "kotlin-mode"]
-	path = lib/kotlin-mode
-	url = https://github.com/Emacs-Kotlin-Mode-Maintainers/kotlin-mode.git
 [submodule "leuven-theme"]
 	path = lib/leuven-theme
 	url = https://github.com/fniessen/emacs-leuven-theme.git
@@ -356,9 +339,6 @@
 	path = lib/subed
 	url = https://github.com/rndusr/subed.git
 	load-path = subed
-[submodule "swift-mode"]
-	path = lib/swift-mode
-	url = https://github.com/swift-emacs/swift-mode.git
 [submodule "tablist"]
 	path = lib/tablist
 	url = https://github.com/politza/tablist.git
@@ -375,21 +355,9 @@
 	path = lib/transient
 	url = https://github.com/magit/transient.git
 	info-path = docs
-[submodule "tree-sitter"]
-	path = lib/tree-sitter
-	load-path = core
-	load-path = lisp
-	load-path = langs
-	url = https://github.com/emacs-tree-sitter/elisp-tree-sitter.git
-[submodule "tree-sitter-langs"]
-	path = lib/tree-sitter-langs
-	url = https://github.com/emacs-tree-sitter/tree-sitter-langs.git
 [submodule "treepy"]
 	path = lib/treepy
 	url = https://github.com/volrath/treepy.el.git
-[submodule "typescript-mode"]
-	path = lib/typescript-mode
-	url = https://github.com/emacs-typescript/typescript.el.git
 [submodule "use-package"]
 	path = lib/use-package
 	url = https://github.com/jwiegley/use-package.git

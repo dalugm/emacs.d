@@ -7,7 +7,7 @@
 /abbrev_defs
 /amx-items
 /bookmarks
-/custom-set-variables.el
+/custom.el
 /history
 /ido.last
 /places
@@ -17,7 +17,6 @@
 /tramp
 /viper
 /README.html
-!/lib/site-lisp/README
 
 ###########
 # Folders #
@@ -25,13 +24,20 @@
 /.cache/
 /auto-save-list/
 /elpa/
-/opt/librime/
 /transient/
 /url/
-/var/
 /tramp/
 /eshell/
 /games/
-/lib/site-lisp/*/
 /server/
 /eln-cache/
+/var/
+/lib/site-lisp/*/
+/tree-sitter/*
+
+################
+# DON'T IGNORE #
+################
+
+!/lib/site-lisp/README
+!/tree-sitter/README

@@ -7,9 +7,10 @@
 
 ;;; Code:
 
-;; https://endlessparentheses.com/get-in-the-habit-of-using-sharp-quote.html
 (defun my-endless-sharp ()
-  "Insert #' unless in a string or comment."
+  "Insert #\\=' unless in a string or comment.
+
+URL `https://endlessparentheses.com/get-in-the-habit-of-using-sharp-quote.html'."
   (interactive)
   (call-interactively #'self-insert-command)
   (let ((ppss (syntax-ppss)))
@@ -20,7 +21,7 @@
 
 (define-key emacs-lisp-mode-map "#" #'my-endless-sharp)
 
-(defun my-eval-last-sexp (&optional arg)
+(defun my-eval-print-last-sexp (&optional arg)
   "Evaluate sexp before point, insert output below following an arrow.
 With a `\\[universal-argument]' prefix argument ARG, delete the
 sexp before point and insert output into current position."
@@ -42,7 +43,7 @@ sexp before point and insert output into current position."
 
 (dolist (map (list emacs-lisp-mode-map
                    lisp-interaction-mode-map))
-  (define-key map (kbd "C-c C-e") #'my-eval-last-sexp))
+  (define-key map (kbd "C-c C-p") #'my-eval-print-last-sexp))
 
 ;; https://www.travishinkelman.com/posts/getting-started-with-chez-scheme-and-emacs/
 (use-package geiser

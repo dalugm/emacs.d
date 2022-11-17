@@ -8,7 +8,7 @@
 ;;; Code:
 
 (use-package python
-  :mode "\\.\\(c\\|i\\|r\\)?.py\\'"
+  :mode ("\\.\\(c\\|i\\|r\\)?py\\'" . python-mode)
   :custom
   (python-indent-guess-indent-offset nil)
   (python-indent-offset 4))

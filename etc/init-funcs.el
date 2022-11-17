@@ -18,8 +18,7 @@ If current buffer is visiting a file, rename it too."
   (let ((filename (buffer-file-name)))
     (if (not (and filename (file-exists-p filename)))
         (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
-      (let* ((new-name
-              (read-from-minibuffer "New name: " filename))
+      (let* ((new-name (read-from-minibuffer "New name: " filename))
              (containing-dir (file-name-directory new-name)))
         (make-directory containing-dir t)
         (cond
@@ -105,10 +104,11 @@ version control automatically."
    ((not (> (count-windows) 1))
     (message "You can't rotate a single window!"))
    (t
-    (let ((i 1) (numWindows (count-windows)))
-      (while (< i numWindows)
+    (let ((i 1)
+          (window-num (count-windows)))
+      (while (< i window-num)
         (let* ((w1 (elt (window-list) i))
-               (w2 (elt (window-list) (+ (% i numWindows) 1)))
+               (w2 (elt (window-list) (+ (% i window-num) 1)))
                (b1 (window-buffer w1))
                (b2 (window-buffer w2))
                (s1 (window-start w1))
@@ -124,7 +124,6 @@ version control automatically."
 (defun my-toggle-full-window()
   "Toggle full view of selected window."
   (interactive)
-  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Splitting-Windows.html
   (if (window-parent)
       (delete-other-windows)
     (winner-undo)))
@@ -274,7 +273,7 @@ With a prefix ARG, rename based on current name."
      (mapconcat (lambda (sym)
                   (format "%s 平安" sym))
                 list
-                ", "))))
+                "，"))))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; SEARCH RELATED ;;
@@ -422,13 +421,13 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 
 (global-set-key (kbd "C-c m l") #'my-load-theme)
 
-(defun my-emacs-default-theme ()
+(defun my-load-default-theme ()
   "Load default Emacs theme."
   (interactive)
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
 
-(global-set-key (kbd "C-c m e") #'my-emacs-default-theme)
+(global-set-key (kbd "C-c m L") #'my-load-default-theme)
 
 (defun my-kill-other-buffers-without-special-ones ()
   "Keep all buffers but the current one.

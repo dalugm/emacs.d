@@ -26,15 +26,15 @@
 
 (use-package consult
   :init
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
+  ;; Optionally configure the register formatting. This improves the
+  ;; register preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
   (setq register-preview-delay 0.5
         register-preview-function #'consult-register-format)
   ;; Optionally tweak the register preview window.
   ;; This adds thin lines, sorting and hides the mode line of the window.
   (advice-add 'register-preview :override #'consult-register-window)
-  ;; Use Consult to select xref locations with preview
+  ;; Use Consult to select xref locations with preview.
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
   :bind
@@ -76,15 +76,16 @@
    ("C-c s m" . consult-multi-occur)
    ("C-c s k" . consult-focus-lines)
    ("C-c s K" . consult-keep-lines)
-   ;; minibuffer history
+   (:map dired-mode-map
+         ("e" . my-dired-open-externally))
    (:map minibuffer-local-map
+         ("M-h" . consult-history)
          ([remap next-matching-history-element] . consult-history)
          ([remap previous-matching-history-element] . consult-history))
    (:map isearch-mode-map
-         ("M-s e" . consult-isearch-history)
+         ("M-h" . consult-isearch-history)
          ("M-l" . consult-line)
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
+         ("M-m" . consult-line-multi)
          ([remap isearch-edit-string] . consult-isearch-history)))
 
   ;; Enable automatic preview at point in the *Completions* buffer.
@@ -100,15 +101,12 @@
     (require 'zh-lib)
     (let* ((str (car input))
            (len (length str)))
-      (cond
-       ;; do nothing
-       ((<= len 0))
-       ;; Detect the first character entered, if it matches `:',
-       ;; convert the subsequent characters into Zhongwen regexp.
-       ;; For expmale, input `:zw' matches ‘中文’, ‘植物’ and etc.
-       ((string= (substring str 0 1) ":")
+      ;; Detect the first entered character.  If it matches `:',
+      ;; convert the subsequent characters into Zhongwen regexp.
+      ;; For expmale, input `:zw' matches ‘中文’, ‘植物’ and etc.
+      (when (string= (substring str 0 1) ":")
         (setf (car input) (zh-lib-build-regexp-string
-                           (substring str 1 len))))))
+                           (substring str 1 len)))))
     input)
 
   (defcustom my--consult--fd-command "fd"
@@ -145,7 +143,7 @@
   (defun my-consult-fd (&optional dir initial)
     "Search with `fd' for files in DIR where the content matches a regexp.
 The initial input is given by the INITIAL argument.  See
-`consult-grep' for more details."
+`consult-find' for more details."
     (interactive "P")
     (let* ((prompt-dir (consult--directory-prompt "Fd" dir))
            (default-directory (cdr prompt-dir)))
@@ -155,15 +153,16 @@ The initial input is given by the INITIAL argument.  See
 
   (when my-win-p
 
-    ;; ;; if Windows does not support utf-8 globally in CN environment
+    ;; ;; If Windows does not enable utf-8 globally in CN environment.
     ;; (add-to-list 'process-coding-system-alist
     ;;              '("[rR][gG]" . (utf-8 . gbk-dos)))
 
-    ;; https://github.com/minad/consult/issues/475
     (defun my--consult-find-win (&optional dir initial)
-      "Use `consult-find' in Windows with msys2."
+      "Use `consult-find' in Windows with msys2.
+
+URL `https://github.com/minad/consult/issues/475'."
       (let* ((w32-quote-process-args ?\\)  ; or (w32-quote-process-args ?*)
-             (consult-find-args "C:\\msys64\\usr\\bin\\find.exe . -not ( -wholename */.* -prune )")
+             (consult-find-args "c:/msys64/usr/bin/find.exe . -not ( -wholename */.* -prune )")
              (prompt-dir (consult--directory-prompt "Find" dir))
              (default-directory (cdr prompt-dir)))
         (find-file (consult--find
@@ -171,6 +170,13 @@ The initial input is given by the INITIAL argument.  See
                     #'consult--find-builder
                     initial))))
     (advice-add 'consult-find :override #'my--consult-find-win))
+
+  (defun my-dired-open-externally (&optional arg)
+    "Open marked or current file in operating system's default application."
+    (interactive "P")
+    (dired-map-over-marks
+     (consult-file-externally (dired-get-file-for-visit))
+     arg))
 
   ;; The narrowing key.
   ;; Both `<' and `C-+' work reasonably well.

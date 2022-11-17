@@ -1,8 +1,8 @@
-;;; init-complete.el --- auto-completion in Emacs -*- lexical-binding: t; -*-
+;;; init-corfu.el --- auto complete by corfu -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;;
-;; Auto-completion configuration.
+;; Auto complete by corfu.
 ;;
 
 ;;; Code:
@@ -18,7 +18,6 @@
   ;; (corfu-preview-current nil)    ; disable current candidate preview
   ;; (corfu-preselect-first nil)    ; disable candidate preselection
   ;; (corfu-on-exact-match nil)     ; configure handling of exact matches
-  ;; (corfu-echo-documentation nil) ; disable documentation in the echo area
   ;; (corfu-scroll-margin 5)        ; use scroll margin
   :config
   ;; use Dabbrev with Corfu!
@@ -30,20 +29,24 @@
     :custom
     (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'"))))
 
-(use-package corfu-doc
-  :hook (corfu-mode . corfu-doc-mode)
-  :bind (:map corfu-map
-              ("M-n" . corfu-doc-scroll-up)
-              ("M-p" . corfu-doc-scroll-down)
-              ("M-d" . corfu-doc-toggle)))
+(if (display-graphic-p)
+    (use-package corfu-popupinfo
+      :hook (corfu-mode . corfu-popupinfo-mode)
+      :bind (:map corfu-map
+                  ("M-n" . corfu-popupinfo-scroll-up)
+                  ("M-p" . corfu-popupinfo-scroll-down)
+                  ("M-l" . corfu-popupinfo-location)
+                  ("M-d" . corfu-popupinfo-documentation)
+                  ("M-t" . corfu-popupinfo-toggle)))
+  (use-package corfu-info
+    :after corfu
+    :bind (:map corfu-map
+                ("M-l" . corfu-info-location)
+                ("M-d" . corfu-info-documentation))))
 
 (use-package corfu-terminal
   :unless (display-graphic-p)
   :hook (corfu-mode . corfu-terminal-mode))
-
-(use-package corfu-doc-terminal
-  :unless (display-graphic-p)
-  :hook (corfu-doc-mode . corfu-doc-terminal-mode))
 
 (use-package cape
   :init
@@ -77,6 +80,6 @@
          ("C-c k &" . cape-sgml)
          ("C-c k r" . cape-rfc1345)))
 
-(provide 'init-complete)
+(provide 'init-corfu)
 
-;;; init-complete.el ends here
+;;; init-corfu.el ends here

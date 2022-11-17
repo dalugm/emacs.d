@@ -13,13 +13,9 @@
 (global-set-key (kbd "C-c o b") #'org-switchb)
 
 (with-eval-after-load 'org
-  ;; agenda
   (setq org-agenda-files `(,org-directory))
-
-  ;; capture
   (setq org-default-notes-file (concat org-directory "/notes.org"))
 
-  ;; useful initials
   (defvar my--org-task-file (concat org-directory "/task.org")
     "Org task file.")
   (defvar my--org-work-file (concat org-directory "/work.org")
@@ -55,8 +51,7 @@
       ;; locate YEAR headline, then MONTH headline.
       (dolist (heading path)
         (let ((re (format org-complex-heading-regexp-format
-                          (regexp-quote heading)))
-              (cnt 0))
+                          (regexp-quote heading))))
           (if (re-search-forward re end t)
               (goto-char (line-beginning-position))
             ;; new headline
@@ -141,7 +136,7 @@
   ;; -----------
   ;; Enhance org
   ;; -----------
-  ;; make Emacs respect kinsoku rules when wrapping lines visually
+  ;; Make Emacs respect kinsoku rules when wrapping lines visually.
   (setq word-wrap-by-category t)
 
   (defun my-org-demote-or-promote (&optional is-promote)
@@ -174,26 +169,26 @@
     "Show next entry, keeping other entries closed."
     (interactive)
     (if (save-excursion (end-of-line) (outline-invisible-p))
-        (progn (org-show-entry) (show-children))
+        (progn (org-show-entry) (outline-show-children))
       (outline-back-to-heading)
-      (unless (and (bolp) (org-on-heading-p))
+      (unless (and (bolp) (org-at-heading-p))
         (org-up-heading-safe)
-        (hide-subtree)
+        (outline-hide-subtree)
         (error "Boundary reached"))
       (org-overview)
       (org-reveal t)
       (org-show-entry)
-      (show-children)))
+      (outline-show-children)))
 
   (global-set-key (kbd "C-c o o") #'my-org-show-current-heading-tidily)
 
   ;; -----
   ;; babel
   ;; -----
-  ;; fontify source code in code blocks
-  ;; default value is nil after Emacs v24.1
-  ;; then becomes t after Emacs v26.1
-  ;; to keep this always t, we set this explicitly
+  ;; Fontify source code in code blocks.
+  ;; Default value is nil after Emacs v24.1,
+  ;; then becomes t after Emacs v26.1,
+  ;; to keep this always t, we set this explicitly.
   (setq org-src-fontify-natively t)
 
   (defun my-org-babel-load-languages ()
@@ -213,18 +208,18 @@
   ;; ----
   ;; TODO
   ;; ----
-  ;; format `X/Y', X means action when enters the state, Y means action
-  ;; when leaves the state use `@' to add notes and status
-  ;; information (including time) use `!' to add status information only
+  ;; Format `X/Y', X means action when enters the state, Y means action
+  ;; when leaves the state use `@' to add notes and status information
+  ;; (including time) use `!' to add status information only.
 
   ;; | DONE(d@)   | add notes when entering                            |
   ;; | DONE(d/!)  | add status when leaving                            |
   ;; | DONE(d@/!) | add note when entering and add status when leaving |
   ;; | DONE(d@/)  | WARNING: illegal                                   |
 
-  ;; NOTE: when leaving state A to state B, if A has a leaving action
-  ;; and B has an entering action A's leaving action won't be triggered
-  ;; instead of executing B's entering action
+  ;; NOTE: When leaving state A to state B, if A has a leaving action
+  ;; and B has an entering action. A's leaving action won't be triggered
+  ;; instead of executing B's entering action.
 
   (setq org-todo-keywords
         '((sequence "TODO(t)" "STARTED(s!/!)" "HANGUP(h@)"
@@ -240,11 +235,11 @@
   ;; -----
   ;; clock
   ;; -----
-  ;; Save clock data and notes in the LOGBOOK drawer
+  ;; Save clock data and notes in the LOGBOOK drawer.
   (setq org-clock-into-drawer t)
-  ;; Save state changes in the LOGBOOK drawer
+  ;; Save state changes in the LOGBOOK drawer.
   (setq org-log-into-drawer t)
-  ;; Removes clocked tasks with 0:00 duration
+  ;; Remove clocked tasks with 0:00 duration.
   (setq org-clock-out-remove-zero-time-clocks t)
 
   ;; -------
@@ -276,7 +271,7 @@
   ;; LaTeX
   ;; -----
   (with-eval-after-load 'ox-latex
-    ;; export org-mode in Chinese into PDF
+    ;; export org in Chinese into PDF
     ;; https://freizl.github.io/posts/2012-04-06-export-orgmode-file-in-Chinese.html
     (setq org-latex-pdf-process
           '("xelatex -interaction nonstopmode -output-directory %o %f"
@@ -291,10 +286,10 @@
                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
     (setq org-latex-default-class "ctexart")
     ;; Compared to `pdflatex', `xelatex' supports unicode and can use
-    ;; system's font
+    ;; system's font.
     (setq org-latex-compiler "xelatex"))
 
-  ;; preview LaTeX in Org
+  ;; preview LaTeX in Org.
   (setq org-preview-latex-default-process 'dvisvgm)
   (setq org-preview-latex-process-alist
         '((dvisvgm
@@ -307,7 +302,7 @@
            :latex-compiler
            ("xelatex -no-pdf -interaction nonstopmode -output-directory %o %f")
            :image-converter
-           ;; set `dvisvgm' with --exact option
+           ;; use `-e' to compute exact glyph bounding boxes
            ("dvisvgm %f -e -n -b min -c %S -o %O"))
           (dvipng
            :programs ("latex" "dvipng")
@@ -332,17 +327,19 @@
            :image-converter
            ("convert -density %D -trim -antialias %f -quality 100 %O"))))
 
-  ;; ;; enlarge the preview magnification
+  ;; ;; Enlarge the preview magnification.
   ;; (plist-put org-format-latex-options :scale 1.5)
 
   ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview-fragments-in-org-mode/
-  ;; use center or right, anything else means left-justified as the default
+  ;; Use center or right, anything else means left-justified as the default.
   (plist-put org-format-latex-options :justify 'right)
 
   (defun my--org-justify-fragment-overlay-h (beg end image imagetype)
     "Adjust the justification of a LaTeX fragment horizontally.
 The justification is set by :justify in `org-format-latex-options'.
-Only equations at the beginning of a line are justified."
+Only equations at the beginning of a line are justified.
+
+URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview-fragments-in-org-mode/'."
     (let* ((position (plist-get org-format-latex-options :justify))
            (img (create-image image 'svg t))
            (ov (car (overlays-at (/ (+ beg end) 2) t)))
@@ -387,9 +384,10 @@ Only equations at the beginning of a line are justified."
         (advice-remove 'org--make-preview-overlay #'my--org-justify-fragment-overlay-v)
       (advice-add 'org--make-preview-overlay :after #'my--org-justify-fragment-overlay-v)))
 
-  ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/
   (defun my--org-renumber-fragment (orig-func &rest args)
-    "Number equations in LaTeX fragment."
+    "Number equations in LaTeX fragment.
+
+URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/'."
     (let ((results '())
           (counter -1)
           (numberp))
@@ -448,14 +446,14 @@ Only equations at the beginning of a line are justified."
   (global-set-key (kbd "C-c o l") #'org-store-link)
   (global-set-key (kbd "C-c o i") #'org-insert-structure-template)
 
-  ;; ;; after v9.2 [[https://orgmode.org/Changes.html][changlog]]
-  ;; ;; Org comes with a new template expansion mechanism
+  ;; ;; After v9.2 [[https://orgmode.org/Changes.html][changelog]]
+  ;; ;; Org comes with a new template expansion mechanism,
   ;; ;; `org-insert-structure-template'. Default keybinding is `\C-c\C-,'.
   ;; ;; If prefer using previous patterns, e.g. `<s',
-  ;; ;; check `org-tempo.el' for more information
+  ;; ;; check `org-tempo.el' for more information.
   ;; (add-to-list 'org-modules 'org-tempo)
 
-  ;; {} must exist to denote this is a subscript
+  ;; {} must exist to denote this is a subscript.
   (setq org-use-sub-superscripts (quote {}))
   (setq org-export-with-sub-superscripts (quote {}))
 
@@ -468,18 +466,7 @@ Only equations at the beginning of a line are justified."
   (with-eval-after-load 'ox
     (require 'ox-md)
     (add-to-list 'org-export-backends 'md)
-    (setq org-export-coding-system 'utf-8))
-
-  (defun my-org-convert-docx-by-pandoc ()
-    "Export org file as docx by pandoc."
-    (interactive)
-    (let ((docx-file (concat (file-name-sans-extension (buffer-file-name))
-                             ".docx"))
-          (template-file (concat (file-name-as-directory my-optional-d)
-                                 "template.docx")))
-      (shell-command (format "pandoc %s -o %s --reference-doc=%s"
-                             (buffer-file-name) docx-file template-file))
-      (message "Convert finish: %s. " docx-file))))
+    (setq org-export-coding-system 'utf-8)))
 
 (provide 'init-org)
 

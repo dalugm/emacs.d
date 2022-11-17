@@ -18,7 +18,7 @@
   :hook (js-mode css-mode web-mode html-mode nxml-mode sgml-mode))
 
 (use-package web-mode
-  :mode "\\.[px]?html?\\'"
+  :mode "\\.\\(?:cs\\|[px]\\)?html?\\'"
   :mode "\\.\\(?:tpl\\|blade\\)\\(?:\\.php\\)?\\'"
   :mode "\\.as[cp]x\\'"
   :mode "\\.eco\\'"
@@ -31,7 +31,6 @@
   :mode "\\.svelte\\'"
   :mode "\\.twig\\'"
   :mode "\\.n?vue\\'"
-  :mode "\\.tsx\\'"
   :mode "\\.wxml\\'"
   :mode "templates/.+\\.php\\'"
   :mode "wp-content/themes/.+/.+\\.php\\'"

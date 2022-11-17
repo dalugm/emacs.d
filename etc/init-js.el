@@ -11,10 +11,6 @@
   :mode ("\\.\\(m\\|c\\)?js\\'" . js-mode)
   :custom (js-indent-level 2))
 
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :custom (typescript-indent-level 2))
-
 (provide 'init-js)
 
 ;;; init-js.el ends here
