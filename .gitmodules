@@ -271,9 +271,6 @@
 [submodule "ox-hugo"]
 	path = lib/ox-hugo
 	url = https://github.com/kaushalmodi/ox-hugo.git
-[submodule "packed"]
-	path = lib/packed
-	url = https://github.com/emacscollective/packed.git
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools.git

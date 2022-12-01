@@ -16,6 +16,6 @@
     (ido-mode +1)
     (ido-everywhere +1)))
 
-(provide 'init-complete)
+(provide 'init-ido)
 
 ;;; init-ido.el ends here

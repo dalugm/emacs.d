@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: method actionPerformed
-# key: m.ap
-# --
-public void actionPerformed(ActionEvent ev) {
-       $0
-}

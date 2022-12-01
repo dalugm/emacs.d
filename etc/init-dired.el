@@ -72,7 +72,7 @@
                     (setq ediff-after-quit-hook-internal nil)
                     (set-window-configuration wnd)))))
      (t
-      (error "No more than 2 files should be marked")))))
+      (error "No more than 2 files should be marked!")))))
 
 (defun my-dired-cycle-space-underscore-hyphen ()
   "In Dired, rename current or marked files.

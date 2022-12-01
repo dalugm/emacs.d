@@ -50,16 +50,16 @@ version control automatically."
 (global-set-key (kbd "C-c v c") #'my-vc-copy-file-and-rename-buffer)
 
 (defun my-vc-delete-file-and-buffer ()
-  "Kill the current buffer and deletes the file it is visiting."
+  "Kill the current buffer and delete the file it is visiting."
   (interactive)
   (let ((filename (buffer-file-name)))
     (when filename
       (if (vc-backend filename)
           (vc-delete-file filename)
-        (when (y-or-n-p (format "Are you sure you want to delete ‘%s’? "
+        (when (y-or-n-p (format "Are you sure you want to delete `%s'? "
                                 filename))
           (delete-file filename delete-by-moving-to-trash)
-          (message "Deleted file ‘%s’." filename)
+          (message "Deleted file `%s'." filename)
           (kill-buffer))))))
 
 (global-set-key (kbd "C-c v d") #'my-vc-delete-file-and-buffer)
@@ -140,7 +140,7 @@ With a prefix ARG, rename based on current name."
   (interactive "P")
   (let ((filename (buffer-file-name)))
     (unless filename
-      (error "Buffer ‘%s’ is not visiting a file!" name))
+      (error "Buffer `%s' is not visiting a file!" filename))
     (let ((new-name (read-string
                      "New name: "
                      (when arg (file-name-nondirectory filename)))))
@@ -162,7 +162,7 @@ With a prefix ARG, rename based on current name."
     (if filename
         (progn
           (kill-new (file-name-nondirectory filename))
-          (message "Copied ‘%s’." (file-name-nondirectory filename)))
+          (message "Copied `%s'." (file-name-nondirectory filename)))
       (warn "Current buffer is not attached to a file!"))))
 
 (global-set-key (kbd "C-c f c") #'my-copy-file-name)
@@ -197,8 +197,8 @@ With a prefix ARG, rename based on current name."
   "Delete current file, and kill the buffer."
   (interactive)
   (unless (buffer-file-name)
-    (error "No file is currently being edited"))
-  (when (yes-or-no-p (format "Really delete ‘%s’?"
+    (error "No file is currently being edited!"))
+  (when (yes-or-no-p (format "Really delete `%s'?"
                              (file-name-nondirectory buffer-file-name)))
     (delete-file (buffer-file-name))
     (kill-this-buffer)))
@@ -210,7 +210,7 @@ With a prefix ARG, rename based on current name."
   (interactive "sFile name: ")
   (shell-command
    (format "find . -depth -name %s -print0 | xargs -0 rm" file))
-  (message "‘%s’ under current working directory deleted." file))
+  (message "`%s' under current working directory deleted." file))
 
 (global-set-key (kbd "C-c f D") #'my-delete-file)
 

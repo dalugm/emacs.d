@@ -38,8 +38,7 @@
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
   :bind
-  (([remap apropos-command] . consult-apropos)
-   ([remap bookmark-jump] . consult-bookmark)
+  (([remap bookmark-jump] . consult-bookmark)
    ([remap goto-line] . consult-goto-line)
    ([remap imenu] . consult-imenu)
    ([remap locate] . consult-locate)
@@ -93,9 +92,6 @@
   :hook (completion-list-mode . consult-preview-at-point-mode)
 
   :config
-  ;; ---------
-  ;; customize
-  ;; ---------
   (defun my--consult-zh-builder (input)
     "Add Zhongwen support for `consult' when searching INPUT."
     (require 'zh-lib)
@@ -103,7 +99,7 @@
            (len (length str)))
       ;; Detect the first entered character.  If it matches `:',
       ;; convert the subsequent characters into Zhongwen regexp.
-      ;; For expmale, input `:zw' matches ‘中文’, ‘植物’ and etc.
+      ;; For expmale, input `:zw' matches `中文', `植物' and etc.
       (when (string= (substring str 0 1) ":")
         (setf (car input) (zh-lib-build-regexp-string
                            (substring str 1 len)))))
@@ -161,7 +157,7 @@ The initial input is given by the INITIAL argument.  See
       "Use `consult-find' in Windows with msys2.
 
 URL `https://github.com/minad/consult/issues/475'."
-      (let* ((w32-quote-process-args ?\\)  ; or (w32-quote-process-args ?*)
+      (let* ((w32-quote-process-args ?\\) ; or (w32-quote-process-args ?*)
              (consult-find-args "c:/msys64/usr/bin/find.exe . -not ( -wholename */.* -prune )")
              (prompt-dir (consult--directory-prompt "Find" dir))
              (default-directory (cdr prompt-dir)))

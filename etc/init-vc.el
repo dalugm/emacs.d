@@ -7,33 +7,6 @@
 
 ;;; Code:
 
-;; ;; Solution 1: disable all vc backends
-;; ;; https://stackoverflow.com/questions/5748814/how-does-one-disable-vc-git-in-emacs
-;; (setq vc-handled-backends nil)
-
-;; ;; Solution 2: if NO network mounted drive involved
-;; (setq vc-handled-backends '(Git SVN Hg))
-;; ;; https://www.reddit.com/r/emacs/comments/4c0mi3/the_biggest_performance_improvement_to_emacs_ive/
-;; ;; open files faster but you can't check if file is version
-;; ;; controlled. other VCS functionality still works.
-;; (remove-hook 'find-file-hooks 'vc-find-file-hook)
-
-;; ;; Solution 3: setup `vc-handled-backends' per project
-;; (setq vc-handled-backends nil)
-;; (defun my-setup-develop-environment ()
-;;   "Default configuration for project under vcs."
-;;   (interactive)
-;;   (cond
-;;     ((string-match-p (file-truename user-emacs-directory)
-;;                      (file-name-directory (buffer-file-name)))
-;;       (setq vc-handled-backends '(Git)))
-;;     (t
-;;       (setq vc-handled-backends nil))))
-;; (dolist (hook '(java-mode-hook emacs-lisp-mode-hook org-mode-hook
-;;                 js-mode-hook javascript-mode-hook web-mode-hook
-;;                 c++-mode-hook c-mode-hook))
-;;   (add-hook hook #'my-setup-develop-environment))
-
 (use-package magit
   :bind (("C-x g"   . magit-status)
          ("C-c v g" . magit-status)
@@ -42,18 +15,15 @@
          ("C-c M-g" . magit-file-dispatch)
          ("C-c v f" . magit-file-dispatch))
   :config
-  ;; add module section into the status buffer
+  ;; Add module section into the status buffer.
   (magit-add-section-hook 'magit-status-sections-hook
                           #'magit-insert-modules
                           #'magit-insert-stashes #'append))
 
-;; access GIT forges from `magit'
+;; Access GIT forges from `magit'.
 (use-package forge
   :after magit
   :config
-  (add-to-list 'forge-alist
-               '("work.github.com" "api.github.com" "github.com"
-                 forge-github-repository))
   (setq forge-topic-list-columns
         '(("#" 5 forge-topic-list-sort-by-number (:right-align t) number nil)
           ("Title" 50 t nil title  nil)
@@ -64,7 +34,7 @@
   :hook ((after-init . global-diff-hl-mode)
          (dired-mode . diff-hl-dired-mode))
   :config
-  ;; highlight on-the-fly
+  ;; Highlight on-the-fly.
   (diff-hl-flydiff-mode +1)
 
   (setq diff-hl-margin-symbols-alist
@@ -72,14 +42,14 @@
           (unknown . "?") (ignored . "!")))
 
   (unless (display-graphic-p)
-    ;; fall back to margin since fringe is unavailable in terminal
+    ;; Fall back to margin since fringe is unavailable in terminal.
     (diff-hl-margin-mode +1)
-    ;; avoid restoring `diff-hl-margin-mode' when using `desktop.el'
+    ;; Avoid restoring `diff-hl-margin-mode' when using `desktop.el'.
     (with-eval-after-load 'desktop
       (add-to-list 'desktop-minor-mode-table
                    '(diff-hl-margin-mode nil))))
 
-  ;; integration with `magit'
+  ;; Integrate with `magit'.
   (with-eval-after-load 'magit
     (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
     (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)))
@@ -89,7 +59,7 @@
 
 (use-package git-link
   :init
-  ;; make the following lambda work without initialize.
+  ;; Make the following lambda work without initialize.
   (setq git-link-use-commit nil)
   :bind (("C-c v l l" . git-link)
          ("C-c v l c" . git-link-commit)

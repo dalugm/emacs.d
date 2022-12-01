@@ -9,7 +9,7 @@
 
 (use-package evil
   :init
-  ;; use Emacs keys in INSERT state
+  ;; Use Emacs keys in INSERT state.
   (setq evil-disable-insert-state-bindings t)
   :hook (after-init . evil-mode)
   :bind ((:map evil-normal-state-map
@@ -26,20 +26,20 @@
          (:map evil-visual-state-map
                ("v" . er/expand-region)))
   :config
-  ;; make evil-search behave more like VIM
+  ;; Make evil-search behave more like VIM.
   (evil-select-search-module 'evil-search-module 'evil-search)
   (setq evil-ex-interactive-search-highlight 'selected-window)
 
   ;; https://github.com/emacs-evil/evil/issues/342
   ;; Cursor is always black because of evil.
-  ;; here is the workaround
+  ;; Here is the workaround.
   (setq evil-default-cursor t)
 
-  ;; move back the cursor one position when exiting insert mode
+  ;; Move back the cursor one position when exiting insert mode.
   (setq evil-move-cursor-back t)
-  ;; make cursor move as Emacs
+  ;; Make cursor move as Emacs.
   (setq evil-move-beyond-eol t)
-  ;; make evil search like vim
+  ;; Make evil search like vim.
   (setq evil-ex-search-vim-style-regexp t)
 
   ;; ------------
@@ -52,18 +52,14 @@
     (save-excursion (dotimes (_ count) (evil-insert-newline-above)))
     (when (bolp) (forward-char count)))
 
-  (define-key evil-normal-state-map
-              (kbd "[ SPC")
-              #'evil-unimpaired-insert-newline-above)
+  (define-key evil-normal-state-map (kbd "[ SPC") #'evil-unimpaired-insert-newline-above)
 
   (defun evil-unimpaired-insert-newline-below (count)
     "Insert COUNT blank line(s) below current line."
     (interactive "p")
     (save-excursion (dotimes (_ count) (evil-insert-newline-below))))
 
-  (define-key evil-normal-state-map
-              (kbd "] SPC")
-              #'evil-unimpaired-insert-newline-below)
+  (define-key evil-normal-state-map (kbd "] SPC") #'evil-unimpaired-insert-newline-below)
 
   (defun my--evil-disable-ex-highlight ()
     "Disable evil ex search buffer highlight."
@@ -154,33 +150,32 @@ If INCLUSIVE is t, the text object is inclusive."
     "gp" #'outline-previous-visible-heading
     "$"  #'org-end-of-line
     "^"  #'org-beginning-of-line
-    "<"  (lambda () (interactive) (my-org-demote-or-promote 1)) ; outdent
-    ">"  #'my-org-demote-or-promote                             ; indent
+    "<"  #'org-promote-subtree          ; outdent
+    ">"  #'org-demote-subtree           ; indent
     (kbd "TAB") #'org-cycle)
 
   (evil-declare-key 'normal markdown-mode-map
     "gh" #'outline-up-heading
     "gn" #'outline-next-visible-heading
     "gp" #'outline-previous-visible-heading
-    "<"  (lambda () (interactive) (my-markdown-demote-or-promote 1)) ; outdent
-    ">"  #'my-markdown-demote-or-promote                             ; indent
+    "<"  #'markdown-promote             ; outdent
+    ">"  #'markdown-demote              ; indent
     (kbd "TAB") #'markdown-cycle)
 
   ;; ------------------
   ;; evil-initial-state
   ;; ------------------
 
-  ;; https://github.com/emacs-evil/evil/issues/511
-  (defmacro my--adjust-major-mode-keymap-with-evil (mode &optional replace)
+  (defmacro my--evil-adjust-major-mode-keymap (mode &optional replace)
+    "URL `https://github.com/emacs-evil/evil/issues/511'."
     `(with-eval-after-load (quote ,(if replace replace mode))
        (evil-make-overriding-map ,(intern (concat mode "-mode-map")) 'normal)
        ;; force update evil keymaps after `mode' loaded
        (add-hook (quote ,(intern (concat mode "-mode-hook")))
                  #'evil-normalize-keymaps)))
 
-  (my--adjust-major-mode-keymap-with-evil "git-timemachine")
+  (my--evil-adjust-major-mode-keymap "git-timemachine")
 
-  ;; buffer-regexps
   (dolist (b '(
                ("+new-snippet+"  . emacs)
                ("\\*.*\\*"       . emacs)
@@ -189,11 +184,10 @@ If INCLUSIVE is t, the text object is inclusive."
                ))
     (add-to-list 'evil-buffer-regexps b))
 
-  ;; hook
   (dolist (hook '(cua-rectangle-mark-mode-hook))
     (add-hook hook #'evil-emacs-state))
 
-  ;; specify MAJOR mode uses Evil (vim) NORMAL state or EMACS original state.
+  ;; Specify MAJOR mode uses Evil (vim) NORMAL state or EMACS original state.
   (dolist (p '(
                (Info-mode                . emacs)
                (Man-mode                 . emacs)
@@ -231,7 +225,8 @@ If INCLUSIVE is t, the text object is inclusive."
 
   (defmacro my--quoted-text-object (name key start-regex end-regex)
     "Define text objects.
-ref: https://stackoverflow.com/a/22418983/4921402."
+
+URL `https://stackoverflow.com/a/22418983/4921402'."
     (let ((inner-name (make-symbol (concat "evil-inner-" name)))
           (outer-name (make-symbol (concat "evil-a-" name))))
       `(progn
@@ -246,7 +241,7 @@ ref: https://stackoverflow.com/a/22418983/4921402."
          (define-key evil-inner-text-objects-map ,key #',inner-name)
          (define-key evil-outer-text-objects-map ,key #',outer-name))))
 
-  ;; NOTE: do NOT use text-object such as `w' `p'
+  ;; NOTE: do NOT use text-object such as `w' `p'.
   (my--quoted-text-object "ShuMingHao" "q" "《" "》")
   (my--quoted-text-object "ShuangYinHao" "e" "“" "”")
   (my--quoted-text-object "DanYinHao" "d" "‘" "’")
@@ -288,7 +283,7 @@ ref: https://stackoverflow.com/a/22418983/4921402."
 (use-package evil-zh
   :config (global-evil-zh-mode +1))
 
-;; bundle with `evil'
+;; Bundle with `evil'.
 (use-package evil-nerd-commenter
   :bind ((:map evil-normal-state-map
                ("gc" . evilnc-comment-operator)
@@ -301,12 +296,12 @@ ref: https://stackoverflow.com/a/22418983/4921402."
 
 ;; https://medium.com/@schtoeffel/you-don-t-need-more-than-one-cursor-in-vim-2c44117d51db
 ;; https://macplay.github.io/posts/vim-bu-xu-yao-duo-guang-biao-bian-ji-gong-neng/
-;; That's why I don't use multipleCursor in Emacs and VIM
+;; That's why I don't use multipleCursor in Emacs and VIM.
 
 (use-package general
   :config (general-evil-setup)
 
-  ;; use `,' as leader key
+  ;; Use `,' as leader key.
   (general-create-definer my-comma-leader-def
     :prefix ","
     :states '(normal visual))
@@ -347,9 +342,9 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "xk" #'kill-buffer
     "xs" #'save-buffer
     ;; org
-    ;; toggle overview
+    ;; Toggle overview.
     "c$" #'org-archive-subtree
-    ;; org-do-demote/org-do-premote support selected region
+    ;; org-do-demote/org-do-premote support selected region.
     "c<"  #'org-do-promote
     "c>"  #'org-do-demote
     "cam" #'org-tags-view
@@ -407,8 +402,8 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     ;; http://ergoemacs.org/emacs/emacs_pinky_2020.html
     "xx" #'my-kill-other-buffers-without-special-ones)
 
-  ;; Use `SPC' as leader key
-  ;; all keywords arguments are still supported
+  ;; Use `SPC' as leader key.
+  ;; All keywords arguments are still supported.
   (general-create-definer my-space-leader-def
     :prefix "SPC"
     :states '(normal visual))
@@ -473,11 +468,11 @@ ref: https://stackoverflow.com/a/22418983/4921402."
     "s"  #'(:ignore t)
     "sd" #'search-dired-dwim
     "sD" #'search-dired
-    "sf" #'my-consult-find
+    "sf" #'my-consult-fd
     "sF" #'consult-find
+    "sg" #'consult-grep
     "so" #'my-search-online
-    "sr" #'my-consult-rg
-    "sR" #'consult-rg
+    "sr" #'consult-rg
     "ss" #'consult-line
     "si" #'imenu
     ;; toggle

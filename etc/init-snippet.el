@@ -18,8 +18,7 @@
     (unless (gethash 'text-mode yas--tables)
       (yas-reload-all t))
     (let ((templates
-           (let (yas-choose-tables-first ; avoid prompts
-                 yas-choose-keys-first)
+           (let (yas-choose-tables-first yas-choose-keys-first)
              (cl-loop for tpl in (yas--all-templates
                                   (yas--get-snippet-tables 'text-mode))
                       for uuid = (yas--template-uuid tpl)
@@ -29,10 +28,14 @@
       (when-let (uuid (yas-choose-value (mapcar #'car templates)))
         (yas-expand-snippet (cdr (assoc uuid templates))))))
 
-  (setq my-private-snippet (expand-file-name "~/my-snippets"))
-  (when (and (file-exists-p my-private-snippet)
-             (not (member my-yasnippets yas-snippet-dirs)))
-    (add-to-list 'yas-snippet-dirs my-private-snippet)))
+  (defcustom my-private-snippet-d (expand-file-name "~/my-snippets")
+    "Personal snippet directory."
+    :group 'convenience
+    :type 'string)
+
+  (when (and (file-exists-p my-private-snippet-d)
+             (not (member my-private-snippet-d yas-snippet-dirs)))
+    (add-to-list 'yas-snippet-dirs my-private-snippet-d)))
 
 (use-package auto-yasnippet
   :after yasnippet

@@ -20,12 +20,11 @@
   ;; (corfu-on-exact-match nil)     ; configure handling of exact matches
   ;; (corfu-scroll-margin 5)        ; use scroll margin
   :config
-  ;; use Dabbrev with Corfu!
+  ;; Use Dabbrev with Corfu.
   (use-package dabbrev
-    ;; Swap M-/ and C-M-/
+    ;; Swap M-/ and C-M-/.
     :bind (("M-/" . dabbrev-completion)
            ("C-M-/" . dabbrev-expand))
-    ;; other useful Dabbrev configurations.
     :custom
     (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'"))))
 
@@ -63,7 +62,7 @@
   (add-to-list 'completion-at-point-functions #'cape-symbol)
   (add-to-list 'completion-at-point-functions #'cape-keyword)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  ;; Bind dedicated completion commands
+  ;; Bind dedicated completion commands.
   :bind (("C-c k p" . completion-at-point)
          ("C-c k t" . complete-tag)
          ("C-c k d" . cape-dabbrev)

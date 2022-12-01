@@ -7,7 +7,7 @@
 
 ;;; Code:
 
-;; show fortune in Emacs
+;; Show fortune in Emacs.
 (with-eval-after-load 'fortune
   (when (or my-mac-p my-linux-p)
     (let ((fortune
@@ -16,9 +16,8 @@
             (my-linux-p "/usr/share/games/fortunes"))))
       (setq fortune-file fortune))))
 
-;; network proxy
 (defcustom my-http-proxy "127.0.0.1:1087"
-  "Network proxy."
+  "HTTP proxy."
   :group 'convenience
   :type 'string)
 
@@ -29,30 +28,38 @@
 
 (defcustom my-wsl-socks-proxy
   (concat
-   (shell-command-to-string
-    "cat /etc/resolv.conf | grep nameserver | awk '{ printf $2 }'")
+   (if (file-exists-p "/etc/resolv.conf")
+       (shell-command-to-string
+        "cat /etc/resolv.conf | grep nameserver | awk '{ printf $2 }'")
+     "0.0.0.0")
    ":"
    "10810")
   "SOCKS proxy in WSL."
   :group 'convenience
   :type 'string)
 
-;; allow access from emacsclient
-(run-with-idle-timer 3 nil
-                     (lambda ()
-                       (require 'server)
-                       (unless (server-running-p)
-                         (message "Starting a server...")
-                         (server-start))))
+(defcustom my-run-emacs-as-a-server nil
+  "Non-nil means to run Emacs as a server process, which allows
+access from `emacsclient'."
+  :group 'convenience
+  :type 'boolean)
 
-;; calendar
+(when my-run-emacs-as-a-server
+  (run-with-idle-timer 3 nil
+                       (lambda ()
+                         "Run Emacs as a server process."
+                         (require 'server)
+                         (unless (server-running-p)
+                           (message "Starting a server...")
+                           (server-start)))))
+
+;; Calendar.
 (setq calendar-chinese-all-holidays-flag t)
 (setq holiday-local-holidays
       `((holiday-fixed 3 8  "Women's Day")
         (holiday-fixed 3 12 "Arbor Day")
-        ,@(cl-loop
-           for i from 1 to 3
-           collect `(holiday-fixed 5 ,i "International Workers' Day"))
+        ,@(cl-loop for i from 1 to 3
+                   collect `(holiday-fixed 5 ,i "International Workers' Day"))
         (holiday-fixed 5 4  "Chinese Youth Day")
         (holiday-fixed 6 1  "Children's Day")
         (holiday-fixed 9 9  "Mourn of Mao's Death")
@@ -96,7 +103,7 @@
           ;; may break in a future update.
           ("HACK" font-lock-constant-face bold)
           ;; For things that were done for temporarily use,
-          ;; It will be removed in the future.
+          ;; it will be removed in the future.
           ("TEMP" font-lock-keyword-face bold)
           ;; For things that were done hastily and/or hasn't been
           ;; thoroughly tested. It may not even be necessary!

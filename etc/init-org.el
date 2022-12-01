@@ -7,7 +7,6 @@
 
 ;;; Code:
 
-;; Keybindings
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o c") #'org-capture)
 (global-set-key (kbd "C-c o b") #'org-switchb)
@@ -17,21 +16,21 @@
   (setq org-default-notes-file (concat org-directory "/notes.org"))
 
   (defvar my--org-task-file (concat org-directory "/task.org")
-    "Org task file.")
+    "My org task file.")
   (defvar my--org-work-file (concat org-directory "/work.org")
-    "Org work file.")
+    "My org work file.")
   (defvar my--org-todo-file (concat org-directory "/todo.org")
-    "Org todo file.")
+    "My org todo file.")
   (defvar my--org-inbox-file (concat org-directory "/inbox.org")
-    "Org inbox file.")
+    "My org inbox file.")
   (defvar my--org-someday-file (concat org-directory "/someday.org")
-    "Org file that records something may do in someday.")
+    "My org file that records something may do in someday.")
   (defvar my--org-journal-file (concat org-directory "/journal.org")
-    "Org journal file.")
+    "My org journal file.")
   (defvar my--org-read-file (concat org-directory "/read.org")
-    "Org reading record file.")
+    "My org reading record file.")
   (defvar my--org-bill-file (concat org-directory "/bill.org")
-    "Org billing file.")
+    "My org billing file.")
   (defvar my--org-blog-dir (concat org-directory "/blog/")
     "My org blog directory.")
 
@@ -45,16 +44,16 @@
           (level 1)
           end)
       (unless (derived-mode-p 'org-mode)
-        (error "Target buffer \"%s\" should be in Org mode"
+        (error "Target buffer `%s' should be in org mode!"
                (current-buffer)))
       (goto-char (point-min))
-      ;; locate YEAR headline, then MONTH headline.
+      ;; Locate YEAR headline, then MONTH headline.
       (dolist (heading path)
         (let ((re (format org-complex-heading-regexp-format
                           (regexp-quote heading))))
           (if (re-search-forward re end t)
               (goto-char (line-beginning-position))
-            ;; new headline
+            ;; New headline.
             (progn
               (or (bolp) (insert "\n"))
               (when (/= (point) (point-min)) (org-end-of-subtree t t))
@@ -72,11 +71,10 @@
   ;; | %T     | timestamp, with date and time                               |
   ;; | %u，%U | timestamp, but inactive                                     |
   ;; | %?     | cursor location after completing the template               |
-  ;; NOTE: inactive timestamp will not be added to agenda
+  ;; NOTE: inactive timestamp will not be added to agenda.
 
   (setq org-capture-templates
-        `(;; tasks
-          ("t" "TASK")
+        `(("t" "TASK")
           ("tt" "Todo" entry
            (file+headline my--org-todo-file "Todo")
            "* TODO %^{todo}\n")
@@ -92,7 +90,7 @@
           ("tw" "Work Task" entry
            (file+headline my--org-work-file "Work")
            "* TODO %^{task name}\n   %t\n" :clock-in t :clock-resume t)
-          ;; inbox
+
           ("i" "INBOX")
           ("ii" "Inbox" entry
            (file+headline my--org-inbox-file "Inbox")
@@ -103,7 +101,6 @@
           ("in" "Note" entry
            (file+headline my--org-inbox-file "Note")
            "* %^{notes} %t %^g\n   %?\n")
-          ;; misc
           ("m" "MISC")
           ("mr" "Read" entry
            (file+headline my--org-read-file "Book")
@@ -129,6 +126,7 @@
                     "---\n"
                     "#+end_export\n"
                     "#+TOC: headlines 2\n"))
+
           ("j" "JOURNAL" entry
            (file+olp+datetree my--org-journal-file)
            "* - %^U - %^{heading}\n %?")))
@@ -139,18 +137,8 @@
   ;; Make Emacs respect kinsoku rules when wrapping lines visually.
   (setq word-wrap-by-category t)
 
-  (defun my-org-demote-or-promote (&optional is-promote)
-    "Demote or promote current org tree according to IS-PROMOTE."
-    (interactive "P")
-    (unless (region-active-p)
-      (org-mark-subtree))
-    (if is-promote (org-do-promote) (org-do-demote)))
-
-  (global-set-key (kbd "C-c o p") (lambda ()
-                                    "Promote current org tree."
-                                    (interactive)
-                                    (my-org-demote-or-promote t)))
-  (global-set-key (kbd "C-c o d") #'my-org-demote-or-promote)
+  (global-set-key (kbd "C-c o d") #'org-demote-subtree)
+  (global-set-key (kbd "C-c o p") #'org-promote-subtree)
 
   ;; -----------------------------------------
   ;; C-c . \+1w RET ;; => <2020-05-23 Sat +1w>
@@ -174,7 +162,7 @@
       (unless (and (bolp) (org-at-heading-p))
         (org-up-heading-safe)
         (outline-hide-subtree)
-        (error "Boundary reached"))
+        (error "Boundary reached!"))
       (org-overview)
       (org-reveal t)
       (org-show-entry)
@@ -271,7 +259,7 @@
   ;; LaTeX
   ;; -----
   (with-eval-after-load 'ox-latex
-    ;; export org in Chinese into PDF
+    ;; Export org in Chinese into PDF.
     ;; https://freizl.github.io/posts/2012-04-06-export-orgmode-file-in-Chinese.html
     (setq org-latex-pdf-process
           '("xelatex -interaction nonstopmode -output-directory %o %f"
@@ -289,7 +277,7 @@
     ;; system's font.
     (setq org-latex-compiler "xelatex"))
 
-  ;; preview LaTeX in Org.
+  ;; Preview LaTeX in Org.
   (setq org-preview-latex-default-process 'dvisvgm)
   (setq org-preview-latex-process-alist
         '((dvisvgm

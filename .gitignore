@@ -32,7 +32,7 @@
 /server/
 /eln-cache/
 /var/
-/lib/site-lisp/*/
+/lib/site-lisp/**
 /tree-sitter/*
 
 ################

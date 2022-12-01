@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: ManyToOne
-# key: mo
-# --
-@ManyToOne
-$0
