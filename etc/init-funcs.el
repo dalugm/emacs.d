@@ -7,63 +7,6 @@
 
 ;;; Code:
 
-;;;;;;;;
-;; VC ;;
-;;;;;;;;
-
-(defun my-vc-rename-file-and-buffer ()
-  "Rename current buffer.
-If current buffer is visiting a file, rename it too."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
-      (let* ((new-name (read-from-minibuffer "New name: " filename))
-             (containing-dir (file-name-directory new-name)))
-        (make-directory containing-dir t)
-        (cond
-         ((vc-backend filename) (vc-rename-file filename new-name))
-         (t
-          (rename-file filename new-name t)
-          (set-visited-file-name new-name t t)))))))
-
-(global-set-key (kbd "C-c v r") #'my-vc-rename-file-and-buffer)
-
-(defun my-vc-copy-file-and-rename-buffer ()
-  "Copy the current buffer and file it is visiting.
-If the old file is under version control, the new file is added into
-version control automatically."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (cond
-     ((not (and filename (file-exists-p filename)))
-      (message "Buffer is not visiting a file!"))
-     (t
-      (let ((new-name (read-file-name "New name: " filename)))
-        (copy-file filename new-name t)
-        (rename-buffer new-name)
-        (set-visited-file-name new-name)
-        (set-buffer-modified-p nil)
-        (when (vc-backend filename)
-          (vc-register)))))))
-
-(global-set-key (kbd "C-c v c") #'my-vc-copy-file-and-rename-buffer)
-
-(defun my-vc-delete-file-and-buffer ()
-  "Kill the current buffer and delete the file it is visiting."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (when filename
-      (if (vc-backend filename)
-          (vc-delete-file filename)
-        (when (y-or-n-p (format "Are you sure you want to delete `%s'? "
-                                filename))
-          (delete-file filename delete-by-moving-to-trash)
-          (message "Deleted file `%s'." filename)
-          (kill-buffer))))))
-
-(global-set-key (kbd "C-c v d") #'my-vc-delete-file-and-buffer)
-
 ;;;;;;;;;;;;
 ;; Window ;;
 ;;;;;;;;;;;;
@@ -198,8 +141,9 @@ With a prefix ARG, rename based on current name."
   (interactive)
   (unless (buffer-file-name)
     (error "No file is currently being edited!"))
-  (when (yes-or-no-p (format "Really delete `%s'?"
-                             (file-name-nondirectory buffer-file-name)))
+  (when (yes-or-no-p
+         (format-message "Really delete `%s'?"
+                         (file-name-nondirectory buffer-file-name)))
     (delete-file (buffer-file-name))
     (kill-this-buffer)))
 
@@ -250,14 +194,20 @@ With a prefix ARG, rename based on current name."
 ;; JUST4FUN ;;
 ;;;;;;;;;;;;;;
 
-(defun my-ascii-table ()
-  "Print the ascii table."
-  (interactive)
+(defun my-print-ascii-table (&optional arg)
+  "Print the ASCII table.
+
+Default print to 256.  With a prefix ARG, print to specified
+number."
+  (interactive "P")
+  (setq num (if arg
+                (string-to-number (read-string "Input a number: "))
+              256))
   (switch-to-buffer "*ASCII*")
   (erase-buffer)
-  (insert (format "ASCII characters up to number %d.\n" 254))
+  (insert (format "ASCII characters up to number %d.\n" num))
   (let ((i 0))
-    (while (< i 254)
+    (while (< i num)
       (setq i (1+ i))
       (insert (format "%4d %c\n" i i))))
   (goto-char (point-min)))
@@ -278,11 +228,6 @@ With a prefix ARG, rename based on current name."
 ;;;;;;;;;;;;;;;;;;;;
 ;; SEARCH RELATED ;;
 ;;;;;;;;;;;;;;;;;;;;
-
-(defcustom my-search-engine nil
-  "Used to cache search configuration across sessions."
-  :type 'string
-  :group 'convenience)
 
 (defvar my-search-engine-alist
   '(
@@ -307,18 +252,14 @@ Key is a symbol as the name, value is a plist specifying the search url.")
   (interactive (list
                 (completing-read "Choose a search engine: "
                                  (mapcar #'car my-search-engine-alist))))
-  (let* ((search-engine (or search-engine my-search-engine))
-         (search-url (if search-engine
-                         (alist-get (intern search-engine)
-                                    my-search-engine-alist
-                                    nil nil #'equal)
-                       (cdar my-search-engine-alist)))
-         (url search-url))
+  (let ((search-url (alist-get (intern search-engine)
+                               my-search-engine-alist
+                               nil nil #'equal)))
     (browse-url
      (url-encode-url
-      (concat url
+      (concat search-url
               (if mark-active
-                  (buffer-substring (region-beginning) (region-end))
+                  (buffer-substring-no-properties (region-beginning) (region-end))
                 (read-string
                  (message "%s Search: " (capitalize search-engine)))))))))
 
@@ -360,24 +301,6 @@ Key is a symbol as the name, value is a plist specifying the search url.")
       (messages-buffer-mode))))
 
 (global-set-key (kbd "C-c M") #'my-switch-messages-buffer)
-
-(defun my-create-tags ()
-  "Create tags file."
-  (interactive)
-  (let* ((dir (read-directory-name "Ctags will scan code at: "))
-         (default-directory dir)
-         (name (read-string "Input tag file name (Default: tags): "
-                            nil nil "tags"))
-         (language
-          (read-string "Input language (e.g.: c,c++,... Default: all): "
-                       nil nil "all"))
-         (extra-args (read-string "Input extra arguments (e.g.: -e): ")))
-    (shell-command
-     (format "ctags -f %s --languages=%s --kinds-all='*' --fields='*' --extras='*' %s -R %s"
-             name language extra-args (directory-file-name dir)))
-    (message "Tag file %s%s was created." dir name)))
-
-(global-set-key (kbd "C-c m t") #'my-create-tags)
 
 (defun my-occur-dwim ()
   "Call `occur' with a sane default."
@@ -497,7 +420,7 @@ argument ARG, insert name only."
   "Divide FILE according to specified word."
   (interactive)
   (goto-char (point-max))
-  ;; make sure final newline exist
+  ;; Make sure final newline exist.
   (unless (bolp)
     (newline))
   (goto-char (point-min))
@@ -518,7 +441,7 @@ argument ARG, insert name only."
       (end-of-line)))
   (when (= (point) (point-max))
     (forward-line -1)
-    ;; remove all blank lines at eof
+    ;; Remove all blank lines at EOF.
     (delete-blank-lines)
     (delete-blank-lines)
     (forward-line)))
@@ -578,8 +501,8 @@ Version: 2018-09-07 2022-09-13."
         nil
       (insert ?\s))))
 
-;; use `cl-lef' to change the behavior of `fixup-whitespace' only when
-;; called from `delete-indentation'
+;; Use `cl-lef' to change the behavior of `fixup-whitespace' only when
+;; called from `delete-indentation'.
 (defun my--delete-indentation (old-func &rest args)
   "My modified `delete-indentation'.
 Fix OLD-FUNC with ARGS."
@@ -677,7 +600,7 @@ pangu-spacing. The excluded puncuation will be matched to group
                  (match-beginning 2))
         (replace-match "\\1 \\2" nil nil)
         (backward-char))))
-  ;; nil must be returned to allow use in hooks
+  ;; `nil' must be returned to allow use in hooks.
   nil)
 
 (global-set-key (kbd "C-c m p") #'my-pangu-spacing-current-buffer)
@@ -686,13 +609,13 @@ pangu-spacing. The excluded puncuation will be matched to group
   "Add every subdir of SEARCH-DIR to `load-path'."
   (let ((dir (file-name-as-directory search-dir)))
     (dolist (subdir
-             ;; filter out unnecessary dirs
+             ;; Filter out unnecessary dirs.
              (cl-remove-if
               (lambda (subdir)
                 (or
-                 ;; remove if not directory
+                 ;; Remove if not directory.
                  (not (file-directory-p (concat dir subdir)))
-                 ;; remove dirs such as parent dir, programming language
+                 ;; Remove dirs such as parent dir, programming language
                  ;; related dir and version control dir.
                  (member subdir '("." ".."
                                   "dist" "node_modules" "__pycache__"
@@ -703,16 +626,17 @@ pangu-spacing. The excluded puncuation will be matched to group
         (when (cl-some (lambda (subdir-file)
                          (and (file-regular-p
                                (concat subdir-path subdir-file))
-                              ;; .so .dll are Emacs dynamic library
-                              ;; written in non emacs-lisp
+                              ;; Extensions like `.so' `.dll' are
+                              ;; Emacs dynamic library written in non
+                              ;; emacs-lisp.
                               (member (file-name-extension subdir-file)
                                       '("el" "so" "dll"))))
                        (directory-files subdir-path))
           (add-to-list 'load-path subdir-path t))
-        ;; recursively search subdirectories
+        ;; Recursively search subdirectories.
         (my--add-subdirs-to-load-path subdir-path)))))
 
-;; Network Proxy
+;; Network Proxy.
 (defun my-show-http-proxy ()
   "Show http/https proxy."
   (interactive)

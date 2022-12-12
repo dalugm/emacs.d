@@ -226,6 +226,9 @@
 [submodule "leuven-theme"]
 	path = lib/leuven-theme
 	url = https://github.com/fniessen/emacs-leuven-theme.git
+[submodule "llama"]
+	path = lib/llama
+	url = https://git.sr.ht/~tarsius/llama
 [submodule "lua-mode"]
 	path = lib/lua-mode
 	url = https://github.com/immerrr/lua-mode.git

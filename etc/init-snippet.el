@@ -33,7 +33,7 @@
     :group 'convenience
     :type 'string)
 
-  (when (and (file-exists-p my-private-snippet-d)
+  (when (and (file-directory-p my-private-snippet-d)
              (not (member my-private-snippet-d yas-snippet-dirs)))
     (add-to-list 'yas-snippet-dirs my-private-snippet-d)))
 

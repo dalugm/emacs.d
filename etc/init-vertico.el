@@ -105,15 +105,15 @@
                            (substring str 1 len)))))
     input)
 
-  (defcustom my--consult--fd-command "fd"
+  (defcustom my-consult-fd-command "fd"
     "The default command used to run fd."
     :group 'convenience
     :type 'string)
 
   (defun my--consult--fd-builder (input)
     "Build command line given INPUT."
-    (unless my--consult--fd-command
-      (setq my--consult--fd-command
+    (unless my-consult-fd-command
+      (setq my-consult-fd-command
             (if (eq 0 (call-process-shell-command "fdfind"))
                 "fdfind"
               "fd")))
@@ -122,7 +122,7 @@
                                         arg 'extended t)))
       (when re
         (list :command (append
-                        (list my--consult--fd-command
+                        (list my-consult-fd-command
                               "--color=never" "--full-path"
                               (consult--join-regexps re 'extended))
                         opts)
@@ -154,11 +154,11 @@ The initial input is given by the INITIAL argument.  See
     ;;              '("[rR][gG]" . (utf-8 . gbk-dos)))
 
     (defun my--consult-find-win (&optional dir initial)
-      "Use `consult-find' in Windows with msys2.
+      "Use `consult-find' on Windows.
 
 URL `https://github.com/minad/consult/issues/475'."
       (let* ((w32-quote-process-args ?\\) ; or (w32-quote-process-args ?*)
-             (consult-find-args "c:/msys64/usr/bin/find.exe . -not ( -wholename */.* -prune )")
+             (consult-find-args (concat find-program " . -not ( -wholename */.* -prune )"))
              (prompt-dir (consult--directory-prompt "Find" dir))
              (default-directory (cdr prompt-dir)))
         (find-file (consult--find
