@@ -9,9 +9,9 @@
 
 ;; ----- Frame ---------------------------------------------
 
-(setq-default frame-title-format `(,user-full-name " %@ %b"))
+(setq-default frame-title-format "GNU Emacs %@ %b")
 
-;; move more smoothly
+;; Move more smoothly.
 (when (fboundp 'pixel-scroll-precision-mode)
   (pixel-scroll-precision-mode +1))
 
@@ -40,7 +40,7 @@
 (global-set-key (kbd "C-c w p") #'my-set-window-transparency)
 
 (defun my-set-window-margins (margin)
-  "Set the MARGIN of the currrent window."
+  "Set the MARGIN of the current window."
   (interactive "nMargin Value: ")
   (set-window-margins (selected-window) margin margin))
 
@@ -58,15 +58,15 @@
 ;; ;; https://archive.casouri.cat/note/2019/emacs-%E5%AD%97%E4%BD%93%E4%B8%8E%E5%AD%97%E4%BD%93%E9%9B%86/index.html
 ;; ;; http://ergoemacs.org/emacs/emacs_list_and_set_font.html
 ;; ;;
-;; ;; Emacs use `symbola' (https://dn-works.com/ufas/) as default fallback font
-;; ;; install it to avoid traversing all fonts
+;; ;; Emacs use `symbola' (https://dn-works.com/ufas/) as the default
+;; ;; fallback font. Install to avoid traversing all fonts.
 ;; ;;
-;; ;; NOTE: I am using `my-load-font' to handle this now
+;; ;; NOTE: I am using `my-load-font' to handle this now.
 ;; ;;
-;; ;; Default font
+;; ;; Default font.
 ;; (set-face-attribute 'default nil :font (font-spec :family "Unifont" :size 16))
 ;; ;;
-;; ;; East Asia: 你好，こんにちは，안녕하세요
+;; ;; East Asia: 你好，こんにちは，안녕하세요。
 ;; ;;
 ;; ;; ¯\_(ツ)_/¯
 ;; (dolist (charset '(han cjk-misc))
@@ -99,35 +99,36 @@ FONT-NAMEs are keys in `my-font-alist'.")
     ("SF Mono Light 14"  . ("SF Mono" "LXGW WenKai Mono" 1 :size 14 :weight light))
     ("SF Mono"           . ("SF Mono" "LXGW WenKai Mono" 1))
     ("Spot Mono"         . ("Spot Mono" "Sarasa Mono SC" 1))
-    ("冬青黑体 简"       . (nil "Hiragino Sans GB" 1))
-    ("冬青黑体 繁"       . (nil "Hiragino Sans CNS" 1))
-    ("华文楷体 简"       . (nil "Kaiti SC" 1))
-    ("华文楷体 繁"       . (nil "Kaiti TC" 1))
-    ("思源宋体 简 全"    . ("Source Han Serif SC" nil 1))
-    ("思源宋体 简"       . (nil "Source Han Serif SC" 1))
-    ("思源宋体 繁 全"    . ("Source Han Serif TC" nil 1))
-    ("思源宋体 繁"       . (nil "Source Han Serif TC" 1))
-    ("思源黑体 简 全"    . ("Source Han Sans SC" nil 1))
-    ("思源黑体 简"       . (nil "Source Han Sans SC" 1))
-    ("思源黑体 繁 全"    . ("Source Han Sans TC" nil 1))
-    ("思源黑体 繁"       . (nil "Source Han Sans TC" 1))
+    ("冬青黑体 简"       . ("Hiragino Sans GB" nil 1))
+    ("冬青黑体 繁"       . ("Hiragino Sans CNS" nil 1))
+    ("华文楷体 简"       . ("Kaiti SC" nil 1))
+    ("华文楷体 繁"       . ("Kaiti TC" nil 1))
+    ("思源宋体 简"       . ("Source Han Serif SC" nil 1))
+    ("思源宋体 简 cjk"   . (nil "Source Han Serif SC" 1))
+    ("思源宋体 繁"       . ("Source Han Serif TC" nil 1))
+    ("思源宋体 繁 cjk"   . (nil "Source Han Serif TC" 1))
+    ("思源黑体 简"       . ("Source Han Sans SC" nil 1))
+    ("思源黑体 简 cjk"   . (nil "Source Han Sans SC" 1))
+    ("思源黑体 繁"       . ("Source Han Sans TC" nil 1))
+    ("思源黑体 繁 cjk"   . (nil "Source Han Sans TC" 1))
     ("文泉驿等宽正黑"    . ("WenQuanYi Zen Hei Mono" nil 1))
-    ("方正书宋"          . (nil "FZShuSong Z01" 1))
-    ("方正仿宋"          . (nil "FZFangSong Z02" 1))
-    ("方正公文仿宋"      . (nil "FZDocFangSong" 1))
-    ("方正公文小标宋"    . (nil "FZDocXiaoBiaoSong" 1))
-    ("方正公文楷体"      . (nil "FZDocKai" 1))
-    ("方正公文黑体"      . (nil "FZDocHei" 1))
-    ("方正兰亭黑 简"     . (nil "Lantinghei SC" 1))
-    ("方正兰亭黑 繁"     . (nil "Lantinghei TC" 1))
-    ("方正屏显雅宋"      . (nil "FZPingXianYaSong R GBK" 1))
-    ("方正楷体"          . (nil "FZKai Z03" 1))
-    ("方正黑体"          . (nil "FZHei B01" 1))
-    ("更纱黑体 Gothic"   . (nil "Sarasa Gothic SC" 1))
-    ("更纱黑体 UI"       . (nil "Sarasa UI SC" 1))
+    ("方正书宋"          . ("FZShuSong Z01" nil 1))
+    ("方正仿宋"          . ("FZFangSong Z02" nil 1))
+    ("方正公文仿宋"      . ("FZDocFangSong" nil 1))
+    ("方正公文小标宋"    . ("FZDocXiaoBiaoSong" nil 1))
+    ("方正公文楷体"      . ("FZDocKai" nil 1))
+    ("方正公文黑体"      . ("FZDocHei" nil 1))
+    ("方正兰亭黑 简"     . ("Lantinghei SC" nil 1))
+    ("方正兰亭黑 繁"     . ("Lantinghei TC" nil 1))
+    ("方正屏显雅宋"      . ("FZPingXianYaSong R GBK" nil 1))
+    ("方正楷体"          . ("FZKai Z03" nil 1))
+    ("方正黑体"          . ("FZHei B01" nil 1))
+    ("更纱黑体 Gothic"   . ("Sarasa Gothic SC" nil 1))
+    ("更纱黑体 UI"       . ("Sarasa UI SC" nil 1))
     ("等距更纱黑体 Slab" . ("Sarasa Mono Slab SC" nil 1))
     ("等距更纱黑体"      . ("Sarasa Mono SC" nil 1))
-    ("霞鹜文楷"          . (nil "LXGW WenKai" 1)))
+    ("霞鹜文楷 cjk"      . (nil "LXGW WenKai" 1))
+    ("霞鹜文楷"          . ("LXGW WenKai" nil 1)))
   "An alist of all the fonts you can switch between by `my-load-font'.
 Each element is like
 
@@ -183,13 +184,13 @@ See `my-load-font'."
           "Font: " (mapcar #'car my-font-alist))
          (string-to-number (completing-read
                             "Size: " nil nil nil nil nil
-                            ;; default value
+                            ;; Default value.
                             (cond
-                             ;; 4k
+                             ;; 4k.
                              ((>= (display-pixel-width) 3840) "28")
-                             ;; 2k
+                             ;; 2k.
                              ((>= (display-pixel-width) 2560) "20")
-                             ;; 1080
+                             ;; 1080.
                              (t "14"))))))
   (let* ((specs (apply #'my-font-name-to-spec font-name size attrs))
          (ascii (apply #'font-spec (car specs)))
@@ -273,18 +274,18 @@ Use `my-save-font-settings' to save font settings and use
 (my-enable-apple-emoji)
 
 (cond
- ;; 4k
+ ;; 4k.
  ((>= (display-pixel-width) 3840)
   (my-load-font 'default nil 28))
- ;; 2k
+ ;; 2k.
  ((>= (display-pixel-width) 2560)
   (my-load-font 'default nil 20))
- ;; 1080
+ ;; 1080.
  (t
   (my-load-font 'default nil 14)))
 
 ;; https://www.reddit.com/r/emacs/comments/988paa/emacs_on_windows_seems_lagging/
-;; speed up font rendering for special characters, especially on Windows
+;; Speed up font rendering for special characters, especially on Windows.
 (setq inhibit-compacting-font-caches t)
 
 (provide 'init-gui)

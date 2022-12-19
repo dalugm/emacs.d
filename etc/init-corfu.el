@@ -16,7 +16,7 @@
   ;; (corfu-quit-at-boundary nil)   ; never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ; never quit, even if there is no match
   ;; (corfu-preview-current nil)    ; disable current candidate preview
-  ;; (corfu-preselect-first nil)    ; disable candidate preselection
+  ;; (corfu-preselect 'prompt)      ; disable candidate preselection
   ;; (corfu-on-exact-match nil)     ; configure handling of exact matches
   ;; (corfu-scroll-margin 5)        ; use scroll margin
   :config

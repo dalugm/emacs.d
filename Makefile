@@ -26,17 +26,17 @@ helpall::
 	@printf "\n"
 
 codespell-dry:
-	@cd lib; codespell \
-	  --ignore-words ../etc/codespell/ignore-words \
-	  --exclude-file ../etc/codespell/ignore-lines \
+	@codespell \
+	  --ignore-words ./etc/codespell/ignore-words \
+	  --exclude-file ./etc/codespell/ignore-lines \
 	  --skip $(shell sed '/^\s*$$/d;/^\s*#.*$$/d;s/#.*//;s/\s//g' \
-	  ../etc/codespell/ignore-files | tr "\\n" ",")
+	  ./etc/codespell/ignore-files | tr "\\n" ",")
 
 codespell-fix:
-	@cd lib; codespell --write-changes \
-	  --ignore-words ../etc/codespell/ignore-words \
-	  --exclude-file ../etc/codespell/ignore-lines \
+	@codespell --write-changes \
+	  --ignore-words ./etc/codespell/ignore-words \
+	  --exclude-file ./etc/codespell/ignore-lines \
 	  --skip $(shell sed '/^\s*$$/d;/^\s*#.*$$/d;s/#.*//;s/\s//g' \
-	  ../etc/codespell/ignore-files | tr "\\n" ",")
+	  ./etc/codespell/ignore-files | tr "\\n" ",")
 
 endif

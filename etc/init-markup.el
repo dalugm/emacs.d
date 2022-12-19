@@ -109,9 +109,6 @@ Show the heading too, if it is currently invisible."
   (when (executable-find "multimarkdown")
     (setq markdown-command "multimarkdown")))
 
-(use-package yaml-mode
-  :mode "\\.\\(yml\\|yaml\\)\\'")
-
 (provide 'init-markup)
 
 ;;; init-markup.el ends here

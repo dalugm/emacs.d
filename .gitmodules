@@ -202,9 +202,6 @@
 [submodule "git-timemachine"]
 	path = lib/git-timemachine
 	url = https://codeberg.org/pidu/git-timemachine.git
-[submodule "go-mode"]
-	path = lib/go-mode
-	url = https://github.com/dominikh/go-mode.el.git
 [submodule "goto-chg"]
 	path = lib/goto-chg
 	url = https://github.com/emacs-evil/goto-chg.git
@@ -307,9 +304,6 @@
 [submodule "request"]
 	path = lib/request
 	url = https://github.com/tkf/emacs-request.git
-[submodule "rust-mode"]
-	path = lib/rust-mode
-	url = https://github.com/rust-lang/rust-mode.git
 [submodule "s"]
 	path = lib/s
 	url = https://github.com/magnars/s.el.git
@@ -358,15 +352,15 @@
 [submodule "treepy"]
 	path = lib/treepy
 	url = https://github.com/volrath/treepy.el.git
-[submodule "use-package"]
-	path = lib/use-package
-	url = https://github.com/jwiegley/use-package.git
 [submodule "valign"]
 	path = lib/valign
 	url = https://github.com/casouri/valign.git
 [submodule "vertico"]
 	path = lib/vertico
 	url = https://github.com/minad/vertico.git
+[submodule "vundo"]
+	path = lib/vundo
+	url = https://github.com/casouri/vundo
 [submodule "web-mode"]
 	path = lib/web-mode
 	url = https://github.com/fxbois/web-mode.git
@@ -388,9 +382,6 @@
 [submodule "yaml"]
 	path = lib/yaml
 	url = https://github.com/zkry/yaml.el.git
-[submodule "yaml-mode"]
-	path = lib/yaml-mode
-	url = https://github.com/yoshiki/yaml-mode.git
 [submodule "yasnippet"]
 	path = lib/yasnippet
 	url = https://github.com/joaotavora/yasnippet.git

@@ -27,7 +27,7 @@
                ("C-c C-o" . embark-export)
                ("C-c C-c" . embark-dwim)))
   :custom
-  ;; Optionally replace the key help with a completing-read interface
+  ;; Optionally replace the key help with a completing-read interface.
   (prefix-help-command #'embark-prefix-help-command)
   :config
   (defun my-embark-preview ()
@@ -38,11 +38,33 @@
         (let ((embark-quit-after-action nil))
           (embark-dwim)))))
 
-  ;; Hide the mode line of the Embark live/completions buffers
+  ;; Hide the mode line of the Embark live/completions buffers.
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none)))))
+
+(use-package eyebrowse
+  :hook (after-init . eyebrowse-mode)
+  :custom (eyebrowse-keymap-prefix (kbd "C-c w"))
+  :bind ("C-c w n" . eyebrowse-create-named-window-config))
+
+(use-package ace-window
+  :bind (([remap other-window] . ace-window)
+         ("C-c w s" . ace-swap-window)
+         ("C-c w d" . ace-delete-window)
+         ("C-c w o" . ace-delete-other-windows))
+  :config
+  ;; Inherits from `avy'
+  (with-eval-after-load 'avy
+    (setq aw-keys avy-keys)
+    (setq aw-background avy-background)))
+
+(use-package winum
+  :config
+  (setq winum-format "%s ")
+  (setq winum-mode-line-position 0)
+  (winum-mode +1))
 
 (use-package color-rg
   :custom
@@ -57,7 +79,7 @@
    ("C-c s M-n" . color-rg-search-symbol)
    (:map isearch-mode-map
          ("M-s M-s" . isearch-toggle-color-rg))
-   ;; vim-like
+   ;; Vim-like.
    (:map color-rg-mode-map
          ("h" . color-rg-jump-prev-file)
          ("l" . color-rg-jump-next-file))
@@ -65,7 +87,7 @@
          ("C-c C-h" . color-rg-jump-prev-file)
          ("C-c C-l" . color-rg-jump-next-file))))
 
-;; jump between texts
+;; Jump between texts.
 ;; https://emacsredux.com/blog/2015/07/19/ace-jump-mode-is-dead-long-live-avy
 (use-package avy
   :bind (("C-c g 2" . avy-goto-char-2)
@@ -86,7 +108,7 @@
   :custom (avy-style 'at-full)
   :config
   (defun my-avy-copy-thing-at-point ()
-    "Copy thing at point."
+    "Copy thing at point using `avy'."
     (interactive)
     (save-excursion
       (avy-goto-word-or-subword-1)
@@ -111,27 +133,8 @@
 (use-package expand-region
   :bind ("C-c e ;" . er/expand-region))
 
-(use-package ace-window
-  :bind (([remap other-window] . ace-window)
-         ("C-c w s" . ace-swap-window)
-         ("C-c w d" . ace-delete-window)
-         ("C-c w o" . ace-delete-other-windows))
-  :config
-  ;; Inherits from `avy'
-  (with-eval-after-load 'avy
-    (setq aw-keys avy-keys)
-    (setq aw-background avy-background)))
-
-(use-package winum
-  :config
-  (setq winum-format "%s ")
-  (setq winum-mode-line-position 0)
-  (winum-mode +1))
-
-(use-package eyebrowse
-  :hook (after-init . eyebrowse-mode)
-  :custom (eyebrowse-keymap-prefix (kbd "C-c w"))
-  :bind ("C-c w n" . eyebrowse-create-named-window-config))
+(use-package vundo
+  :bind ("C-c e u" . vundo))
 
 (provide 'init-edit)
 

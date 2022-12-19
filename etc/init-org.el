@@ -180,7 +180,7 @@
   (setq org-src-fontify-natively t)
 
   (defun my-org-babel-load-languages ()
-    "Add src_block supproted src."
+    "Add src_block supported src."
     (interactive)
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -196,9 +196,9 @@
   ;; ----
   ;; TODO
   ;; ----
-  ;; Format `X/Y', X means action when enters the state, Y means action
-  ;; when leaves the state use `@' to add notes and status information
-  ;; (including time) use `!' to add status information only.
+  ;; `X/Y', X means action when enters the state, Y means action when
+  ;; leaves the state. Use `@' to add notes and status information
+  ;; (including time), use `!' to add status information only.
 
   ;; | DONE(d@)   | add notes when entering                            |
   ;; | DONE(d/!)  | add status when leaving                            |

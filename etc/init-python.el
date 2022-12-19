@@ -25,7 +25,7 @@
 ;; | python -m ipykernel install --user --name=<PYVENV NAME>
 ;; `---
 ;;
-;; where <PYVENV_NAME> is a name you give to this ipython kernel
+;; where <PYVENV_NAME> is a name you give to this ipython kernel.
 ;;
 ;; To manage jupyter kernels, run
 ;;

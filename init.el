@@ -53,13 +53,17 @@
   (require 'init-gui))
 
 (require 'init-package)
+
 (require 'init-edit)
 (require 'init-vc)
+
 ;; (require 'init-ido)
 ;; (require 'init-ivy)
 (require 'init-vertico)
+
 ;; (require 'init-company)
 (require 'init-corfu)
+
 (require 'init-prog)
 (require 'init-check)
 
@@ -80,7 +84,6 @@
 (require 'init-lua)
 (require 'init-web)
 (require 'init-dart)
-(require 'init-rust)
 (require 'init-python)
 
 ;; Personal setup.

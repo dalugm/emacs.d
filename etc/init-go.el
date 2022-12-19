@@ -7,12 +7,8 @@
 
 ;;; Code:
 
-(use-package go-mode
-  :mode "\\.go\\'"
-  :mode ("go\\.mod\\'" . go-dot-mod-mode)
-  :config
-  (with-eval-after-load 'exec-path-from-shell
-    (exec-path-from-shell-copy-envs '("GOPATH" "GO111MODULE" "GOPROXY"))))
+(with-eval-after-load 'exec-path-from-shell
+  (exec-path-from-shell-copy-envs '("GOPATH" "GO111MODULE" "GOPROXY")))
 
 (provide 'init-go)
 

@@ -640,7 +640,7 @@ pangu-spacing. The excluded puncuation will be matched to group
 (defun my-show-http-proxy ()
   "Show http/https proxy."
   (interactive)
-  (if url-proxy-services
+  (if (bound-and-true-p url-proxy-services)
       (message "Current HTTP proxy is \"%s\"." my-http-proxy)
     (message "No HTTP proxy.")))
 
@@ -662,7 +662,7 @@ pangu-spacing. The excluded puncuation will be matched to group
 (defun my-toggle-http-proxy ()
   "Toggle HTTP/HTTPS proxy."
   (interactive)
-  (if url-proxy-services
+  (if (bound-and-true-p url-proxy-services)
       (my-disable-http-proxy)
     (my-enable-http-proxy)))
 
