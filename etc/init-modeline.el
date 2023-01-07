@@ -7,31 +7,28 @@
 
 ;;; Code:
 
-;; use `setq-default' to set it for all modes
+;; Use `setq-default' to set it for all modes.
 ;; https://emacs-fu.blogspot.com/2011/08/customizing-mode-line.html
 ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Mode-Line-Format.html#Mode-Line-Format
 
 ;;
-;;; Segments
+;;; Segments.
 ;;
 
-;; NOTE unless the symbol has a non-nil
-;; `risky-local-variable' property, all properties in any strings, as
-;; well as all :eval and :propertize forms in the value, are ignored.
+;; NOTE: Unless the symbol has a non-nil `risky-local-variable'
+;; property, all properties in any strings, as well as all :eval and
+;; :propertize forms in the value, are ignored.
 
-;; ----- `my--mode-line-buffer-identification' -------------
 (defvar my--mode-line-buffer-identification
   '(:propertize " %b ")
   "More informative than `buffer-id'.")
 (put 'my--mode-line-buffer-identification 'risky-local-variable t)
 
-;; ----- `my--mode-line-position' --------------------------
 (defvar my--mode-line-position
   '(" %l:%C ")
   "Display the position in the buffer.")
 (put 'my--mode-line-position 'risky-local-variable t)
 
-;; ----- `my--mode-line-file-info' -------------------------
 (defvar my--mode-line-file-info
   '("("
     (:propertize "%p" 'face nil)
@@ -42,7 +39,6 @@
   "Display file info.")
 (put 'my--mode-line-file-info 'risky-local-variable t)
 
-;; ----- `my--mode-line-modes' -----------------------------
 (defvar my--mode-line-modes
   '(""
     "%["
@@ -53,7 +49,6 @@
   "Remove minor modes.")
 (put 'my--mode-line-modes 'risky-local-variable t)
 
-;; ----- `my--mode-line-encoding' --------------------------
 (defvar my--mode-line-encoding
   '(:eval
     (let ((sys (coding-system-plist buffer-file-coding-system)))
@@ -65,7 +60,7 @@
 (put 'my--mode-line-encoding 'risky-local-variable t)
 
 ;;
-;;; Setup
+;;; Setup.
 ;;
 
 (defvar-local mode-line-format-left nil "Mode-line left component.")
@@ -117,26 +112,28 @@
 ;;; Misc
 ;;
 
-;; ----- format ---------------------------------------
-;; If you want to customize time format, read document of `format-time-string'
-;; and customize `display-time-format'.
+;; ;; If you want to customize time format, read document of
+;; ;; `format-time-string' and customize `display-time-format'.
 ;; (setq display-time-format "%a %b %e")
 
-;; see `info'
+;; Unify the eol mnemonics for all systems.
+(setq eol-mnemonic-unix ":")
+(setq eol-mnemonic-mac "/")
+(setq eol-mnemonic-dos "\\")
+
 (setq system-time-locale "C")
 (setq display-time-24hr-format t)
 (setq display-time-day-and-date t)
-;; do NOT display the load average
+;; Do NOT display the load average.
 (setq display-time-default-load-average nil)
-;; show date in mode-line
+;; Show date in mode-line.
 (display-time)
 
-;; line-column
-;; To make the position number update correctly in all cases
+;; Make the position number update correctly in all cases.
 (line-number-mode +1)
 (column-number-mode +1)
 
-;; human readable representation of file size in mode-line
+;; Human readable representation of file size in mode-line.
 (size-indication-mode +1)
 
 (provide 'init-modeline)

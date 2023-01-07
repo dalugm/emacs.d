@@ -7,15 +7,30 @@
 
 ;;; Code:
 
+(when (treesit-available-p)
+  (require 'treesit)
+  (setq major-mode-remap-alist
+        '((c-mode          . c-ts-mode)
+          (c++-mode        . c++-ts-mode)
+          (conf-toml-mode  . toml-ts-mode)
+          (css-mode        . css-ts-mode)
+          (java-mode       . java-ts-mode)
+          (javascript-mode . js-ts-mode)
+          (js-json-mode    . json-ts-mode)
+          (js-mode         . js-ts-mode)
+          (python-mode     . python-ts-mode)
+          (ruby-mode       . ruby-ts-mode)
+          (sh-mode         . bash-ts-mode))))
+
 (defvar my-last-compilation-buffer nil
   "The last buffer in which compilation took place.")
 
 (with-eval-after-load 'compile
-  ;; Just save before compiling
+  ;; Save before compiling.
   (setq compilation-ask-about-save nil)
-  ;; Just kill old compile processes before starting the new one
+  ;; Kill old compile processes before starting the new one.
   (setq compilation-always-kill t)
-  ;; Automatically scroll to first error
+  ;; Automatically scroll to first error.
   (setq compilation-scroll-output 'first-error)
 
   (defun my--save-compilation-buffer (&rest _)
@@ -36,17 +51,17 @@
 
   (advice-add 'recompile :around #'my--find-prev-compilation))
 
-(global-set-key (kbd "C-c c k") #'compile)
-(global-set-key (kbd "C-c c r") #'recompile)
+(keymap-global-set "C-c c k" #'compile)
+(keymap-global-set "C-c c r" #'recompile)
 
-;; Colorize output of Compilation Mode
+;; Colorize output of Compilation Mode.
 ;; https://stackoverflow.com/a/3072831/355252
 (with-eval-after-load 'compile
   (require 'ansi-color)
 
   (defun my--colorize-compilation-buffer ()
     "Colorize a compilation mode buffer."
-    ;; we don't want to mess with child modes such as grep-mode, ack, ag, etc
+    ;; We don't want to mess with child modes such as grep-mode, ack, ag, etc.
     (when (eq major-mode 'compilation-mode)
       (let ((inhibit-read-only t))
         (ansi-color-apply-on-region (point-min) (point-max)))))
@@ -55,7 +70,7 @@
 
 (defun my--generic-prog-mode-hook-setup ()
   "Generic configuration for `prog-mode'."
-  ;; camel case aware editing operations
+  ;; Camel case aware editing operations.
   (subword-mode +1))
 
 (add-hook 'prog-mode-hook #'my--generic-prog-mode-hook-setup)
@@ -64,10 +79,10 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package xml-mode
-  :mode "\\.[^.]*proj\\'"               ; msbuild xml files
+  :mode "\\.[^.]*proj\\'"
   :mode "\\.xaml\\'"
-  :mode "\\.p\\(?:list\\|om\\)\\'"      ; plist, pom
-  :mode "\\.xs\\(?:d\\|lt\\)\\'"        ; xsd, xslt
+  :mode "\\.p\\(?:list\\|om\\)\\'"
+  :mode "\\.xs\\(?:d\\|lt\\)\\'"
   :mode "\\.rss\\'")
 
 (use-package evil-nerd-commenter

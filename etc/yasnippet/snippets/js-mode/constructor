@@ -1,7 +1,7 @@
-# -*- mode: snippet; require-final-newline: nil -*-
+# -*- mode: snippet -*-
 # name: constructor
 # key: c
 # --
-constructor(${1:props}) {
-                super($1);$2
+constructor(${1:args}) {
+  ${2:super(${3:args});}
 }$0
