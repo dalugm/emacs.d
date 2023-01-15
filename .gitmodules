@@ -71,8 +71,7 @@
 	path = lib/compat
 	url = https://github.com/emacs-compat/compat.git
 [submodule "consult"]
-	no-byte-compile = consult-icomplete
-	no-byte-compile = consult-selectrum
+	no-byte-compile = consult-icomplete.el
 	path = lib/consult
 	url = https://github.com/minad/consult.git
 [submodule "corfu"]
@@ -96,9 +95,10 @@
 	path = lib/dart-mode
 	url = https://github.com/bradyt/dart-mode.git
 [submodule "dash"]
+	no-byte-compile = dash-functional.el
+	no-makeinfo = dash-template.texi
 	path = lib/dash
 	url = https://github.com/magnars/dash.el.git
-	no-makeinfo = dash-template.texi
 [submodule "deferred"]
 	path = lib/deferred
 	url = https://github.com/kiwanami/emacs-deferred.git
@@ -118,6 +118,7 @@
 	path = lib/editorconfig
 	url = https://github.com/editorconfig/editorconfig-emacs.git
 [submodule "ef-themes"]
+	no-makeinfo = doclicense.texi
 	path = lib/ef-themes
 	url = https://git.sr.ht/~protesilaos/ef-themes
 [submodule "ein"]
@@ -136,14 +137,13 @@
 	path = lib/embark
 	url = https://github.com/oantolin/embark.git
 [submodule "emmet-mode"]
-	path = lib/emmet-mode
-	url = https://github.com/dalugm/emmet-mode.git
 	build-step = make clean
 	build-step = make
+	path = lib/emmet-mode
+	url = https://github.com/dalugm/emmet-mode.git
 [submodule "epkg"]
 	path = lib/epkg
 	url = https://github.com/emacscollective/epkg.git
-	makeinfo = epkg.texi
 [submodule "epkg-marginalia"]
 	path = lib/epkg-marginalia
 	url = https://github.com/emacscollective/epkg-marginalia.git
@@ -174,7 +174,6 @@
 [submodule "forge"]
 	path = lib/forge
 	url = https://github.com/magit/forge.git
-	info-path = docs
 [submodule "geiser"]
 	path = lib/geiser
 	url = https://gitlab.com/emacs-geiser/geiser.git
@@ -230,10 +229,9 @@
 	path = lib/lua-mode
 	url = https://github.com/immerrr/lua-mode.git
 [submodule "magit"]
+	no-byte-compile = lisp/magit-libgit.el
 	path = lib/magit
 	url = https://github.com/magit/magit.git
-	recursive-byte-compile = true
-	info-path = docs
 [submodule "marginalia"]
 	path = lib/marginalia
 	url = https://github.com/minad/marginalia.git
@@ -244,9 +242,9 @@
 	path = lib/material-theme
 	url = https://github.com/cpaulik/emacs-material-theme.git
 [submodule "modus-themes"]
+	no-makeinfo = doclicense.texi
 	path = lib/modus-themes
 	url = https://git.sr.ht/~protesilaos/modus-themes
-	info-path = doc
 [submodule "moe-theme"]
 	path = lib/moe-theme
 	url = https://github.com/kuanyui/moe-theme.el.git
@@ -323,16 +321,16 @@
 	path = lib/spacemacs-theme
 	url = https://github.com/nashamri/spacemacs-theme.git
 [submodule "sqlite3"]
+	build-step = make
 	path = lib/sqlite3
 	url = https://github.com/pekingduck/emacs-sqlite3-api.git
-	build-step = make
 [submodule "srcery-theme"]
 	path = lib/srcery-theme
 	url = https://github.com/srcery-colors/srcery-emacs.git
 [submodule "subed"]
+	load-path = subed
 	path = lib/subed
 	url = https://github.com/rndusr/subed.git
-	load-path = subed
 [submodule "tablist"]
 	path = lib/tablist
 	url = https://github.com/politza/tablist.git
@@ -348,7 +346,6 @@
 [submodule "transient"]
 	path = lib/transient
 	url = https://github.com/magit/transient.git
-	info-path = docs
 [submodule "treepy"]
 	path = lib/treepy
 	url = https://github.com/volrath/treepy.el.git

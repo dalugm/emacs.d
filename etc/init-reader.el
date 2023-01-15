@@ -62,9 +62,6 @@
   :hook ((pdf-view-mode . pdf-isearch-minor-mode))
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
   :magic ("%PDF" . pdf-view-mode)
-  :bind ((:map pdf-view-mode-map
-               ("C-s" . isearch-forward)
-               ("C-r" . isearch-backward)))
   :config
   ;; Enable hiDPI support, but at the cost of memory!
   (setq pdf-view-use-scaling t
