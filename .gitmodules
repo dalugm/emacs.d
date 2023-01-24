@@ -159,9 +159,6 @@
 [submodule "evil-zh"]
 	path = lib/evil-zh
 	url = https://github.com/dalugm/evil-zh.git
-[submodule "exec-path-from-shell"]
-	path = lib/exec-path-from-shell
-	url = https://github.com/purcell/exec-path-from-shell.git
 [submodule "expand-region"]
 	path = lib/expand-region
 	url = https://github.com/magnars/expand-region.el.git
@@ -241,10 +238,6 @@
 [submodule "material-theme"]
 	path = lib/material-theme
 	url = https://github.com/cpaulik/emacs-material-theme.git
-[submodule "modus-themes"]
-	no-makeinfo = doclicense.texi
-	path = lib/modus-themes
-	url = https://git.sr.ht/~protesilaos/modus-themes
 [submodule "moe-theme"]
 	path = lib/moe-theme
 	url = https://github.com/kuanyui/moe-theme.el.git
@@ -343,9 +336,6 @@
 [submodule "tomelr"]
 	path = lib/tomelr
 	url = https://github.com/kaushalmodi/tomelr.git
-[submodule "transient"]
-	path = lib/transient
-	url = https://github.com/magit/transient.git
 [submodule "treepy"]
 	path = lib/treepy
 	url = https://github.com/volrath/treepy.el.git

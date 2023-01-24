@@ -7,9 +7,9 @@
 
 ;;; Code:
 
-(global-set-key (kbd "C-c o a") #'org-agenda)
-(global-set-key (kbd "C-c o c") #'org-capture)
-(global-set-key (kbd "C-c o b") #'org-switchb)
+(keymap-global-set "C-c o a" #'org-agenda)
+(keymap-global-set "C-c o c" #'org-capture)
+(keymap-global-set "C-c o b" #'org-switchb)
 
 (with-eval-after-load 'org
   (setq org-agenda-files `(,org-directory))
@@ -137,8 +137,8 @@
   ;; Make Emacs respect kinsoku rules when wrapping lines visually.
   (setq word-wrap-by-category t)
 
-  (global-set-key (kbd "C-c o d") #'org-demote-subtree)
-  (global-set-key (kbd "C-c o p") #'org-promote-subtree)
+  (keymap-global-set "C-c o d"  #'org-demote-subtree)
+  (keymap-global-set "C-c o p" #'org-promote-subtree)
 
   ;; -----------------------------------------
   ;; C-c . \+1w RET ;; => <2020-05-23 Sat +1w>
@@ -168,7 +168,7 @@
       (org-show-entry)
       (outline-show-children)))
 
-  (global-set-key (kbd "C-c o o") #'my-org-show-current-heading-tidily)
+  (keymap-global-set "C-c o o" #'my-org-show-current-heading-tidily)
 
   ;; -----
   ;; babel
@@ -430,9 +430,9 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numberin
   ;; ----
   ;; misc
   ;; ----
-  (global-set-key (kbd "C-c o t") #'org-toggle-link-display)
-  (global-set-key (kbd "C-c o l") #'org-store-link)
-  (global-set-key (kbd "C-c o i") #'org-insert-structure-template)
+  (keymap-global-set "C-c o t" #'org-toggle-link-display)
+  (keymap-global-set "C-c o l" #'org-store-link)
+  (keymap-global-set "C-c o i" #'org-insert-structure-template)
 
   ;; ;; After v9.2 [[https://orgmode.org/Changes.html][changelog]]
   ;; ;; Org comes with a new template expansion mechanism,

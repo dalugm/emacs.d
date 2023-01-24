@@ -203,6 +203,7 @@ If INCLUSIVE is t, the text object is inclusive."
                (forge-post-mode          . emacs)
                (grep-mode                . emacs)
                (help-mode                . emacs)
+               (image-mode               . emacs)
                (magit-mode               . emacs)
                (message-mode             . emacs)
                (minibuffer-inactive-mode . emacs)
@@ -442,7 +443,7 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
     "fc" #'my-copy-file-name
     "fd" #'my-delete-this-file
     "fD" #'my-delete-file
-    "fo" #'my-open-this-file-externally
+    "fo" #'my-open-file-externally
     "fr" #'my-rename-this-file
     "fs" #'my-sudo-edit-file
     "fS" #'my-sudo-find-file

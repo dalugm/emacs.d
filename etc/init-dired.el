@@ -26,13 +26,6 @@
   (setq dired-recursive-deletes 'always)
   (setq dired-recursive-copies  'always)
 
-  (when my-mac-p
-    (if (executable-find "gls")
-        ;; Use GNU ls as `gls' from `coreutils' if available.
-        (setq insert-directory-program "gls")
-      ;; To suppress the warning: `ls does not support --dired'.
-      (setq dired-use-ls-dired nil)))
-
   ;; Show directory first.
   ;; https://emacs.stackexchange.com/questions/5649/sort-file-names-numbered-in-dired/5650#5650
   (setq dired-listing-switches "-alhG1v --group-directories-first")

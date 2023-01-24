@@ -38,7 +38,7 @@
           (when this-win-2nd (other-window 1))))
     (error "Not two windows in current frame!")))
 
-(global-set-key (kbd "C-c w t") #'my-toggle-two-split-window)
+(keymap-global-set "C-c w t" #'my-toggle-two-split-window)
 
 (defun my-rotate-windows ()
   "Rotate windows in clock-wise direction."
@@ -62,7 +62,7 @@
           (set-window-start w2 s1)
           (setq i (1+ i))))))))
 
-(global-set-key (kbd "C-c w r") #'my-rotate-windows)
+(keymap-global-set "C-c w r" #'my-rotate-windows)
 
 (defun my-toggle-full-window()
   "Toggle full view of selected window."
@@ -71,7 +71,7 @@
       (delete-other-windows)
     (winner-undo)))
 
-(global-set-key (kbd "C-c w f") #'my-toggle-full-window)
+(keymap-global-set "C-c w f" #'my-toggle-full-window)
 
 ;;;;;;;;;;
 ;; FILE ;;
@@ -94,7 +94,7 @@ With a prefix ARG, rename based on current name."
         (rename-buffer new-name)))
     (save-buffer)))
 
-(global-set-key (kbd "C-c f r") #'my-rename-this-file)
+(keymap-global-set "C-c f r" #'my-rename-this-file)
 
 (defun my-copy-file-name ()
   "Copy file name to clipboard."
@@ -108,7 +108,7 @@ With a prefix ARG, rename based on current name."
           (message "Copied `%s'." (file-name-nondirectory filename)))
       (warn "Current buffer is not attached to a file!"))))
 
-(global-set-key (kbd "C-c f c") #'my-copy-file-name)
+(keymap-global-set "C-c f c" #'my-copy-file-name)
 
 (defun my-browse-this-file ()
   "Open current file as a URL using `browse-url'."
@@ -119,7 +119,7 @@ With a prefix ARG, rename based on current name."
         (error "Cannot open tramp file!")
       (browse-url (concat "file://" file-name)))))
 
-(global-set-key (kbd "C-c f b") #'my-browse-this-file)
+(keymap-global-set "C-c f b" #'my-browse-this-file)
 
 (defun my-open-file-externally (file)
   "Open FILE externally using the default application of the system."
@@ -134,7 +134,7 @@ With a prefix ARG, rename based on current name."
                   nil 0 nil
                   (expand-file-name file))))
 
-(global-set-key (kbd "C-c f o") #'my-open-file-externally)
+(keymap-global-set "C-c f o" #'my-open-file-externally)
 
 (defun my-delete-this-file ()
   "Delete current file, and kill the buffer."
@@ -147,7 +147,7 @@ With a prefix ARG, rename based on current name."
     (delete-file (buffer-file-name))
     (kill-this-buffer)))
 
-(global-set-key (kbd "C-c f d") #'my-delete-this-file)
+(keymap-global-set "C-c f d" #'my-delete-this-file)
 
 (defun my-delete-file (file)
   "Delete FILE under current working directory."
@@ -156,7 +156,7 @@ With a prefix ARG, rename based on current name."
    (format "find . -depth -name %s -print0 | xargs -0 rm" file))
   (message "`%s' under current working directory deleted." file))
 
-(global-set-key (kbd "C-c f D") #'my-delete-file)
+(keymap-global-set "C-c f D" #'my-delete-file)
 
 (defun my--sudo-file-path (file)
   "Get current FILE's path."
@@ -181,14 +181,14 @@ With a prefix ARG, rename based on current name."
                   (derived-mode-p 'wdired-mode))
           default-directory)))))
 
-(global-set-key (kbd "C-c f s") #'my-sudo-edit-file)
+(keymap-global-set "C-c f s" #'my-sudo-edit-file)
 
 (defun my-sudo-find-file (file)
   "Open FILE as root."
   (interactive "FOpen file as root: ")
   (find-file (my--sudo-file-path file)))
 
-(global-set-key (kbd "C-c f S") #'my-sudo-find-file)
+(keymap-global-set "C-c f S" #'my-sudo-find-file)
 
 ;;;;;;;;;;;;;;
 ;; JUST4FUN ;;
@@ -263,7 +263,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
                 (read-string
                  (message "%s Search: " (capitalize search-engine)))))))))
 
-(global-set-key (kbd "C-c s o") #'my-search-online)
+(keymap-global-set "C-c s o" #'my-search-online)
 
 ;;;;;;;;;;;;;;;
 ;; DAILY USE ;;
@@ -276,7 +276,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
   (set-selective-display
    (if selective-display nil (or column 1))))
 
-(global-set-key (kbd "C-c m h") #'my-toggle-selective-display)
+(keymap-global-set "C-c m h" #'my-toggle-selective-display)
 
 ;; https://www.emacswiki.org/emacs/RecreateScratchBuffer
 (defun my-switch-scratch-buffer ()
@@ -289,7 +289,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
       (funcall initial-major-mode)
       (insert initial-scratch-message))))
 
-(global-set-key (kbd "C-c X") #'my-switch-scratch-buffer)
+(keymap-global-set "C-c X" #'my-switch-scratch-buffer)
 
 (defun my-switch-messages-buffer ()
   "Create or switch to the *Message* buffer."
@@ -300,7 +300,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
       (switch-to-buffer (get-buffer-create "*Messages*"))
       (messages-buffer-mode))))
 
-(global-set-key (kbd "C-c M") #'my-switch-messages-buffer)
+(keymap-global-set "C-c M" #'my-switch-messages-buffer)
 
 (defun my-occur-dwim ()
   "Call `occur' with a sane default."
@@ -315,7 +315,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
         regexp-history)
   (call-interactively #'occur))
 
-(global-set-key (kbd "C-c m o") #'my-occur-dwim)
+(keymap-global-set "C-c m o" #'my-occur-dwim)
 
 (defun my-hide-dos-eol ()
   "Do not show  in files containing mixed UNIX and DOS line endings."
@@ -342,7 +342,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
         (load-theme (intern x) t))
     (error "Problem loading theme %s!" x)))
 
-(global-set-key (kbd "C-c m l") #'my-load-theme)
+(keymap-global-set "C-c m l" #'my-load-theme)
 
 (defun my-load-default-theme ()
   "Load default Emacs theme."
@@ -350,7 +350,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
 
-(global-set-key (kbd "C-c m L") #'my-load-default-theme)
+(keymap-global-set "C-c m L" #'my-load-default-theme)
 
 (defun my-kill-other-buffers-without-special-ones ()
   "Keep all buffers but the current one.
@@ -362,7 +362,7 @@ Do NOT mess with special buffers."
                (current-buffer)
                (seq-filter #'buffer-file-name (buffer-list))))))
 
-(global-set-key (kbd "C-c m k") #'my-kill-other-buffers-without-special-ones)
+(keymap-global-set "C-c m k" #'my-kill-other-buffers-without-special-ones)
 
 ;; https://stackoverflow.com/questions/3417438/closing-all-other-buffers-in-emacs
 (defun my-kill-other-buffers-with-special-ones ()
@@ -371,7 +371,7 @@ Do NOT mess with special buffers."
   (when (y-or-n-p "Are you sure you want to kill all buffers but the current one? ")
     (mapc #'kill-buffer (cdr (buffer-list (current-buffer))))))
 
-(global-set-key (kbd "C-c m K") #'my-kill-other-buffers-with-special-ones)
+(keymap-global-set "C-c m K" #'my-kill-other-buffers-with-special-ones)
 
 (defun my-strfile2dat ()
   "Strfile current file to make it readable by `fortune'."
@@ -397,7 +397,7 @@ With a `\\[universal-argument] \\[universal-argument] \
                  ((equal arg '(64)) "%c"))))
     (insert (format-time-string format))))
 
-(global-set-key (kbd "C-c 1") #'my-insert-date)
+(keymap-global-set "C-c 1" #'my-insert-date)
 
 (defun my-insert-user-information (arg)
   "Insert user information at point.
@@ -414,7 +414,7 @@ argument ARG, insert name only."
                  ((equal arg '(16)) user-full-name))))
     (insert format)))
 
-(global-set-key (kbd "C-c 2") #'my-insert-user-information)
+(keymap-global-set "C-c 2" #'my-insert-user-information)
 
 (defun my-divide-file-chapter ()
   "Divide FILE according to specified word."
@@ -454,7 +454,7 @@ When region is active, delete the blank lines in region only."
       (delete-matching-lines "^[[:space:]]*$" (region-beginning) (region-end))
     (delete-matching-lines "^[[:space:]]*$" (point-min) (point-max))))
 
-(global-set-key (kbd "C-c m d") #'my-delete-blank-lines)
+(keymap-global-set "C-c m d" #'my-delete-blank-lines)
 
 (defun my-delete-visual-blank-lines ()
   "Delete all visual blank lines."
@@ -463,7 +463,7 @@ When region is active, delete the blank lines in region only."
     (narrow-to-region (window-start) (window-end))
     (delete-matching-lines "^[[:space:]]*$" (point-min) (point-max))))
 
-(global-set-key (kbd "C-c m D") #'my-delete-visual-blank-lines)
+(keymap-global-set "C-c m D" #'my-delete-visual-blank-lines)
 
 (defun my-delete-invisible-chars ()
   "Query and replace some invisible Unicode chars.
@@ -523,7 +523,7 @@ Fix OLD-FUNC with ARGS."
     (mark-defun)
     (indent-region (region-beginning) (region-end))))
 
-(global-set-key (kbd "C-M-z") #'my-indent-defun)
+(keymap-global-set "C-M-z" #'my-indent-defun)
 
 (defun my--adjust-point-after-click (event &optional _)
   "Adjust point.  Click more accurate in line with intuition.
@@ -603,7 +603,7 @@ pangu-spacing. The excluded puncuation will be matched to group
   ;; `nil' must be returned to allow use in hooks.
   nil)
 
-(global-set-key (kbd "C-c m p") #'my-pangu-spacing-current-buffer)
+(keymap-global-set "C-c m p" #'my-pangu-spacing-current-buffer)
 
 (defun my--add-subdirs-to-load-path (search-dir)
   "Add every subdir of SEARCH-DIR to `load-path'."
@@ -666,8 +666,8 @@ pangu-spacing. The excluded puncuation will be matched to group
       (my-disable-http-proxy)
     (my-enable-http-proxy)))
 
-(global-set-key (kbd "C-c t p h") #'my-toggle-http-proxy)
-(global-set-key (kbd "C-c t p H") #'my-show-http-proxy)
+(keymap-global-set "C-c t p h" #'my-toggle-http-proxy)
+(keymap-global-set "C-c t p H" #'my-show-http-proxy)
 
 (defun my-show-socks-proxy ()
   "Show SOCKS proxy."
@@ -708,8 +708,8 @@ pangu-spacing. The excluded puncuation will be matched to group
       (my-disable-socks-proxy)
     (my-enable-socks-proxy)))
 
-(global-set-key (kbd "C-c t p s") #'my-toggle-socks-proxy)
-(global-set-key (kbd "C-c t p S") #'my-show-socks-proxy)
+(keymap-global-set "C-c t p s" #'my-toggle-socks-proxy)
+(keymap-global-set "C-c t p S" #'my-show-socks-proxy)
 
 (defun my-show-wsl-socks-proxy ()
   "Show SOCKS proxy in WSL."
@@ -750,8 +750,8 @@ pangu-spacing. The excluded puncuation will be matched to group
       (my-disable-wsl-socks-proxy)
     (my-enable-wsl-socks-proxy)))
 
-(global-set-key (kbd "C-c t p w") #'my-toggle-wsl-socks-proxy)
-(global-set-key (kbd "C-c t p W") #'my-show-wsl-socks-proxy)
+(keymap-global-set "C-c t p w" #'my-toggle-wsl-socks-proxy)
+(keymap-global-set "C-c t p W" #'my-show-wsl-socks-proxy)
 
 (provide 'init-funcs)
 

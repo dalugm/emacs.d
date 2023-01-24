@@ -34,6 +34,26 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 
+;; Fix PATH problem on macOS when using GUI Emacs.
+(when my-mac-x-p
+  (setenv "LANG" "en_US.UTF-8")
+  (condition-case err
+      (let ((path (with-temp-buffer
+                    (insert-file-contents-literally "~/.path")
+                    (buffer-string))))
+        (setenv "PATH" path)
+        (setq exec-path
+              (append (parse-colon-path path) (list exec-directory))))
+    (error (warn "%s" (error-message-string err)))))
+
+;; Use GNU ls as `gls' from `coreutils' if available.
+(when my-mac-p
+  (let ((gls (executable-find "gls")))
+    (if gls
+        (setq insert-directory-program gls)
+      ;; Suppress the Dired warning when not using GNU ls.
+      (setq dired-use-ls-dired nil))))
+
 ;; Coding configuration, last has the highest priority.
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html#Recognize-Coding
 (prefer-coding-system 'cp950)
@@ -116,6 +136,9 @@
               ;; Disable the annoying bell ring.
               ring-bell-function #'ignore)
 
+;; Use y/n instead of yes/no.
+(setq use-short-answers t)
+
 ;;; Tab and Space
 ;; Indent with spaces.
 (setq-default indent-tabs-mode nil)
@@ -126,9 +149,6 @@
 (setq tab-always-indent 'complete)
 ;; TAB cycle if there are only few candidates.
 (setq completion-cycle-threshold 3)
-
-;; Reply y/n instead of yes/no.
-(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Enable narrowing commands.
 (put 'narrow-to-region 'disabled nil)
@@ -204,11 +224,13 @@
 
   (setq tramp-chunksize 8192))
 
+;; Eldoc.
 (with-eval-after-load 'eldoc
   ;; Multi-line message should not display too soon.
   (setq eldoc-idle-delay 1)
   (setq eldoc-echo-area-use-multiline-p t))
 
+;; Tags.
 ;; Don't ask before rereading the TAGS files if they have changed.
 (setq tags-revert-without-query t)
 
@@ -223,8 +245,8 @@
                                          try-expand-line
                                          try-complete-lisp-symbol-partially
                                          try-complete-lisp-symbol))
-;; use `hippie-expand' instead of `dabbrev'
-(global-set-key [remap dabbrev-expand] #'hippie-expand)
+;; Use `hippie-expand' instead of `dabbrev'.
+(keymap-global-set "<remap> <dabbrev-expand>" #'hippie-expand)
 
 (with-eval-after-load 'comint
   ;; Don't echo passwords when communicating with interactive programs:
@@ -246,76 +268,76 @@
 ;; keybindings ;;
 ;;;;;;;;;;;;;;;;;
 
-(global-set-key (kbd "C-c f f") #'recentf-open-files)
-(global-set-key (kbd "C-c f l") #'recentf-load-list)
-(global-set-key (kbd "C-c l t") #'load-theme)
+(keymap-global-set "C-c f f" #'recentf-open-files)
+(keymap-global-set "C-c f l" #'recentf-load-list)
+(keymap-global-set "C-c l t" #'load-theme)
 ;; Be able to M-x without meta.
-(global-set-key (kbd "C-c m x") #'execute-extended-command)
+(keymap-global-set "C-c m x" #'execute-extended-command)
 ;; Zero width space.
-(global-set-key (kbd "C-c 8 z") (lambda ()
-                                  (interactive)
-                                  (insert-char ?\u200b)))
+(keymap-global-set "C-c 8 z" (lambda ()
+                               (interactive)
+                               (insert-char ?\u200b)))
 ;; Ideographic space.
-(global-set-key (kbd "C-c 8 f") (lambda ()
-                                  (interactive)
-                                  (insert-char ?\u3000)))
+(keymap-global-set "C-c 8 f" (lambda ()
+                               (interactive)
+                               (insert-char ?\u3000)))
 
 ;; Toggle.
-(global-set-key (kbd "C-c t A") #'abbrev-mode)
-(global-set-key (kbd "C-c t a") #'auto-fill-mode)
-(global-set-key (kbd "C-c t f f") #'toggle-frame-fullscreen)
-(global-set-key (kbd "C-c t f m") #'toggle-frame-maximized)
-(global-set-key (kbd "C-c t g") #'glasses-mode)
-(global-set-key (kbd "C-c t h") #'global-hl-line-mode)
-(global-set-key (kbd "C-c t i") #'display-fill-column-indicator-mode)
-(global-set-key (kbd "C-c t j") #'toggle-truncate-lines)
-(global-set-key (kbd "C-c t k") #'visual-line-mode)
-(global-set-key (kbd "C-c t l") #'display-line-numbers-mode)
-(global-set-key (kbd "C-c t r") #'cua-rectangle-mark-mode)
-(global-set-key (kbd "C-c t s") #'subword-mode)
-(global-set-key (kbd "C-c t v") #'view-mode)
-(global-set-key (kbd "C-c t w") #'whitespace-mode)
+(keymap-global-set "C-c t A" #'abbrev-mode)
+(keymap-global-set "C-c t a" #'auto-fill-mode)
+(keymap-global-set "C-c t f f" #'toggle-frame-fullscreen)
+(keymap-global-set "C-c t f m" #'toggle-frame-maximized)
+(keymap-global-set "C-c t g" #'glasses-mode)
+(keymap-global-set "C-c t h" #'global-hl-line-mode)
+(keymap-global-set "C-c t i" #'display-fill-column-indicator-mode)
+(keymap-global-set "C-c t j" #'toggle-truncate-lines)
+(keymap-global-set "C-c t k" #'visual-line-mode)
+(keymap-global-set "C-c t l" #'display-line-numbers-mode)
+(keymap-global-set "C-c t r" #'cua-rectangle-mark-mode)
+(keymap-global-set "C-c t s" #'subword-mode)
+(keymap-global-set "C-c t v" #'view-mode)
+(keymap-global-set "C-c t w" #'whitespace-mode)
 
 ;; Abbrevs.
 (setq save-abbrevs 'silently)
 
 ;; Search.
-(global-set-key (kbd "C-c s d") #'find-dired)
-(global-set-key (kbd "C-c s i") #'imenu)
-(global-set-key (kbd "C-c s g") #'grep)
+(keymap-global-set "C-c s d" #'find-dired)
+(keymap-global-set "C-c s i" #'imenu)
+(keymap-global-set "C-c s g" #'grep)
 
 ;; Isearch.
-(global-set-key (kbd "C-M-s") #'isearch-forward-regexp)
-(global-set-key (kbd "C-M-r") #'isearch-backward-regexp)
+(keymap-global-set "C-M-s" #'isearch-forward-regexp)
+(keymap-global-set "C-M-r" #'isearch-backward-regexp)
 ;; Activate occur easily inside isearch.
-(define-key isearch-mode-map (kbd "C-o") #'isearch-occur)
+(keymap-set isearch-mode-map "C-o" #'isearch-occur)
 
 ;; Align code in a pretty way.
 ;; http://ergoemacs.org/emacs/emacs_align_and_sort.html
-(global-set-key (kbd "C-x \\") #'align-regexp)
+(keymap-global-set "C-x \\" #'align-regexp)
 
 ;; Open header file under cursor.
-(global-set-key (kbd "C-x C-o") #'ffap)
+(keymap-global-set "C-x C-o" #'ffap)
 
 ;; A complementary binding to the apropos-command (C-h a).
-(define-key 'help-command "A" #'apropos)
+(keymap-set 'help-command "A" #'apropos)
 
-(define-key 'help-command (kbd "C-f") #'find-function)
-(define-key 'help-command (kbd "C-k") #'find-function-on-key)
-(define-key 'help-command (kbd "C-v") #'find-variable)
-(define-key 'help-command (kbd "C-l") #'find-library)
+(keymap-set 'help-command "C-f" #'find-function)
+(keymap-set 'help-command "C-k" #'find-function-on-key)
+(keymap-set 'help-command "C-v" #'find-variable)
+(keymap-set 'help-command "C-l" #'find-library)
 
-(define-key 'help-command (kbd "C-i") #'info-display-manual)
+(keymap-set 'help-command "C-i" #'info-display-manual)
 
-(global-set-key [remap just-one-space] #'cycle-spacing)
-(global-set-key (kbd "C-x M-u") #'revert-buffer)
-(global-set-key (kbd "C-x M-c") #'capitalize-region)
+(keymap-global-set "<remap> <just-one-space>" #'cycle-spacing)
+(keymap-global-set "C-x M-u" #'revert-buffer)
+(keymap-global-set "C-x M-c" #'capitalize-region)
 
-(global-set-key (kbd "M-z") #'zap-up-to-char)
-(global-set-key (kbd "M-Z") #'zap-to-char)
+(keymap-global-set "M-z" #'zap-up-to-char)
+(keymap-global-set "M-Z" #'zap-to-char)
 
-(global-set-key (kbd "M-s M-j") #'scroll-other-window)
-(global-set-key (kbd "M-s M-k") #'scroll-other-window-down)
+(keymap-global-set "M-s M-j" #'scroll-other-window)
+(keymap-global-set "M-s M-k" #'scroll-other-window-down)
 
 (provide 'init-utils)
 

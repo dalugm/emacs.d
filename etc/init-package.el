@@ -14,20 +14,17 @@
         borg-user-emacs-directory user-emacs-directory
         borg-gitmodules-file (expand-file-name ".gitmodules"
                                                user-emacs-directory))
-  ;; use HTTPS instead of SSH
-  (setq borg-rewrite-urls-alist
-        '(("git@github.com:" . "https://github.com/")
-          ("git@gitlab.com:" . "https://gitlab.com/")))
   (borg-initialize))
 
-;; Add both site-lisp and its subdirs to `load-path'
+;; Add both site-lisp and its subdirs to `load-path'.
 (let ((site-lisp-dir (expand-file-name "site-lisp/" my-library-d)))
   (push site-lisp-dir load-path)
   (my--add-subdirs-to-load-path site-lisp-dir))
 
 (eval-and-compile                       ; `use-package'
-  (require 'use-package)
-  (setq use-package-verbose t))
+  (setq use-package-enable-imenu-support t)
+  (setq use-package-verbose t)
+  (require 'use-package))
 
 (use-package auto-compile
   :custom
@@ -64,7 +61,7 @@
   (add-to-list 'recentf-exclude no-littering-etc-directory))
 
 ;; HTTPS URLs should be used where possible
-;; as they offer superior security
+;; as they offer superior security.
 (with-eval-after-load 'package
   (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                       (not (gnutls-available-p))))

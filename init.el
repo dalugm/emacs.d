@@ -79,7 +79,6 @@
 ;; Program.
 (require 'init-sexp)
 (require 'init-tex)
-(require 'init-go)
 (require 'init-js)
 (require 'init-lua)
 (require 'init-web)

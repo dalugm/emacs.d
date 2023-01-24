@@ -68,20 +68,6 @@ access from `emacsclient'."
                    collect `(holiday-fixed 10 ,i "National Day"))
         (holiday-fixed 12 26 "Mao's Birthday")))
 
-(use-package exec-path-from-shell
-  :defer 1
-  :when my-mac-x-p
-  :init (setq exec-path-from-shell-check-startup-files nil)
-  :config (exec-path-from-shell-initialize)
-  ;; https://emacs.stackexchange.com/questions/10822/locale-when-launching-emacs-app-on-os-x
-  (exec-path-from-shell-copy-envs
-   '("SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO"
-     "NIX_SSL_CERT_FILE" "NIX_PATH" "GTAGSLABEL" "GTAGSCONF"
-     "LANG" "LC_CTYPE" "PATH" "MANPATH"))
-  (when (executable-find "gls")
-    ;; Use GNU ls as `gls' from `coreutils' if available.
-    (setq insert-directory-program "gls")))
-
 (use-package hl-todo
   :hook (after-init . global-hl-todo-mode)
   :bind (:map hl-todo-mode-map

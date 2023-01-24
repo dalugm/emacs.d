@@ -15,7 +15,15 @@
   (setq php-mode-template-compatibility nil))
 
 (use-package emmet-mode
-  :hook (js-mode css-mode web-mode html-mode nxml-mode sgml-mode))
+  :hook (css-mode
+         html-mode
+         js-jsx-mode
+         js-mode
+         js-ts-mode
+         nxml-mode
+         sgml-mode
+         tsx-ts-mode
+         web-mode))
 
 (use-package web-mode
   :mode "\\.\\(?:cs\\|[px]\\)?html?\\'"

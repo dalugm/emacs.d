@@ -37,21 +37,21 @@
   (interactive "nSet transparency (0 is transparent- 100 is opaque): ")
   (set-frame-parameter (selected-frame) 'alpha value))
 
-(global-set-key (kbd "C-c w p") #'my-set-window-transparency)
+(keymap-global-set "C-c w p" #'my-set-window-transparency)
 
 (defun my-set-window-margins (margin)
   "Set the MARGIN of the current window."
   (interactive "nMargin Value: ")
   (set-window-margins (selected-window) margin margin))
 
-(global-set-key (kbd "C-c w m") #'my-set-window-margins)
+(keymap-global-set "C-c w m" #'my-set-window-margins)
 
 (defun my-set-line-spacing (space)
   "Set the line SPACE of the current window."
   (interactive "nLine Space: ")
   (setq line-spacing space))
 
-(global-set-key (kbd "C-c w l") #'my-set-line-spacing)
+(keymap-global-set "C-c w l" #'my-set-line-spacing)
 
 ;; ----- Font ----------------------------------------------
 
@@ -202,7 +202,7 @@ See `my-load-font'."
     (set-fontset-font t 'cjk-misc cjk)
     (set-fontset-font t 'symbol cjk nil 'append)))
 
-(global-set-key (kbd "C-c l f") #'my-load-default-font)
+(keymap-global-set "C-c l f" #'my-load-default-font)
 
 (defun my-load-font (face font-name size &rest attrs)
   "Set font for FACE to FONT-NAME.
@@ -243,7 +243,7 @@ Use `my-save-font-settings' to save font settings and use
      ',my-font-settings
      nil nil "Automatically saved by `my-load-font'")))
 
-(global-set-key (kbd "C-c l F") #'my-load-font)
+(keymap-global-set "C-c l F" #'my-load-font)
 
 (defun my-save-font-settings ()
   "Save font-settings set by `my-load-font'."

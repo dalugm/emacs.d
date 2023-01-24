@@ -38,11 +38,12 @@
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
   :bind
-  (([remap bookmark-jump] . consult-bookmark)
+  (;; Remap bindings.
+   ([remap bookmark-jump] . consult-bookmark)
    ([remap goto-line] . consult-goto-line)
    ([remap imenu] . consult-imenu)
-   ([remap locate] . consult-locate)
    ([remap load-theme] . consult-theme)
+   ([remap locate] . consult-locate)
    ([remap man] . consult-man)
    ([remap project-switch-to-buffer] . consult-project-buffer)
    ([remap recentf-open-files] . consult-recent-file)
@@ -51,19 +52,12 @@
    ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
    ([remap switch-to-buffer] . consult-buffer)
    ([remap yank-pop] . consult-yank-pop)
-   ;; register access
+   ;; Register access.
    ([remap abbrev-prefix-mark] . consult-register-store)
    ("M-#" . consult-register-load)
    ("C-M-#" . consult-register)
-   ;; other short keybindings
-   ("M-g e" . consult-compile-error)
-   ("M-g f" . consult-flymake)
-   ("M-g o" . consult-outline)
-   ("M-g m" . consult-mark)
-   ("M-g k" . consult-global-mark)
-   ("M-L" . consult-line)
-   ("M-s l" . consult-line)
-   ("M-s L" . consult-line-multi)
+   ;; C-c bindings (mode-specific-map).
+   ("C-c M-x" . consult-mode-command)
    ("C-c s I" . consult-imenu-multi)
    ("C-c s f" . my-consult-fd)
    ("C-c s F" . consult-find)
@@ -75,6 +69,17 @@
    ("C-c s m" . consult-line-multi)
    ("C-c s k" . consult-focus-lines)
    ("C-c s K" . consult-keep-lines)
+   ;; M-g bindings (goto-map).
+   ("M-g e" . consult-compile-error)
+   ("M-g f" . consult-flymake)
+   ("M-g o" . consult-outline)
+   ("M-g m" . consult-mark)
+   ("M-g k" . consult-global-mark)
+   ;; M-s bindings (search-map).
+   ("M-s l" . consult-line)
+   ("M-s L" . consult-line-multi)
+   ;; Other bindings.
+   ("M-L" . consult-line)
    (:map minibuffer-local-map
          ("M-h" . consult-history)
          ([remap next-matching-history-element] . consult-history)
@@ -123,33 +128,35 @@ matches case insensitively."
     :group 'convenience
     :type 'string)
 
-  (defun my--consult--fd-builder (input)
-    "Build command line given INPUT."
+  (defun my--consult--fd-make-builder ()
+    "Create fd command line builder."
     (unless my-consult-fd-command
       (setq my-consult-fd-command
             (if (eq 0 (call-process-shell-command "fdfind"))
                 "fdfind"
               "fd")))
-    (pcase-let* ((`(,arg . ,opts) (consult--command-split input))
-                 (`(,re . ,hl) (funcall consult--regexp-compiler
-                                        arg 'extended t)))
-      (when re
-        (list :command (append
-                        (list my-consult-fd-command
-                              "--color=never" "--full-path"
-                              (consult--join-regexps re 'extended))
-                        opts)
-              :highlight hl))))
+    (lambda (input)
+      (pcase-let* ((`(,arg . ,opts) (consult--command-split input))
+                   (`(,re . ,hl) (funcall consult--regexp-compiler
+                                          arg 'extended t)))
+        (when re
+          (cons (append
+                 (list my-consult-fd-command
+                       "--color=never" "--full-path"
+                       (consult--join-regexps re 'extended))
+                 opts)
+                hl)))))
 
   (defun my-consult-fd (&optional dir initial)
-    "Search with `fd' for files in DIR where the content matches a regexp.
-The initial input is given by the INITIAL argument.  See
-`consult-find' for more details."
+    "Search for files in DIR matching input regexp given INITIAL input.
+
+The fd process is started asynchronously, similar to `consult-grep'.
+See `consult-grep' for more details regarding the asynchronous search."
     (interactive "P")
     (let* ((prompt-dir (consult--directory-prompt "Fd" dir))
            (default-directory (cdr prompt-dir)))
       (find-file (consult--find (car prompt-dir)
-                                #'my--consult--fd-builder
+                                (my--consult--fd-make-builder)
                                 initial))))
 
   (when my-win-p
@@ -166,10 +173,9 @@ URL `https://github.com/minad/consult/issues/475'."
              (consult-find-args (concat find-program " . -not ( -wholename */.* -prune )"))
              (prompt-dir (consult--directory-prompt "Find" dir))
              (default-directory (cdr prompt-dir)))
-        (find-file (consult--find
-                    (car prompt-dir)
-                    #'consult--find-builder
-                    initial))))
+        (find-file (consult--find (car prompt-dir)
+                                  (consult--find-make-builder)
+                                  initial))))
     (advice-add 'consult-find :override #'my--consult-find-win))
 
   ;; The narrowing key.
