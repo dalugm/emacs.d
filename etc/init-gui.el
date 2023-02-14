@@ -16,6 +16,10 @@
   (pixel-scroll-precision-mode +1))
 
 (when (featurep 'ns)
+  ;; Make NS behavior the same as other platforms.
+  (setq ns-command-modifier 'meta)
+  (setq ns-alternate-modifier 'super)
+
   (defun my--set-frame-ns-titlebar (frame &rest _)
     "Set ns-appearance frame parameter for FRAME."
     (when (display-graphic-p frame)
@@ -34,7 +38,7 @@
 
 (defun my-set-window-transparency (value)
   "Set the VALUE of transparency of the frame window."
-  (interactive "nSet transparency (0 is transparent- 100 is opaque): ")
+  (interactive "nSet transparency (0 is transparent - 100 is opaque): ")
   (set-frame-parameter (selected-frame) 'alpha value))
 
 (keymap-global-set "C-c w p" #'my-set-window-transparency)
