@@ -44,7 +44,7 @@ Show the heading too, if it is currently invisible."
                            nil))))
 
 (use-package markdown-mode
-  :mode ("README\\(?:\\.md\\)?\\'" . gfm-mode)
+  :mode ("README\\.md\\'" . gfm-mode)
   :bind (:map markdown-mode-command-map
               ("'" . markdown-edit-code-block)
               ("f" . markdown-footnote-goto-text)

@@ -6,6 +6,6 @@ try {
   $1
 } catch (err) {
   $2
-}${3: finally {
+} finally {
   $4
-}}
+}

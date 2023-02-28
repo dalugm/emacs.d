@@ -128,8 +128,8 @@ matches case insensitively."
     :group 'convenience
     :type 'string)
 
-  (defun my--consult--fd-make-builder ()
-    "Create fd command line builder."
+  (defun my--consult--fd-make-builder (paths)
+    "Create fd command line builder given PATHS."
     (unless my-consult-fd-command
       (setq my-consult-fd-command
             (if (eq 0 (call-process-shell-command "fdfind"))
@@ -144,7 +144,8 @@ matches case insensitively."
                  (list my-consult-fd-command
                        "--color=never" "--full-path"
                        (consult--join-regexps re 'extended))
-                 opts)
+                 opts
+                 paths)
                 hl)))))
 
   (defun my-consult-fd (&optional dir initial)
@@ -153,11 +154,10 @@ matches case insensitively."
 The fd process is started asynchronously, similar to `consult-grep'.
 See `consult-grep' for more details regarding the asynchronous search."
     (interactive "P")
-    (let* ((prompt-dir (consult--directory-prompt "Fd" dir))
-           (default-directory (cdr prompt-dir)))
-      (find-file (consult--find (car prompt-dir)
-                                (my--consult--fd-make-builder)
-                                initial))))
+    (pcase-let* ((`(,prompt ,paths ,dir) (consult--directory-prompt "Fd" dir))
+                 (default-directory dir)
+                 (builder (my--consult--fd-make-builder paths)))
+      (find-file (consult--find prompt builder initial))))
 
   (when my-win-p
 

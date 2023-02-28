@@ -17,6 +17,7 @@
           (cpp        . ("https://github.com/tree-sitter/tree-sitter-cpp.git"))
           (csharp     . ("https://github.com/tree-sitter/tree-sitter-c-sharp.git"))
           (css        . ("https://github.com/tree-sitter/tree-sitter-css.git"))
+          (dart       . ("https://github.com/UserNobody14/tree-sitter-dart.git"))
           (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile.git"))
           (go         . ("https://github.com/tree-sitter/tree-sitter-go.git"))
           (gomod      . ("https://github.com/camdencheek/tree-sitter-go-mod.git"))
