@@ -135,11 +135,6 @@
   :hook (prog-mode . editorconfig-mode)
   :bind ("C-c c E" . editorconfig-apply))
 
-(use-package apheleia
-  :bind ("C-c c F" . apheleia-format-buffer)
-  :config
-  (add-to-list 'apheleia-mode-alist '(emacs-lisp-mode . lisp-indent)))
-
 (use-package citre
   :init
   (require 'citre-config)

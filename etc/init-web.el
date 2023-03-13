@@ -55,9 +55,6 @@
 (define-derived-mode vue-mode web-mode "Vue")
 (add-to-list 'auto-mode-alist '("\\.n?vue\\'" . vue-mode))
 
-(use-package pug-mode
-  :mode "\\.pug\\'")
-
 (provide 'init-web)
 
 ;;; init-web.el ends here

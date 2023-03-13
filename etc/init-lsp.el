@@ -7,6 +7,21 @@
 
 ;;; Code:
 
+(use-package lsp-bridge
+  :hook (lsp-bridge-mode . (lambda ()
+                             "Change `corfu-mode' based on `lsp-bridge-mode'."
+                             (if lsp-bridge-mode
+                                 (global-corfu-mode -1)
+                               (global-corfu-mode +1))))
+  :bind (("C-c l l" . lsp-bridge-mode)
+         ("C-c l a" . lsp-bridge-code-action)
+         ("C-c l d" . lsp-bridge-find-def)
+         ("C-c l D" . lsp-bridge-find-def-other-window)
+         ("C-c l i" . lsp-bridge-find-impl)
+         ("C-c l I" . lsp-bridge-find-impl-other-window)
+         ("C-c l n" . lsp-bridge-rename)
+         ("C-c l r" . lsp-bridge-find-references)))
+
 (with-eval-after-load 'eglot
   ;; Eglot with volar.
   (add-to-list 'eglot-server-programs

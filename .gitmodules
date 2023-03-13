@@ -16,9 +16,6 @@
 [submodule "anti-zenburn-theme"]
 	path = lib/anti-zenburn-theme
 	url = https://github.com/m00natic/anti-zenburn-theme.git
-[submodule "apheleia"]
-	path = lib/apheleia
-	url = https://github.com/radian-software/apheleia.git
 [submodule "async"]
 	path = lib/async
 	url = https://github.com/jwiegley/emacs-async.git
@@ -46,12 +43,6 @@
 [submodule "cape"]
 	path = lib/cape
 	url = https://github.com/minad/cape.git
-[submodule "challenger-deep-theme"]
-	path = lib/challenger-deep-theme
-	url = https://github.com/challenger-deep-theme/emacs.git
-[submodule "chocolate-theme"]
-	path = lib/chocolate-theme
-	url = https://github.com/SavchenkoValeriy/emacs-chocolate-theme.git
 [submodule "citre"]
 	path = lib/citre
 	url = https://github.com/universal-ctags/citre.git
@@ -88,9 +79,6 @@
 [submodule "darkroom"]
 	path = lib/darkroom
 	url = https://github.com/joaotavora/darkroom.git
-[submodule "darktooth-theme"]
-	path = lib/darktooth-theme
-	url = https://github.com/emacsfodder/emacs-theme-darktooth.git
 [submodule "dart-mode"]
 	path = lib/dart-mode
 	url = https://github.com/bradyt/dart-mode.git
@@ -222,6 +210,11 @@
 [submodule "llama"]
 	path = lib/llama
 	url = https://git.sr.ht/~tarsius/llama
+[submodule "lsp-bridge"]
+	# Do not build lsp-bridge.
+	build-step = borg-update-autoloads
+	path = lib/lsp-bridge
+	url = https://github.com/manateelazycat/lsp-bridge.git
 [submodule "lua-mode"]
 	path = lib/lua-mode
 	url = https://github.com/immerrr/lua-mode.git
@@ -249,7 +242,7 @@
 	url = https://github.com/emacscollective/no-littering.git
 [submodule "nord-theme"]
 	path = lib/nord-theme
-	url = https://github.com/arcticicestudio/nord-emacs.git
+	url = https://github.com/nordtheme/emacs
 [submodule "orderless"]
 	path = lib/orderless
 	url = https://github.com/oantolin/orderless.git
@@ -277,9 +270,6 @@
 [submodule "posframe"]
 	path = lib/posframe
 	url = https://github.com/tumashu/posframe.git
-[submodule "pug-mode"]
-	path = lib/pug-mode
-	url = https://github.com/hlissner/emacs-pug-mode.git
 [submodule "pyim"]
 	path = lib/pyim
 	url = https://github.com/tumashu/pyim.git
