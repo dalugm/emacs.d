@@ -169,13 +169,12 @@ See `consult-grep' for more details regarding the asynchronous search."
       "Use `consult-find' on Windows.
 
 URL `https://github.com/minad/consult/issues/475'."
-      (let* ((w32-quote-process-args ?\\) ; or (w32-quote-process-args ?*)
-             (consult-find-args (concat find-program " . -not ( -wholename */.* -prune )"))
-             (prompt-dir (consult--directory-prompt "Find" dir))
-             (default-directory (cdr prompt-dir)))
-        (find-file (consult--find (car prompt-dir)
-                                  (consult--find-make-builder)
-                                  initial))))
+      (pcase-let* ((w32-quote-process-args ?\\) ; or (w32-quote-process-args ?*)
+                   (consult-find-args (concat find-program " . -not ( -wholename */.* -prune )"))
+                   (`(,prompt ,paths ,dir) (consult--directory-prompt "Find" dir))
+                   (default-directory dir)
+                   (builder (consult--find-make-builder paths)))
+        (find-file (consult--find prompt builder initial))))
     (advice-add 'consult-find :override #'my--consult-find-win))
 
   ;; The narrowing key.

@@ -426,11 +426,13 @@ argument ARG, insert name only."
   (goto-char (point-min))
   (while (< (point) (point-max))
     (beginning-of-line)
-    (if (re-search-forward "^第.\\{1,6\\}[回章话]" (line-end-position) t)
+    (setq zh-title-regexp
+          (rx bol "第" (repeat 1 6 nonl) (any "章回话")))
+    (if (re-search-forward zh-title-regexp (line-end-position) t)
         (progn
           (end-of-line)
           (newline))
-      (while (not (or (re-search-forward "^第.\\{1,6\\}[回章话]"
+      (while (not (or (re-search-forward zh-title-regexp
                                          (line-end-position) t)
                       (= (point) (point-max))))
         (forward-line))
@@ -445,6 +447,23 @@ argument ARG, insert name only."
     (delete-blank-lines)
     (delete-blank-lines)
     (forward-line)))
+
+(defun my-full-width-space-for-zh ()
+  "Use two full-width spaces in line beginning."
+  (interactive)
+  (if (region-active-p)
+      (let ((start (region-beginning))
+            (end (region-end)))
+        (save-excursion
+          (goto-char start)
+          (while (< (point) end)
+            (back-to-indentation)
+            (delete-horizontal-space)
+            (insert-char #x3000 2)
+            (forward-line 1))))
+    (error "Select a region first!")))
+
+(keymap-global-set "C-c m f" #'my-full-width-space-for-zh)
 
 (defun my-delete-blank-lines ()
   "Delete blank lines.

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Console.Read(...);
+# key: cr
+# --
+Console.Read(${1:Read});

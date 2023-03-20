@@ -2,4 +2,4 @@
 # name: using
 # key: us
 # --
-using $0
+using $1;

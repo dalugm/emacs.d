@@ -276,11 +276,11 @@
 ;; Zero width space.
 (keymap-global-set "C-c 8 z" (lambda ()
                                (interactive)
-                               (insert-char ?\u200b)))
+                               (insert-char #x200b)))
 ;; Ideographic space.
 (keymap-global-set "C-c 8 f" (lambda ()
                                (interactive)
-                               (insert-char ?\u3000)))
+                               (insert-char #x3000)))
 
 ;; Toggle.
 (keymap-global-set "C-c t A" #'abbrev-mode)
