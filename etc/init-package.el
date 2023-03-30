@@ -38,12 +38,7 @@
   (auto-compile-on-save-mode +1))
 
 (use-package epkg
-  :defer t
-  :init
-  (setq epkg-database-connector
-        (if (>= emacs-major-version 29)
-            'sqlite-builtin
-          'sqlite-module)))
+  :defer t)
 
 (use-package epkg-marginalia
   :after epkg
@@ -57,8 +52,12 @@
   (setq no-littering-etc-directory my-config-d
         no-littering-var-directory my-cache-d)
   :config
-  (add-to-list 'recentf-exclude no-littering-var-directory)
-  (add-to-list 'recentf-exclude no-littering-etc-directory))
+  ;; Use shortened filenames.
+  ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=56123
+  (add-to-list 'recentf-exclude
+               (recentf-expand-file-name no-littering-var-directory))
+  (add-to-list 'recentf-exclude
+               (recentf-expand-file-name no-littering-etc-directory)))
 
 ;; HTTPS URLs should be used where possible
 ;; as they offer superior security.

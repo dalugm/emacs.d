@@ -28,9 +28,6 @@
 [submodule "auto-yasnippet"]
 	path = lib/auto-yasnippet
 	url = https://github.com/abo-abo/auto-yasnippet.git
-[submodule "autothemer"]
-	path = lib/autothemer
-	url = https://github.com/jasonm23/autothemer.git
 [submodule "avy"]
 	path = lib/avy
 	url = https://github.com/abo-abo/avy.git
@@ -79,9 +76,9 @@
 [submodule "darkroom"]
 	path = lib/darkroom
 	url = https://github.com/joaotavora/darkroom.git
-[submodule "dart-mode"]
-	path = lib/dart-mode
-	url = https://github.com/bradyt/dart-mode.git
+[submodule "dart-ts-mode"]
+	path = lib/dart-ts-mode
+	url = https://github.com/50ways2sayhard/dart-ts-mode.git
 [submodule "dash"]
 	no-byte-compile = dash-functional.el
 	no-makeinfo = dash-template.texi
@@ -192,29 +189,15 @@
 [submodule "green-is-the-new-black-theme"]
 	path = lib/green-is-the-new-black-theme
 	url = https://github.com/fredcamps/green-is-the-new-black-emacs.git
-[submodule "gruvbox-theme"]
-	path = lib/gruvbox-theme
-	url = https://github.com/greduan/emacs-theme-gruvbox.git
 [submodule "hl-todo"]
 	path = lib/hl-todo
 	url = https://github.com/tarsius/hl-todo.git
 [submodule "htmlize"]
 	path = lib/htmlize
 	url = https://github.com/hniksic/emacs-htmlize.git
-[submodule "kaolin-themes"]
-	path = lib/kaolin-themes
-	url = https://github.com/ogdenwebb/emacs-kaolin-themes.git
-[submodule "leuven-theme"]
-	path = lib/leuven-theme
-	url = https://github.com/fniessen/emacs-leuven-theme.git
 [submodule "llama"]
 	path = lib/llama
 	url = https://git.sr.ht/~tarsius/llama
-[submodule "lsp-bridge"]
-	# Do not build lsp-bridge.
-	build-step = borg-update-autoloads
-	path = lib/lsp-bridge
-	url = https://github.com/manateelazycat/lsp-bridge.git
 [submodule "lua-mode"]
 	path = lib/lua-mode
 	url = https://github.com/immerrr/lua-mode.git
@@ -258,9 +241,6 @@
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools.git
-[submodule "php-mode"]
-	path = lib/php-mode
-	url = https://github.com/emacs-php/php-mode.git
 [submodule "polymode"]
 	path = lib/polymode
 	url = https://github.com/polymode/polymode.git
@@ -310,6 +290,9 @@
 [submodule "srcery-theme"]
 	path = lib/srcery-theme
 	url = https://github.com/srcery-colors/srcery-emacs.git
+[submodule "standard-themes"]
+	path = lib/standard-themes
+	url = https://git.sr.ht/~protesilaos/standard-themes
 [submodule "subed"]
 	load-path = subed
 	path = lib/subed

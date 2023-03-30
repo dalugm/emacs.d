@@ -7,15 +7,9 @@
 
 ;;; Code:
 
-(use-package php-mode
-  :mode "\\.inc\\'"
-  :config
-  ;; Disable HTML compatibility in `php-mode'.
-  ;; `web-mode' has superior support for php+html.
-  (setq php-mode-template-compatibility nil))
-
 (use-package emmet-mode
   :hook (css-mode
+         heex-ts-mode
          html-mode
          js-jsx-mode
          js-mode

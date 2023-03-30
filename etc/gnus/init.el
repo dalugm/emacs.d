@@ -2,28 +2,28 @@
 
 ;;; Commentary:
 ;;
-;; Read emails in Emacs.
+;; Manage emails in Emacs.
 ;;
 
 ;;; Code:
 
-;; send mail through SMTP
+;; Send mail through SMTP.
 (require 'smtpmail)
 (setq message-send-mail-function #'smtpmail-send-it)
 
-;; Outlook
+;; Outlook.
 (setq smtpmail-smtp-user "mou.tong@outlook.com"
       smtpmail-smtp-server "smtp.office365.com"
       smtpmail-smtp-service 587
       smtpmail-stream-type 'starttls)
 
 (with-eval-after-load 'gnus
-  ;; fetch only part of the article if we can.
+  ;; Fetch only part of the article if we can.
   (setq gnus-read-active-file 'some)
   (setq nnmail-expiry-wait 'never)
   (setq nnmail-expiry-target "Deleted Messages"))
 
-;; ;; debug
+;; ;; Debug.
 ;; (setq smtpmail-debug-info t)
 ;; (setq smtpmail-debug-verb t)
 

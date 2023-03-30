@@ -82,7 +82,6 @@
 (require 'init-js)
 (require 'init-lua)
 (require 'init-web)
-(require 'init-dart)
 (require 'init-python)
 (require 'init-lsp)
 

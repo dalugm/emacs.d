@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: print var
+# key: pv
+# --
+print('${1:var}: \${$1}');$0

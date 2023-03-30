@@ -7,21 +7,6 @@
 
 ;;; Code:
 
-(use-package lsp-bridge
-  :hook (lsp-bridge-mode . (lambda ()
-                             "Change `corfu-mode' based on `lsp-bridge-mode'."
-                             (if lsp-bridge-mode
-                                 (global-corfu-mode -1)
-                               (global-corfu-mode +1))))
-  :bind (("C-c l l" . lsp-bridge-mode)
-         ("C-c l a" . lsp-bridge-code-action)
-         ("C-c l d" . lsp-bridge-find-def)
-         ("C-c l D" . lsp-bridge-find-def-other-window)
-         ("C-c l i" . lsp-bridge-find-impl)
-         ("C-c l I" . lsp-bridge-find-impl-other-window)
-         ("C-c l n" . lsp-bridge-rename)
-         ("C-c l r" . lsp-bridge-find-references)))
-
 (with-eval-after-load 'eglot
   ;; Eglot with volar.
   (add-to-list 'eglot-server-programs
@@ -31,9 +16,13 @@
     :documentation "volar")
 
   (cl-defmethod eglot-initialization-options ((server eglot-volar))
-    "Passes through required cquery initialization options"
+    "Pass through required cquery initialization options."
     `(
-      :typescript (:tsdk ,(expand-file-name "/usr/local/lib/node_modules/typescript/lib"))
+      :typescript (:tsdk ,(expand-file-name
+                           "lib"
+                           (string-trim-right
+                            (shell-command-to-string
+                             "npm list --global --parseable typescript | head -n1"))))
       :languageFeatures (
                          :references t
                          :implementation t
@@ -45,26 +34,27 @@
                          :codeAction t
                          :workspaceSymbol t
                          :completion (
-                                      :defaultTagNameCase ""
-                                      :defaultAttrNameCase ""
-                                      :getDocumentNameCasesRequest :json-false
-                                      :getDocumentSelectionRequest :json-false)
+                                      :defaultTagNameCase "both"
+                                      :defaultAttrNameCase "kebabCase"
+                                      :getDocumentNameCasesRequest nil
+                                      :getDocumentSelectionRequest nil
+                                      )
                          :schemaRequestService (
-                                                :getDocumentContentRequest :json-false
+                                                :getDocumentContentRequest nil
                                                 )
                          )
       :documentFeatures (
-                         :selectionRange t,
-                         :foldingRange :json-false,
-                         :linkedEditingRange t,
-                         :documentSymbol t,
-                         :documentColor t,
+                         :selectionRange t
+                         :foldingRange nil
+                         :linkedEditingRange t
+                         :documentSymbol t
+                         :documentColor t
                          :documentFormatting (
                                               :defaultPrintWidth 100
-                                              :getDocumentPrintWidthRequest :json-false
+                                              :getDocumentPrintWidthRequest nil
                                               )
                          :defaultPrintWidth 100
-                         :getDocumentPrintWidthRequest :json-false))))
+                         :getDocumentPrintWidthRequest nil))))
 
 (provide 'init-lsp)
 

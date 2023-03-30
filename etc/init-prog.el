@@ -53,6 +53,7 @@
   :config
   ;; Add `*-ts-mode' to `auto-mode-alist'.
   (dolist (list `((cmake      . (,(rx (or "CMakeLists.txt" ".cmake") eos) . cmake-ts-mode))
+                  (dart       . (,(rx ".dart" eos) . dart-ts-mode))
                   (dockerfile . (,(rx (or (seq "Dockerfile" (opt "." (zero-or-more nonl))) (seq "." (any "Dd") "ockerfile")) eos) . dockerfile-ts-mode))
                   (elixir     . (,(rx (or ".elixir" (seq ".ex" (opt "s")) "mix.lock") eos) . elixir-ts-mode))
                   (go         . (,(rx ".go" eos) . go-ts-mode))
@@ -64,7 +65,7 @@
                   (yaml       . (,(rx ".y" (opt "a") "ml" eos) . yaml-ts-mode))))
     (let ((parser (car list))
           (alist (cdr list)))
-      (when (treesit-ready-p parser)
+      (when (treesit-ready-p parser 'message)
         (add-to-list 'auto-mode-alist alist)))))
 
 (defvar my-last-compilation-buffer nil
