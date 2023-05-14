@@ -14,8 +14,8 @@
   :hook ((org-mode markdown-mode) . toc-org-mode)
   :config
   (with-eval-after-load 'markdown-mode
-    (define-key markdown-mode-map
-                (kbd "C-c C-o")
+    (keymap-set markdown-mode-map
+                "C-c C-o"
                 #'toc-org-markdown-follow-thing-at-point)))
 
 ;; Pixel-perfect visual alignment for Org and Markdown tables.

@@ -8,19 +8,17 @@
 ;;; Code:
 
 (use-package flymake
-  :hook ((c-mode c++-mode) . flymake-mode)
-  :bind (("C-c ! n" . flymake-goto-next-error)
-         ("C-c ! p" . flymake-goto-prev-error)
-         ("C-c ! d" . flymake-show-buffer-diagnostics)
-         ("C-c ! D" . flymake-show-project-diagnostics)
-         ("C-c ! s" . flymake-start)))
+  :bind (("C-c ! b" . flymake-show-buffer-diagnostics)
+         ("C-c ! p" . flymake-show-project-diagnostics)))
 
 (use-package flyspell
-  :when (executable-find "aspell")
-  :custom
-  (ispell-program-name "aspell")
-  (ispell-extra-args
-   '("--sug-mode=ultra" "--lang=en_US" "--camel-case")))
+  :defer t
+  :config
+  (cond
+   ((executable-find "aspell")
+    (setq ispell-program-name "aspell")
+    (setq ispell-extra-args
+          '("--sug-mode=ultra" "--lang=en_US" "--camel-case")))))
 
 (provide 'init-check)
 

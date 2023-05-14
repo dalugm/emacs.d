@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: try/catch
+# key: try
+# --
+try {
+    $1
+} on Exception catch (e) {
+  print('Exception details:\n $e');
+} catch (e, s) {
+  print('Exception details:\n $e');
+  print('Stack trace:\n $s');
+}$0

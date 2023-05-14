@@ -1,0 +1,8 @@
+# -*- mode:snippet -*-
+# name: import (...)
+# key: import
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region nil))
+# --
+import (
+	"${0:package}"
+)

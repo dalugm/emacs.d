@@ -200,17 +200,18 @@ With a prefix ARG, rename based on current name."
 Default print to 256.  With a prefix ARG, print to specified
 number."
   (interactive "P")
-  (setq num (if arg
-                (string-to-number (read-string "Input a number: "))
-              256))
-  (switch-to-buffer "*ASCII*")
-  (erase-buffer)
-  (insert (format "ASCII characters up to number %d.\n" num))
-  (let ((i 0))
+  (let ((num (if arg
+                 (string-to-number (read-string "Input a number: "))
+               256))
+        (i 0))
+    (switch-to-buffer "*ASCII*")
+    (erase-buffer)
+    (insert (format "ASCII characters up to number %d.\n" num))
     (while (< i num)
       (setq i (1+ i))
-      (insert (format "%4d %c\n" i i))))
-  (goto-char (point-min)))
+      (insert (format "%4d %c\n" i i)))
+    (special-mode)
+    (goto-char (point-min))))
 
 (defun my-pingan-emacs ()
   "建议击毙, @平安 Emacs."
@@ -305,7 +306,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 (defun my-occur-dwim ()
   "Call `occur' with a sane default."
   (interactive)
-  (push (if (region-active-p)
+  (push (if (use-region-p)
             (buffer-substring-no-properties
              (region-beginning)
              (region-end))
@@ -322,13 +323,15 @@ Key is a symbol as the name, value is a plist specifying the search url.")
   (interactive)
   (unless buffer-display-table
     (setq buffer-display-table (make-display-table)))
-  (aset buffer-display-table ?\ []))
+  (aset buffer-display-table ?\C-m []))
 
-(defun my-remove-dos-eol ()
+(defun my-dos2unix ()
   "Replace DOS eolns CR LF with Unix eolns CR."
   (interactive)
-  (goto-char (point-min))
-  (while (search-forward "\r" nil t) (replace-match "")))
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward (string ?\C-m) nil t)
+      (replace-match "" nil t))))
 
 (defun my-load-theme (x)
   "Disable current theme and load theme X."
@@ -356,7 +359,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
   "Keep all buffers but the current one.
 Do NOT mess with special buffers."
   (interactive)
-  (when (y-or-n-p "Are you sure you want to kill all buffers but the current with special ones? ")
+  (when (y-or-n-p "Kill all buffers but current with special ones? ")
     (seq-each #'kill-buffer
               (delete
                (current-buffer)
@@ -368,17 +371,10 @@ Do NOT mess with special buffers."
 (defun my-kill-other-buffers-with-special-ones ()
   "Keep all buffers (include special buffers) but the current one."
   (interactive)
-  (when (y-or-n-p "Are you sure you want to kill all buffers but the current one? ")
+  (when (y-or-n-p "Kill all buffers but current one? ")
     (mapc #'kill-buffer (cdr (buffer-list (current-buffer))))))
 
 (keymap-global-set "C-c m K" #'my-kill-other-buffers-with-special-ones)
-
-(defun my-strfile2dat ()
-  "Strfile current file to make it readable by `fortune'."
-  (interactive)
-  (let ((dat-file (concat (buffer-file-name) ".dat")))
-    (shell-command (format "strfile %s %s" (buffer-file-name) dat-file))
-    (message "Strfile finish: %s." dat-file)))
 
 (defun my-insert-date (&optional arg)
   "Insert current date at point.
@@ -416,60 +412,76 @@ argument ARG, insert name only."
 
 (keymap-global-set "C-c 2" #'my-insert-user-information)
 
-(defun my-divide-file-chapter ()
-  "Divide FILE according to specified word."
-  (interactive)
-  (goto-char (point-max))
+(defcustom my-zh-title-regexp
+  (rx bol "第" (repeat 1 6 nonl) (any "章回话") (+ nonl))
+  "Chinese title regexp.")
+
+(defun my-divide-file-chapter (&optional arg)
+  "Add empty lines to divide chapters according to `my-zh-title-regexp'.
+
+With a prefix ARG, add lines based on input regexp."
+  (interactive "P")
   ;; Make sure final newline exist.
+  (goto-char (point-max))
   (unless (bolp)
     (newline))
   (goto-char (point-min))
-  (while (< (point) (point-max))
-    (beginning-of-line)
-    (setq zh-title-regexp
-          (rx bol "第" (repeat 1 6 nonl) (any "章回话")))
-    (if (re-search-forward zh-title-regexp (line-end-position) t)
-        (progn
-          (end-of-line)
-          (newline))
-      (while (not (or (re-search-forward zh-title-regexp
-                                         (line-end-position) t)
-                      (= (point) (point-max))))
-        (forward-line))
-      (forward-line -1)
-      (end-of-line)
-      (newline 2)
-      (forward-line)
-      (end-of-line)))
+  ;; Search sentences containing `zh-title-regexp'.
+  (let (zh-title-regexp)
+    (if arg
+        (setq zh-title-regexp (read-regexp "Input search regexp: "))
+      (setq zh-title-regexp my-zh-title-regexp))
+    (while (< (point) (point-max))
+      (if (re-search-forward zh-title-regexp (line-end-position) t)
+          ;; Add new line if current line contains `zh-title-regexp'.
+          (newline)
+        (while (not (or (re-search-forward zh-title-regexp
+                                           (line-end-position) t)
+                        (= (point) (point-max))))
+          ;; Forward line until find next line contains
+          ;; `zh-title-regexp' or EOF.
+          (forward-line))
+        ;; Add two new lines above the chapter title.
+        (beginning-of-line)
+        (newline 2)
+        ;; Add one new line below the chapter title.
+        (end-of-line)
+        (newline)
+        (forward-line))))
+  ;; Keep a final newline at EOF.
   (when (= (point) (point-max))
-    (forward-line -1)
-    ;; Remove all blank lines at EOF.
-    (delete-blank-lines)
-    (delete-blank-lines)
-    (forward-line)))
+    (delete-all-space)
+    (newline)))
 
-(defun my-full-width-space-for-zh ()
-  "Use two full-width spaces in line beginning."
+(defun my-add-two-ideographic-spaces-at-bol ()
+  "Add two ideographic spaces at non-empty line beginning.
+
+If a region is selected, executed on the selected region,
+otherwise on the whole buffer."
   (interactive)
-  (if (region-active-p)
-      (let ((start (region-beginning))
-            (end (region-end)))
-        (save-excursion
-          (goto-char start)
-          (while (< (point) end)
-            (back-to-indentation)
-            (delete-horizontal-space)
-            (insert-char #x3000 2)
-            (forward-line 1))))
-    (error "Select a region first!")))
+  (let (start end)
+    (if (use-region-p)
+        (setq start (copy-marker (region-beginning))
+              end (copy-marker (region-end)))
+      (setq start (copy-marker (point-min))
+            end (copy-marker (point-max))))
+    (save-excursion
+      (goto-char start)
+      (while (< (point) end)
+        (back-to-indentation)
+        (delete-space--internal " \t　​" nil)
+        ;; Insert ideographic space at non-blank line only.
+        (unless (= (pos-bol) (pos-eol))
+          (insert-char #x3000 2))
+        (forward-line)))))
 
-(keymap-global-set "C-c m f" #'my-full-width-space-for-zh)
+(keymap-global-set "C-c m f" #'my-add-two-ideographic-spaces-at-bol)
 
 (defun my-delete-blank-lines ()
   "Delete blank lines.
 When region is active, delete the blank lines in region only."
   (interactive)
-  (if (region-active-p)
+  (if (use-region-p)
       (delete-matching-lines "^[[:space:]]*$" (region-beginning) (region-end))
     (delete-matching-lines "^[[:space:]]*$" (point-min) (point-max))))
 

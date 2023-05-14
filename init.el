@@ -70,7 +70,6 @@
 ;; Handy tools though not must have.
 (require 'init-misc)
 (require 'init-reader)
-(require 'init-irc)
 (require 'init-evil)
 (require 'init-markup)
 (require 'init-snippet)

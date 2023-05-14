@@ -16,10 +16,10 @@ URL `https://endlessparentheses.com/get-in-the-habit-of-using-sharp-quote.html'.
   (let ((ppss (syntax-ppss)))
     (unless (or (elt ppss 3)
                 (elt ppss 4)
-                (eq (char-after) ?'))
+                (eq (char-after) ?\'))
       (insert "'"))))
 
-(define-key emacs-lisp-mode-map "#" #'my-endless-sharp)
+(keymap-set emacs-lisp-mode-map "#" #'my-endless-sharp)
 
 (defun my-eval-print-last-sexp (&optional arg)
   "Evaluate sexp before point, insert output below following an arrow.
@@ -43,13 +43,17 @@ sexp before point and insert output into current position."
 
 (dolist (map (list emacs-lisp-mode-map
                    lisp-interaction-mode-map))
-  (define-key map (kbd "C-c C-p") #'my-eval-print-last-sexp))
+  (keymap-set map "C-c C-p" #'my-eval-print-last-sexp))
 
-;; https://www.travishinkelman.com/posts/getting-started-with-chez-scheme-and-emacs/
+(use-package sly
+  :defer t
+  :custom (inferior-lisp-program "sbcl"))
+
 (use-package geiser
-  :commands geiser
-  :config
-  (setq geiser-mode-smart-tab-p t))
+  :defer t
+  :custom
+  (geiser-active-implementations '(chez))
+  (geiser-mode-smart-tab-p t))
 
 (provide 'init-sexp)
 

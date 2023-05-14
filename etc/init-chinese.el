@@ -7,10 +7,6 @@
 
 ;;; Code:
 
-;; ---------
-;; Emacs IME
-;; ---------
-
 (use-package pyim
   :bind (("C-\\" . toggle-input-method)
          ("M-j" . pyim-convert-string-at-point)
@@ -21,7 +17,7 @@
   :config
   (setq pyim-default-scheme 'quanpin)
 
-  ;; compatible with terminal
+  ;; Compatible with terminal.
   (setq pyim-page-tooltip 'minibuffer)
   (setq pyim-page-style 'two-lines)
   (setq pyim-page-length 9)
@@ -29,19 +25,11 @@
         '(("en" "eng")
           ("in" "ing")))
 
-  ;; ;; Rime config
-  ;; (liberime-start
-  ;;   (if my-mac-p
-  ;;       "/Library/Input Methods/Squirrel.app/Contents/SharedSupport"
-  ;;     "/usr/share/rime-data")
-  ;;   (expand-file-name "rime/" my-cache-d))
-  ;; (liberime-select-schema "luna_pinyin")
-
-  ;; use memory efficient pyim engine
+  ;; Use memory efficient pyim engine.
   (require 'pyim-dregcache)
   (setq pyim-dcache-backend 'pyim-dregcache)
 
-  ;; change input method automatically
+  ;; Change input method automatically.
   (setq-default pyim-english-input-switch-functions
                 '(pyim-probe-dynamic-english
                   pyim-probe-isearch-mode
@@ -52,9 +40,6 @@
                 '(pyim-probe-punctuation-line-beginning
                   pyim-probe-punctuation-after-punctuation))
 
-  ;; ----
-  ;; dict
-  ;; ----
   (defvar my-pyim-directory (expand-file-name "pyim/" my-cache-d)
     "The directory containing pyim related files.")
 
@@ -75,7 +60,7 @@
              (lambda (f)
                (list :name (file-name-base f) :file f))
              files))
-      ;; disable basedict if a local dict is used
+      ;; Disable basedict if a local dict is used.
       (setq disable-basedict t))
     (unless disable-basedict (pyim-basedict-enable))))
 

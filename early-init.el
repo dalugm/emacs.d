@@ -28,6 +28,6 @@
   ;; Fix native compilation error.
   (setenv
    "LIBRARY_PATH"
-   "/usr/local/opt/gcc/lib/gcc/12:/usr/local/opt/gcc/lib/gcc/12/gcc/x86_64-apple-darwin21/12"))
+   "/usr/local/opt/gcc/lib/gcc/13:/usr/local/opt/gcc/lib/gcc/13/gcc/x86_64-apple-darwin21/13"))
 
 ;;; early-init.el ends here

@@ -3,6 +3,6 @@
 # key: fori
 # expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region nil))
 # --
-for(var ${1:item} in ${2:collection}) {
+for(final ${1:item} in ${2:collection}) {
   $0
 }

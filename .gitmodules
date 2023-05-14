@@ -10,12 +10,12 @@
 [submodule "ample-theme"]
 	path = lib/ample-theme
 	url = https://github.com/jordonbiondo/ample-theme.git
-[submodule "anaphora"]
-	path = lib/anaphora
-	url = https://github.com/rolandwalker/anaphora.git
 [submodule "anti-zenburn-theme"]
 	path = lib/anti-zenburn-theme
 	url = https://github.com/m00natic/anti-zenburn-theme.git
+[submodule "apheleia"]
+	path = lib/apheleia
+	url = https://github.com/radian-software/apheleia
 [submodule "async"]
 	path = lib/async
 	url = https://github.com/jwiegley/emacs-async.git
@@ -43,6 +43,9 @@
 [submodule "citre"]
 	path = lib/citre
 	url = https://github.com/universal-ctags/citre.git
+[submodule "clojure-ts-mode"]
+	path = lib/clojure-ts-mode
+	url = https://github.com/clojure-emacs/clojure-ts-mode.git
 [submodule "closql"]
 	path = lib/closql
 	url = https://github.com/magit/closql.git
@@ -84,9 +87,6 @@
 	no-makeinfo = dash-template.texi
 	path = lib/dash
 	url = https://github.com/magnars/dash.el.git
-[submodule "deferred"]
-	path = lib/deferred
-	url = https://github.com/kiwanami/emacs-deferred.git
 [submodule "diff-hl"]
 	path = lib/diff-hl
 	url = https://github.com/dgutov/diff-hl.git
@@ -106,9 +106,9 @@
 	no-makeinfo = doclicense.texi
 	path = lib/ef-themes
 	url = https://git.sr.ht/~protesilaos/ef-themes
-[submodule "ein"]
-	path = lib/ein
-	url = https://github.com/millejoh/emacs-ipython-notebook.git
+[submodule "eldoc-box"]
+	path = lib/eldoc-box
+	url = https://github.com/dalugm/eldoc-box
 [submodule "elfeed"]
 	path = lib/elfeed
 	url = https://github.com/skeeto/elfeed.git
@@ -144,9 +144,9 @@
 [submodule "evil-zh"]
 	path = lib/evil-zh
 	url = https://github.com/dalugm/evil-zh.git
-[submodule "expand-region"]
-	path = lib/expand-region
-	url = https://github.com/magnars/expand-region.el.git
+[submodule "expreg"]
+	path = lib/expreg
+	url = https://github.com/casouri/expreg.git
 [submodule "eyebrowse"]
 	path = lib/eyebrowse
 	url = https://depp.brause.cc/eyebrowse.git
@@ -159,18 +159,12 @@
 [submodule "geiser"]
 	path = lib/geiser
 	url = https://gitlab.com/emacs-geiser/geiser.git
-[submodule "geiser-guile"]
-	path = lib/geiser-guile
-	url = https://gitlab.com/emacs-geiser/guile.git
-[submodule "geiser-mit"]
-	path = lib/geiser-mit
-	url = https://gitlab.com/emacs-geiser/mit.git
+[submodule "geiser-chez"]
+	path = lib/geiser-chez
+	url = https://gitlab.com/emacs-geiser/chez
 [submodule "general"]
 	path = lib/general
 	url = https://github.com/noctuid/general.el.git
-[submodule "ggtags"]
-	path = lib/ggtags
-	url = https://github.com/dalugm/ggtags.git
 [submodule "ghub"]
 	path = lib/ghub
 	url = https://github.com/magit/ghub.git
@@ -235,21 +229,12 @@
 [submodule "organic-green-theme"]
 	path = lib/organic-green-theme
 	url = https://github.com/kostafey/organic-green-theme.git
-[submodule "ox-hugo"]
-	path = lib/ox-hugo
-	url = https://github.com/kaushalmodi/ox-hugo.git
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools.git
-[submodule "polymode"]
-	path = lib/polymode
-	url = https://github.com/polymode/polymode.git
 [submodule "popon"]
 	path = lib/popon
 	url = https://codeberg.org/akib/emacs-popon.git
-[submodule "posframe"]
-	path = lib/posframe
-	url = https://github.com/tumashu/posframe.git
 [submodule "pyim"]
 	path = lib/pyim
 	url = https://github.com/tumashu/pyim.git
@@ -259,12 +244,6 @@
 [submodule "rainbow-delimiters"]
 	path = lib/rainbow-delimiters
 	url = https://github.com/Fanael/rainbow-delimiters.git
-[submodule "rainbow-mode"]
-	path = lib/rainbow-mode
-	url = https://github.com/emacsmirror/rainbow-mode.git
-[submodule "request"]
-	path = lib/request
-	url = https://github.com/tkf/emacs-request.git
 [submodule "s"]
 	path = lib/s
 	url = https://github.com/magnars/s.el.git
@@ -277,6 +256,9 @@
 [submodule "sinolor-themes"]
 	path = lib/sinolor-themes
 	url = https://github.com/dalugm/sinolor-themes.git
+[submodule "sly"]
+	path = lib/sly
+	url = https://github.com/joaotavora/sly
 [submodule "solarized-theme"]
 	path = lib/solarized-theme
 	url = https://github.com/bbatsov/solarized-emacs.git
@@ -299,16 +281,13 @@
 	url = https://github.com/rndusr/subed.git
 [submodule "tablist"]
 	path = lib/tablist
-	url = https://github.com/politza/tablist.git
+	url = https://github.com/emacsorphanage/tablist
 [submodule "tao-theme"]
 	path = lib/tao-theme
 	url = https://github.com/11111000000/tao-theme-emacs.git
 [submodule "toc-org"]
 	path = lib/toc-org
 	url = https://github.com/snosov1/toc-org.git
-[submodule "tomelr"]
-	path = lib/tomelr
-	url = https://github.com/kaushalmodi/tomelr.git
 [submodule "treepy"]
 	path = lib/treepy
 	url = https://github.com/volrath/treepy.el.git
@@ -324,9 +303,6 @@
 [submodule "web-mode"]
 	path = lib/web-mode
 	url = https://github.com/fxbois/web-mode.git
-[submodule "websocket"]
-	path = lib/websocket
-	url = https://github.com/ahyatt/emacs-websocket.git
 [submodule "wgrep"]
 	path = lib/wgrep
 	url = https://github.com/mhayashi1120/Emacs-wgrep.git

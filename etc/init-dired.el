@@ -17,7 +17,7 @@
 
   ;; Reuse current buffer by pressing `a'.
   (put 'dired-find-alternate-file 'disabled nil)
-  (define-key dired-mode-map (kbd "RET") #'dired-find-alternate-file)
+  (keymap-set dired-mode-map "RET" #'dired-find-alternate-file)
 
   ;; Search file name only when focus is over file.
   (setq dired-isearch-filenames 'dwim)

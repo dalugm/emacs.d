@@ -270,13 +270,6 @@ Use `my-save-font-settings' to save font settings and use
                      face-font-rescale-alist nil nil #'equal)
 	  (if my-scale-cjk-mode (cdr setting) nil))))
 
-(defun my-enable-apple-emoji ()
-  "Enable Apple emoji display."
-  (set-fontset-font t 'emoji (font-spec :family "Apple Color Emoji")
-                    nil 'prepend))
-
-(my-enable-apple-emoji)
-
 (cond
  ;; 4k.
  ((>= (display-pixel-width) 3840)
@@ -287,6 +280,13 @@ Use `my-save-font-settings' to save font settings and use
  ;; 1080.
  (t
   (my-load-font 'default nil 14)))
+
+;; Enable emoji display.
+(set-fontset-font t 'emoji
+                  (if my-mac-p
+                      (font-spec :family "Apple Color Emoji")
+                    (font-spec :family "Noto Color Emoji"))
+                  nil 'prepend)
 
 ;; https://www.reddit.com/r/emacs/comments/988paa/emacs_on_windows_seems_lagging/
 ;; Speed up font rendering for special characters, especially on Windows.

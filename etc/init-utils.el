@@ -224,16 +224,6 @@
 
   (setq tramp-chunksize 8192))
 
-;; Eldoc.
-(with-eval-after-load 'eldoc
-  ;; Multi-line message should not display too soon.
-  (setq eldoc-idle-delay 1)
-  (setq eldoc-echo-area-use-multiline-p t))
-
-;; Tags.
-;; Don't ask before rereading the TAGS files if they have changed.
-(setq tags-revert-without-query t)
-
 ;; Change the default behavior of hippie-expand.
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev
                                          try-expand-dabbrev-all-buffers

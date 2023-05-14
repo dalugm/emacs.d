@@ -1,8 +1,11 @@
 # -*- mode: snippet -*-
-# name: for
-# key: for
+# name: switch
+# key: switch
 # expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region nil))
 # --
-for(var i = ${1:0}; i ${2:< N}; ${3:i++}) {
-  $0
+switch $1 {
+case $2:
+	$3
+default:
+	$0
 }

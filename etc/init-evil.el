@@ -24,7 +24,7 @@
                ("gle" . avy-goto-end-of-line)
                ("M-." . xref-find-definitions))
          (:map evil-visual-state-map
-               ("v" . er/expand-region)))
+               ("v" . expreg-expand)))
   :config
   ;; Make evil-search behave more like VIM.
   (evil-select-search-module 'evil-search-module 'evil-search)
@@ -42,24 +42,20 @@
   ;; Make evil search like vim.
   (setq evil-ex-search-vim-style-regexp t)
 
-  ;; ------------
-  ;; evil enhance
-  ;; ------------
-
   (defun evil-unimpaired-insert-newline-above (count)
     "Insert COUNT blank line(s) above current line."
     (interactive "p")
     (save-excursion (dotimes (_ count) (evil-insert-newline-above)))
     (when (bolp) (forward-char count)))
 
-  (define-key evil-normal-state-map (kbd "[ SPC") #'evil-unimpaired-insert-newline-above)
+  (keymap-set evil-normal-state-map "[ SPC" #'evil-unimpaired-insert-newline-above)
 
   (defun evil-unimpaired-insert-newline-below (count)
     "Insert COUNT blank line(s) below current line."
     (interactive "p")
     (save-excursion (dotimes (_ count) (evil-insert-newline-below))))
 
-  (define-key evil-normal-state-map (kbd "] SPC") #'evil-unimpaired-insert-newline-below)
+  (keymap-set evil-normal-state-map "] SPC" #'evil-unimpaired-insert-newline-below)
 
   (defun my--evil-disable-ex-highlight ()
     "Disable evil ex search buffer highlight."
@@ -113,8 +109,8 @@ If INCLUSIVE is t, the text object is inclusive."
     :extend-selection nil
     (my--evil-paren-range count beg end type nil))
 
-  (define-key evil-outer-text-objects-map "a" #'my--evil-a-paren)
-  (define-key evil-inner-text-objects-map "a" #'my--evil-inner-paren)
+  (keymap-set evil-outer-text-objects-map "a" #'my--evil-a-paren)
+  (keymap-set evil-inner-text-objects-map "a" #'my--evil-inner-paren)
 
   (defun my--show-current-evil-state ()
     "Change modeline's face according to different evil state."
@@ -144,7 +140,7 @@ If INCLUSIVE is t, the text object is inclusive."
   ;; evil keybinding
   ;; ---------------
 
-  (evil-declare-key 'normal org-mode-map
+  (evil-define-key 'normal org-mode-map
     "gh" #'outline-up-heading
     "gn" #'outline-next-visible-heading
     "gp" #'outline-previous-visible-heading
@@ -154,7 +150,7 @@ If INCLUSIVE is t, the text object is inclusive."
     ">"  #'org-demote-subtree           ; indent
     (kbd "TAB") #'org-cycle)
 
-  (evil-declare-key 'normal markdown-mode-map
+  (evil-define-key 'normal markdown-mode-map
     "gh" #'outline-up-heading
     "gn" #'outline-next-visible-heading
     "gp" #'outline-previous-visible-heading
@@ -167,10 +163,12 @@ If INCLUSIVE is t, the text object is inclusive."
   ;; ------------------
 
   (defmacro my--evil-adjust-major-mode-keymap (mode &optional replace)
-    "URL `https://github.com/emacs-evil/evil/issues/511'."
+    "Use MODE\\='s keymap in evil after MODE loaded.
+
+If MODE provides a feature REPLACE, to change the keymap use REPLACE instead.
+URL `https://github.com/emacs-evil/evil/issues/511'."
     `(with-eval-after-load (quote ,(if replace replace mode))
        (evil-make-overriding-map ,(intern (concat mode "-mode-map")) 'normal)
-       ;; force update evil keymaps after `mode' loaded
        (add-hook (quote ,(intern (concat mode "-mode-hook")))
                  #'evil-normalize-keymaps)))
 
@@ -187,7 +185,7 @@ If INCLUSIVE is t, the text object is inclusive."
   (dolist (hook '(cua-rectangle-mark-mode-hook))
     (add-hook hook #'evil-emacs-state))
 
-  ;; Specify MAJOR mode uses Evil (vim) NORMAL state or EMACS original state.
+  ;; Set evil initial state for major modes.
   (dolist (p '(
                (Info-mode                . emacs)
                (Man-mode                 . emacs)
@@ -225,7 +223,7 @@ If INCLUSIVE is t, the text object is inclusive."
   :config (global-evil-surround-mode +1)
 
   (defmacro my--quoted-text-object (name key start-regex end-regex)
-    "Define text objects.
+    "Define text objects for `evil-mode'.
 
 URL `https://stackoverflow.com/a/22418983/4921402'."
     (let ((inner-name (make-symbol (concat "evil-inner-" name)))
@@ -239,8 +237,8 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
            ,outer-name (count &optional beg end type)
            (evil-select-paren ,start-regex ,end-regex
                               beg end type count t))
-         (define-key evil-inner-text-objects-map ,key #',inner-name)
-         (define-key evil-outer-text-objects-map ,key #',outer-name))))
+         (keymap-set evil-inner-text-objects-map ,key #',inner-name)
+         (keymap-set evil-outer-text-objects-map ,key #',outer-name))))
 
   ;; NOTE: do NOT use text-object such as `w' `p'.
   (my--quoted-text-object "ShuMingHao" "q" "《" "》")
@@ -284,7 +282,6 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
 (use-package evil-zh
   :config (global-evil-zh-mode +1))
 
-;; Bundle with `evil'.
 (use-package evil-nerd-commenter
   :bind ((:map evil-normal-state-map
                ("gc" . evilnc-comment-operator)
@@ -294,10 +291,6 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
                ("gc" . evilnc-comment-operator)
                ("gp" . evilnc-copy-and-comment-operator)
                ("gy" . evilnc-yank-and-comment-operator))))
-
-;; https://medium.com/@schtoeffel/you-don-t-need-more-than-one-cursor-in-vim-2c44117d51db
-;; https://macplay.github.io/posts/vim-bu-xu-yao-duo-guang-biao-bian-ji-gong-neng/
-;; That's why I don't use multipleCursor in Emacs and VIM.
 
 (use-package general
   :config (general-evil-setup)

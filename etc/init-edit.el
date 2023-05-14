@@ -55,7 +55,7 @@
          ("C-c w d" . ace-delete-window)
          ("C-c w o" . ace-delete-other-windows))
   :config
-  ;; Inherits from `avy'
+  ;; Inherits from `avy'.
   (with-eval-after-load 'avy
     (setq aw-keys avy-keys)
     (setq aw-background avy-background)))
@@ -130,8 +130,9 @@
   :after avy
   :config (global-avy-zh-mode +1))
 
-(use-package expand-region
-  :bind ("C-c e ;" . er/expand-region))
+(use-package expreg
+  :bind (("C-c e ;" . expreg-expand)
+         ("C-c e '" . expreg-contract)))
 
 (use-package vundo
   :bind ("C-c e u" . vundo))

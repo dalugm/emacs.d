@@ -8,7 +8,7 @@
 ;;; Code:
 
 (with-eval-after-load 'eglot
-  ;; Eglot with volar.
+  ;; Vue with volar.
   (add-to-list 'eglot-server-programs
                '(vue-mode . (eglot-volar "vue-language-server" "--stdio")))
 
@@ -18,11 +18,13 @@
   (cl-defmethod eglot-initialization-options ((server eglot-volar))
     "Pass through required cquery initialization options."
     `(
-      :typescript (:tsdk ,(expand-file-name
+      :typescript (
+                   :tsdk ,(expand-file-name
                            "lib"
                            (string-trim-right
                             (shell-command-to-string
-                             "npm list --global --parseable typescript | head -n1"))))
+                             "npm list --global --parseable typescript | head -n1")))
+                   )
       :languageFeatures (
                          :references t
                          :implementation t
@@ -54,7 +56,12 @@
                                               :getDocumentPrintWidthRequest nil
                                               )
                          :defaultPrintWidth 100
-                         :getDocumentPrintWidthRequest nil))))
+                         :getDocumentPrintWidthRequest nil)))
+
+  ;; Elixir.
+  (when my-mac-p
+    (add-to-list 'eglot-server-programs
+                 '((elixir-ts-mode heex-ts-mode) . ("elixir-ls")))))
 
 (provide 'init-lsp)
 
