@@ -72,34 +72,8 @@ access from `emacsclient'."
   :hook (after-init . global-hl-todo-mode)
   :bind (:map hl-todo-mode-map
               ("M-s M-o" . hl-todo-occur))
-  :config
-  (setq hl-todo-highlight-punctuation ":")
-  (setq hl-todo-keyword-faces
-        `(;; For things that need to be done, just not today.
-          ("TODO" warning bold)
-          ;; For especially important gotchas with a given implementation.
-          ("NOTE" success bold)
-          ;; For problems that will become bigger problems later
-          ;; if not fixed ASAP.
-          ("FIXME" error bold)
-          ;; For problems that need to pay attention especially.
-          ("WARNING" error bold)
-          ;; For tidbits that are unconventional and not intended uses of
-          ;; the constituent parts, or modify function for own use, and
-          ;; may break in a future update.
-          ("HACK" font-lock-constant-face bold)
-          ;; For things that were done for temporarily use,
-          ;; it will be removed in the future.
-          ("TEMP" font-lock-keyword-face bold)
-          ;; For things that were done hastily and/or hasn't been
-          ;; thoroughly tested. It may not even be necessary!
-          ("REVIEW" font-lock-keyword-face bold)
-          ;; For codes that need to refactor or optimize later.
-          ("XXX" font-lock-keyword-face bold)
-          ;; For things that has abandoned but should not removed.
-          ("ABANDONED" font-lock-doc-face bold)
-          ;; For things that just gotta go and will soon be gone.
-          ("DEPRECATED" font-lock-doc-face bold))))
+  :custom
+  (hl-todo-highlight-punctuation ":"))
 
 (use-package darkroom
   :bind (("C-c t d" . darkroom-tentative-mode)

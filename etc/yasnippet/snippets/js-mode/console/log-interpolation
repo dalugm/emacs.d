@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: console.log interpolation
+# key: cli
+# group: console
+# --
+console.log(`${1:string}`)

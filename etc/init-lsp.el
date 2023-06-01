@@ -7,7 +7,15 @@
 
 ;;; Code:
 
-(with-eval-after-load 'eglot
+(use-package eglot
+  :bind (("C-c l l" . eglot)
+         ("C-c l a" . eglot-code-actions)
+         ("C-c l c" . eglot-show-workspace-configuration)
+         ("C-c l f" . eglot-format)
+         ("C-c l q" . eglot-shutdown)
+         ("C-c l Q" . eglot-shutdown-all)
+         ("C-c l r" . eglot-rename))
+  :config
   ;; Vue with volar.
   (add-to-list 'eglot-server-programs
                '(vue-mode . (eglot-volar "vue-language-server" "--stdio")))

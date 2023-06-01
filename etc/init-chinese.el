@@ -9,18 +9,18 @@
 
 (use-package pyim
   :bind (("C-\\" . toggle-input-method)
-         ("M-j" . pyim-convert-string-at-point)
+         ("C-c e c" . pyim-convert-string-at-point)
          (:map pyim-mode-map
                ("," . pyim-page-previous-page)
                ("." . pyim-page-next-page)))
-  :custom (default-input-method "pyim")
-  :config
-  (setq pyim-default-scheme 'quanpin)
-
+  :custom
+  (default-input-method "pyim")
+  (pyim-default-scheme 'quanpin)
   ;; Compatible with terminal.
-  (setq pyim-page-tooltip 'minibuffer)
-  (setq pyim-page-style 'two-lines)
-  (setq pyim-page-length 9)
+  (pyim-page-tooltip 'minibuffer)
+  (pyim-page-style 'two-lines)
+  (pyim-page-length 9)
+  :config
   (setq pyim-fuzzy-pinyin-alist
         '(("en" "eng")
           ("in" "ing")))

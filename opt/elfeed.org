@@ -12,6 +12,7 @@
 *** [[https://blog.binchen.org/rss.xml][chenbin]]
 *** [[https://manateelazycat.github.io/feed.xml][wangyong]]
 *** [[https://sachachua.com/blog/feed][sasha-chua]]
+*** [[https://overreacted.io/rss.xml][Dan Abramov]]
 ** DAILY                                                                        :daily:
 *** [[https://feeds.feedburner.com/zhihu-daily][知乎日报]]
 *** [[https://songshuhui.net/feed][科学松鼠会]]

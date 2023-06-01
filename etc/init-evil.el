@@ -219,8 +219,12 @@ URL `https://github.com/emacs-evil/evil/issues/511'."
                ))
     (evil-set-initial-state (car p) (cdr p))))
 
+(use-package evil-zh
+  :config (global-evil-zh-mode +1))
+
 (use-package evil-surround
-  :config (global-evil-surround-mode +1)
+  :config
+  (global-evil-surround-mode +1)
 
   (defmacro my--quoted-text-object (name key start-regex end-regex)
     "Define text objects for `evil-mode'.
@@ -279,9 +283,6 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
               (push '(?v . ("=" . "=")) evil-surround-pairs-alist)
               )))
 
-(use-package evil-zh
-  :config (global-evil-zh-mode +1))
-
 (use-package evil-nerd-commenter
   :bind ((:map evil-normal-state-map
                ("gc" . evilnc-comment-operator)
@@ -335,7 +336,7 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
     "xf" #'find-file
     "xk" #'kill-buffer
     "xs" #'save-buffer
-    ;; org
+    ;; ORG.
     ;; Toggle overview.
     "c$" #'org-archive-subtree
     ;; org-do-demote/org-do-premote support selected region.
@@ -350,7 +351,7 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
     "oc"  #'org-capture
     "ol"  #'org-store-link
     "ot"  #'org-toggle-link-display
-    ;; window
+    ;; Window.
     "0"   #'winum-select-window-0-or-10
     "1"   #'winum-select-window-1
     "2"   #'winum-select-window-2
@@ -379,14 +380,14 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
     "x51" #'delete-other-frames
     "x52" #'make-frame-command
     "x5o" #'other-frame
-    ;; checker on the fly
+    ;; Check on the fly
     "fa" #'flyspell-auto-correct-word
     "fm" #'flymake-mode
     "fn" #'flyspell-goto-next-error
     "fs" #'flyspell-mode
     "ne" #'flymake-goto-next-error
     "pe" #'flymake-goto-prev-error
-    ;; vc
+    ;; Version control.
     "va" #'vc-next-action
     "vc" #'my-vc-copy-file-and-rename-buffer
     "vf" #'my-vc-rename-file-and-buffer
@@ -405,7 +406,7 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
   (my-space-leader-def
     "SPC" #'execute-extended-command
     ":"   #'eval-expression
-    ;; bookmark/buffer
+    ;; Bookmark/buffer.
     "b"  #'(:ignore t)
     "bb" #'switch-to-buffer
     "b/" #'switch-to-buffer-other-window
@@ -420,15 +421,15 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
     "bO" #'my-kill-other-buffers-with-special-ones
     "bs" #'bookmark-save
     "bx" #'my-switch-scratch-buffer
-    ;; code
+    ;; Code.
     "c"  #'(:ignore t)
     "ck" #'compile
     "cr" #'recompile
-    ;; dired
+    ;; Dired.
     "dj" #'dired-jump
     "d/" #'dired-jump-other-window
     "dd" #'pwd
-    ;; file
+    ;; File.
     "f"  #'(:ignore t)
     "fb" #'my-browse-this-file
     "ff" #'find-file
@@ -440,25 +441,40 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
     "fr" #'my-rename-this-file
     "fs" #'my-sudo-edit-file
     "fS" #'my-sudo-find-file
-    ;; git
+    ;; Git.
     "g"  #'(:ignore t)
     "gd" #'magit-dispatch
     "gg" #'magit-status
     "gf" #'magit-file-dispatch
     "gs" #'consult-git-grep
-    ;; load
+    ;; Lsp.
     "l"  #'(:ignore t)
-    "lF" #'my-load-font
-    "lf" #'my-load-default-font
-    "lt" #'load-theme
-    "lg" #'ggtags-mode
-    ;; org
+    "ll" #'eglot
+    "la" #'eglot-code-actions
+    "lc" #'eglot-show-workspace-configuration
+    "lf" #'eglot-format
+    "lq" #'eglot-shutdown
+    "lQ" #'eglot-shutdown-all
+    "lr" #'eglot-rename
+    ;; My custom.
+    "m" #'(:ignore t)
+    "mc" #'my-avy-copy-thing-at-point
+    "mF" #'my-load-font
+    "mf" #'my-load-default-font
+    "mp" #'my-pangu-spacing-current-buffer
+    "mD" #'my-delete-visual-blank-lines
+    "md" #'my-delete-blank-lines
+    "mi" #'my-add-two-ideographic-spaces-at-bol
+    "mT" #'my-load-default-theme
+    "mt" #'my-load-theme
+    "mx" #'execute-extended-command
+    ;; Org.
     "o"  #'(:ignore t)
     "oa" #'org-agenda
     "ob" #'org-switchb
     "oc" #'org-capture
     "ot" #'org-toggle-link-display
-    ;; search
+    ;; Search.
     "s"  #'(:ignore t)
     "sd" #'search-dired-dwim
     "sD" #'search-dired
@@ -466,10 +482,10 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
     "sF" #'consult-find
     "sg" #'consult-grep
     "so" #'my-search-online
-    "sr" #'consult-rg
+    "sr" #'consult-ripgrep
     "ss" #'consult-line
     "si" #'imenu
-    ;; toggle
+    ;; Toggle.
     "t"  #'(:ignore t)
     "tA" #'abbrev-mode
     "tD" #'darkroom-mode
@@ -484,9 +500,10 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
     "tk" #'visual-line-mode
     "tl" #'display-line-numbers-mode
     "ts" #'subword-mode
+    "tt" #'load-theme
     "tv" #'view-mode
     "tw" #'whitespace-mode
-    ;; window
+    ;; Window.
     "w"   #'(:ignore t)
     "w'"  #'eyebrowse-last-window-config
     "w,"  #'eyebrowse-rename-window-config

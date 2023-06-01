@@ -345,7 +345,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
         (load-theme (intern x) t))
     (error "Problem loading theme %s!" x)))
 
-(keymap-global-set "C-c m l" #'my-load-theme)
+(keymap-global-set "C-c m t" #'my-load-theme)
 
 (defun my-load-default-theme ()
   "Load default Emacs theme."
@@ -353,7 +353,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
   (dolist (theme custom-enabled-themes)
     (disable-theme theme)))
 
-(keymap-global-set "C-c m L" #'my-load-default-theme)
+(keymap-global-set "C-c m T" #'my-load-default-theme)
 
 (defun my-kill-other-buffers-without-special-ones ()
   "Keep all buffers but the current one.
@@ -393,7 +393,7 @@ With a `\\[universal-argument] \\[universal-argument] \
                  ((equal arg '(64)) "%c"))))
     (insert (format-time-string format))))
 
-(keymap-global-set "C-c 1" #'my-insert-date)
+(keymap-global-set "C-c m 1" #'my-insert-date)
 
 (defun my-insert-user-information (arg)
   "Insert user information at point.
@@ -410,7 +410,7 @@ argument ARG, insert name only."
                  ((equal arg '(16)) user-full-name))))
     (insert format)))
 
-(keymap-global-set "C-c 2" #'my-insert-user-information)
+(keymap-global-set "C-c m 2" #'my-insert-user-information)
 
 (defcustom my-zh-title-regexp
   (rx bol "第" (repeat 1 6 nonl) (any "章回话") (+ nonl))
@@ -475,7 +475,7 @@ otherwise on the whole buffer."
           (insert-char #x3000 2))
         (forward-line)))))
 
-(keymap-global-set "C-c m f" #'my-add-two-ideographic-spaces-at-bol)
+(keymap-global-set "C-c m i" #'my-add-two-ideographic-spaces-at-bol)
 
 (defun my-delete-blank-lines ()
   "Delete blank lines.
@@ -619,7 +619,7 @@ characters, but not the punctuation), we first try to match
 excluded puncuation, then the characters that need
 pangu-spacing. The excluded puncuation will be matched to group
 3, and shortcut the matching for Chinese characters.  Thus group
-1 and group 2 will both be non nil when a pangu space is needed.")
+1 and group 2 will both be non-nil when a pangu space is needed.")
 
 (defun my-pangu-spacing-current-buffer ()
   "Pangu space current buffer."
@@ -630,9 +630,7 @@ pangu-spacing. The excluded puncuation will be matched to group
       (when (and (match-beginning 1)
                  (match-beginning 2))
         (replace-match "\\1 \\2" nil nil)
-        (backward-char))))
-  ;; `nil' must be returned to allow use in hooks.
-  nil)
+        (backward-char)))))
 
 (keymap-global-set "C-c m p" #'my-pangu-spacing-current-buffer)
 

@@ -2,4 +2,4 @@
 # name: LaTeX-usepackage
 # key: ltx-u
 # --
-#+latex_header: \usepackage{${1:package}}$0
+#+latex_header: \usepackage{${1:package}}

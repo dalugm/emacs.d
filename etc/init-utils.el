@@ -28,12 +28,6 @@
 (defconst my-root-p (string-equal "root" (getenv "USER"))
   "Root user.")
 
-;; Env.
-(set-language-environment "UTF-8")
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-
 ;; Fix PATH problem on macOS when using GUI Emacs.
 (when my-mac-x-p
   (setenv "LANG" "en_US.UTF-8")
@@ -54,38 +48,44 @@
       ;; Suppress the Dired warning when not using GNU ls.
       (setq dired-use-ls-dired nil))))
 
-;; Coding configuration, last has the highest priority.
-;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html#Recognize-Coding
-(prefer-coding-system 'cp950)
-(prefer-coding-system 'gb2312)
-(prefer-coding-system 'cp936)
-(prefer-coding-system 'gb18030)
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html
 (prefer-coding-system 'utf-8)
 
 ;; Shutdown the startup screen.
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-echo-area-message t)
 
-(defun my--show-scratch-buffer-message ()
+(defun my--initial-scratch-message ()
   "Customize `initial-scratch-message'."
   (let ((fortune-prog (executable-find "fortune")))
-    (cond
-     (fortune-prog
-      (format
-       ";; %s\n\n"
-       (replace-regexp-in-string
-        "\n" "\n;; "                ; comment each line
+    (format
+     ;; Comment first line and add two new lines in the end.
+     ";; %s\n\n"
+     (replace-regexp-in-string
+      ;; Comment each line below first line.
+      "\n"
+      "\n;; "
+      (cond
+       (fortune-prog
         (replace-regexp-in-string
-         ;; remove trailing line break
-         "\\(\n$\\|\\|\\[m *\\|\\[[0-9][0-9]m *\\)" ""
-         (shell-command-to-string fortune-prog)))))
-     (t
-      (concat ";; Happy hacking "
-              (or user-full-name "")
-              "\n;; - Le vent se lève"
-              "\n;; - il faut tenter de vivre\n\n")))))
+         ;; Remove extra escape sequences.
+         (rx (or (seq ?\n eol)
+                 (seq ?\C-\[ ?\[ (0+ digit) ?m)))
+         ""
+         (shell-command-to-string fortune-prog)))
+       (t
+        (concat "Now, trailblazers"
+                "\nKeep credos in mind"
+                "\n(I won't say it twice!)"
+                "\nOne! Stop staying within the lines"
+                "\nTwo! We always align"
+                "\nThree! Even if we don't gain the upper hand, we'll fight for right"
+                "\nFour! Never care a rap for hindsight"
+                "\nFive! Let us light the night"
+                "\nSix! Even when there are wheels within wheels, go ahead!"
+                "\nGet it pulverized")))))))
 
-(setq-default initial-scratch-message (my--show-scratch-buffer-message))
+(setq-default initial-scratch-message (my--initial-scratch-message))
 
 ;; Nice scrolling.
 (setq scroll-margin 0)
@@ -260,7 +260,6 @@
 
 (keymap-global-set "C-c f f" #'recentf-open-files)
 (keymap-global-set "C-c f l" #'recentf-load-list)
-(keymap-global-set "C-c l t" #'load-theme)
 ;; Be able to M-x without meta.
 (keymap-global-set "C-c m x" #'execute-extended-command)
 ;; Zero width space.
@@ -268,7 +267,7 @@
                                (interactive)
                                (insert-char #x200b)))
 ;; Ideographic space.
-(keymap-global-set "C-c 8 f" (lambda ()
+(keymap-global-set "C-c 8 i" (lambda ()
                                (interactive)
                                (insert-char #x3000)))
 
@@ -285,6 +284,7 @@
 (keymap-global-set "C-c t l" #'display-line-numbers-mode)
 (keymap-global-set "C-c t r" #'cua-rectangle-mark-mode)
 (keymap-global-set "C-c t s" #'subword-mode)
+(keymap-global-set "C-c t t" #'load-theme)
 (keymap-global-set "C-c t v" #'view-mode)
 (keymap-global-set "C-c t w" #'whitespace-mode)
 
