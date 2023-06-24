@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: __len__
+# key: len
+# group: dunder
+# --
+def __len__(self):
+    $0

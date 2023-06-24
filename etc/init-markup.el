@@ -7,9 +7,6 @@
 
 ;;; Code:
 
-(use-package ox-hugo
-  :after ox)
-
 (use-package toc-org
   :hook ((org-mode markdown-mode) . toc-org-mode)
   :config

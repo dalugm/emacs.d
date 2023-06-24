@@ -20,21 +20,21 @@
   (setq ns-command-modifier 'meta)
   (setq ns-alternate-modifier 'super)
 
-  (defun my--set-frame-ns-titlebar (frame &rest _)
+  (push '(ns-transparent-titlebar . t) default-frame-alist)
+
+  (defun my--set-frame-ns-appearance (frame &rest _)
     "Set ns-appearance frame parameter for FRAME."
     (when (display-graphic-p frame)
       (let ((mode (frame-parameter frame 'background-mode)))
-        (modify-frame-parameters
-         frame
-         `((ns-transparent-titlebar . t) (ns-appearance . ,mode))))))
+        (modify-frame-parameters frame `((ns-appearance . ,mode))))))
 
-  (defun my--set-all-frames-ns-titlebar (&rest _)
+  (defun my--set-all-frames-ns-appearance (&rest _)
     "Set ns-appearance frame parameter for all frames."
-    (mapc #'my--set-frame-ns-titlebar (frame-list)))
+    (mapc #'my--set-frame-ns-appearance (frame-list)))
 
-  (add-hook 'after-init-hook #'my--set-all-frames-ns-titlebar)
-  (add-hook 'after-make-frame-functions #'my--set-frame-ns-titlebar)
-  (advice-add 'frame-set-background-mode :after #'my--set-frame-ns-titlebar))
+  (add-hook 'after-init-hook #'my--set-all-frames-ns-appearance)
+  (add-hook 'after-make-frame-functions #'my--set-frame-ns-appearance)
+  (advice-add 'frame-set-background-mode :after #'my--set-frame-ns-appearance))
 
 (defun my-set-window-transparency (value)
   "Set the VALUE of transparency of the frame window."

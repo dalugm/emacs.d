@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: __all__
+# key: all
+# group: dunder
+# --
+__all__ = [
+    $0
+]

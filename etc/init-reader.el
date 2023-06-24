@@ -57,7 +57,7 @@
   :config (elfeed-org)
   (setq rmh-elfeed-org-files (list (concat my-optional-d "elfeed.org"))))
 
-(use-package pdf-view
+(use-package pdf-tools
   :when (display-graphic-p)
   :hook ((pdf-view-mode . pdf-isearch-minor-mode))
   :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)

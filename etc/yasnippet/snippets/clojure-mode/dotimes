@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: dotimes
+# key: do
+# --
+(dotimes [${1:bindings}]$>
+  $0)

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: metaclass
+# key: mt
+# group: dunder
+# --
+__metaclass__ = ${1:type}

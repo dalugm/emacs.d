@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: subclass
+# key: scls
+# --
+class ${1:class}(${2:super-class}):
+    $0

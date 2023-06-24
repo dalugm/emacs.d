@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: DOCTYPE HTML5
+# key: <!
+# group: meta
+# --
+<!DOCTYPE html>

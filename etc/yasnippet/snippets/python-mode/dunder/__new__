@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: __new__
+# key: new
+# group: dunder
+# --
+def __new__(mcls, name, bases, dct):
+    $0
+    return type.__new__(mcls, name, bases, dct)

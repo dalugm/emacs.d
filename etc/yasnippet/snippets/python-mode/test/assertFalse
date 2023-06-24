@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: assertFalse
+# key: assf
+# group: test
+# --
+self.assertFalse($0)

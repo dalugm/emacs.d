@@ -92,24 +92,6 @@
 (setq scroll-conservatively 100000)
 (setq scroll-preserve-screen-position 1)
 
-;; Do NOT make backups of files, not safe.
-;; https://github.com/joedicastro/dotfiles/tree/master/emacs
-(setq auto-save-default nil)
-(setq make-backup-files nil)
-(setq vc-make-backup-files nil)
-
-(require 'recentf)
-(setq recentf-max-saved-items 200)
-;; Simplify save path.
-(setq recentf-filename-handlers '(abbreviate-file-name))
-(dolist (regexp '("^/\\(?:ssh\\|su\\|sudo\\)?x?:"
-                  "/\\.?TAGS\\'" "/\\.?tags\\'"))
-  (add-to-list 'recentf-exclude regexp))
-;; Disable `recentf-cleanup' on recentf start,
-;; because it can be laggy with remote files.
-(setq recentf-auto-cleanup 'never)
-(recentf-mode +1)
-
 (setq-default buffers-menu-max-size 30
               fill-column 72
               case-fold-search t
@@ -174,11 +156,6 @@
 ;; https://www.emacswiki.org/emacs/SavePlace
 (save-place-mode +1)
 
-;; Automatically reload files was modified by external program.
-(global-auto-revert-mode +1)
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
-
 ;; Pairs...
 (electric-pair-mode +1)
 
@@ -189,31 +166,56 @@
 ;; Clean up obsolete buffers automatically.
 (require 'midnight)
 
-;; Undo (and redo) changes about the window.
-(require 'winner)
-(setq winner-boring-buffers
-      '("*Completions*"
-        "*Compile-Log*"
-        "*inferior-lisp*"
-        "*Apropos*"
-        "*Help*"
-        "*Buffer List*"
-        "*Ibuffer*"))
-(winner-mode +1)
+;; It must be set before loading `use-package'.
+(setq use-package-enable-imenu-support t)
 
-;; Whitespace.
-(require 'whitespace)
-;; Search {zero,full}-width space also.
-(setq whitespace-space-regexp "\\( +\\|　+\\|​+\\)")
-;; Show zero-width space.
-(add-to-list 'whitespace-display-mappings '(space-mark #x200b [?.]))
+(use-package winner
+  :custom
+  (winner-boring-buffers '("*Apropos*" "*Buffer List*"
+                           "*Completions*" "*Compile-Log*"
+                           "*Help*" "*Ibuffer*"
+                           "*inferior-lisp*"))
+  :hook (after-init . winner-mode))
 
-;; Meaningful names for buffers with the same name.
-(require 'uniquify)
-;; Rename after killing uniquified.
-(setq uniquify-after-kill-buffer-p t)
-;; Don't muck with special buffers.
-(setq uniquify-ignore-buffers-re "^\\*")
+;; Do NOT make backups of files, not safe.
+;; https://github.com/joedicastro/dotfiles/tree/master/emacs
+(use-package files
+  :custom
+  (auto-save-default nil)
+  (make-backup-files nil))
+
+(use-package recentf
+  :hook (after-init . recentf-mode)
+  :bind (("C-c f f" . recentf-open-files)
+         ("C-c f l" . recentf-load-list))
+  :custom
+  (recentf-max-saved-items 100)
+  ;; It can be laggy when cleanup remote files.
+  (recentf-auto-cleanup 'never)
+  :config
+  (dolist (regexp '("^/\\(?:ssh\\|su\\|sudo\\)?x?:"
+                    "/\\.?TAGS\\'" "/\\.?tags\\'"))
+    (add-to-list 'recentf-exclude regexp)))
+
+;; Automatically reload files was modified by external program.
+(use-package autorevert
+  :hook (after-init . global-auto-revert-mode)
+  :custom
+  (global-auto-revert-non-file-buffers t)
+  (auto-revert-verbose nil))
+
+(use-package whitespace
+  :custom
+  ;; Search {zero,full}-width space also.
+  (whitespace-space-regexp "\\( +\\|　+\\|​+\\)")
+  :config
+  ;; Show zero-width space.
+  (add-to-list 'whitespace-display-mappings '(space-mark #x200b [?.])))
+
+(use-package uniquify
+  :custom
+  ;; Don't muck with special buffers.
+  (uniquify-ignore-buffers-re "^\\*"))
 
 (with-eval-after-load 'tramp
   (push (cons tramp-file-name-regexp nil) backup-directory-alist)
@@ -258,8 +260,6 @@
 ;; keybindings ;;
 ;;;;;;;;;;;;;;;;;
 
-(keymap-global-set "C-c f f" #'recentf-open-files)
-(keymap-global-set "C-c f l" #'recentf-load-list)
 ;; Be able to M-x without meta.
 (keymap-global-set "C-c m x" #'execute-extended-command)
 ;; Zero width space.

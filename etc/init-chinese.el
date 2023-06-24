@@ -40,7 +40,7 @@
                 '(pyim-probe-punctuation-line-beginning
                   pyim-probe-punctuation-after-punctuation))
 
-  (defvar my-pyim-directory (expand-file-name "pyim/" my-cache-d)
+  (defvar my-pyim-directory (expand-file-name "pyim" my-cache-d)
     "The directory containing pyim related files.")
 
   (unless (file-directory-p my-pyim-directory) (mkdir my-pyim-directory))

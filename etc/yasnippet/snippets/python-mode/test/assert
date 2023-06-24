@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: assert
+# key: ass
+# group: test
+# --
+assert $0

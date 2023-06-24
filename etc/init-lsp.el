@@ -64,12 +64,7 @@
                                               :getDocumentPrintWidthRequest nil
                                               )
                          :defaultPrintWidth 100
-                         :getDocumentPrintWidthRequest nil)))
-
-  ;; Elixir.
-  (when my-mac-p
-    (add-to-list 'eglot-server-programs
-                 '((elixir-ts-mode heex-ts-mode) . ("elixir-ls")))))
+                         :getDocumentPrintWidthRequest nil))))
 
 (provide 'init-lsp)
 
