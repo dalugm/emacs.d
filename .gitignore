@@ -32,12 +32,12 @@
 /server/
 /eln-cache/
 /var/
-/lib/site-lisp/**
+/site-lisp/*
 /tree-sitter/*
 
 ################
 # DON'T IGNORE #
 ################
 
-!/lib/site-lisp/README
+!/site-lisp/README
 !/tree-sitter/README

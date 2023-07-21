@@ -9,11 +9,9 @@
 
 (use-package toc-org
   :hook ((org-mode markdown-mode) . toc-org-mode)
-  :config
-  (with-eval-after-load 'markdown-mode
-    (keymap-set markdown-mode-map
-                "C-c C-o"
-                #'toc-org-markdown-follow-thing-at-point)))
+  :bind (:map markdown-mode-map
+              :package markdown-mode
+              ("C-c C-o" . toc-org-markdown-follow-thing-at-point)))
 
 ;; Pixel-perfect visual alignment for Org and Markdown tables.
 (use-package valign
@@ -48,8 +46,6 @@ Show the heading too, if it is currently invisible."
               ("r" . markdown-footnote-return))
   :custom
   (markdown-asymmetric-header t)
-  (markdown-enable-math t)
-  (markdown-enable-wiki-links t)
   (markdown-fontify-code-blocks-natively t)
   (markdown-gfm-uppercase-checkbox t)
   (markdown-italic-underscore t)

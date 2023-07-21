@@ -7,6 +7,11 @@
 
 ;;; Code:
 
+(use-package ediff
+  :custom
+  (ediff-split-window-function #'split-window-horizontally)
+  (ediff-window-setup-function #'ediff-setup-windows-plain))
+
 (use-package zh-lib
   :custom (zh-lib-scheme 'simplified-traditional-quanpin-all))
 
@@ -101,6 +106,7 @@
          ("C-c g w" . avy-goto-word-or-subword-1)
          ("C-c m c" . my-avy-copy-thing-at-point)
          (:map dired-mode-map
+               :package dired-mode
                (";" . avy-goto-char-2))
          (:map isearch-mode-map
                ("C-a" . avy-isearch)

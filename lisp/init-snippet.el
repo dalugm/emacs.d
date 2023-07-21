@@ -28,10 +28,11 @@
       (when-let (uuid (yas-choose-value (mapcar #'car templates)))
         (yas-expand-snippet (cdr (assoc uuid templates))))))
 
-  (defcustom my-private-snippet-d (expand-file-name "~/my-snippets")
+  (defcustom my-private-snippet-d (file-name-as-directory
+                                   (expand-file-name "~/my-snippets"))
     "Personal snippet directory."
     :group 'convenience
-    :type 'string)
+    :type 'directory)
 
   (when (and (file-directory-p my-private-snippet-d)
              (not (member my-private-snippet-d yas-snippet-dirs)))

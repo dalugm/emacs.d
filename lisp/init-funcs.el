@@ -413,7 +413,7 @@ argument ARG, insert name only."
 (keymap-global-set "C-c m 2" #'my-insert-user-information)
 
 (defcustom my-zh-title-regexp
-  (rx bol "第" (repeat 1 6 nonl) (any "章回话") (+ nonl))
+  (rx bol "第" (repeat 1 6 nonl) (any "章回话") (0+ nonl))
   "Chinese title regexp.")
 
 (defun my-divide-file-chapter (&optional arg)
@@ -556,35 +556,6 @@ Fix OLD-FUNC with ARGS."
 
 (keymap-global-set "C-M-z" #'my-indent-defun)
 
-(defun my--adjust-point-after-click (event &optional _)
-  "Adjust point.  Click more accurate in line with intuition.
-Adjust point depending on which portion of the character the
-cursor clicked on, if on the right half, move point after.
-EVENT is the mouse event."
-  (let* ((posn (event-end event))
-         (x (car (posn-object-x-y posn)))
-         (w (car (posn-object-width-height posn))))
-    ;; `mouse-set-point' is called twice when you click mouse
-    ;; first in `down-mouse-1', called by `mouse-drag-region' ->
-    ;; `mouse-drag-track' to set point, second in `mouse-1', when
-    ;; mouse released and Emacs realized that this is a click event.
-    ;; We want to adjust point in both cases.
-    (when (and (null (posn-object posn))
-               (> x (/ w 2))
-               (not (eq (char-after) ?\n)))
-      (forward-char))))
-
-(define-minor-mode my-delicate-click-mode
-  "Accurate point position on click.
-That is, if you click on the right half of a character, the point
-is set to after it."
-  :global t
-  :lighter ""
-  :group 'convenience
-  (if my-delicate-click-mode
-      (advice-add 'mouse-set-point :after #'my--adjust-point-after-click)
-    (advice-remove 'mouse-set-point #'my--adjust-point-after-click)))
-
 (defcustom my-pangu-spacing-excluded-puncuation
   "，。！？、；：‘’“”『』「」【】（）《》"
   "Excluded puncuation when pangu spacing buffer."
@@ -633,37 +604,6 @@ pangu-spacing. The excluded puncuation will be matched to group
         (backward-char)))))
 
 (keymap-global-set "C-c m p" #'my-pangu-spacing-current-buffer)
-
-(defun my--add-subdirs-to-load-path (search-dir)
-  "Add every subdir of SEARCH-DIR to `load-path'."
-  (let ((dir (file-name-as-directory search-dir)))
-    (dolist (subdir
-             ;; Filter out unnecessary dirs.
-             (cl-remove-if
-              (lambda (subdir)
-                (or
-                 ;; Remove if not directory.
-                 (not (file-directory-p (concat dir subdir)))
-                 ;; Remove dirs such as parent dir, programming language
-                 ;; related dir and version control dir.
-                 (member subdir '("." ".."
-                                  "dist" "node_modules" "__pycache__"
-                                  "RCS" "CVS" "rcs" "cvs"
-                                  ".git" ".github"))))
-              (directory-files dir)))
-      (let ((subdir-path (concat dir (file-name-as-directory subdir))))
-        (when (cl-some (lambda (subdir-file)
-                         (and (file-regular-p
-                               (concat subdir-path subdir-file))
-                              ;; Extensions like `.so' `.dll' are
-                              ;; Emacs dynamic library written in non
-                              ;; emacs-lisp.
-                              (member (file-name-extension subdir-file)
-                                      '("el" "so" "dll"))))
-                       (directory-files subdir-path))
-          (add-to-list 'load-path subdir-path t))
-        ;; Recursively search subdirectories.
-        (my--add-subdirs-to-load-path subdir-path)))))
 
 ;; Network Proxy.
 (defun my-show-http-proxy ()

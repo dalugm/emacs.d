@@ -10,16 +10,20 @@
 (setq user-init-file (or load-file-name buffer-file-name))
 (setq user-emacs-directory (file-name-directory user-init-file))
 
-(defconst my-config-d (expand-file-name "etc" user-emacs-directory)
+(defconst my-config-d (file-name-as-directory
+                       (expand-file-name "etc" user-emacs-directory))
   "Directory of configuration files.")
 
-(defconst my-library-d (expand-file-name "lib" user-emacs-directory)
+(defconst my-library-d (file-name-as-directory
+                        (expand-file-name "lib" user-emacs-directory))
   "Directory of packages.")
 
-(defconst my-optional-d (expand-file-name "opt" user-emacs-directory)
+(defconst my-optional-d (file-name-as-directory
+                         (expand-file-name "opt" user-emacs-directory))
   "Directory of optional files.")
 
-(defconst my-cache-d (expand-file-name "var" user-emacs-directory)
+(defconst my-cache-d (file-name-as-directory
+                      (expand-file-name "var" user-emacs-directory))
   "Directory of dotfiles created by packages.")
 
 (unless (file-directory-p my-cache-d) (mkdir my-cache-d))
@@ -37,7 +41,7 @@
               ;; If x10, half of cpu time is spent on gc when scrolling.
               (setq gc-cons-threshold (* 100 old-gc-cons-threshold)))))
 
-(push (expand-file-name my-config-d) load-path)
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (load
  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

@@ -31,8 +31,7 @@
           ("Updated" 10 t nil updated nil))))
 
 (use-package diff-hl
-  :hook ((after-init . global-diff-hl-mode)
-         (dired-mode . diff-hl-dired-mode))
+  :hook (after-init . global-diff-hl-mode)
   :config
   ;; Highlight on-the-fly.
   (diff-hl-flydiff-mode +1)
@@ -41,9 +40,10 @@
         '((insert . "+") (delete . "-") (change . "=")
           (unknown . "?") (ignored . "!")))
 
-  (unless (display-graphic-p)
+  (if (display-graphic-p)
+      (add-hook 'dired-mode-hook #'diff-hl-dired-mode)
     ;; Fall back to margin since fringe is unavailable in terminal.
-    (diff-hl-margin-mode +1)
+    (add-hook 'dired-mode-hook #'diff-hl-margin-mode)
     ;; Avoid restoring `diff-hl-margin-mode' when using `desktop.el'.
     (with-eval-after-load 'desktop
       (add-to-list 'desktop-minor-mode-table
