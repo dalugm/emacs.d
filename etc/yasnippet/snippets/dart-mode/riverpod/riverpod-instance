@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: riverpod-instance
+# key: rpi
+# --
+@riverpod
+${1:dynamic} ${2:name}(${2:$(concat (upcase (substring yas-text 0 1)) (substring yas-text 1))}Ref ref) {
+  return $3;
+}

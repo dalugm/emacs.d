@@ -7,13 +7,12 @@
 
 ;;; Code:
 
-;;; Frame
+;;;; Frame.
 
 (setq-default frame-title-format "GNU Emacs %@ %b")
 
 ;; Move more smoothly.
-(when (fboundp 'pixel-scroll-precision-mode)
-  (pixel-scroll-precision-mode +1))
+(pixel-scroll-precision-mode +1)
 
 (when (featurep 'ns)
   ;; Make NS behavior the same as other platforms.
@@ -57,7 +56,7 @@
 
 (keymap-global-set "C-c w l" #'my-set-line-spacing)
 
-;;; Font
+;;;; Font.
 
 ;; ;; https://archive.casouri.cat/note/2019/emacs-%E5%AD%97%E4%BD%93%E4%B8%8E%E5%AD%97%E4%BD%93%E9%9B%86/index.html
 ;; ;; http://ergoemacs.org/emacs/emacs_list_and_set_font.html
@@ -156,8 +155,8 @@ additional font spec for ASCII and CJK font.")
       (set-fontset-font fontset charset (apply #'font-spec cjk-spec)))
     fontset))
 
-(defun my--font-expand-spec (font-spec size &rest attrs)
-  "Translate FONT-SPEC, SIZE and ATTRS to (ASCII-SPEC CJK-SPEC).
+(defun my--font-expand-spec (font-spec size)
+  "Translate FONT-SPEC and SIZE to (ASCII-SPEC CJK-SPEC).
 
 FONT-SPEC should be a list (ASCII-FAMILY CJK-FAMILY CJK-SCALE
 ASCII-SPEC CJK-SPEC), where ASCII-FAMILY is a ASCII font family,
@@ -209,7 +208,8 @@ ASCII and CJK."
       (apply #'my-load-default-font font-name size attrs)
     (let ((fontset
            (apply #'my--create-fontset
-                  (my-font-expand-spec font-spec size))))
+                  (my--font-expand-spec
+                   (my--font-name-to-spec font-name) size))))
       (apply #'set-face-attribute face nil
              ;; We must set both `:font' and `fontset' for both ASCII
              ;; and non-ascii spec to take effect.
@@ -228,9 +228,7 @@ More details are inside `my-load-font'."
   (interactive
    (list (completing-read
           "Font: " (mapcar #'car my-font-alist) nil t)
-         (string-to-number (completing-read
-                            "Size: " nil nil nil nil nil
-                            (number-to-string (my--font-default-size))))))
+         (read-number "Size: " (my--font-default-size))))
   (let* ((spec (my--font-expand-spec
                 (my--font-name-to-spec font-name)
                 size))
@@ -254,9 +252,7 @@ ATTRS."
   (interactive
    (list (intern (completing-read "Face: " (face-list) nil t))
          (completing-read "Font: " (mapcar #'car my-font-alist) nil t)
-         (string-to-number (completing-read
-                            "Size: " nil nil nil nil nil
-                            (number-to-string (my--font-default-size))))))
+         (read-number "Size: " (my--font-default-size))))
   (let* ((spec (my--font-name-to-spec font-name))
          (fontset
           (apply #'my--create-fontset

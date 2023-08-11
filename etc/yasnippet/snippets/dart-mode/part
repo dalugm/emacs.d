@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: part
-# key: part
+# key: pt
 # --
-part of ${1:Part}$0
+part '${1:library}'

@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: class extends
-# key: cle
+# key: clse
 # --
 class ${1:`(string-join
             (split-string

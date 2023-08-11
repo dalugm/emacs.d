@@ -2,5 +2,5 @@
 # name: getter
 # key: get
 # --
-${1:Type} _${2:Name};
-$1 get $2 => _$2;$0
+${1:dynamic} _${2:name};
+$1 get $2 => _$2;

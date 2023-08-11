@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: hook-stateful-widget
+# key: hsfw
+# --
+class ${1:name} extends StatefulHookWidget {
+  const $1({super.key});
+
+  @override
+  State<$1> createState() => _$1State();
+}
+
+class _$1State extends State<$1> {
+  @override
+  Widget build(BuildContext context) {
+    return Container($0);
+  }
+}

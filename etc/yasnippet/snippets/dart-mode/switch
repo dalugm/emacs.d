@@ -1,13 +1,7 @@
 # -*- mode: snippet -*-
-# name: switch (...) { case : ... default: ...}
+# name: switch (...) { }
 # key: switch
-# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region nil))
 # --
 switch (${1:expr}) {
-  case ${2:constexpr}:
-    $3
-    break;
-  default:
-    $0
-    break;
+  ${2:expr}
 }

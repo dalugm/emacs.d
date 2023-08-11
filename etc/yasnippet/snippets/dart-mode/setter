@@ -2,5 +2,5 @@
 # name: setter
 # key: set
 # --
-${1:Type} _${2:Name};
+${1:dynamic} _${2:name};
 set $2($1 $2) => _$2 = $2;

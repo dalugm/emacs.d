@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: notifier
+# key: rn
+# --
+class $1Notifier extends Notifier<$2> {
+  @override
+  $2 build() {
+    return $3;
+  }
+}

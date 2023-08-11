@@ -7,9 +7,7 @@
 
 ;;; Code:
 
-;;;;;;;;;;;;
-;; Window ;;
-;;;;;;;;;;;;
+;;;; Window.
 
 (defun my-toggle-two-split-window ()
   "Toggle two window layout vertically or horizontally."
@@ -36,7 +34,7 @@
           (set-window-buffer (next-window) next-win-buffer)
           (select-window first-win)
           (when this-win-2nd (other-window 1))))
-    (error "Not two windows in current frame!")))
+    (user-error "There should be only two windows in current frame")))
 
 (keymap-global-set "C-c w t" #'my-toggle-two-split-window)
 
@@ -45,7 +43,7 @@
   (interactive)
   (cond
    ((not (> (count-windows) 1))
-    (message "You can't rotate a single window!"))
+    (user-error "Cannot rotate a single window"))
    (t
     (let ((i 1)
           (window-num (count-windows)))
@@ -73,9 +71,7 @@
 
 (keymap-global-set "C-c w f" #'my-toggle-full-window)
 
-;;;;;;;;;;
-;; FILE ;;
-;;;;;;;;;;
+;;;; File.
 
 (defun my-rename-this-file (&optional arg)
   "Rename both current buffer and file.
@@ -83,7 +79,7 @@ With a prefix ARG, rename based on current name."
   (interactive "P")
   (let ((filename (buffer-file-name)))
     (unless filename
-      (error "Buffer `%s' is not visiting a file!" filename))
+      (user-error "Buffer `%s' is not visiting a file" filename))
     (let ((new-name (read-string
                      "New name: "
                      (when arg (file-name-nondirectory filename)))))
@@ -106,7 +102,7 @@ With a prefix ARG, rename based on current name."
         (progn
           (kill-new (file-name-nondirectory filename))
           (message "Copied `%s'." (file-name-nondirectory filename)))
-      (warn "Current buffer is not attached to a file!"))))
+      (user-error "Current buffer is not attached to a file"))))
 
 (keymap-global-set "C-c f c" #'my-copy-file-name)
 
@@ -116,7 +112,7 @@ With a prefix ARG, rename based on current name."
   (let ((file-name (buffer-file-name)))
     (if (and (fboundp 'tramp-tramp-file-p)
              (tramp-tramp-file-p file-name))
-        (error "Cannot open tramp file!")
+        (user-error "Cannot open tramp file")
       (browse-url (concat "file://" file-name)))))
 
 (keymap-global-set "C-c f b" #'my-browse-this-file)
@@ -140,7 +136,7 @@ With a prefix ARG, rename based on current name."
   "Delete current file, and kill the buffer."
   (interactive)
   (unless (buffer-file-name)
-    (error "No file is currently being edited!"))
+    (user-error "No file is currently being edited"))
   (when (yes-or-no-p
          (format-message "Really delete `%s'?"
                          (file-name-nondirectory buffer-file-name)))
@@ -190,45 +186,7 @@ With a prefix ARG, rename based on current name."
 
 (keymap-global-set "C-c f S" #'my-sudo-find-file)
 
-;;;;;;;;;;;;;;
-;; JUST4FUN ;;
-;;;;;;;;;;;;;;
-
-(defun my-print-ascii-table (&optional arg)
-  "Print the ASCII table.
-
-Default print to 256.  With a prefix ARG, print to specified
-number."
-  (interactive "P")
-  (let ((num (if arg
-                 (string-to-number (read-string "Input a number: "))
-               256))
-        (i 0))
-    (switch-to-buffer "*ASCII*")
-    (erase-buffer)
-    (insert (format "ASCII characters up to number %d.\n" num))
-    (while (< i num)
-      (setq i (1+ i))
-      (insert (format "%4d %c\n" i i)))
-    (special-mode)
-    (goto-char (point-min))))
-
-(defun my-pingan-emacs ()
-  "建议击毙, @平安 Emacs."
-  (interactive)
-  (message
-   (let ((list '()))
-     (mapatoms (lambda (sym)
-                 (when (special-form-p sym)
-                   (push sym list))))
-     (mapconcat (lambda (sym)
-                  (format "%s 平安" sym))
-                list
-                "，"))))
-
-;;;;;;;;;;;;;;;;;;;;
-;; SEARCH RELATED ;;
-;;;;;;;;;;;;;;;;;;;;
+;;;; Search.
 
 (defvar my-search-engine-alist
   '(
@@ -266,9 +224,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 
 (keymap-global-set "C-c s o" #'my-search-online)
 
-;;;;;;;;;;;;;;;
-;; DAILY USE ;;
-;;;;;;;;;;;;;;;
+;;;; Daily.
 
 ;; https://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
 (defun my-toggle-selective-display (column)
@@ -339,11 +295,11 @@ Key is a symbol as the name, value is a plist specifying the search url.")
                 (completing-read
                  "Choose a theme: "
                  (mapcar #'symbol-name (custom-available-themes)))))
-  (condition-case nil
+  (condition-case _
       (progn
         (mapc #'disable-theme custom-enabled-themes)
         (load-theme (intern x) t))
-    (error "Problem loading theme %s!" x)))
+    (error "Problem loading theme %s" x)))
 
 (keymap-global-set "C-c m t" #'my-load-theme)
 
@@ -412,87 +368,31 @@ argument ARG, insert name only."
 
 (keymap-global-set "C-c m 2" #'my-insert-user-information)
 
-(defcustom my-zh-title-regexp
-  (rx bol "第" (repeat 1 6 nonl) (any "章回话") (0+ nonl))
-  "Chinese title regexp.")
-
-(defun my-divide-file-chapter (&optional arg)
-  "Add empty lines to divide chapters according to `my-zh-title-regexp'.
-
-With a prefix ARG, add lines based on input regexp."
-  (interactive "P")
-  ;; Make sure final newline exist.
-  (goto-char (point-max))
-  (unless (bolp)
-    (newline))
-  (goto-char (point-min))
-  ;; Search sentences containing `zh-title-regexp'.
-  (let (zh-title-regexp)
-    (if arg
-        (setq zh-title-regexp (read-regexp "Input search regexp: "))
-      (setq zh-title-regexp my-zh-title-regexp))
-    (while (< (point) (point-max))
-      (if (re-search-forward zh-title-regexp (line-end-position) t)
-          ;; Add new line if current line contains `zh-title-regexp'.
-          (newline)
-        (while (not (or (re-search-forward zh-title-regexp
-                                           (line-end-position) t)
-                        (= (point) (point-max))))
-          ;; Forward line until find next line contains
-          ;; `zh-title-regexp' or EOF.
-          (forward-line))
-        ;; Add two new lines above the chapter title.
-        (beginning-of-line)
-        (newline 2)
-        ;; Add one new line below the chapter title.
-        (end-of-line)
-        (newline)
-        (forward-line))))
-  ;; Keep a final newline at EOF.
-  (when (= (point) (point-max))
-    (delete-all-space)
-    (newline)))
-
-(defun my-add-two-ideographic-spaces-at-bol ()
-  "Add two ideographic spaces at non-empty line beginning.
-
-If a region is selected, executed on the selected region,
-otherwise on the whole buffer."
-  (interactive)
-  (let (start end)
-    (if (use-region-p)
-        (setq start (copy-marker (region-beginning))
-              end (copy-marker (region-end)))
-      (setq start (copy-marker (point-min))
-            end (copy-marker (point-max))))
-    (save-excursion
-      (goto-char start)
-      (while (< (point) end)
-        (back-to-indentation)
-        (delete-space--internal " \t　​" nil)
-        ;; Insert ideographic space at non-blank line only.
-        (unless (= (pos-bol) (pos-eol))
-          (insert-char #x3000 2))
-        (forward-line)))))
-
-(keymap-global-set "C-c m i" #'my-add-two-ideographic-spaces-at-bol)
-
 (defun my-delete-blank-lines ()
   "Delete blank lines.
 When region is active, delete the blank lines in region only."
   (interactive)
-  (if (use-region-p)
-      (delete-matching-lines "^[[:space:]]*$" (region-beginning) (region-end))
-    (delete-matching-lines "^[[:space:]]*$" (point-min) (point-max))))
+  (save-excursion
+    (let ((regexp "^[[:space:]]*$"))
+      (if (use-region-p)
+          (delete-matching-lines regexp
+                                 (region-beginning)
+                                 (region-end))
+        (delete-matching-lines regexp
+                               (point-min)
+                               (point-max))))))
 
 (keymap-global-set "C-c m d" #'my-delete-blank-lines)
 
 (defun my-delete-visual-blank-lines ()
   "Delete all visual blank lines."
   (interactive)
-  (save-restriction
-    (narrow-to-region (window-start) (window-end))
-    (delete-matching-lines "^[[:space:]]*$" (point-min) (point-max))))
+  (save-excursion
+    (save-restriction
+      (narrow-to-region (window-start) (window-end))
+      (delete-matching-lines "^[[:space:]]*$"
+                             (point-min)
+                             (point-max)))))
 
 (keymap-global-set "C-c m D" #'my-delete-visual-blank-lines)
 
@@ -605,7 +505,8 @@ pangu-spacing. The excluded puncuation will be matched to group
 
 (keymap-global-set "C-c m p" #'my-pangu-spacing-current-buffer)
 
-;; Network Proxy.
+;;;; Proxy.
+
 (defun my-show-http-proxy ()
   "Show http/https proxy."
   (interactive)
@@ -721,6 +622,40 @@ pangu-spacing. The excluded puncuation will be matched to group
 
 (keymap-global-set "C-c t p w" #'my-toggle-wsl-socks-proxy)
 (keymap-global-set "C-c t p W" #'my-show-wsl-socks-proxy)
+
+;;;; JUST4FUN.
+
+(defun my-print-ascii-table (&optional arg)
+  "Print the ASCII table.
+
+Default print to 256.  With a prefix ARG, print to specified
+number."
+  (interactive "P")
+  (let ((num (if arg
+                 (string-to-number (read-string "Input a number: "))
+               256))
+        (i 0))
+    (switch-to-buffer "*ASCII*")
+    (erase-buffer)
+    (insert (format "ASCII characters up to number %d.\n" num))
+    (while (< i num)
+      (setq i (1+ i))
+      (insert (format "%4d %c\n" i i)))
+    (special-mode)
+    (goto-char (point-min))))
+
+(defun my-pingan-emacs ()
+  "建议击毙, @平安 Emacs."
+  (interactive)
+  (message
+   (let ((list '()))
+     (mapatoms (lambda (sym)
+                 (when (special-form-p sym)
+                   (push sym list))))
+     (mapconcat (lambda (sym)
+                  (format "%s 平安" sym))
+                list
+                "，"))))
 
 (provide 'init-funcs)
 

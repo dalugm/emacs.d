@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# name: func
+# name: function
 # key: fun
 # --
-${1:Type} ${2:Name}($3) {
+${1:dynamic} ${2:name}($3) {
   $0
 }

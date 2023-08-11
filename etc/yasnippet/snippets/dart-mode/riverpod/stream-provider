@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: stream-provider
+# key: srp
+# --
+final $1Provider = StreamProvider<$2>((ref) async* {
+  return $3;
+});

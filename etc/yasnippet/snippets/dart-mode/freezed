@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: freezed
+# key: fz
+# --
+@freezed
+class ${1:name} with _$$1 {
+  const factory $1({
+    $2
+  }) = _$1;
+
+  factory $1.fromJson(Map<String, Object?> json) => _$$1FromJson(json);
+}

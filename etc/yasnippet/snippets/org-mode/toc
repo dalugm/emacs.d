@@ -1,5 +1,14 @@
 # -*- mode: snippet -*-
-# name: toc
+# name: Table of Contents
 # key: toc
 # --
-* Table of Contents                                               :TOC:noexport:
+`(let ((start "* Table of Contents")
+       (end ":TOC:noexport:"))
+   (concat start
+           (make-string
+            (max (- (abs org-tags-column)
+                    (length start)
+                    (length end))
+                 1)
+            ? )
+           end))`

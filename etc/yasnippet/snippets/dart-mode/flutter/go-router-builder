@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: go-router-builder
+# key: grb
+# --
+class ${1:name}Route extends GoRouteData {
+  static const String path = '${2:path}';
+  const $1Route();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const ${3:screen}();
+}

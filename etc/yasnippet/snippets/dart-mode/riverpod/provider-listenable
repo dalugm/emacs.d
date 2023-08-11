@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: provider-listenable
+# key: rpl
+# --
+ref.listen<$1>($2, (previous, next) {
+  $3
+});

@@ -1,9 +1,9 @@
 # -*- mode: snippet -*-
 # name: dispose
-# key: dis
+# key: dp
 # --
 @override
 void dispose() {
-  super.dispose();
   $0
+  super.dispose();
 }

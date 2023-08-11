@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: state-provider
+# key: sp
+# --
+final $1Provider = StateProvider<$2>((ref) {
+  return $3;
+});

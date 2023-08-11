@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: consumer-stateful-widget
+# key: csfw
+# --
+class ${1:name} extends ConsumerStatefulWidget {
+  const $1({super.key});
+
+  @override
+  ConsumerState<$1> createState() => _$1State();
+}
+
+class _$1State extends ConsumerState<$1> {
+  @override
+  Widget build(BuildContext context) {
+    return Container($0);
+  }
+}

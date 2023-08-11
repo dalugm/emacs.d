@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: provider-family
+# key: rpf
+# --
+final $1Provider = Provider.family<$2, $3>((ref, $4) {
+  return $5;
+});

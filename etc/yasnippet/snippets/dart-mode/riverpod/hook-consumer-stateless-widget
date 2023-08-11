@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: hook-consumer-stateless-widget
+# key: hcslw
+# --
+class ${1:name} extends HookConsumerWidget {
+  const $1({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container($2);
+  }
+}

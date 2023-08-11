@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: notifier-provider
+# key: np
+# --
+final $1Provider = NotifierProvider<$2, $3>($2.new);

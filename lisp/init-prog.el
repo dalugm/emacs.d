@@ -120,7 +120,7 @@
 (use-package subword
   :hook ((prog-mode text-mode) . subword-mode))
 
-(use-package xml-mode
+(use-package nxml-mode
   :mode "\\.[^.]*proj\\'"
   :mode "\\.xaml\\'"
   :mode "\\.p\\(?:list\\|om\\)\\'"
@@ -136,10 +136,10 @@
   (eldoc-box-use-visible-frame-map t)
   :bind (("C-c h h" . eldoc-box-help-at-point)
          (:map eldoc-box-visible-frame-map
-               ("M-n" . eldoc-box-scroll-up)
-               ("M-p" . eldoc-box-scroll-down)
-               ("M-a" . eldoc-box-beginning)
-               ("M-e" . eldoc-box-end)))
+               ("C-M-n" . eldoc-box-scroll-up)
+               ("C-M-p" . eldoc-box-scroll-down)
+               ("C-M-a" . eldoc-box-beginning)
+               ("C-M-e" . eldoc-box-end)))
   :config
   (setq eldoc-doc-buffer-separator
         (concat "\n"
@@ -162,9 +162,15 @@
   :bind ("C-c c E" . editorconfig-apply))
 
 (use-package citre
-  :init
-  (require 'citre-config)
-  (setq citre-auto-enable-citre-mode-modes '(prog-mode))
+  :bind (("C-c c a" . citre-ace-peek)
+         ("C-c c e" . citre-edit-tags-file-recipe)
+         ("C-c c h" . citre-peek)
+         ("C-c c t" . citre-update-this-tags-file)
+         ("C-c c j" . my-citre-jump)
+         ("C-c c J" . my-citre-jump-back))
+  :custom (citre-auto-enable-citre-mode-modes '(prog-mode))
+  :commands (citre-jump-back)
+  :config
   (defun my-citre-jump ()
     "Fallback to `xref' when citre failed."
     (interactive)
@@ -176,13 +182,7 @@
     (interactive)
     (condition-case _
         (citre-jump-back)
-      (error (call-interactively #'xref-pop-marker-stack))))
-  :bind (("C-c c a" . citre-ace-peek)
-         ("C-c c e" . citre-edit-tags-file-recipe)
-         ("C-c c h" . citre-peek)
-         ("C-c c t" . citre-update-this-tags-file)
-         ("C-c c j" . my-citre-jump)
-         ("C-c c J" . my-citre-jump-back)))
+      (error (call-interactively #'xref-go-back)))))
 
 (use-package apheleia
   :bind (("C-c c f" . apheleia-format-buffer)

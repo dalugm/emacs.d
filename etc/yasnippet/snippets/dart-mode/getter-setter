@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: getter-setter
+# key: gset
+# --
+${1:dynamic} _${2:name};
+$1 get $2 => _$2;
+set $2($1 $2) => _$2 = $2;

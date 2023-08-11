@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: provider
+# key: rp
+# --
+final $1Provider = Provider<$2>((ref) {
+  return $3;
+});

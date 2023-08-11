@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: stream-notifier-provider
+# key: srnp
+# --
+final $1Provider = StreamNotifierProvider<$2, $3>($2.new);

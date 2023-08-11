@@ -7,8 +7,24 @@
 
 ;;; Code:
 
-(with-eval-after-load 'ibuffer
-
+(use-package ibuffer
+  :bind ([remap list-buffers] . ibuffer)
+  :custom
+  (ibuffer-expert t)
+  (ibuffer-show-empty-filter-groups nil)
+  (ibuffer-display-summary nil)
+  :commands (ibuffer-switch-to-saved-filter-groups)
+  :defines (ibuffer-saved-filter-groups)
+  :functions (my--ibuffer-get-major-modes-list
+              my--ibuffer-generate-filter-groups-alist
+              ibuffer-vc--status-string
+              ibuffer-vc--state)
+  :hook
+  (ibuffer-mode . (lambda ()
+                    (ibuffer-switch-to-saved-filter-groups "default")))
+  ;; Update filter group when calling `ibuffer'.
+  (ibuffer . my--ibuffer-generate-filter-groups-by-major-mode)
+  :config
   ;; Display vc status info in the ibuffer list.
   (defun ibuffer-vc--state (file)
     "Return the `vc-state' for FILE, or `nil' if unregistered."
@@ -109,23 +125,7 @@
                     '(("Modified" (predicate buffer-modified-p
                                              (current-buffer)))))))))
       (setq ibuffer-saved-filter-groups groups)
-      (ibuffer-switch-to-saved-filter-groups "default")))
-
-  (setq ibuffer-expert t
-        ibuffer-show-empty-filter-groups nil
-        ibuffer-display-summary nil)
-
-  (defun my--ibuffer-mode-hook-setup ()
-    "`ibuffer-mode' configuration."
-    (unless (eq ibuffer-sorting-mode 'filename/process)
-      (ibuffer-do-sort-by-filename/process))
-    (ibuffer-switch-to-saved-filter-groups "default"))
-
-  (add-hook 'ibuffer-mode-hook #'my--ibuffer-mode-hook-setup)
-  ;; Update filter group when calling `ibuffer'.
-  (add-hook 'ibuffer-hook #'my--ibuffer-generate-filter-groups-by-major-mode))
-
-(keymap-global-set "<remap> <list-buffers>" #'ibuffer)
+      (ibuffer-switch-to-saved-filter-groups "default"))))
 
 (provide 'init-ibuffer)
 

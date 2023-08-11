@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: hook-stateless-widget
+# key: hslw
+# --
+class ${1:name} extends HookWidget {
+  const $1({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container($2);
+  }
+}

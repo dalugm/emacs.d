@@ -28,7 +28,6 @@
   :mode "\\.hbs\\'"
   :mode "\\.jinja2?\\'"
   :mode "\\.jsp\\'"
-  :mode "\\.l?eex\\'"
   :mode "\\.mustache\\'"
   :mode "\\.svelte\\'"
   :mode "\\.twig\\'"
@@ -47,7 +46,7 @@
 
 ;; Separate vue-mode from web-mode to use eglot.
 (define-derived-mode vue-mode web-mode "Vue")
-(add-to-list 'auto-mode-alist '("\\.n?vue\\'" . vue-mode))
+(add-to-list 'auto-mode-alist '("\\.[nu]?vue\\'" . vue-mode))
 
 (provide 'init-web)
 

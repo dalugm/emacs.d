@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: future-provider-family
+# key: fpf
+# --
+final $1Provider = FutureProvider.family<$2, $3>((ref, $4) async {
+  return $5;
+});

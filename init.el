@@ -63,10 +63,8 @@
 (require 'init-vc)
 
 ;; (require 'init-ido)
-;; (require 'init-ivy)
 (require 'init-vertico)
 
-;; (require 'init-company)
 (require 'init-corfu)
 
 (require 'init-prog)

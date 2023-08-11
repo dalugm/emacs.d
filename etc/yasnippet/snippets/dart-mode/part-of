@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: part-of
+# key: po
+# --
+part of '${1:library}'

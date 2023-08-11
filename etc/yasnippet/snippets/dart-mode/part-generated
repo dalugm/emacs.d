@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: part-generated
+# key: pg
+# --
+part '`(file-name-sans-extension (buffer-name))`.g.dart';

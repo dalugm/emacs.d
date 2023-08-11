@@ -7,6 +7,8 @@
 
 ;;; Code:
 
+;;;; Const.
+
 (defconst my-linux-p (eq system-type 'gnu/linux)
   "Running on GNU/Linux.")
 
@@ -28,21 +30,24 @@
 (defconst my-root-p (string-equal "root" (getenv "USER"))
   "Root user.")
 
-;;; Use-package.
+;;;; Use-package.
+
 ;; It must be set before loading `use-package'.
 (setq use-package-enable-imenu-support t)
+
+;;;; Utility.
 
 ;; Fix PATH problem on macOS when using GUI Emacs.
 (when my-mac-x-p
   (setenv "LANG" "en_US.UTF-8")
   (condition-case err
       (let ((path (with-temp-buffer
-                    (insert-file-contents-literally "~/.path")
+                    (insert-file-contents-literally "~/.emacsenv")
                     (buffer-string))))
         (setenv "PATH" path)
         (setq exec-path
               (append (parse-colon-path path) (list exec-directory))))
-    (error (warn "%s" (error-message-string err)))))
+    (error (message (error-message-string err)))))
 
 ;; Use GNU ls as `gls' from `coreutils' if available.
 (when my-mac-p
@@ -108,7 +113,7 @@
 ;; Make mouse clicks more precise.
 (setq mouse-prefer-closest-glyph t)
 
-;;; Tab and Space.
+;;;; Tab and Space.
 
 ;; Indent with spaces.
 (setq-default indent-tabs-mode nil)
@@ -123,7 +128,7 @@
 ;; TAB cycle if there are only few candidates.
 (setq completion-cycle-threshold 3)
 
-;;; Useful modes.
+;;;; Useful modes.
 
 ;; Disable annoying blink.
 (blink-cursor-mode -1)
@@ -147,6 +152,11 @@
 ;; Clean up obsolete buffers automatically.
 (require 'midnight)
 
+(use-package simple
+  :custom
+  ;; Pass `C-u' to `recenter' to put point in the window's center.
+  (next-error-recenter '(4)))
+
 ;; Do NOT make backups of files, not safe.
 ;; https://github.com/joedicastro/dotfiles/tree/master/emacs
 (use-package files
@@ -160,12 +170,12 @@
   (uniquify-ignore-buffers-re "^\\*"))
 
 (use-package winner
+  :hook (after-init . winner-mode)
   :custom
   (winner-boring-buffers '("*Apropos*" "*Buffer List*"
                            "*Completions*" "*Compile-Log*"
                            "*Help*" "*Ibuffer*"
-                           "*inferior-lisp*"))
-  :hook (after-init . winner-mode))
+                           "*inferior-lisp*")))
 
 (use-package recentf
   :hook (after-init . recentf-mode)
@@ -196,10 +206,10 @@
   (add-to-list 'whitespace-display-mappings '(space-mark #x200b [?.])))
 
 (use-package tramp
-  :defer
+  :defer t
   :custom (tramp-default-method "ssh"))
 
-;;; Commands
+;;;; Commands.
 
 ;; Enable narrowing commands.
 (put 'narrow-to-region 'disabled nil)
@@ -213,7 +223,7 @@
 ;; Enable erase-buffer command.
 (put 'erase-buffer 'disabled nil)
 
-;;; Keybindings.
+;;;; Keybindings.
 
 ;; Be able to M-x without meta.
 (keymap-global-set "C-c m x" #'execute-extended-command)
@@ -242,9 +252,6 @@
 (keymap-global-set "C-c t t" #'load-theme)
 (keymap-global-set "C-c t v" #'view-mode)
 (keymap-global-set "C-c t w" #'whitespace-mode)
-
-;; Abbrevs.
-(setq save-abbrevs 'silently)
 
 ;; Search.
 (keymap-global-set "C-c s d" #'find-dired)

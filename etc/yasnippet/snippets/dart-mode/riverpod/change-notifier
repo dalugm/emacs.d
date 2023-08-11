@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: change-notifier
+# key: cn
+# --
+class $1Notifier extends ChangeNotifier {
+  $2
+}

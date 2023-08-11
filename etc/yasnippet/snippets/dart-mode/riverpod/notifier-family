@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: notifier-family
+# key: rnf
+# --
+class $1Notifier extends FamilyNotifier<$2, $3> {
+  @override
+  $2 build($3 arg) {
+    return $4;
+  }
+}

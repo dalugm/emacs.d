@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: part-freezed
+# key: pf
+# --
+part '`(file-name-sans-extension (buffer-name))`.freezed.dart';

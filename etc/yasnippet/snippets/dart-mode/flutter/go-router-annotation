@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: go-router-annotation
+# key: gra
+# --
+@TypedGoRoute<${1:name}Route>(path: $1Route.path)

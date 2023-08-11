@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: state-notifier
+# key: sn
+# --
+class $1Notifier extends StateNotifier<$2> {
+  $1Notifier(): super($3);
+  $4
+}

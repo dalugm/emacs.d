@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: riverpod-instance-async
+# key: arpi
+# --
+@riverpod
+Future<${1:dynamic}> ${2:name}(${2:$(concat (upcase (substring yas-text 0 1)) (substring yas-text 1))}Ref ref) async {
+  return $3;
+}

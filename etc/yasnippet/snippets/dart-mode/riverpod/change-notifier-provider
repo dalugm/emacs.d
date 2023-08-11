@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: change-notifier-provider
+# key: cnp
+# --
+final $1Provider = ChangeNotifierProvider<$2>((ref) {
+  return $3;
+});

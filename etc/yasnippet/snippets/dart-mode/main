@@ -2,6 +2,6 @@
 # name: main
 # key: main
 # --
-main(List<String> args) {
+${1:void} main($2) {
   $0
 }

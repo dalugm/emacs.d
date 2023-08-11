@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: future-provider
+# key: fp
+# --
+final $1Provider = FutureProvider<$2>((ref) async {
+  return $3;
+});
