@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: riverpod-class-async
+# key: arpc
+# --
+@riverpod
+class ${1:name} extends _$$1 {
+  @override
+  Future<${2:dynamic}> build() async => $3;
+}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: hook-use-state
+# key: hus
+# --
+useState<$1>($2);

@@ -28,7 +28,7 @@
   "Running under X on GNU/Linux system.")
 
 (defconst my-root-p (string-equal "root" (getenv "USER"))
-  "Root user.")
+  "Running as root.")
 
 ;;;; Use-package.
 
@@ -36,26 +36,6 @@
 (setq use-package-enable-imenu-support t)
 
 ;;;; Utility.
-
-;; Fix PATH problem on macOS when using GUI Emacs.
-(when my-mac-x-p
-  (setenv "LANG" "en_US.UTF-8")
-  (condition-case err
-      (let ((path (with-temp-buffer
-                    (insert-file-contents-literally "~/.emacsenv")
-                    (buffer-string))))
-        (setenv "PATH" path)
-        (setq exec-path
-              (append (parse-colon-path path) (list exec-directory))))
-    (error (message (error-message-string err)))))
-
-;; Use GNU ls as `gls' from `coreutils' if available.
-(when my-mac-p
-  (let ((gls (executable-find "gls")))
-    (if gls
-        (setq insert-directory-program gls)
-      ;; Suppress the Dired warning when not using GNU ls.
-      (setq dired-use-ls-dired nil))))
 
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html
 (prefer-coding-system 'utf-8)

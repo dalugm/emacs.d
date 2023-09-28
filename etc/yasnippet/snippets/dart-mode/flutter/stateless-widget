@@ -7,6 +7,8 @@ class ${1:name} extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container($0);
+    return const Placeholder(
+      child: Center(child: Text('$1')),
+    );$0
   }
 }

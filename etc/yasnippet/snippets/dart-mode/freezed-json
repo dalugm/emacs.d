@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: freezed-json
+# key: fzj
+# --
+factory ${1:name}.fromJson(Map<String, dynamic> json) => _$$1FromJson(json);
