@@ -5,5 +5,5 @@
 @riverpod
 class ${1:name} extends _$$1 {
   @override
-  ${2:dynamic} build() => $3;
+  ${2:dynamic} build() => ${3:throw UnimplementedError()};
 }

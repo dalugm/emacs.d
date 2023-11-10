@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: println!();
+# name: println
 # key: pl
 # --
-println!($1);
+println($0)

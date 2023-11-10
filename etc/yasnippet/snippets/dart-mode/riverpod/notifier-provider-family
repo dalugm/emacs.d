@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: notifier-provider-family
-# key: npf
-# --
-final $1Provider = NotifierProviderFamily<$2, $3, $4>($2.new);

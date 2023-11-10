@@ -12,11 +12,42 @@
   (ediff-split-window-function #'split-window-horizontally)
   (ediff-window-setup-function #'ediff-setup-windows-plain))
 
+(use-package project
+  :init
+  (defun my-project-magit ()
+    "Start `magit-status' in the current project."
+    (interactive)
+    (magit-status (project-root (project-current t))))
+
+  (defun my-project-search ()
+    "Start `consult-ripgrep' or `consult-grep' in the current project."
+    (interactive)
+    (let ((root (project-root (project-current t))))
+      (if (executable-find "rg")
+          (consult-ripgrep root)
+        (consult-grep root))))
+
+  (defun my-project-find ()
+    "Start `consult-fd' or `consult-find' in the current project."
+    (interactive)
+    (let ((root (project-root (project-current t))))
+      (if (or (executable-find "fd") (executable-find "fdfind"))
+          (consult-fd root)
+        (consult-find root))))
+  :custom
+  (project-switch-commands '((project-find-file "Find file" ?F)
+                             (project-find-dir "Find directory")
+                             (project-eshell "Eshell")
+                             (my-project-magit "Magit status" ?g)
+                             (my-project-find "Find" ?f)
+                             (my-project-search "Search" ?s)
+                             (project-any-command "Other"))))
+
 (use-package zh-lib
   :custom (zh-lib-scheme 'simplified-traditional-quanpin-all))
 
 (use-package marginalia
-  :config (marginalia-mode +1))
+  :hook (after-init . marginalia-mode))
 
 (use-package embark
   :bind (("M-A" . embark-act)
@@ -49,10 +80,50 @@
                  nil
                  (window-parameters (mode-line-format . none)))))
 
-(use-package eyebrowse
-  :hook (after-init . eyebrowse-mode)
-  :custom (eyebrowse-keymap-prefix (kbd "C-c w"))
-  :bind ("C-c w n" . eyebrowse-create-named-window-config))
+(use-package tabspaces
+  :init
+  (defun my--tabspaces-setup ()
+    "Setup for `tabspaces'."
+    (tabspaces-mode +1)
+    (tab-bar-rename-tab "default")
+    ;; Move `*Messages*' to frame's `buffer-list'.
+    (when (get-buffer "*Messages*")
+      (set-frame-parameter nil
+                           'buffer-list
+                           (cons (get-buffer "*Messages*")
+                                 (frame-parameter nil 'buffer-list)))))
+  :hook (after-init . my--tabspaces-setup)
+  :custom
+  ;; Always keep the tab bar hidden.
+  (tab-bar-show nil)
+  (tabspaces-remove-to-default nil)
+  (tabspaces-initialize-project-with-todo nil)
+  :config
+  ;; Integrate workspace buffers into `consult-buffer'.
+  (with-eval-after-load 'consult
+    (defvar consult--source-workspace
+      (list :name     "Workspace Buffers"
+            :narrow   ?w
+            :history  'buffer-name-history
+            :category 'buffer
+            :state    #'consult--buffer-state
+            :default  t
+            :items    (lambda () (consult--buffer-query
+                                  :predicate #'tabspaces--local-buffer-p
+                                  :sort 'visibility
+                                  :as #'buffer-name)))
+      "Set workspace buffer list for `consult-buffer'.")
+
+    (defun my--consult-tabspaces ()
+      "Isolate workspace buffers when using tabspaces."
+      (if tabspaces-mode
+          (add-to-list 'consult-buffer-sources 'consult--source-workspace)
+        ;; Reset `consult-buffer' to show all buffers.
+        (setq consult-buffer-sources
+              (remove #'consult--source-workspace consult-buffer-sources))))
+
+    (my--consult-tabspaces)
+    (add-hook 'tabspaces-mode-hook #'my--consult-tabspaces)))
 
 (use-package ace-window
   :bind (([remap other-window] . ace-window)
@@ -66,10 +137,10 @@
     (setq aw-background avy-background)))
 
 (use-package winum
-  :config
-  (setq winum-format "%s ")
-  (setq winum-mode-line-position 0)
-  (winum-mode +1))
+  :hook (after-init . winum-mode)
+  :custom
+  (winum-format "%s ")
+  (winum-mode-line-position 0))
 
 (use-package color-rg
   :custom

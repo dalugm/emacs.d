@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: hook-use-effect
-# key: hue
-# --
-useEffect(() {
-  return $1;
-}, [$2]);

@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: async-notifier-provider-family
-# key: anpf
-# --
-final $1Provider = AsyncNotifierProviderFamily<$2, $3, $4>($2.new);

@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: hook-use-memoized
-# key: hum
-# --
-useMemoized(() {
-  return $1;
-}, [$2]);

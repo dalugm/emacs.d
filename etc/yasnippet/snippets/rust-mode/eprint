@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: eprint!("{}", value);
-# key: eprint
+# name: eprint!();
+# key: ep
 # --
-eprint!("${1:{\}}", $2);
+eprint!($0);

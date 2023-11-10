@@ -1,6 +1,5 @@
 # -*- mode: snippet -*-
 # name: fortune-poem
-# key: fp
 # --
 [32m《${1:name}》[m
 [33m${2:author}[m

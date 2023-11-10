@@ -46,14 +46,15 @@ sexp before point and insert output into current position."
   (keymap-set map "C-c C-p" #'my-eval-print-last-sexp))
 
 (use-package sly
-  :defer t
+  :bind ((:map sly-mode-map
+               ("C-c C-o" . sly)
+               ("C-c C-q" . sly-disconnect))
+         (:map sly-doc-map
+               ("C-l" . sly-documentation)))
   :custom (inferior-lisp-program "sbcl"))
 
-(use-package geiser
-  :defer t
-  :custom
-  (geiser-active-implementations '(chez))
-  (geiser-mode-smart-tab-p t))
+(use-package racket-mode
+  :mode ".rkt")
 
 (provide 'init-sexp)
 

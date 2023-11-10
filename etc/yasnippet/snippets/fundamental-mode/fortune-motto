@@ -1,6 +1,5 @@
 # -*- mode: snippet -*-
 # name: fortune-motto
-# key: fm
 # expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
 # --
 ${1:content}

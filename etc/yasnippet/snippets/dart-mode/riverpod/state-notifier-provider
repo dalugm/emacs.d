@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: state-notifier-provider
-# key: snp
-# --
-final $1Provider = StateNotifierProvider<$2>((ref) {
-  return $3
-});

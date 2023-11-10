@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: state-provider-family
-# key: spf
-# --
-final $1Provider = StateProvider.family<$2, $3>((ref, $4) {
-  return $5;
-});

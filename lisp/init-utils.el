@@ -46,33 +46,32 @@
 
 (defun my--initial-scratch-message ()
   "Customize `initial-scratch-message'."
-  (let ((fortune-prog (executable-find "fortune")))
-    (format
-     ;; Comment first line and add two new lines in the end.
-     ";; %s\n\n"
-     (replace-regexp-in-string
-      ;; Comment each line below first line.
-      "\n"
-      "\n;; "
-      (cond
-       (fortune-prog
+  (format
+   ;; Comment first line and add two new lines in the end.
+   ";; %s\n\n"
+   (replace-regexp-in-string
+    ;; Comment each line below first line.
+    "\n"
+    "\n;; "
+    (if-let ((fortune-prog (executable-find "fortune")))
         (replace-regexp-in-string
          ;; Remove extra escape sequences.
          (rx (or (seq ?\n eol)
                  (seq ?\C-\[ ?\[ (0+ digit) ?m)))
          ""
-         (shell-command-to-string fortune-prog)))
-       (t
-        (concat "Now, trailblazers"
-                "\nKeep credos in mind"
-                "\n(I won't say it twice!)"
-                "\nOne! Stop staying within the lines"
-                "\nTwo! We always align"
-                "\nThree! Even if we don't gain the upper hand, we'll fight for right"
-                "\nFour! Never care a rap for hindsight"
-                "\nFive! Let us light the night"
-                "\nSix! Even when there are wheels within wheels, go ahead!"
-                "\nGet it pulverized")))))))
+         (shell-command-to-string fortune-prog))
+      (string-join
+       '("Now, trailblazers"
+         "Keep credos in mind"
+         "(I won't say it twice!)"
+         "One! Stop staying within the lines"
+         "Two! We always align"
+         "Three! Even if we don't gain the upper hand, we'll fight for right"
+         "Four! Never care a rap for hindsight"
+         "Five! Let us light the night"
+         "Six! Even when there are wheels within wheels, go ahead!"
+         "Get it pulverized")
+       "\n")))))
 
 (setq-default initial-scratch-message (my--initial-scratch-message))
 

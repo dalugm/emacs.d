@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: constructor-private
+# key: cp
+# --
+const ${1:name}._();

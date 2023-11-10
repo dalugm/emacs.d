@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: hook-consumer-widget
+# key: hcw
+# --
+class ${1:name} extends HookConsumerWidget {
+  const $1({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return const Placeholder(
+      child: Center(child: Text('$1')),
+    );$0
+  }
+}

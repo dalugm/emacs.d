@@ -138,7 +138,9 @@ matches case insensitively."
 
 URL `https://github.com/minad/consult/issues/475'."
       (pcase-let* ((w32-quote-process-args ?\\) ; or (w32-quote-process-args ?*)
-                   (consult-find-args (concat find-program " . -not ( -wholename */.* -prune )"))
+                   (consult-find-args (string-join
+                                       (push find-program (cdr (string-split consult-find-args)))
+                                       " "))
                    (`(,prompt ,paths ,dir) (consult--directory-prompt "Find" dir))
                    (default-directory dir)
                    (builder (consult--find-make-builder paths)))

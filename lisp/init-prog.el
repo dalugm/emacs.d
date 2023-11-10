@@ -188,9 +188,7 @@
 
 (use-package apheleia
   :bind (("C-c c f" . apheleia-format-buffer)
-         ("C-c c F" . apheleia-goto-error))
-  :config
-  (add-to-list 'apheleia-mode-alist '(emacs-lisp-mode . lisp-indent)))
+         ("C-c c F" . apheleia-goto-error)))
 
 (provide 'init-prog)
 

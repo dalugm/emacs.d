@@ -120,24 +120,12 @@
 [submodule "expreg"]
 	path = lib/expreg
 	url = https://github.com/casouri/expreg
-[submodule "eyebrowse"]
-	path = lib/eyebrowse
-	url = https://depp.brause.cc/eyebrowse
 [submodule "f"]
 	path = lib/f
 	url = https://github.com/rejeep/f.el
 [submodule "forge"]
 	path = lib/forge
 	url = https://github.com/magit/forge
-[submodule "geiser"]
-	path = lib/geiser
-	url = https://gitlab.com/emacs-geiser/geiser
-[submodule "geiser-chez"]
-	path = lib/geiser-chez
-	url = https://gitlab.com/emacs-geiser/chez
-[submodule "general"]
-	path = lib/general
-	url = https://github.com/noctuid/general.el
 [submodule "ghub"]
 	path = lib/ghub
 	url = https://github.com/magit/ghub
@@ -196,6 +184,9 @@
 [submodule "pyim-basedict"]
 	path = lib/pyim-basedict
 	url = https://github.com/tumashu/pyim-basedict
+[submodule "racket-mode"]
+	path = lib/racket-mode
+	url = https://github.com/greghendershott/racket-mode
 [submodule "rainbow-delimiters"]
 	path = lib/rainbow-delimiters
 	url = https://github.com/Fanael/rainbow-delimiters
@@ -228,6 +219,9 @@
 [submodule "tablist"]
 	path = lib/tablist
 	url = https://github.com/emacsorphanage/tablist
+[submodule "tabspaces"]
+	path = lib/tabspaces
+	url = https://github.com/mclear-tools/tabspaces
 [submodule "tao-theme"]
 	path = lib/tao-theme
 	url = https://github.com/11111000000/tao-theme-emacs

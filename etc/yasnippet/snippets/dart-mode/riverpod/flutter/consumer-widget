@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: consumer-widget
+# key: cw
+# --
+class ${1:name} extends ConsumerWidget {
+  const $1({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return const Placeholder(
+      child: Center(child: Text('$1')),
+    );$0
+  }
+}

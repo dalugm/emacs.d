@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: async-notifier-provider
-# key: anp
-# --
-final $1Provider = AsyncNotifierProvider<$2, $3>($2.new);

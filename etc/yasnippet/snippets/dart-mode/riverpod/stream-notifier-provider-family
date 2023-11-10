@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: stream-notifier-provider-family
-# key: srnpf
-# --
-final $1Provider = StreamNotifierProviderFamily<$2, $3, $4>($2.new);

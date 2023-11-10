@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: hook-widget
+# key: hw
+# --
+class ${1:name} extends HookWidget {
+  const $1({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder(
+      child: Center(child: Text('$1')),
+    );$0
+  }
+}

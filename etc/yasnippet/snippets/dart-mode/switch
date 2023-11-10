@@ -3,5 +3,5 @@
 # key: switch
 # --
 switch (${1:expr}) {
-  ${2:expr}
+       $0
 }

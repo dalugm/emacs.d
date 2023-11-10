@@ -2,6 +2,6 @@
 # name: function
 # key: fn
 # --
-${1:dynamic} ${2:name}($3) {
-  $0
+fun ${1:name}($2) {
+    $0
 }

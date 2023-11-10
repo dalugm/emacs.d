@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: stream-provider-family
-# key: srpf
-# --
-final $1Provider = StreamProvider.family<$2, $3>((ref, $4) async* {
-  return $5;
-});

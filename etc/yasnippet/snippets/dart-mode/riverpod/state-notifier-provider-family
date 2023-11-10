@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: state-notifier-provider-family
-# key: snpf
-# --
-final $1Provider = StateNotifierProvider.family<$2, $3>((ref, $4) {
-  return $5
-});

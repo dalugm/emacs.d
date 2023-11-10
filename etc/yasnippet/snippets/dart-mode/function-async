@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: function-async
-# key: afun
+# key: afn
 # --
 Future<${1:dynamic}> ${2:name}($3) async {
   $0

@@ -226,8 +226,7 @@ More details are inside `my-load-font'."
   ;; (although `set-frame-parameter' works). So we just set default
   ;; face with ASCII font and use default fontset for Unicode font.
   (interactive
-   (list (completing-read
-          "Font: " (mapcar #'car my-font-alist) nil t)
+   (list (completing-read "Font: " (mapcar #'car my-font-alist) nil t)
          (read-number "Size: " (my--font-default-size))))
   (let* ((spec (my--font-expand-spec
                 (my--font-name-to-spec font-name)
