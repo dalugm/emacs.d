@@ -2,5 +2,5 @@
 # name: ifl
 # key: ifl
 # --
-(if-let [${1:bindings}]
-  ${2:exprs})
+(if-let [$1 $2]
+  $0)

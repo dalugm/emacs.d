@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: public class implements
-# key: pcli
-# --
-public class ${1:`(file-name-base
-                    (or (buffer-file-name)
-                        (buffer-name)))`} implements ${2:Interface} {
-                        $0
-}

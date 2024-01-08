@@ -1,3 +1,5 @@
+[include]
+	path = .borgconfig
 [submodule "ace-window"]
 	path = lib/ace-window
 	url = https://github.com/abo-abo/ace-window
@@ -25,9 +27,15 @@
 [submodule "cape"]
 	path = lib/cape
 	url = https://github.com/minad/cape
+[submodule "cider"]
+	path = lib/cider
+	url = https://github.com/clojure-emacs/cider
 [submodule "citre"]
 	path = lib/citre
 	url = https://github.com/universal-ctags/citre
+[submodule "clojure-mode"]
+	path = lib/clojure-mode
+	url = https://github.com/clojure-emacs/clojure-mode
 [submodule "clojure-ts-mode"]
 	path = lib/clojure-ts-mode
 	url = https://github.com/clojure-emacs/clojure-ts-mode
@@ -41,12 +49,9 @@
 	path = lib/compat
 	url = https://github.com/emacs-compat/compat
 [submodule "consult"]
-	no-byte-compile = consult-icomplete.el
 	path = lib/consult
 	url = https://github.com/minad/consult
 [submodule "corfu"]
-	load-path = .
-	load-path = extensions
 	path = lib/corfu
 	url = https://github.com/minad/corfu
 [submodule "corfu-terminal"]
@@ -59,8 +64,6 @@
 	path = lib/dart-ts-mode
 	url = https://github.com/50ways2sayhard/dart-ts-mode
 [submodule "dash"]
-	no-byte-compile = dash-functional.el
-	no-makeinfo = dash-template.texi
 	path = lib/dash
 	url = https://github.com/magnars/dash.el
 [submodule "diff-hl"]
@@ -72,11 +75,7 @@
 [submodule "edit-indirect"]
 	path = lib/edit-indirect
 	url = https://github.com/Fanael/edit-indirect
-[submodule "editorconfig"]
-	path = lib/editorconfig
-	url = https://github.com/editorconfig/editorconfig-emacs
 [submodule "ef-themes"]
-	no-makeinfo = doclicense.texi
 	path = lib/ef-themes
 	url = https://git.sr.ht/~protesilaos/ef-themes
 [submodule "eldoc-box"]
@@ -95,8 +94,6 @@
 	path = lib/embark
 	url = https://github.com/oantolin/embark
 [submodule "emmet-mode"]
-	build-step = make clean
-	build-step = make
 	path = lib/emmet-mode
 	url = https://github.com/dalugm/emmet-mode
 [submodule "epkg"]
@@ -147,11 +144,13 @@
 [submodule "htmlize"]
 	path = lib/htmlize
 	url = https://github.com/hniksic/emacs-htmlize
+[submodule "kotlin-ts-mode"]
+	path = lib/kotlin-ts-mode
+	url = https://gitlab.com/bricka/emacs-kotlin-ts-mode
 [submodule "llama"]
 	path = lib/llama
 	url = https://git.sr.ht/~tarsius/llama
 [submodule "magit"]
-	no-byte-compile = lisp/magit-libgit.el
 	path = lib/magit
 	url = https://github.com/magit/magit
 [submodule "marginalia"]
@@ -160,18 +159,18 @@
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode
-[submodule "moe-theme"]
-	path = lib/moe-theme
-	url = https://github.com/kuanyui/moe-theme.el
 [submodule "no-littering"]
 	path = lib/no-littering
 	url = https://github.com/emacscollective/no-littering
 [submodule "orderless"]
 	path = lib/orderless
 	url = https://github.com/oantolin/orderless
-[submodule "org-html-themes"]
-	path = opt/org-html-themes
-	url = https://github.com/fniessen/org-html-themes
+[submodule "parseclj"]
+	path = lib/parseclj
+	url = https://github.com/clojure-emacs/parseclj
+[submodule "parseedn"]
+	path = lib/parseedn
+	url = https://github.com/clojure-emacs/parseedn
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools
@@ -184,6 +183,9 @@
 [submodule "pyim-basedict"]
 	path = lib/pyim-basedict
 	url = https://github.com/tumashu/pyim-basedict
+[submodule "queue"]
+	path = lib/queue
+	url = https://github.com/emacsmirror/queue
 [submodule "racket-mode"]
 	path = lib/racket-mode
 	url = https://github.com/greghendershott/racket-mode
@@ -196,6 +198,9 @@
 [submodule "separedit"]
 	path = lib/separedit
 	url = https://github.com/twlz0ne/separedit.el
+[submodule "sesman"]
+	path = lib/sesman
+	url = https://github.com/vspinu/sesman
 [submodule "sinolor-themes"]
 	path = lib/sinolor-themes
 	url = https://github.com/dalugm/sinolor-themes
@@ -205,15 +210,16 @@
 [submodule "sly"]
 	path = lib/sly
 	url = https://github.com/joaotavora/sly
+[submodule "spinner"]
+	path = lib/spinner
+	url = https://github.com/Malabarba/spinner.el
 [submodule "sqlite3"]
-	build-step = make
 	path = lib/sqlite3
 	url = https://github.com/pekingduck/emacs-sqlite3-api
 [submodule "standard-themes"]
 	path = lib/standard-themes
 	url = https://git.sr.ht/~protesilaos/standard-themes
 [submodule "subed"]
-	load-path = subed
 	path = lib/subed
 	url = https://github.com/rndusr/subed
 [submodule "tablist"]
@@ -221,13 +227,16 @@
 	url = https://github.com/emacsorphanage/tablist
 [submodule "tabspaces"]
 	path = lib/tabspaces
-	url = https://github.com/mclear-tools/tabspaces
+	url = https://github.com/dalugm/tabspaces
 [submodule "tao-theme"]
 	path = lib/tao-theme
 	url = https://github.com/11111000000/tao-theme-emacs
 [submodule "toc-org"]
 	path = lib/toc-org
 	url = https://github.com/snosov1/toc-org
+[submodule "transient"]
+	path = lib/transient
+	url = https://github.com/magit/transient
 [submodule "treepy"]
 	path = lib/treepy
 	url = https://github.com/volrath/treepy.el

@@ -2,4 +2,4 @@
 # name: errln
 # key: errln
 # --
-System.err.println($1);$0
+System.err.println($1);

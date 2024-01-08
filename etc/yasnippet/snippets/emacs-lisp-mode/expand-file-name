@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: expand-file-name
-# key: expand-file-name
-# key: efn
-# --
-(expand-file-name $0)

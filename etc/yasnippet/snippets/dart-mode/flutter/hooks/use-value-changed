@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: use-value-changed
+# key: uvc
+# --
+useValueChanged(${1:value}, (_, __) {
+  $2;
+});

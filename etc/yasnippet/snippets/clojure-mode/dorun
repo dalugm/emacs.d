@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: dorun
+# key: dorun
+# --
+(doall
+  $0)

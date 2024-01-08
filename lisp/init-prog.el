@@ -29,8 +29,10 @@
           (java "https://github.com/tree-sitter/tree-sitter-java")
           (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
           (json "https://github.com/tree-sitter/tree-sitter-json")
+          (kotlin "https://github.com/fwcd/tree-sitter-kotlin")
           (lua "https://github.com/MunifTanjim/tree-sitter-lua")
           (python "https://github.com/tree-sitter/tree-sitter-python")
+          (racket "https://github.com/6cdh/tree-sitter-racket")
           (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
           (rust "https://github.com/tree-sitter/tree-sitter-rust")
           (toml "https://github.com/tree-sitter/tree-sitter-toml")
@@ -55,9 +57,7 @@
      (sh-mode         . bash-ts-mode)))
   :config
   ;; Add `*-ts-mode' to `auto-mode-alist'.
-  (dolist (list `((clojure    . (,(rx ".clj" eos) . clojure-ts-mode))
-                  (cmake      . (,(rx (or "CMakeLists.txt" ".cmake") eos) . cmake-ts-mode))
-                  (dart       . (,(rx ".dart" eos) . dart-ts-mode))
+  (dolist (list `((cmake      . (,(rx (or "CMakeLists.txt" ".cmake") eos) . cmake-ts-mode))
                   (dockerfile . (,(rx "Dockerfile" eos) . dockerfile-ts-mode))
                   (elixir     . (,(rx (or ".elixir" (seq ".ex" (opt "s")) "mix.lock") eos) . elixir-ts-mode))
                   (go         . (,(rx ".go" eos) . go-ts-mode))
@@ -122,13 +122,6 @@
 (use-package subword
   :hook ((prog-mode text-mode) . subword-mode))
 
-(use-package nxml-mode
-  :mode "\\.[^.]*proj\\'"
-  :mode "\\.xaml\\'"
-  :mode "\\.p\\(?:list\\|om\\)\\'"
-  :mode "\\.xs\\(?:d\\|lt\\)\\'"
-  :mode "\\.rss\\'")
-
 (use-package eldoc-box
   :when (display-graphic-p)
   :hook (eldoc-mode . eldoc-box-hover-mode)
@@ -159,10 +152,6 @@
          ("C-c c d" . evilnc-copy-and-comment-lines)
          ("C-c c p" . evilnc-comment-or-uncomment-paragraphs)))
 
-(use-package editorconfig
-  :hook (prog-mode . editorconfig-mode)
-  :bind ("C-c c E" . editorconfig-apply))
-
 (use-package citre
   :bind (("C-c c a" . citre-ace-peek)
          ("C-c c e" . citre-edit-tags-file-recipe)
@@ -189,6 +178,40 @@
 (use-package apheleia
   :bind (("C-c c f" . apheleia-format-buffer)
          ("C-c c F" . apheleia-goto-error)))
+
+;;;; Major modes.
+
+(use-package js
+  :mode ("\\.[cm]js\\'" . js-mode)
+  :custom (js-indent-level 2))
+
+(use-package python
+  :mode ("\\.[cir]py\\'" . python-mode)
+  :custom
+  (python-indent-guess-indent-offset nil)
+  (python-indent-offset 4))
+
+(use-package nxml
+  :mode
+  ("\\.[^.]*proj\\'" . nxml-mode)
+  ("\\.xaml\\'" . nxml-mode)
+  ("\\.p\\(?:list\\|om\\)\\'" . nxml-mode)
+  ("\\.xs\\(?:d\\|lt\\)\\'" . nxml-mode)
+  ("\\.rss\\'" . nxml-mode))
+
+(use-package tex-mode
+  :defer t
+  :config
+  (setq tex-command "xelatex")
+  (add-to-list 'tex-compile-commands '("xelatex %f" t "%r.pdf")))
+
+(use-package dart-ts-mode
+  :when (and (treesit-available-p) (treesit-ready-p 'dart 'message))
+  :mode "\\.dart\\'")
+
+(use-package kotlin-ts-mode
+  :when (and (treesit-available-p) (treesit-ready-p 'kotlin 'message))
+  :mode "\\.kts?\\'")
 
 (provide 'init-prog)
 

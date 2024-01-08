@@ -2,4 +2,4 @@
 # name: eprint!();
 # key: ep
 # --
-eprint!($0);
+eprint!($1);

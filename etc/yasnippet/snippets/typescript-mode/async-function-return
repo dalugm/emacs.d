@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: function-return
+# key: afnr
+# --
+async function ${1:name}($2): Promise<${3:type}> {
+      $0
+}

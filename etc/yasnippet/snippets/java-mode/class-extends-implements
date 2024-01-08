@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: class extends implements
-# key: clei
-# --
-class ${1:`(file-name-base
-             (or (buffer-file-name)
-                 (buffer-name)))`} extends ${2:Parent} implements ${3:Interface} {
-                 $0
-}

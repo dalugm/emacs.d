@@ -2,4 +2,8 @@
 # name: cerr
 # key: err
 # --
-cerr << $0;
+`(progn
+  (goto-char (point-min))
+  (unless (re-search-forward "^using\\s-+namespace std;" nil 'no-error)
+    "std::"))
+`cerr << $0;

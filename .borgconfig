@@ -1,0 +1,21 @@
+[submodule "consult"]
+	no-byte-compile = consult-icomplete.el
+[submodule "corfu"]
+	load-path = .
+	load-path = extensions
+[submodule "dash"]
+	no-byte-compile = dash-functional.el
+	no-makeinfo = dash-template.texi
+[submodule "ef-themes"]
+	no-makeinfo = doclicense.texi
+[submodule "emacsql"]
+	no-byte-compile = emacsql-pg.el
+[submodule "emmet-mode"]
+	build-step = make clean
+	build-step = make
+[submodule "magit"]
+	no-byte-compile = lisp/magit-libgit.el
+[submodule "sqlite3"]
+	build-step = make
+[submodule "subed"]
+	load-path = subed

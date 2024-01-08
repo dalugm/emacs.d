@@ -3,8 +3,5 @@
 # key: switch
 # --
 switch (${1:condition}) {
-  case ${2:expression}:
-    $0
-    break;
-  default:
+       $0
 }

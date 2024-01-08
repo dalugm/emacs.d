@@ -2,8 +2,6 @@
 # name: interface
 # key: in
 # --
-interface ${1:`(file-name-base
-                 (or (buffer-file-name)
-                     (buffer-name)))`} ${2:extends ${3:Parent}} {
-                     $0
+interface ${1:`(file-name-base (or (buffer-file-name) (buffer-name)))`} {
+          $0
 }

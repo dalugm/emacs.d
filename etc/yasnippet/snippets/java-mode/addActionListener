@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: addActionListener
-# key: aal
-# --
-addActionListener($0);

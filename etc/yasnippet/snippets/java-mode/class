@@ -1,9 +1,7 @@
 # -*- mode: snippet -*-
 # name: class
-# key: cl
+# key: cls
 # --
-class ${1:`(file-name-base
-             (or (buffer-file-name)
-                 (buffer-name)))`} {
-                 $0
+class ${1:`(file-name-base (or (buffer-file-name) (buffer-name)))`} {
+      $0
 }

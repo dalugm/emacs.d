@@ -2,6 +2,6 @@
 # name: <body>...</body>
 # key: body
 # --
-<body$1>
+<body>
   $0
 </body>

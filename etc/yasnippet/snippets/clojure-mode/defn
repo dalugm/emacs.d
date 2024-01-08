@@ -3,6 +3,6 @@
 # key: defn
 # --
 (defn ${1:name}
-  "${2:doc}"$>
-  [${3:params}]$>
+  "${2:doc}"
+  [$3]
   $0)

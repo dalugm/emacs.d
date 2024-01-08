@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: unicode_literals
-# key: fu
+# key: funi
 # --
 from __future__ import unicode_literals

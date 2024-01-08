@@ -1,6 +1,5 @@
 # -*- mode: snippet -*-
 # name: error
-# key: error
 # key: e
 # --
-(error "${1:message}"${2: format-args})
+(error "${1:error}")

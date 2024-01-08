@@ -2,5 +2,5 @@
 # name: fn
 # key: fn
 # --
-(fn [${1:params}]$>
-  ${2:exprs})
+(fn [$1]
+  $0)

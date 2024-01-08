@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: use-state
+# key: us
+# --
+final ${1:name} = useState<$3>($2);

@@ -32,6 +32,7 @@
   :mode "\\.svelte\\'"
   :mode "\\.twig\\'"
   :mode "\\.wxml\\'"
+  :mode "\\.[nu]?vue\\'"
   :mode "templates/.+\\.php\\'"
   :mode "wp-content/themes/.+/.+\\.php\\'"
   :custom
@@ -43,10 +44,6 @@
   ;; https://github.com/fxbois/web-mode/issues/1175
   (web-mode-enable-auto-quoting nil)
   (web-mode-enable-auto-pairing nil))
-
-;; Separate vue-mode from web-mode to use eglot.
-(define-derived-mode vue-mode web-mode "Vue")
-(add-to-list 'auto-mode-alist '("\\.[nu]?vue\\'" . vue-mode))
 
 (provide 'init-web)
 

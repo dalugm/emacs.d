@@ -306,8 +306,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 (defun my-load-default-theme ()
   "Load default Emacs theme."
   (interactive)
-  (dolist (theme custom-enabled-themes)
-    (disable-theme theme)))
+  (mapc #'disable-theme custom-enabled-themes))
 
 (keymap-global-set "C-c m T" #'my-load-default-theme)
 
@@ -316,10 +315,10 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 Do NOT mess with special buffers."
   (interactive)
   (when (y-or-n-p "Kill all buffers but current with special ones? ")
-    (seq-each #'kill-buffer
-              (delete
-               (current-buffer)
-               (seq-filter #'buffer-file-name (buffer-list))))))
+    (seq-do #'kill-buffer
+            (remove
+             (current-buffer)
+             (seq-filter #'buffer-file-name (buffer-list))))))
 
 (keymap-global-set "C-c m k" #'my-kill-other-buffers-without-special-ones)
 

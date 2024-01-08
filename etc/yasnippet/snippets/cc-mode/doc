@@ -1,6 +1,5 @@
 # -*- mode: snippet -*-
 # name: document (/* ... */)
-# key: doc
 # key: /**
 # --
 /**

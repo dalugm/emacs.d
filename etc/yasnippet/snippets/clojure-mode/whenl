@@ -2,5 +2,5 @@
 # name: whenl
 # key: whenl
 # --
-(when-let [${1:bindings}]
-  ${2:body})
+(when-let [$1 $2]
+  $0)

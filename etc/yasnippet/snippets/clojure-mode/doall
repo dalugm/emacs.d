@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: doall
+# key: doall
+# --
+(doall
+  $0)

@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 # name: class
-# key: cl
+# key: cls
 # --
-${5:public} class ${1:Name}
+class ${1:Name}
 {
     #region Ctor & Destructor
     /// <summary>

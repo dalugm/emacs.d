@@ -25,8 +25,11 @@
     ;; Swap M-/ and C-M-/.
     :bind (("M-/" . dabbrev-completion)
            ("C-M-/" . dabbrev-expand))
-    :custom
-    (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'"))))
+    :config
+    (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+    ;; Since 29.1, use `dabbrev-ignored-buffer-regexps' on older.
+    (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)))
 
 (if (display-graphic-p)
     (use-package corfu-popupinfo
@@ -51,29 +54,36 @@
 
 (use-package cape
   :init
-  ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  ;; (add-to-list 'completion-at-point-functions #'cape-tex)
-  ;; (add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;; (add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  ;; (add-to-list 'completion-at-point-functions #'cape-ispell)
-  ;; (add-to-list 'completion-at-point-functions #'cape-line)
-  ;; (add-to-list 'completion-at-point-functions #'cape-dict)
-  ;; (add-to-list 'completion-at-point-functions #'cape-history)
-  ;; (add-to-list 'completion-at-point-functions #'cape-abbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-symbol)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;; Add to the global default value of
+  ;; `completion-at-point-functions' which is used by
+  ;; `completion-at-point'.  The order of the functions matters, the
+  ;; first function returning a result wins.  Note that the list of
+  ;; buffer-local completion functions takes precedence over the
+  ;; global list.
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  ;;(add-to-list 'completion-at-point-functions #'cape-history)
+  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+  ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+  ;;(add-to-list 'completion-at-point-functions #'cape-line)
   ;; Bind dedicated completion commands.
-  :bind (("C-c k p" . completion-at-point)
-         ("C-c k t" . complete-tag)
+  :bind (("C-c k p" . completion-at-point) ; capf
+         ("C-c k t" . complete-tag)        ; etags
          ("C-c k d" . cape-dabbrev)
+         ("C-c k h" . cape-history)
          ("C-c k f" . cape-file)
          ("C-c k k" . cape-keyword)
-         ("C-c k s" . cape-symbol)
+         ("C-c k s" . cape-elisp-symbol)
+         ("C-c k e" . cape-elisp-block)
          ("C-c k a" . cape-abbrev)
-         ("C-c k i" . cape-ispell)
          ("C-c k l" . cape-line)
+         ("C-c k :" . cape-emoji)
          ("C-c k w" . cape-dict)
          ("C-c k \\" . cape-tex)
          ("C-c k _" . cape-tex)

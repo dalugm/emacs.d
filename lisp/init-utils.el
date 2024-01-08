@@ -75,6 +75,9 @@
 
 (setq-default initial-scratch-message (my--initial-scratch-message))
 
+;; Warn when opening files bigger than 100MB.
+(setq large-file-warning-threshold (* 100 1000 1000))
+
 ;; Nice scrolling.
 (setq scroll-margin 0)
 (setq scroll-conservatively 100000)

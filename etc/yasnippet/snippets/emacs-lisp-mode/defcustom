@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: defcustom
+# key: defcustom
+# --
+(defcustom ${1:symbol} ${2:standard}
+  "${3:docstring}")

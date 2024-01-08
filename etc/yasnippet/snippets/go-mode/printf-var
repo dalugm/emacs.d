@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: fmt.Printf(var)
+# key: pv
+# --
+fmt.Printf("${1:var}: %s", $1)

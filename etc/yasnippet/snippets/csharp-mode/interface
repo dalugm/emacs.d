@@ -1,10 +1,8 @@
 # -*- mode: snippet -*-
 # name: interface
-# key: int
+# key: interface
 # --
-interface ${1:`(file-name-base
-                 (or (buffer-file-name)
-                     (buffer-name)))`} ${2:: Parent}
+interface ${1:name}
 {
         $0
 }

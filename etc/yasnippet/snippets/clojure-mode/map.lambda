@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: map lambda
-# key: mapl
-# --
-(map #($1) $2)

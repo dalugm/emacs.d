@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
 # name: defun
-# key: def
+# key: defun
 # --
-(defun ${1:fun} (${2:args})
+(defun ${1:fun} ($2)
   "${3:docstring}"
   ${4:(interactive${5: "${6:P}"})}
   $0)

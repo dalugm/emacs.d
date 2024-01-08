@@ -32,7 +32,7 @@ sexp before point and insert output into current position."
        ((not arg)
         (newline-and-indent)
         (if (and (stringp value) (string-match-p "\n" value))
-            ;; if return value is a multiline string
+            ;; If return value is a multiline string.
             (insert (format
                      ";; =>\n;; %S"
                      (replace-regexp-in-string "\n" "\n;; " value)))
@@ -45,6 +45,26 @@ sexp before point and insert output into current position."
                    lisp-interaction-mode-map))
   (keymap-set map "C-c C-p" #'my-eval-print-last-sexp))
 
+(use-package clojure-mode
+  :mode
+  ("\\.\\(cljd?\\|edn\\)\\'" . clojure-mode)
+  ("\\.cljs\\'" . clojurescript-mode))
+
+(use-package cider
+  :after clojure-mode
+  :config
+  ;; https://github.com/clojure-emacs/cider/issues/3588
+  (when (string= "powershell" cider-clojure-cli-command)
+    (setq cider-clojure-cli-command "pwsh")))
+
+(use-package clojure-ts-mode
+  :disabled
+  :when (and (treesit-available-p) (treesit-ready-p 'clojure 'message))
+  :mode
+  ("\\.\\(clj\\|edn\\)\\'" . clojure-ts-mode)
+  ("\\.cljs\\'" . clojurescript-ts-mode)
+  ("\\.cljd\\'" . clojure-dart-ts-mode))
+
 (use-package sly
   :bind ((:map sly-mode-map
                ("C-c C-o" . sly)
@@ -54,7 +74,9 @@ sexp before point and insert output into current position."
   :custom (inferior-lisp-program "sbcl"))
 
 (use-package racket-mode
-  :mode ".rkt")
+  :bind (:map racket-mode-map
+              ("C-c C-x C-x" . racket-xp-mode)
+              ("C-c C-x C-e" . racket-eval-last-sexp)))
 
 (provide 'init-sexp)
 

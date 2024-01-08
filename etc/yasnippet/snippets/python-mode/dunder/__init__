@@ -3,5 +3,5 @@
 # key: init
 # group: dunder
 # --
-def __init__(self${1:, args}):
+def __init__(self${1:, ${2:args}}):
     $0

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: select
+# key: select
+# --
+select ${1:var} in ${2:collection}; do
+    $0
+done

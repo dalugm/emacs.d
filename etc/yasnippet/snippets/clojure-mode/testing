@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: testing
+# key: testing
+# --
+(testing "$1"
+  $0)

@@ -2,6 +2,6 @@
 # name: code
 # key: code
 # --
-\begin{lstlisting}
+\begin{lstlisting}[language=${1:lang}]
 $0
 \end{lstlisting}

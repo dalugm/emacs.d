@@ -2,5 +2,5 @@
 # name: doseq
 # key: doseq
 # --
-(doseq [${1:seq}]
-  ${2:body})
+(doseq [$1 $2]
+  $0)

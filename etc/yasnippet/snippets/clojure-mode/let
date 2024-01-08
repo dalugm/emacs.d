@@ -2,5 +2,5 @@
 # name: let
 # key: let
 # --
-(let [${1:bindings}]$>
-  ${2:exprs})
+(let [$1 $2]
+  $0)

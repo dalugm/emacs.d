@@ -1,5 +1,5 @@
 # -*- mode: snippet; -*-
-# name: package info
+# name: package-info
 # key: packagei
 # --
 ;; Author: ${1:`(user-full-name)`}

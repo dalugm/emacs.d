@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: public class
-# key: pcl
-# --
-public class ${1:`(file-name-base
-                    (or (buffer-file-name)
-                        (buffer-name)))`} {
-                        $0
-}

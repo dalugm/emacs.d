@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: import as from
-# key: imaf
-# --
-import * as $2 from '$1';

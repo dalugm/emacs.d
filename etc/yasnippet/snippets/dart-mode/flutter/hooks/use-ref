@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: use-ref
+# key: urf
+# --
+final ${1:ref} = useRef($2);

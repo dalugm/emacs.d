@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: file
+# key: filed
+# --
+/**
+ * @file ${1:`(file-name-nondirectory(buffer-file-name))`}
+ * @author ${2:`user-full-name` `user-mail-address`}
+ *
+ * ${3:A brief description}
+ *
+ ${4:*
+ *  ${5:Detailed description}
+ *
+}*/

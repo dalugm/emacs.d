@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: use-ref
+# key: urf
+# --
+const ${1:ref} = useRef($2);

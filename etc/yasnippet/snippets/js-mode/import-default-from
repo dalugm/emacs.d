@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: import default from
-# key: idf
-# --
-import $2 from '$1';

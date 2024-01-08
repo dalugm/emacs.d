@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: export interface
-# key: ein
-# --
-export interface ${1:Interface} {
-       $0
-}

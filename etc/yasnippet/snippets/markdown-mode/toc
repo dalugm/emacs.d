@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: Table of Contents
+# key: toc
+# --
+`(let ((start "# Table of Contents")
+       (end "<!-- :TOC: -->"))
+   (concat start
+           (make-string
+            (max (- fill-column
+                    (length start)
+                    (length end))
+                 1)
+           ? )
+           end))`

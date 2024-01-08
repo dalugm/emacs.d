@@ -2,4 +2,4 @@
 # name: eprintln!();
 # key: epl
 # --
-eprintln!($0);
+eprintln!($1);

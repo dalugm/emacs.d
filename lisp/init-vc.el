@@ -7,6 +7,9 @@
 
 ;;; Code:
 
+;; Visit version controlled symlink without asking.
+(setq vc-follow-symlinks t)
+
 (use-package magit
   :bind (("C-x g"   . magit-status)
          ("C-c v g" . magit-status)
@@ -22,13 +25,7 @@
 
 ;; Access GIT forges from `magit'.
 (use-package forge
-  :after magit
-  :config
-  (setq forge-topic-list-columns
-        '(("#" 5 forge-topic-list-sort-by-number (:right-align t) number nil)
-          ("Title" 50 t nil title  nil)
-          ("State" 10 t nil state nil)
-          ("Updated" 10 t nil updated nil))))
+  :after magit)
 
 (use-package diff-hl
   :hook ((after-init . global-diff-hl-mode)
@@ -69,14 +66,7 @@
                                 (setq git-link-use-commit nil)
                                 (message "Use the branch name."))
                             (setq git-link-use-commit t)
-                            (message "Use the commit hash.")))))
-  :config
-  (add-to-list 'git-link-remote-alist
-               '("ghproxy" git-link-github))
-  (add-to-list 'git-link-commit-remote-alist
-               '("ghproxy" git-link-commit-github))
-  (add-to-list 'git-link-homepage-remote-alist
-               '("ghproxy" git-link-homepage-github)))
+                            (message "Use the commit hash."))))))
 
 (use-package git-timemachine
   :bind ("C-c v t" . git-timemachine))

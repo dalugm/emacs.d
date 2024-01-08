@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: println ArraytoString
-# key: plas
-# --
-System.out.println(Arrays.toString($1));

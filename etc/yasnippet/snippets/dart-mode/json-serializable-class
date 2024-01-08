@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: json-serializable-class
+# key: jsc
+# --
+@JsonSerializable()
+class ${1:name} {
+  $1({
+    $2
+  });
+
+  factory $1.fromJson(Map<String, dynamic> json) => _$$1FromJson(json);
+
+  Map<String, dynamic> toJson() => _$$1ToJson(this);
+}

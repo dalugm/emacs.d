@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: function-method
+# key: fnm
+# --
+func (${1:recv}) ${2:name}($3) $4 {
+     $0
+}

@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: method
-# key: method
-# --
-func (${1:recv}) ${2:name}(${3:args}) $4 {
-	$0
-}

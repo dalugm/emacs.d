@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: class constructor
-# key: clc
+# key: clsc
 # --
 class ${1:`(file-name-base
              (or (buffer-file-name)

@@ -2,4 +2,4 @@
 # name: err
 # key: err
 # --
-System.err.print($1);$0
+System.err.print($1);

@@ -2,4 +2,8 @@
 # name: iterator
 # key: iter
 # --
-${1:std::}${2:vector<int>}::iterator ${3:iter};
+`(progn
+  (goto-char (point-min))
+  (unless (re-search-forward "^using\\s-+namespace std;" nil 'no-error)
+    "std::"))
+`${2:vector<${3:int}>}::iterator ${4:iter};

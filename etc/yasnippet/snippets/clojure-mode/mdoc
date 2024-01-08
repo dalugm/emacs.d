@@ -2,4 +2,4 @@
 # name: mdoc
 # key: mdoc
 # --
-^{:doc "$1"}
+^{:doc "$0"}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: use-context
+# key: uct
+# --
+final ${1:value} = useContext($2);

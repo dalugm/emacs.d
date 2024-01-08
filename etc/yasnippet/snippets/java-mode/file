@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: file
-# key: @fi
-# --
-@file ${0:`(file-name-base
-             (or (buffer-file-name)
-                 (buffer-name)))`}.java

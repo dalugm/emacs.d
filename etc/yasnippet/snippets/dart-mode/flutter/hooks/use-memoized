@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: use-memoized
+# key: um
+# --
+final ${1:memoized} = useMemoized(() => ${2:result}, [$3]);

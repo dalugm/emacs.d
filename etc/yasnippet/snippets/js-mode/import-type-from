@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: import type from
-# key: imtf
-# --
-import type { $2 } from '$1';

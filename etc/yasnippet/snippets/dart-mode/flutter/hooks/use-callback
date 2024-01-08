@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: use-callback
+# key: uc
+# --
+final ${1:cachedFn} = useCallback(${2:fn}, [$3]);

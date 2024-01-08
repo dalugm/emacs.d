@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: import java package
-# key: im.
-# --
-import ${1:java}.${2:util}.$3;$0

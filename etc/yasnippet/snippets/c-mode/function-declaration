@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: function-declaration
+# key: fnd
+# --
+${1:void} ${2:name}($3);
