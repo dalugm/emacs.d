@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: defvar
-# key: defvar
-# --
-(defvar ${1:symbol} ${2:init-value}
-  "${3:docstring}")

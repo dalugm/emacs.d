@@ -35,8 +35,8 @@
 
 (use-package no-littering
   :init
-  (setq no-littering-etc-directory my-config-d
-        no-littering-var-directory my-cache-d)
+  (setopt no-littering-etc-directory my-config-d
+          no-littering-var-directory my-cache-d)
   :config
   ;; Use shortened filenames.
   ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=56123
@@ -47,47 +47,46 @@
                  (recentf-expand-file-name no-littering-etc-directory))))
 
 (with-eval-after-load 'package
-  (setq package-install-upgrade-built-in t)
+  (setopt package-install-upgrade-built-in t)
   (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                       (not (gnutls-available-p))))
          (proto (if no-ssl "http" "https")))
-    (setq package-archives
-          `(
+    (setopt package-archives
+            `(
 
-            ;; ;; Official.
-            ;; ,(cons "gnu"    (concat proto "://elpa.gnu.org/packages/"))
-            ;; ,(cons "nongnu" (concat proto "://elpa.nongnu.org/nongnu/"))
-            ;; ,(cons "gnu-devel" (concat proto "://elpa.gnu.org/devel/"))
-            ;; ,(cons "nongnu-devel" (concat proto "://elpa.nongnu.org/nongnu-devel/"))
-            ;; ,(cons "melpa"  (concat proto "://melpa.org/packages/"))
-            ;; ;; ,(cons "melpa-stable" (concat proto "://stable.melpa.org/packages/"))
+              ;; ;; Official.
+              ;; ,(cons "gnu"    (concat proto "://elpa.gnu.org/packages/"))
+              ;; ,(cons "nongnu" (concat proto "://elpa.nongnu.org/nongnu/"))
+              ;; ,(cons "gnu-devel" (concat proto "://elpa.gnu.org/devel/"))
+              ;; ,(cons "nongnu-devel" (concat proto "://elpa.nongnu.org/nongnu-devel/"))
+              ;; ,(cons "melpa"  (concat proto "://melpa.org/packages/"))
+              ;; ;; ,(cons "melpa-stable" (concat proto "://stable.melpa.org/packages/"))
 
-            ;; ;; Emacs-china.
-            ;; ,(cons "gnu"    (concat proto "://elpa.emacs-china.org/gnu/"))
-            ;; ,(cons "nongnu" (concat proto "://elpa.emacs-china.org/nongnu/"))
-            ;; ,(cons "gnu-devel" (concat proto "://elpa.emacs-china.org/gnu-devel/"))
-            ;; ,(cons "nongnu-devel" (concat proto "://elpa.emacs-china.org/nongnu-devel/"))
-            ;; ,(cons "melpa"  (concat proto "://elpa.emacs-china.org/melpa/"))
-            ;; ;; ,(cons "melpa-stable" (concat proto "://elpa.emacs-china.org/stable-melpa/"))
+              ;; ;; Emacs-china.
+              ;; ,(cons "gnu"    (concat proto "://elpa.emacs-china.org/gnu/"))
+              ;; ,(cons "nongnu" (concat proto "://elpa.emacs-china.org/nongnu/"))
+              ;; ,(cons "gnu-devel" (concat proto "://elpa.emacs-china.org/gnu-devel/"))
+              ;; ,(cons "nongnu-devel" (concat proto "://elpa.emacs-china.org/nongnu-devel/"))
+              ;; ,(cons "melpa"  (concat proto "://elpa.emacs-china.org/melpa/"))
+              ;; ;; ,(cons "melpa-stable" (concat proto "://elpa.emacs-china.org/stable-melpa/"))
 
-            ;; ;; 163.
-            ;; ,(cons "gnu"    (concat proto "://mirrors.163.com/elpa/gnu/"))
-            ;; ,(cons "nongnu" (concat proto "://mirrors.163.com/elpa/nongnu/"))
-            ;; ,(cons "gnu-devel" (concat proto "://mirrors.163.com/elpa/gnu-devel/"))
-            ;; ,(cons "nongnu-devel" (concat proto "://mirrors.163.com/elpa/nongnu-devel/"))
-            ;; ,(cons "melpa"  (concat proto "://mirrors.163.com/elpa/melpa/"))
-            ;; ;; ,(cons "melpa-stable" (concat proto "://mirrors.163.com/elpa/stable-melpa/"))
+              ;; ;; 163.
+              ;; ,(cons "gnu"    (concat proto "://mirrors.163.com/elpa/gnu/"))
+              ;; ,(cons "nongnu" (concat proto "://mirrors.163.com/elpa/nongnu/"))
+              ;; ,(cons "gnu-devel" (concat proto "://mirrors.163.com/elpa/gnu-devel/"))
+              ;; ,(cons "nongnu-devel" (concat proto "://mirrors.163.com/elpa/nongnu-devel/"))
+              ;; ,(cons "melpa"  (concat proto "://mirrors.163.com/elpa/melpa/"))
+              ;; ;; ,(cons "melpa-stable" (concat proto "://mirrors.163.com/elpa/stable-melpa/"))
 
-            ;; Tuna.
-            ,(cons "gnu"    (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
-            ,(cons "nongnu" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/"))
-            ,(cons "gnu-devel" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu-devel/"))
-            ,(cons "nongnu-devel" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu-devel/"))
-            ,(cons "melpa"  (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
-            ;; ,(cons "melpa-stable" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/"))
+              ;; Tuna.
+              ,(cons "gnu"    (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
+              ,(cons "nongnu" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/"))
+              ,(cons "gnu-devel" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/gnu-devel/"))
+              ,(cons "nongnu-devel" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu-devel/"))
+              ,(cons "melpa"  (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/"))
+              ;; ,(cons "melpa-stable" (concat proto "://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/"))
 
-            ))))
+              ))))
 
 (provide 'init-package)
-
 ;;; init-package.el ends here

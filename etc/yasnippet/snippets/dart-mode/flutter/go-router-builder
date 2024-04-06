@@ -3,7 +3,6 @@
 # key: grb
 # --
 class ${1:name}Route extends GoRouteData {
-  static const String path = '${2:path}';
   const $1Route();
 
   @override

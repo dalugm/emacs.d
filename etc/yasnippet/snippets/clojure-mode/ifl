@@ -2,5 +2,5 @@
 # name: ifl
 # key: ifl
 # --
-(if-let [$1 $2]
+(if-let [$1]
   $0)

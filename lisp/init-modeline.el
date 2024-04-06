@@ -47,16 +47,6 @@
   "Show major mode only.")
 (put 'my--mode-line-modes 'risky-local-variable t)
 
-(defvar my--mode-line-encoding
-  '(:eval
-    (let ((sys (coding-system-plist buffer-file-coding-system)))
-      (if (memq (plist-get sys :category)
-                '(coding-category-undecided coding-category-utf-8))
-          "UTF-8"
-        (upcase (symbol-name (plist-get sys :name))))))
-  "Display file encoding.")
-(put 'my--mode-line-encoding 'risky-local-variable t)
-
 ;;;; Setup.
 
 (defvar-local my-mode-line-format-left nil
@@ -87,8 +77,6 @@
                 " "
                 my--mode-line-modes
                 (vc-mode vc-mode)
-                " "
-                my--mode-line-encoding
                 " "))
 
 (defvar my-mode-line-format
@@ -105,26 +93,28 @@
     my-mode-line-format-right)
   "My customized mode-line.")
 
-(setq-default mode-line-format my-mode-line-format)
+(setopt mode-line-format my-mode-line-format)
 
 ;;;; Misc
 
+;; Unify the eol mnemonics for all systems.
+(setopt eol-mnemonic-unix ":"
+        eol-mnemonic-mac "/"
+        eol-mnemonic-dos "\\")
+
 ;; ;; If you want to customize time format, read document of
 ;; ;; `format-time-string' and customize `display-time-format'.
-;; (setq display-time-format "%a %b %e")
+;; (setopt display-time-format "%a %b %e")
 
-;; Unify the eol mnemonics for all systems.
-(setq eol-mnemonic-unix ":")
-(setq eol-mnemonic-mac "/")
-(setq eol-mnemonic-dos "\\")
+;; Time format.
+(setopt system-time-locale "C"
+        display-time-24hr-format t
+        display-time-day-and-date t
+        ;; Do NOT display the load average.
+        display-time-default-load-average nil)
 
-(setq system-time-locale "C")
-(setq display-time-24hr-format t)
-(setq display-time-day-and-date t)
-;; Do NOT display the load average.
-(setq display-time-default-load-average nil)
-;; Show date in mode-line.
-(display-time)
+;; ;; Show date in mode-line.
+;; (display-time-mode +1)
 
 ;; Make the position number update correctly in all cases.
 (line-number-mode +1)
@@ -134,5 +124,4 @@
 (size-indication-mode +1)
 
 (provide 'init-modeline)
-
 ;;; init-modeline.el ends here

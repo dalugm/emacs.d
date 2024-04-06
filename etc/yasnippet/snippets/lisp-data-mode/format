@@ -2,4 +2,4 @@
 # name: format
 # key: f
 # --
-(format "${1:message}")
+(format $0)

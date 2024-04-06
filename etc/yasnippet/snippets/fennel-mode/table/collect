@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: collect
+# key: collect
+# --
+(collect [$1]
+  $0)

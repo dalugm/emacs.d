@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: table.remove
+# key: trm
+# --
+(table.remove $0)

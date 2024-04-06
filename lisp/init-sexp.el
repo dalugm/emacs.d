@@ -45,39 +45,67 @@ sexp before point and insert output into current position."
                    lisp-interaction-mode-map))
   (keymap-set map "C-c C-p" #'my-eval-print-last-sexp))
 
+(use-package sly
+  :config
+  (defun my-sly-mrepl-switch (&rest _)
+    "Switch to the last Lisp/Sly-Mrepl buffer."
+    (interactive)
+    (if (derived-mode-p 'sly-mrepl-mode)
+        (if-let ((buf (seq-find (lambda (b)
+                                  (with-current-buffer b
+                                    (derived-mode-p 'lisp-mode)))
+                                (buffer-list))))
+            (if-let ((win (get-buffer-window buf)))
+                (select-window win)
+              (pop-to-buffer buf))
+          (user-error "No Lisp buffer found"))
+      (if-let ((buf (sly-mrepl--find-create (sly-current-connection))))
+          (if-let ((win (get-buffer-window buf)))
+              (select-window win)
+            (pop-to-buffer buf))
+        (user-error "No Sly-Mrepl buffer found"))))
+  (advice-add 'sly-mrepl :override #'my-sly-mrepl-switch)
+
+  :bind ((:map sly-mode-map
+               ("C-c C-x C-c" . sly-connect)
+               ("C-c C-x C-q" . sly-disconnect)
+               ("C-c C-x C-j" . sly))
+         (:map sly-doc-map
+               ("C-l" . sly-documentation)))
+  :custom (inferior-lisp-program "sbcl"))
+
+(use-package sly-asdf :after sly)
+(use-package sly-quicklisp :after sly)
+
+(use-package racket-mode
+  :bind (:map racket-mode-map
+              ("C-c C-x C-j" . racket-run)
+              ("C-c C-x C-x" . racket-xp-mode)
+              ("C-c C-x C-e" . racket-eval-last-sexp)))
+
 (use-package clojure-mode
   :mode
   ("\\.\\(cljd?\\|edn\\)\\'" . clojure-mode)
   ("\\.cljs\\'" . clojurescript-mode))
 
-(use-package cider
-  :after clojure-mode
-  :config
-  ;; https://github.com/clojure-emacs/cider/issues/3588
-  (when (string= "powershell" cider-clojure-cli-command)
-    (setq cider-clojure-cli-command "pwsh")))
-
 (use-package clojure-ts-mode
-  :disabled
   :when (and (treesit-available-p) (treesit-ready-p 'clojure 'message))
   :mode
   ("\\.\\(clj\\|edn\\)\\'" . clojure-ts-mode)
-  ("\\.cljs\\'" . clojurescript-ts-mode)
-  ("\\.cljd\\'" . clojure-dart-ts-mode))
+  ("\\.cljs\\'" . clojure-ts-clojurescript-mode)
+  ("\\.cljd\\'" . clojure-ts-clojuredart-mode))
 
-(use-package sly
-  :bind ((:map sly-mode-map
-               ("C-c C-o" . sly)
-               ("C-c C-q" . sly-disconnect))
-         (:map sly-doc-map
-               ("C-l" . sly-documentation)))
-  :custom (inferior-lisp-program "sbcl"))
+(use-package cider
+  :bind (:map cider-start-map
+              ("r" . cider-restart)
+              ("C-r" . cider-restart))
+  :config
+  ;; https://github.com/clojure-emacs/cider/issues/3588
+  (when (string= "powershell" cider-clojure-cli-command)
+    (setopt cider-clojure-cli-command "pwsh")))
 
-(use-package racket-mode
-  :bind (:map racket-mode-map
-              ("C-c C-x C-x" . racket-xp-mode)
-              ("C-c C-x C-e" . racket-eval-last-sexp)))
+(use-package fennel-mode
+  :mode ("\\.fnl\\'" . fennel-mode))
 
 (provide 'init-sexp)
-
 ;;; init-sexp.el ends here

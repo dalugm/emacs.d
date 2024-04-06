@@ -2,4 +2,4 @@
 # name: part
 # key: pt
 # --
-part '${1:library}'
+part '${1:library}';

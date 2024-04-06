@@ -2,5 +2,5 @@
 # name: dotimes
 # key: dotimes
 # --
-(dotimes [$1 $2]
+(dotimes [$1]
   $0)

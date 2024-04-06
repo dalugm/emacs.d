@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: map-indexed
+# key: mapi
+# --
+(map-indexed $1 $0)

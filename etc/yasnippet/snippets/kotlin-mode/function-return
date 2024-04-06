@@ -1,7 +1,7 @@
 # -*- mode: snippet -*-
-# name: fun name() : Type { ... }
+# name: fun name() : Unit { ... }
 # key: fnr
 # --
-fun ${1:name}($2) : ${3:Type} {
+fun ${1:name}($2) : ${3:Unit} {
     $0
 }

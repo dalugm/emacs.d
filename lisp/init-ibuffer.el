@@ -68,18 +68,17 @@
     (:name "VC status")
     (ibuffer-vc--status-string))
 
-  ;; Modify the default ibuffer-formats.
-  (setq ibuffer-formats
-        '((mark modified read-only vc-status-mini " "
-                (name 18 18 :left :elide)
-                " "
-                (my--size 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " "
-                (vc-status 16 16 :left)
-                " "
-                filename-and-process)))
+  (setopt ibuffer-formats
+          '((mark modified read-only vc-status-mini " "
+                  (name 18 18 :left :elide)
+                  " "
+                  (my--size 9 -1 :right)
+                  " "
+                  (mode 16 16 :left :elide)
+                  " "
+                  (vc-status 16 16 :left)
+                  " "
+                  filename-and-process)))
 
   (defun my--ibuffer-get-major-modes-list ()
     "Get all major modes based on opened buffers."
@@ -124,9 +123,8 @@
                     ;; Manually created.
                     '(("Modified" (predicate buffer-modified-p
                                              (current-buffer)))))))))
-      (setq ibuffer-saved-filter-groups groups)
+      (setopt ibuffer-saved-filter-groups groups)
       (ibuffer-switch-to-saved-filter-groups "default"))))
 
 (provide 'init-ibuffer)
-
 ;;; init-ibuffer.el ends here

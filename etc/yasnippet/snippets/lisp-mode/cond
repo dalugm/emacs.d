@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: cond
+# key: cond
+# --
+(cond
+  (${1:cond} $2)
+  (t $0))

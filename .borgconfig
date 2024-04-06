@@ -1,5 +1,3 @@
-[submodule "consult"]
-	no-byte-compile = consult-icomplete.el
 [submodule "corfu"]
 	load-path = .
 	load-path = extensions
@@ -17,5 +15,7 @@
 	no-byte-compile = lisp/magit-libgit.el
 [submodule "sqlite3"]
 	build-step = make
+[submodule "standard-themes"]
+	no-makeinfo = doclicense.texi
 [submodule "subed"]
 	load-path = subed

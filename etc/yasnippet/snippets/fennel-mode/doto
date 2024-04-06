@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: doto
+# key: doto
+# --
+(doto $1
+  $0)

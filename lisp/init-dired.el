@@ -84,5 +84,4 @@ URL `http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html'."
   (dired-dwim-target t))
 
 (provide 'init-dired)
-
 ;;; init-dired.el ends here

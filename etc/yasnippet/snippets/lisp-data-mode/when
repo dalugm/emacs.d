@@ -2,4 +2,5 @@
 # name: when
 # key: when
 # --
-(when $0)
+(when ${1:cond}
+  $0)

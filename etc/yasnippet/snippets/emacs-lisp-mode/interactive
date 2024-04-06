@@ -3,4 +3,4 @@
 # key: interactive
 # key: ia
 # --
-(interactive${1: "${2:P}"})
+(interactive)

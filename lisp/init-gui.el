@@ -9,15 +9,15 @@
 
 ;;;; Frame.
 
-(setq-default frame-title-format "GNU Emacs %@ %b")
+(setopt frame-title-format "GNU Emacs %@ %b")
 
 ;; Move more smoothly.
 (pixel-scroll-precision-mode +1)
 
 (when (featurep 'ns)
   ;; Make NS behavior the same as other platforms.
-  (setq ns-command-modifier 'meta)
-  (setq ns-alternate-modifier 'super)
+  (setopt ns-command-modifier 'meta)
+  (setopt ns-alternate-modifier 'super)
 
   (push '(ns-transparent-titlebar . t) default-frame-alist)
 
@@ -52,7 +52,7 @@
 (defun my-set-line-spacing (space)
   "Set the line SPACE of the current window."
   (interactive "nLine Space: ")
-  (setq line-spacing space))
+  (setopt line-spacing space))
 
 (keymap-global-set "C-c w l" #'my-set-line-spacing)
 
@@ -280,5 +280,4 @@ ATTRS."
 (setq inhibit-compacting-font-caches t)
 
 (provide 'init-gui)
-
 ;;; init-gui.el ends here

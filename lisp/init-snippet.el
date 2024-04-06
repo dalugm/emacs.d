@@ -7,44 +7,50 @@
 
 ;;; Code:
 
-(use-package yasnippet
-  :hook (after-init . yas-global-mode)
+(use-package tempel
+  ;; Require trigger prefix before template name when completing.
+  ;; :custom
+  ;; (tempel-trigger-prefix "<")
+
+  :bind (("M-+" . tempel-complete)
+         ("M-_" . tempel-expand)
+         ("M-*" . tempel-insert))
+
   :config
-  (defun my-insert-license ()
-    "Insert a license template into current buffer."
-    (interactive)
-    (when (featurep 'evil)
-      (evil-insert-state))
-    (unless (gethash 'text-mode yas--tables)
-      (yas-reload-all t))
-    (let ((templates
-           (let (yas-choose-tables-first yas-choose-keys-first)
-             (cl-loop for tpl in (yas--all-templates
-                                  (yas--get-snippet-tables 'text-mode))
-                      for uuid = (yas--template-uuid tpl)
-                      if (string-prefix-p "__license-" uuid)
-                      collect (cons (string-remove-prefix "__license-" uuid)
-                                    tpl)))))
-      (when-let (uuid (yas-choose-value (mapcar #'car templates)))
-        (yas-expand-snippet (cdr (assoc uuid templates))))))
 
-  (defcustom my-private-snippet-d (file-name-as-directory
-                                   (expand-file-name "~/my-snippets"))
-    "Personal snippet directory."
-    :group 'convenience
-    :type 'directory)
+  (defun my--tempel-include (elt)
+    "Add ELT (i template) to include templates by name in another template."
+    (when (eq (car-safe elt) 'i)
+      (if-let (template (alist-get (cadr elt) (tempel--templates)))
+          (cons 'l template)
+        (message "Template %s not found" (cadr elt))
+        nil)))
 
-  (when (and (file-directory-p my-private-snippet-d)
-             (not (member my-private-snippet-d yas-snippet-dirs)))
-    (add-to-list 'yas-snippet-dirs my-private-snippet-d)))
+  (add-to-list 'tempel-user-elements #'my--tempel-include)
 
-(use-package auto-yasnippet
-  :after yasnippet
-  :bind ((:map yas-minor-mode-map
-               ("C-c e s" . aya-create)
-               ("C-c e p" . aya-expand)
-               ("C-c e l" . aya-open-line))))
+  :init
+
+  (defun my--tempel-setup-capf ()
+    "Add the Tempel Capf to `completion-at-point-functions'.
+
+`tempel-expand' only triggers on exact matches.  Alternatively use
+`tempel-complete' if you want to see all matches, but then you should
+also configure `tempel-trigger-prefix', such that Tempel does not
+trigger too often when you don't expect it.  NOTE: We add
+`tempel-expand' *before* the main programming mode Capf, such that it
+will be tried first."
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
+
+  (add-hook 'conf-mode-hook #'my--tempel-setup-capf)
+  (add-hook 'prog-mode-hook #'my--tempel-setup-capf)
+  (add-hook 'text-mode-hook #'my--tempel-setup-capf)
+
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  (global-tempel-abbrev-mode))
 
 (provide 'init-snippet)
-
 ;;; init-snippet.el ends here

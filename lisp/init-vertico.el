@@ -13,9 +13,10 @@
 
 (use-package orderless
   :after vertico
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion))))
+  :init
+  (setopt completion-styles '(orderless basic)
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles basic partial-completion))))
   :config
   (defun my--orderless-regexp (str)
     "Enhance `orderless-regexp' when searching STR."
@@ -155,5 +156,4 @@ URL `https://github.com/minad/consult/issues/475'."
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (provide 'init-vertico)
-
 ;;; init-vertico.el ends here

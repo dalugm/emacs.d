@@ -8,7 +8,7 @@
 ;;; Code:
 
 ;; Visit version controlled symlink without asking.
-(setq vc-follow-symlinks t)
+(setopt vc-follow-symlinks t)
 
 (use-package magit
   :bind (("C-x g"   . magit-status)
@@ -22,10 +22,6 @@
   (magit-add-section-hook 'magit-status-sections-hook
                           #'magit-insert-modules
                           #'magit-insert-stashes #'append))
-
-;; Access GIT forges from `magit'.
-(use-package forge
-  :after magit)
 
 (use-package diff-hl
   :hook ((after-init . global-diff-hl-mode)
@@ -63,14 +59,13 @@
                           (interactive)
                           (if (bound-and-true-p git-link-use-commit)
                               (progn
-                                (setq git-link-use-commit nil)
+                                (setopt git-link-use-commit nil)
                                 (message "Use the branch name."))
-                            (setq git-link-use-commit t)
+                            (setopt git-link-use-commit t)
                             (message "Use the commit hash."))))))
 
 (use-package git-timemachine
   :bind ("C-c v t" . git-timemachine))
 
 (provide 'init-vc)
-
 ;;; init-vc.el ends here

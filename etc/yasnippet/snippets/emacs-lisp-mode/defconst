@@ -2,4 +2,4 @@
 # name: defconst
 # key: defconst
 # --
-(defconst ${1:name} ${2:value}${3: "${4:docstring}"})
+(defconst ${1:name} ${2:value})

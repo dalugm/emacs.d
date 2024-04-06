@@ -58,7 +58,7 @@
           (set-window-buffer w2 b1)
           (set-window-start w1 s2)
           (set-window-start w2 s1)
-          (setq i (1+ i))))))))
+          (cl-incf i)))))))
 
 (keymap-global-set "C-c w r" #'my-rotate-windows)
 
@@ -120,8 +120,7 @@ With a prefix ARG, rename based on current name."
 (defun my-open-file-externally (file)
   "Open FILE externally using the default application of the system."
   (interactive "fOpen externally: ")
-  (if (and (eq system-type 'windows-nt)
-           (fboundp 'w32-shell-execute))
+  (if (and my-win-p (fboundp 'w32-shell-execute))
       (w32-shell-execute "open" file)
     (call-process (pcase system-type
                     ('darwin "open")
@@ -235,30 +234,6 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 
 (keymap-global-set "C-c m h" #'my-toggle-selective-display)
 
-;; https://www.emacswiki.org/emacs/RecreateScratchBuffer
-(defun my-switch-scratch-buffer ()
-  "Create or switch to the *scratch* buffer."
-  (interactive)
-  (if (get-buffer "*scratch*")
-      (switch-to-buffer "*scratch*")
-    (progn
-      (switch-to-buffer (get-buffer-create "*scratch*"))
-      (funcall initial-major-mode)
-      (insert initial-scratch-message))))
-
-(keymap-global-set "C-c X" #'my-switch-scratch-buffer)
-
-(defun my-switch-messages-buffer ()
-  "Create or switch to the *Message* buffer."
-  (interactive)
-  (if (get-buffer "*Messages*")
-      (switch-to-buffer "*Messages*")
-    (progn
-      (switch-to-buffer (get-buffer-create "*Messages*"))
-      (messages-buffer-mode))))
-
-(keymap-global-set "C-c M" #'my-switch-messages-buffer)
-
 (defun my-occur-dwim ()
   "Call `occur' with a sane default."
   (interactive)
@@ -275,7 +250,7 @@ Key is a symbol as the name, value is a plist specifying the search url.")
 (keymap-global-set "C-c m o" #'my-occur-dwim)
 
 (defun my-hide-dos-eol ()
-  "Do not show  in files containing mixed UNIX and DOS line endings."
+  "Do not show CR in files with mixed UNIX and DOS line endings."
   (interactive)
   (unless buffer-display-table
     (setq buffer-display-table (make-display-table)))
@@ -516,16 +491,20 @@ pangu-spacing. The excluded puncuation will be matched to group
 (defun my-enable-http-proxy ()
   "Enable HTTP/HTTPS proxy."
   (interactive)
-  (setq url-proxy-services
-        `(("http" . ,my-http-proxy)
-          ("https" . ,my-http-proxy)
-          ("no_proxy" . "^\\(localhost\\|192.168.*\\|10.*\\)")))
+  (setopt url-proxy-services
+          `(("http" . ,my-http-proxy)
+            ("https" . ,my-http-proxy)
+            ("no_proxy" . "^\\(localhost\\|192.168.*\\|10.*\\)")))
+  (setenv "http_proxy" (format "http://%s" my-http-proxy))
+  (setenv "https_proxy" (format "http://%s" my-http-proxy))
   (my-show-http-proxy))
 
 (defun my-disable-http-proxy ()
   "Disable HTTP/HTTPS proxy."
   (interactive)
-  (setq url-proxy-services nil)
+  (setopt url-proxy-services nil)
+  (setenv "http_proxy" "")
+  (setenv "https_proxy" "")
   (my-show-http-proxy))
 
 (defun my-toggle-http-proxy ()
@@ -541,86 +520,41 @@ pangu-spacing. The excluded puncuation will be matched to group
 (defun my-show-socks-proxy ()
   "Show SOCKS proxy."
   (interactive)
-  (if (bound-and-true-p socks-noproxy)
-      (message "Current SOCKS%d proxy is \"%s:%s\"."
+  (if (eq url-gateway-method 'socks)
+      (message "Current SOCKS%d proxy is \"%s:%d\"."
                (cadddr socks-server)
-               (cadr socks-server)
-               (caddr socks-server))
+               (cadr   socks-server)
+               (caddr  socks-server))
     (message "No SOCKS proxy.")))
 
 (defun my-enable-socks-proxy ()
   "Enable SOCKS proxy."
   (interactive)
   (require 'socks)
-  (setq url-gateway-method 'socks
-        socks-noproxy '("localhost"))
-  (let* ((proxy (split-string my-socks-proxy ":"))
-         (host (car proxy))
-         (port (cadr  proxy)))
-    (setq socks-server `("Default server" ,host ,port 5)))
-  (setenv "all_proxy" (concat "socks5://" my-socks-proxy))
+  (let ((host (car  my-socks-proxy))
+        (port (cadr my-socks-proxy)))
+    (setopt url-gateway-method 'socks
+            socks-server `("Default server" ,host ,port 5)
+            socks-noproxy '("localhost"))
+    (setenv "all_proxy" (format "socks5://%s:%s" host port)))
   (my-show-socks-proxy))
 
 (defun my-disable-socks-proxy ()
   "Disable SOCKS proxy."
   (interactive)
-  (setq url-gateway-method 'native
-        socks-noproxy nil
-        socks-server nil)
+  (setopt url-gateway-method 'native)
   (setenv "all_proxy" "")
   (my-show-socks-proxy))
 
 (defun my-toggle-socks-proxy ()
   "Toggle SOCKS proxy."
   (interactive)
-  (if (bound-and-true-p socks-noproxy)
+  (if (eq url-gateway-method 'socks)
       (my-disable-socks-proxy)
     (my-enable-socks-proxy)))
 
 (keymap-global-set "C-c t p s" #'my-toggle-socks-proxy)
 (keymap-global-set "C-c t p S" #'my-show-socks-proxy)
-
-(defun my-show-wsl-socks-proxy ()
-  "Show SOCKS proxy in WSL."
-  (interactive)
-  (if (bound-and-true-p socks-noproxy)
-      (message "Current SOCKS%d proxy in WSL is \"%s:%s\"."
-               (cadddr socks-server)
-               (cadr socks-server)
-               (caddr socks-server))
-    (message "No SOCKS proxy in WSL.")))
-
-(defun my-enable-wsl-socks-proxy ()
-  "Enable SOCKS proxy in WSL."
-  (interactive)
-  (require 'socks)
-  (setq url-gateway-method 'socks
-        socks-noproxy '("localhost"))
-  (let* ((proxy (split-string my-wsl-socks-proxy ":"))
-         (host (car proxy))
-         (port (cadr  proxy)))
-    (setq socks-server `("Default server" ,host ,port 5)))
-  (setenv "all_proxy" (concat "socks5://" my-wsl-socks-proxy))
-  (my-show-wsl-socks-proxy))
-
-(defun my-disable-wsl-socks-proxy ()
-  "Disable SOCKS proxy in WSL."
-  (interactive)
-  (setq url-gateway-method 'native
-        socks-noproxy nil
-        socks-server nil)
-  (setenv "all_proxy" "")
-  (my-show-wsl-socks-proxy))
-
-(defun my-toggle-wsl-socks-proxy ()
-  "Toggle SOCKS proxy in WSL."
-  (interactive)
-  (if (bound-and-true-p socks-noproxy)
-      (my-disable-wsl-socks-proxy)
-    (my-enable-wsl-socks-proxy)))
-
-(keymap-global-set "C-c t p w" #'my-toggle-wsl-socks-proxy)
-(keymap-global-set "C-c t p W" #'my-show-wsl-socks-proxy)
 
 ;;;; JUST4FUN.
 
@@ -631,14 +565,14 @@ Default print to 256.  With a prefix ARG, print to specified
 number."
   (interactive "P")
   (let ((num (if arg
-                 (string-to-number (read-string "Input a number: "))
+                 (read-number "Input a number: ")
                256))
         (i 0))
     (switch-to-buffer "*ASCII*")
     (erase-buffer)
     (insert (format "ASCII characters up to number %d.\n" num))
     (while (< i num)
-      (setq i (1+ i))
+      (cl-incf i)
       (insert (format "%4d %c\n" i i)))
     (special-mode)
     (goto-char (point-min))))
@@ -657,5 +591,4 @@ number."
                 "，"))))
 
 (provide 'init-funcs)
-
 ;;; init-funcs.el ends here

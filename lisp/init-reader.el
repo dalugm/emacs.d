@@ -25,5 +25,4 @@
   :magic ("%PDF" . pdf-view-mode))
 
 (provide 'init-reader)
-
 ;;; init-reader.el ends here

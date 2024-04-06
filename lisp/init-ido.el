@@ -17,5 +17,4 @@
     (ido-everywhere +1)))
 
 (provide 'init-ido)
-
 ;;; init-ido.el ends here

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: pairs
+# key: pairs
+# --
+(pairs $0)

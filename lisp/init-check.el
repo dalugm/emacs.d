@@ -14,12 +14,11 @@
 (use-package flyspell
   :defer t
   :config
-  (cond
-   ((executable-find "aspell")
-    (setq ispell-program-name "aspell")
-    (setq ispell-extra-args
-          '("--sug-mode=ultra" "--lang=en_US" "--camel-case")))))
+  (when (executable-find "aspell")
+    (setopt ispell-program-name "aspell"
+            ispell-extra-args '("--sug-mode=ultra"
+                                "--lang=en_US"
+                                "--camel-case"))))
 
 (provide 'init-check)
-
 ;;; init-check.el ends here

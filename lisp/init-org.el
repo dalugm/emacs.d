@@ -309,7 +309,7 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numberin
             (or (bolp) (insert "\n"))
             (when (/= (point) (point-min)) (org-end-of-subtree t t))
             (insert (make-string level ?*) " " heading "\n")))
-        (setq level (1+ level))
+        (cl-incf level)
         (setq end (save-excursion (org-end-of-subtree t t))))
       (org-end-of-subtree)))
 
@@ -324,20 +324,20 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numberin
   ;; | %?     | cursor location after completing the template               |
   ;; NOTE: inactive timestamp will not be added to agenda.
 
-  (setq org-capture-templates
-        `(("b" "Bill" plain
-           (file+function my--org-bill-file my--org-capture-find-month-tree)
-           "| %U | %^{category} | %^{desc} | %^{price} |" :kill-buffer t)
-          ("c" "Capture" plain (file+olp+datetree org-default-notes-file))
-          ("t" "Todo" entry
-           (file+headline my--org-todo-file "Todo")
-           "* TODO %^{todo}\n")
-          ("w" "Work" entry
-           (file+headline my--org-work-file "Work")
-           "* %^{task name}\n   %t\n" :clock-in t :clock-resume t)
-          ("r" "Read" entry
-           (file+headline my--org-read-file "Book")
-           "* %^{book name}\n   %u\n" :clock-in t :clock-resume t))))
+  (setopt org-capture-templates
+          `(("b" "Bill" plain
+             (file+function my--org-bill-file my--org-capture-find-month-tree)
+             "| %U | %^{category} | %^{desc} | %^{price} |" :kill-buffer t)
+            ("c" "Capture" plain (file+olp+datetree org-default-notes-file))
+            ("t" "Todo" entry
+             (file+headline my--org-todo-file "Todo")
+             "* TODO %^{todo}\n")
+            ("w" "Work" entry
+             (file+headline my--org-work-file "Work")
+             "* %^{task name}\n   %t\n" :clock-in t :clock-resume t)
+            ("r" "Read" entry
+             (file+headline my--org-read-file "Book")
+             "* %^{book name}\n   %u\n" :clock-in t :clock-resume t))))
 
 (use-package ox-latex
   :defer t
@@ -359,8 +359,7 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numberin
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-  (setq org-latex-default-class "ctexart"))
+  (setopt org-latex-default-class "ctexart"))
 
 (provide 'init-org)
-
 ;;; init-org.el ends here

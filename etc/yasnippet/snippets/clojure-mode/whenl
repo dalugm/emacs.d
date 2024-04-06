@@ -2,5 +2,5 @@
 # name: whenl
 # key: whenl
 # --
-(when-let [$1 $2]
+(when-let [$1]
   $0)

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: table.insert
+# key: tin
+# --
+(table.insert $0)

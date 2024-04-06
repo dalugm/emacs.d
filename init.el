@@ -7,8 +7,8 @@
 
 ;;; Code:
 
-(setq user-init-file (or load-file-name buffer-file-name))
-(setq user-emacs-directory (file-name-directory user-init-file))
+(setopt user-init-file (or load-file-name buffer-file-name))
+(setopt user-emacs-directory (file-name-directory user-init-file))
 
 (defconst my-config-d (file-name-as-directory
                        (expand-file-name "etc" user-emacs-directory))
@@ -44,7 +44,7 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (load
- (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+ (setopt custom-file (expand-file-name "custom.el" user-emacs-directory))
  t t)
 
 (require 'init-utils)
@@ -76,7 +76,6 @@
 (require 'init-evil)
 (require 'init-markup)
 (require 'init-snippet)
-(require 'init-chinese)
 
 ;; Program.
 (require 'init-sexp)

@@ -41,27 +41,24 @@
                 collect `(holiday-fixed 10 ,i "National Day"))
      (holiday-fixed 12 26 "Mao's Birthday"))))
 
-(defcustom my-http-proxy "127.0.0.1:1087"
+(defcustom my-http-proxy "127.0.0.1:1080"
   "HTTP proxy."
   :group 'convenience
   :type 'string)
 
-(defcustom my-socks-proxy "127.0.0.1:1080"
+(defcustom my-socks-proxy
+  (list
+   (if my-wsl-p
+       (if (file-exists-p "/etc/resolv.conf")
+           (shell-command-to-string
+            "cat /etc/resolv.conf | grep nameserver | awk '{ printf $2 }'")
+         "0.0.0.0")
+     "127.0.0.1")
+   1080)
   "SOCKS proxy."
   :group 'convenience
-  :type 'string)
-
-(defcustom my-wsl-socks-proxy
-  (concat
-   (if (file-exists-p "/etc/resolv.conf")
-       (shell-command-to-string
-        "cat /etc/resolv.conf | grep nameserver | awk '{ printf $2 }'")
-     "0.0.0.0")
-   ":"
-   "10810")
-  "SOCKS proxy in WSL."
-  :group 'convenience
-  :type 'string)
+  :type '(list (string :tag "Host")
+               (integer :tag "Port")))
 
 (defcustom my-run-emacs-as-a-server nil
   "Non-nil means to run Emacs as a server process, which allows
@@ -119,5 +116,4 @@ access from `emacsclient'."
   :bind ("C-c t x" . xiaoshuo-mode))
 
 (provide 'init-misc)
-
 ;;; init-misc.el ends here

@@ -6,15 +6,9 @@
 [submodule "apheleia"]
 	path = lib/apheleia
 	url = https://github.com/radian-software/apheleia
-[submodule "async"]
-	path = lib/async
-	url = https://github.com/jwiegley/emacs-async
 [submodule "auto-compile"]
 	path = lib/auto-compile
 	url = https://github.com/emacscollective/auto-compile
-[submodule "auto-yasnippet"]
-	path = lib/auto-yasnippet
-	url = https://github.com/abo-abo/auto-yasnippet
 [submodule "avy"]
 	path = lib/avy
 	url = https://github.com/abo-abo/avy
@@ -42,9 +36,12 @@
 [submodule "closql"]
 	path = lib/closql
 	url = https://github.com/magit/closql
-[submodule "color-rg"]
-	path = lib/color-rg
-	url = https://github.com/manateelazycat/color-rg
+[submodule "color-theme-sanityinc-solarized"]
+	path = lib/color-theme-sanityinc-solarized
+	url = https://github.com/purcell/color-theme-sanityinc-solarized
+[submodule "color-theme-sanityinc-tomorrow"]
+	path = lib/color-theme-sanityinc-tomorrow
+	url = https://github.com/purcell/color-theme-sanityinc-tomorrow
 [submodule "compat"]
 	path = lib/compat
 	url = https://github.com/emacs-compat/compat
@@ -69,15 +66,21 @@
 [submodule "diff-hl"]
 	path = lib/diff-hl
 	url = https://github.com/dgutov/diff-hl
-[submodule "doom-themes"]
-	path = lib/doom-themes
-	url = https://github.com/doomemacs/themes
+[submodule "dracula-theme"]
+	path = lib/dracula-theme
+	url = https://github.com/dracula/emacs
 [submodule "edit-indirect"]
 	path = lib/edit-indirect
 	url = https://github.com/Fanael/edit-indirect
 [submodule "ef-themes"]
 	path = lib/ef-themes
-	url = https://git.sr.ht/~protesilaos/ef-themes
+	url = https://github.com/protesilaos/ef-themes
+[submodule "eglot-booster"]
+	path = lib/eglot-booster
+	url = https://github.com/jdtsmith/eglot-booster
+[submodule "eglot-tempel"]
+	path = lib/eglot-tempel
+	url = https://github.com/fejfighter/eglot-tempel
 [submodule "eldoc-box"]
 	path = lib/eldoc-box
 	url = https://github.com/dalugm/eldoc-box
@@ -120,12 +123,9 @@
 [submodule "f"]
 	path = lib/f
 	url = https://github.com/rejeep/f.el
-[submodule "forge"]
-	path = lib/forge
-	url = https://github.com/magit/forge
-[submodule "ghub"]
-	path = lib/ghub
-	url = https://github.com/magit/ghub
+[submodule "fennel-mode"]
+	path = lib/fennel-mode
+	url = https://git.sr.ht/~technomancy/fennel-mode
 [submodule "git-link"]
 	path = lib/git-link
 	url = https://github.com/sshaw/git-link
@@ -146,7 +146,7 @@
 	url = https://github.com/hniksic/emacs-htmlize
 [submodule "kotlin-ts-mode"]
 	path = lib/kotlin-ts-mode
-	url = https://gitlab.com/bricka/emacs-kotlin-ts-mode
+	url = https://gitlab.com/bricka/emacs-kotlin-ts-mode.git
 [submodule "llama"]
 	path = lib/llama
 	url = https://git.sr.ht/~tarsius/llama
@@ -159,6 +159,9 @@
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode
+[submodule "monokai-pro-theme"]
+	path = lib/monokai-pro-theme
+	url = https://github.com/belak/emacs-monokai-pro-theme
 [submodule "no-littering"]
 	path = lib/no-littering
 	url = https://github.com/emacscollective/no-littering
@@ -177,12 +180,6 @@
 [submodule "popon"]
 	path = lib/popon
 	url = https://codeberg.org/akib/emacs-popon
-[submodule "pyim"]
-	path = lib/pyim
-	url = https://github.com/tumashu/pyim
-[submodule "pyim-basedict"]
-	path = lib/pyim-basedict
-	url = https://github.com/tumashu/pyim-basedict
 [submodule "queue"]
 	path = lib/queue
 	url = https://github.com/emacsmirror/queue
@@ -210,15 +207,18 @@
 [submodule "sly"]
 	path = lib/sly
 	url = https://github.com/joaotavora/sly
+[submodule "sly-asdf"]
+	path = lib/sly-asdf
+	url = https://github.com/mmgeorge/sly-asdf
+[submodule "sly-quicklisp"]
+	path = lib/sly-quicklisp
+	url = https://github.com/joaotavora/sly-quicklisp
 [submodule "spinner"]
 	path = lib/spinner
 	url = https://github.com/Malabarba/spinner.el
-[submodule "sqlite3"]
-	path = lib/sqlite3
-	url = https://github.com/pekingduck/emacs-sqlite3-api
 [submodule "standard-themes"]
 	path = lib/standard-themes
-	url = https://git.sr.ht/~protesilaos/standard-themes
+	url = https://github.com/protesilaos/standard-themes
 [submodule "subed"]
 	path = lib/subed
 	url = https://github.com/rndusr/subed
@@ -231,15 +231,18 @@
 [submodule "tao-theme"]
 	path = lib/tao-theme
 	url = https://github.com/11111000000/tao-theme-emacs
+[submodule "tempel"]
+	path = lib/tempel
+	url = https://github.com/minad/tempel
 [submodule "toc-org"]
 	path = lib/toc-org
 	url = https://github.com/snosov1/toc-org
 [submodule "transient"]
 	path = lib/transient
 	url = https://github.com/magit/transient
-[submodule "treepy"]
-	path = lib/treepy
-	url = https://github.com/volrath/treepy.el
+[submodule "typst-ts-mode"]
+	path = lib/typst-ts-mode
+	url = https://git.sr.ht/~meow_king/typst-ts-mode
 [submodule "valign"]
 	path = lib/valign
 	url = https://github.com/casouri/valign
@@ -264,15 +267,9 @@
 [submodule "xiaoshuo-mode"]
 	path = lib/xiaoshuo-mode
 	url = https://github.com/dalugm/xiaoshuo-mode
-[submodule "xr"]
-	path = lib/xr
-	url = https://github.com/mattiase/xr
-[submodule "yaml"]
-	path = lib/yaml
-	url = https://github.com/zkry/yaml.el
-[submodule "yasnippet"]
-	path = lib/yasnippet
-	url = https://github.com/joaotavora/yasnippet
+[submodule "zenburn-theme"]
+	path = lib/zenburn-theme
+	url = https://github.com/bbatsov/zenburn-emacs
 [submodule "zh-lib"]
 	path = lib/zh-lib
 	url = https://github.com/dalugm/zh-lib.el

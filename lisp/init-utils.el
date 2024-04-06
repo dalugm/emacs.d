@@ -15,25 +15,16 @@
 (defconst my-mac-p (eq system-type 'darwin)
   "Running on Mac system.")
 
-(defconst my-cygwin-p (eq system-type 'cygwin)
-  "Running on Cygwin system.")
-
 (defconst my-win-p (eq system-type 'windows-nt)
   "Running on Windows system.")
 
-(defconst my-mac-x-p (and (display-graphic-p) my-mac-p)
-  "Running under X on Mac system.")
-
-(defconst my-linux-x-p (and (display-graphic-p) my-linux-p)
-  "Running under X on GNU/Linux system.")
-
-(defconst my-root-p (string-equal "root" (getenv "USER"))
-  "Running as root.")
+(defconst my-wsl-p (string-match-p "Microsoft" (shell-command-to-string "uname -a"))
+  "Running on WSL (Windows Subsystem for Linux).")
 
 ;;;; Use-package.
 
 ;; It must be set before loading `use-package'.
-(setq use-package-enable-imenu-support t)
+(setopt use-package-enable-imenu-support t)
 
 ;;;; Utility.
 
@@ -41,8 +32,7 @@
 (prefer-coding-system 'utf-8)
 
 ;; Shutdown the startup screen.
-(setq inhibit-startup-screen t)
-(setq inhibit-startup-echo-area-message t)
+(setopt inhibit-startup-screen t)
 
 (defun my--initial-scratch-message ()
   "Customize `initial-scratch-message'."
@@ -73,42 +63,45 @@
          "Get it pulverized")
        "\n")))))
 
-(setq-default initial-scratch-message (my--initial-scratch-message))
+(setopt initial-scratch-message (my--initial-scratch-message))
 
 ;; Warn when opening files bigger than 100MB.
-(setq large-file-warning-threshold (* 100 1000 1000))
+(setopt large-file-warning-threshold (* 100 1000 1000))
 
 ;; Nice scrolling.
-(setq scroll-margin 0)
-(setq scroll-conservatively 100000)
-(setq scroll-preserve-screen-position 1)
+(setopt scroll-margin 0
+        scroll-conservatively 100000
+        scroll-preserve-screen-position 1)
 
 ;; Disable the annoying bell ring.
-(setq ring-bell-function #'ignore)
+(setopt ring-bell-function #'ignore)
 
 ;; Use y/n instead of yes/no.
-(setq use-short-answers t)
+(setopt use-short-answers t)
 
 ;; Repeating C-SPC after popping mark pops it again.
-(setq set-mark-command-repeat-pop t)
+(setopt set-mark-command-repeat-pop t)
 
 ;; Make mouse clicks more precise.
-(setq mouse-prefer-closest-glyph t)
-
-;;;; Tab and Space.
+(setopt mouse-prefer-closest-glyph t)
 
 ;; Indent with spaces.
-(setq-default indent-tabs-mode nil)
-
-;; But maintain correct appearance.
-(setq-default tab-width 8)
+(setopt indent-tabs-mode nil)
 
 ;; Smart tab behavior - indent or complete.
 ;; `completion-at-point' is often bound to M-TAB.
-(setq tab-always-indent 'complete)
+(setopt tab-always-indent 'complete)
 
 ;; TAB cycle if there are only few candidates.
-(setq completion-cycle-threshold 3)
+(setopt completion-cycle-threshold 3)
+
+;; Pass `C-u' to `recenter' to put point in the window's center.
+(setopt next-error-recenter '(4))
+
+;; Do NOT make backups of files, not safe.
+;; https://github.com/joedicastro/dotfiles/tree/master/emacs
+(setopt auto-save-default nil
+        make-backup-files nil)
 
 ;;;; Useful modes.
 
@@ -129,35 +122,22 @@
 
 ;; Show matching parentheses.
 (show-paren-mode +1)
-(setq show-paren-context-when-offscreen 'overlay)
+(setopt show-paren-context-when-offscreen 'overlay)
 
 ;; Clean up obsolete buffers automatically.
 (require 'midnight)
 
-(use-package simple
-  :custom
-  ;; Pass `C-u' to `recenter' to put point in the window's center.
-  (next-error-recenter '(4)))
+;; Restore old window configurations.
+(winner-mode +1)
+(setopt winner-boring-buffers '("*Apropos*" "*Buffer List*"
+                                "*Completions*" "*Compile-Log*"
+                                "*Help*" "*Ibuffer*"
+                                "*inferior-lisp*"))
 
-;; Do NOT make backups of files, not safe.
-;; https://github.com/joedicastro/dotfiles/tree/master/emacs
-(use-package files
-  :custom
-  (auto-save-default nil)
-  (make-backup-files nil))
-
-(use-package uniquify
-  :custom
-  ;; Don't muck with special buffers.
-  (uniquify-ignore-buffers-re "^\\*"))
-
-(use-package winner
-  :hook (after-init . winner-mode)
-  :custom
-  (winner-boring-buffers '("*Apropos*" "*Buffer List*"
-                           "*Completions*" "*Compile-Log*"
-                           "*Help*" "*Ibuffer*"
-                           "*inferior-lisp*")))
+;; Automatically reload files was modified by external program.
+(global-auto-revert-mode +1)
+(setopt global-auto-revert-non-file-buffers t)
+(setopt auto-revert-verbose nil)
 
 (use-package recentf
   :hook (after-init . recentf-mode)
@@ -172,20 +152,20 @@
                     "/\\.?TAGS\\'" "/\\.?tags\\'"))
     (add-to-list 'recentf-exclude regexp)))
 
-;; Automatically reload files was modified by external program.
-(use-package autorevert
-  :hook (after-init . global-auto-revert-mode)
-  :custom
-  (global-auto-revert-non-file-buffers t)
-  (auto-revert-verbose nil))
-
 (use-package whitespace
+  :bind ("C-c t w" . whitespace-mode)
   :custom
   ;; Search {zero,full}-width space also.
   (whitespace-space-regexp "\\( +\\|　+\\|​+\\)")
   :config
   ;; Show zero-width space.
   (add-to-list 'whitespace-display-mappings '(space-mark #x200b [?.])))
+
+(use-package uniquify
+  :defer t
+  :custom
+  ;; Don't muck with special buffers.
+  (uniquify-ignore-buffers-re "^\\*"))
 
 (use-package tramp
   :defer t
@@ -233,7 +213,6 @@
 (keymap-global-set "C-c t s" #'subword-mode)
 (keymap-global-set "C-c t t" #'load-theme)
 (keymap-global-set "C-c t v" #'view-mode)
-(keymap-global-set "C-c t w" #'whitespace-mode)
 
 ;; Search.
 (keymap-global-set "C-c s d" #'find-dired)
@@ -274,5 +253,4 @@
 (keymap-global-set "M-s M-k" #'scroll-other-window-down)
 
 (provide 'init-utils)
-
 ;;; init-utils.el ends here

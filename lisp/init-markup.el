@@ -21,7 +21,7 @@
   (defun my-valign-fancy-bar ()
     "Toggle valign fancy bar."
     (interactive)
-    (setq valign-fancy-bar (not valign-fancy-bar)))
+    (setopt valign-fancy-bar (not valign-fancy-bar)))
 
   ;; Compatible with `outline-mode'.
   (define-advice outline-show-entry (:override nil)
@@ -38,6 +38,12 @@ Show the heading too, if it is currently invisible."
                                (point)))
                            nil))))
 
+(use-package typst-ts-mode
+  :defer t
+  :custom
+  ;; Typst will open the compiled file automatically.
+  (typst-ts-mode-watch-options "--open"))
+
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
   :bind (:map markdown-mode-command-map
@@ -50,12 +56,6 @@ Show the heading too, if it is currently invisible."
   (markdown-gfm-uppercase-checkbox t)
   (markdown-italic-underscore t)
   (markdown-make-gfm-checkboxes-buttons t)
-
-  ;; This is set to `nil' by default, which causes a wrong-type-arg error
-  ;; when you use `markdown-open'. These are more sensible defaults.
-  (markdown-open-command (cond
-                          (my-mac-p "open")
-                          (my-linux-p "xdg-open")))
 
   (markdown-content-type "application/xhtml+xml")
   (markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"
@@ -96,12 +96,11 @@ Show the heading too, if it is currently invisible."
   (markdown-gfm-additional-languages "Mermaid")
   :hook (markdown-mode . (lambda ()
                            "The markdown files may contain tables, so do not wrap lines."
-                           (setq-local truncate-lines t)))
+                           (setq truncate-lines t)))
   :config
   ;; `multimarkdown' is necessary for `highlight.js' and `mermaid.js'.
   (when (executable-find "multimarkdown")
-    (setq markdown-command "multimarkdown")))
+    (setopt markdown-command "multimarkdown")))
 
 (provide 'init-markup)
-
 ;;; init-markup.el ends here

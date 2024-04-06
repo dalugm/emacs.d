@@ -2,5 +2,5 @@
 # name: dorun
 # key: dorun
 # --
-(doall
+(dorun
   $0)
