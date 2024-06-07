@@ -64,11 +64,9 @@ Show the heading too, if it is currently invisible."
 <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
 <style>
   body {
-    box-sizing: border-box;
-    max-width: 740px;
+    max-width: 50rem;
     width: 100%;
-    margin: 40px auto !important;
-    padding: 0 10px;
+    margin: 2rem auto !important;
   }
 </style>
 
@@ -79,7 +77,7 @@ Show the heading too, if it is currently invisible."
     document.body.classList.add('markdown-body');
     document.querySelectorAll('pre code').forEach((code) => {
       if (code.className !== 'mermaid') {
-        hljs.highlightBlock(code);
+        hljs.highlightElement(code);
       }
     });
   });

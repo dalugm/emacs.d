@@ -31,6 +31,8 @@
             (json "https://github.com/tree-sitter/tree-sitter-json")
             (kotlin "https://github.com/fwcd/tree-sitter-kotlin")
             (lua "https://github.com/tree-sitter-grammars/tree-sitter-lua")
+            (markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown/src")
+            (markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown-inline/src")
             (python "https://github.com/tree-sitter/tree-sitter-python")
             (racket "https://github.com/6cdh/tree-sitter-racket")
             (ruby "https://github.com/tree-sitter/tree-sitter-ruby")

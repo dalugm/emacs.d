@@ -41,32 +41,19 @@ URL `https://oremacs.com/2017/03/18/dired-ediff/'."
         (user-error "Mark more than 2 files")))))
 
   (defun my-dired-cycle-space-underscore-hyphen ()
-    "In Dired, rename current or marked files.
-Cycling between space, hyphen - and underscore _.  If not in
-Dired, do nothing.
-
-URL `http://ergoemacs.org/emacs/elisp_dired_rename_space_to_underscore.html'."
+    "Cycle marked files name between space, hyphen and underscore."
     (interactive)
-    (if (eq major-mode 'dired-mode)
-        (progn
-          (mapc (lambda (x)
-                  (let ((x (file-name-nondirectory x)))
-                    (cond
-                     ((string-match " " x)
-                      (rename-file x
-                                   (replace-regexp-in-string " " "-" x)
-                                   nil))
-                     ((string-match "-" x)
-                      (rename-file x
-                                   (replace-regexp-in-string "-" "_" x)
-                                   nil))
-                     ((string-match "_" x)
-                      (rename-file x
-                                   (replace-regexp-in-string "_" " " x)
-                                   nil)))))
-                (dired-get-marked-files))
-          (revert-buffer))
-      (user-error "Not in Dired")))
+    (mapc (lambda (x)
+            (let ((x (file-name-nondirectory x)))
+              (cond
+               ((string-match " " x)
+                (rename-file x (replace-regexp-in-string " " "-" x)))
+               ((string-match "-" x)
+                (rename-file x (replace-regexp-in-string "-" "_" x)))
+               ((string-match "_" x)
+                (rename-file x (replace-regexp-in-string "_" " " x))))))
+          (dired-get-marked-files))
+    (revert-buffer))
 
   (defun my-dired-open-externally (&optional arg)
     "Open marked or current file in OS's default application."

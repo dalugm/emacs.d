@@ -96,9 +96,14 @@ sexp before point and insert output into current position."
   ("\\.cljd\\'" . clojure-ts-clojuredart-mode))
 
 (use-package cider
-  :bind (:map cider-start-map
-              ("r" . cider-restart)
-              ("C-r" . cider-restart))
+  :bind ((:map cider-mode-map
+               ("C-c M-r" . cider-inspect-last-result))
+         (:map cider-start-map
+               ("r" . cider-restart)
+               ("C-r" . cider-restart)))
+  :custom
+  ;; Require Java >= 20.
+  (cider-enable-nrepl-jvmti-agent t)
   :config
   ;; https://github.com/clojure-emacs/cider/issues/3588
   (when (string= "powershell" cider-clojure-cli-command)

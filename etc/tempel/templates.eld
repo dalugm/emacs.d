@@ -43,7 +43,7 @@ c-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 
 clojure-mode clojure-ts-mode
 
-(comment "(comment" n> r> n> ":done)")
+(comment "(comment" n> p n> ":" (p "done") ")")
 (cond "(cond" n> "(" p ") " p n> ":else " r ")")
 (condp "(condp " (p "pred") " " (p "expr") n> r> ")")
 (def "(def " r ")")
@@ -55,7 +55,7 @@ clojure-mode clojure-ts-mode
 (dotimes "(dotimes [" p "]" n> r> ")")
 (fn "(fn [" p "] " r ")")
 (ifl "(if-let [" p "]" n> r> ")")
-(import "(:import (" p "))")
+(import "(:import [" p "])")
 (letfn "(letfn [" p "]" n> r> ")")
 (loop "(loop [" p "]" n> r> ")")
 (macro "(defmacro " p "\n  \"" (p "doc") "\"\n  [" p "]" n> r> ")")
@@ -69,6 +69,7 @@ clojure-mode clojure-ts-mode
 (record "(defrecord " p " [" p "]" n> r> ")")
 (reduce "(reduce " p " " p ")")
 (require "(:require [" p "])")
+(run "(run! " r ")")
 (try "(try" n> p n> "(catch " (p "Exception") " e" n> r> "))")
 (type "(deftype " p " [" p "]" n> r> ")")
 (use "(:use [" p "])")
@@ -503,56 +504,103 @@ rst-mode
 
 rust-mode rust-ts-mode
 
+(a "#[allow(" (p "lint") ")]")
+(adc "#[allow(dead_code)]")
 (afn "async " (i fn))
 (afnr "async " (i fnr))
 (afns "async " (i fns))
 (afnw "async " (i fnw))
-(allow "#[allow(" (p "lint") ")]")
-(allow! "#![allow(" (p "lint") ")]")
+(amain "#[tokio::main]" n>  "async " (i main))
 (anfn "|" (p "arg") "| {" n> r> n "}" >)
-(asrt "assert!(" (p "pred") ")")
-(aseq "assert_eq!(" (p "expected") ", " (p "actual") ");")
+(ar "#![allow(" (p "lint") ")]")
+(ass "assert!(" (p "pred") ")")
+(asseq "assert_eq!(" (p "expected") ", " (p "actual") ");")
+(assne "assert_ne!(" (p "expected") ", " (p "actual") ");")
 (case (p "pattern") " => " (p "expr") ",")
 (cfg "#[cfg(" (p "opt") ")]")
-(cfgv "#[cfg(" (p "opt") " = \"" (p "val") "\")]")
+(ct "#[cfg(\"test\")]")
+(cv "#[cfg(" (p "opt") " = \"" (p "val") "\")]")
 (d "dbg!(" r ")")
 (deny "#[deny(" (p "lint") ")]")
-(deny! "#![deny(" (p "lint") ")]")
-(derive "#[derive(" (p "Trait") ")]")
-(display "impl Display for " p " {" n>
-         "fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {" n>
-         "write!(f, \"" r "\")" n> "}" n
-         "}")
+(denyr "#![deny(" (p "lint") ")]")
+(dr "#[derive(" (p "Trait") ")]")
+(drf "#[derive(Default)]")
+(drg "#[derive(Debug)]")
+(drpe "#[derive(PartialEq)]")
 (enum "enum " p " {" n> r> n> "}")
-(ep "eprint!(" r ");")
-(epl "eprintln!(" r ");")
+(ep "eprint!(" r ")")
+(epl "eprintln!(" r ")")
 (fn "fn " (p "name") "(" p ") {" n> r> n "}" >)
-(fnr "fn " (p "name") "(" p ") -> " p " {" n> r> n "}" >)
-(fns "fn " (p "name") "(&self" p ") {" n> r> n "}" >)
-(fnw "fn " (p "name") "<" p ">(" p ") where " p " {" n> r> n "}" >)
+(fnr "fn " (p "name") "(" p ") -> " (p "()") " {" n> r> n "}" >)
+(fnrw "fn " (p "name") "<" p ">(" p ") -> " (p "()") n>
+      "where" n>
+      (p "trait") n>
+      " {" n> r> n "}" >)
+(fns "fn " (p "name") "(&self) {" n> r> n "}" >)
+(fnsr "fn " (p "name") "(&self) -> " (p "()") " {" n> r> n "}" >)
+(fnw "fn " (p "name") "<" p ">(" p ")" n>
+      "where" n>
+      (p "trait") n>
+      " {" n> r> n "}" >)
 (for "for " p " in " p " {" n> r> n "}" >)
+(ip "impl " p " {" n> r> n "}")
+(ipb "impl Builder for " p " {" n>
+     "fn default() -> Self {" n>
+     r> n>
+     "}" n> "}")
+(ipd "impl Default for " p " {" n>
+     "fn default() -> Self {" n>
+     r> n>
+     "}" n> "}")
+(ipf "impl " p " for " p " {" n> r> n "}")
+(ipfd "impl std::fmt::Display for " (p "Type" type) " {" n>
+      "fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {" n>
+      "write!(f, \"" type "\")" n>
+      "}" n> "}")
+(ippe "impl PartialEq for " p " {" n>
+      "fn eq(&self, other: &Self) -> bool {" n>
+      r> n>
+      "}" n n>
+      "fn ne(&self, other: &Self) -> bool {" n>
+      "!self.eq(other)" n>
+      "}" n>
+      "}")
 (if "if " p " {" n> r> n "}" >)
 (ifl "if let " (p "pattern") " = " (p "expr") " {" n> r> n "}" >)
-(impl "impl " p " {" n> r> n "}")
-(implf "impl " p " for " p " {" n> r> n "}")
 (loop "loop {" n> r> n "}" >)
 (macro "macro_rules! " p " {" n> r> n> "}")
 (main "fn main() {" n> r> n "}")
 (match "match " (p "expr") " {" n> r> n "}" >)
 (mod "mod " (p "module") " {" n> r> n "}" >)
+(p "print!(" r ")")
+(pafn "pub " (i afn))
+(pafnr "pub " (i afnr))
+(penum "pub " (i enum))
 (pfn "pub " (i fn))
 (pfnr "pub " (i fnr))
 (pfns "pub " (i fns))
+(pfnsr "pub " (i fnsr))
 (pfnw "pub " (i fnw))
-(p "print!(" r ");")
-(pl "println!(" r ");")
+(pl "println!(" r ")")
+(plv "println!(\"" (p "value" val) ": {" val "}\")")
+(pmod "pub " (i mod))
+(ps "pub " (i s))
+(ptt "pub " (i tt))
+(pv "print!(\"" (p "value" val) ": {" val "}\")")
+(s "struct " p " {" n> r> n> "}")
 (spawn "spawn(proc() {" n> r> n "});" >)
-(struct "struct " p " {" n> r> n> "}")
-(test "#[test]" n (i fn))
-(trait "trait " p " {" n> r> n> "}")
-(union "union " p " {" n> r> n "}")
-(warn "#[warn(" (p "lint") ")]")
-(warn! "#![warn(" (p "lint") ")]")
+(t "todo!(" r ")")
+(tafn "#[tokio::test]" n>  "async " (i fn))
+(tfn "#[test]" n>  (i fn))
+(tfnr "#[test]" n>  (i fnr))
+(tifn "#[test]" n> "#[ignore]" n>  (i fn))
+(tiafn "#[tokio::test]" n> "#[ignore]" n>  (i afn))
+(tpfn "#[test]" n> "#[should_panic]" n>  (i fn))
+(tt "trait " p " {" n> r> n> "}")
+(u "union " p " {" n> r> n "}")
+(ut "#[cfg(test)]" n> "mod tests {" n> "use super::*;" n n> r> n "}" >)
+(w "#[warn(" (p "lint") ")]")
+(wr "#![warn(" (p "lint") ")]")
 (while "while " p " {" n> r> n "}" >)
 (whilel "while let " (p "pattern") " = " (p "expr") " {" n> r> n "}" >)
 

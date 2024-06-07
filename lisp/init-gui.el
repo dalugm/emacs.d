@@ -79,18 +79,20 @@
 
 (defvar my-font-alist
   '(("霞鹜文楷等宽" "LXGW WenKai Mono" nil 1)
+    ("ToshibaTxL2" "MxPlus ToshibaTxL2 8x16" "Unifont" 1)
+    ("ToshibaSat 8x16" "MxPlus ToshibaSat 8x16" "Unifont" 1)
+    ("IBM VGA 8x16" "MxPlus IBM VGA 8x16" "Unifont" 1)
     ("Unifont" "Unifont" nil 1)
-    ("Unifont 16" "Unifont" nil 1 (:size 16) (:size 16))
     ("Cascadia Code" "Cascadia Code" "Sarasa Mono SC" 1)
     ("Cascadia Mono" "Cascadia Mono" "Sarasa Mono SC" 1)
     ("Fira Code" "Fira Code" "Sarasa Mono SC" 1)
-    ("Hack" "Hack" "Sarasa Mono Slab SC" 1)
+    ("Hack" "Hack" "Sarasa Mono SC" 1)
     ("Jetbrains Mono" "Jetbrains Mono" "Sarasa Mono SC" 1)
-    ("Menlo" "Menlo" "Sarasa Mono Slab SC" 1)
+    ("Menlo" "Menlo" "Sarasa Mono SC" 1)
     ("Monaco" "Monaco" "LXGW WenKai Mono" 1)
     ("Monego" "Monego" "LXGW WenKai Mono" 1)
-    ("Roboto Mono" "Roboto Mono" "Sarasa Mono Slab SC" 1)
-    ("Roboto" "Roboto" "Sarasa Mono Slab SC" 1)
+    ("Roboto Mono" "Roboto Mono" "Sarasa Mono SC" 1)
+    ("Roboto" "Roboto" "Sarasa Mono SC" 1)
     ("SF Mono" "SF Mono" "LXGW WenKai Mono" 1)
     ("Spot Mono" "Spot Mono" "Sarasa Mono SC" 1)
     ("冬青黑体 简" "Hiragino Sans GB" nil 1)
@@ -119,7 +121,6 @@
     ("方正黑体" "FZHei B01" nil 1)
     ("更纱黑体 Gothic" "Sarasa Gothic SC" nil 1)
     ("更纱黑体 UI" "Sarasa UI SC" nil 1)
-    ("等距更纱黑体 Slab" "Sarasa Mono Slab SC" nil 1)
     ("等距更纱黑体" "Sarasa Mono SC" nil 1)
     ("霞鹜文楷 cjk" nil "LXGW WenKai" 1)
     ("霞鹜文楷" "LXGW WenKai" nil 1))
@@ -192,8 +193,7 @@ SCJK-SCALE is nil, don't add size attributes to the CJK spec."
   "Translate FONT-NAME to font-spec.
 
 If FONT-NAME is nil, use the first font in `my-font-alist'."
-  (or (alist-get font-name my-font-alist
-                 nil nil #'equal)
+  (or (alist-get font-name my-font-alist nil nil #'equal)
       (cdar my-font-alist)))
 
 (defun my--load-font-spec (face font-name size &rest attrs)
@@ -253,9 +253,8 @@ ATTRS."
          (completing-read "Font: " (mapcar #'car my-font-alist) nil t)
          (read-number "Size: " (my--font-default-size))))
   (let* ((spec (my--font-name-to-spec font-name))
-         (fontset
-          (apply #'my--create-fontset
-                 (my--font-expand-spec spec size))))
+         (fontset (apply #'my--create-fontset
+                         (my--font-expand-spec spec size))))
     (if (eq face 'default)
         (apply #'my-load-default-font font-name size attrs)
       (apply #'set-face-attribute face nil
