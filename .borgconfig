@@ -11,8 +11,6 @@
 [submodule "emmet-mode"]
 	build-step = make clean
 	build-step = make
-[submodule "magit"]
-	no-byte-compile = lisp/magit-libgit.el
 [submodule "sqlite3"]
 	build-step = make
 [submodule "standard-themes"]

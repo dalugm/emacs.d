@@ -2,7 +2,7 @@
 
 ;;; Commentary:
 ;;
-;;  Ido configuration.
+;;  Interactively do thins with buffers and files.
 ;;
 
 ;;; Code:

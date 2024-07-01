@@ -121,8 +121,8 @@
 (electric-pair-mode +1)
 
 ;; Show matching parentheses.
-(show-paren-mode +1)
 (setopt show-paren-context-when-offscreen 'overlay)
+(show-paren-mode +1)
 
 ;; Clean up obsolete buffers automatically.
 (require 'midnight)
@@ -135,9 +135,8 @@
                                 "*inferior-lisp*"))
 
 ;; Automatically reload files was modified by external program.
-(global-auto-revert-mode +1)
-(setopt global-auto-revert-non-file-buffers t)
 (setopt auto-revert-verbose nil)
+(global-auto-revert-mode +1)
 
 (use-package recentf
   :hook (after-init . recentf-mode)

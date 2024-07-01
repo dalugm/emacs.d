@@ -5,10 +5,16 @@
 bash-ts-mode sh-mode
 
 (b "#!/usr/bin/env " (p "sh"))
-(case "case " (p "cond") " in" n> p ")" n> (p "expr") n> ";;" n> r> n "esac")
-(for "for " p " in " p "; do" n> r> n "done")
-(fn "function " p " {" n> r> n "}")
+(case "case \"$" (p "VAR") "\" in" n>
+      (p "1") ") echo 1" n> ";;" n>
+      (p "2|3") ") echo 2 or 3" n> ";;" n>
+      "*) echo default" n> ";;" n> "esac" >)
+(for "for ((" (p "i" i) " = 0; " i " < " (p "10") "; " i "++)); do" n> "echo \"$" i "\"" n "done")
+(fori "for " p " in " p "; do" n> r> n "done")
+(fn (p "name") "() {" n> r> n "}")
 (if "if " (p "pred") "; then" n> r> n "fi")
+(elif "elif " (p "pred") "; then" n> r>)
+(else "else" n> r>)
 (select "select " p " in " p "; do" n> r> n "done")
 (until "until " p "; do" n> r> n "done")
 (while "while " p "; do" n> r> n "done")
@@ -20,11 +26,12 @@ c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-m
 c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-mode js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
 
 (class "class " p " {" n> r> n "}")
+(doc "/**" n " * " r n " */")
 (dow "do {" n> p n "} while (" p ")" >)
 (for "for (" p ") {" n> r> n "}" >)
 (if "if (" p ") {" n> r> n "}" >)
 (switch "switch (" p ") {" n> r> n "}" >)
-(ter "(" (p "pred") ") ? " (p "then") " : " (p "else") ";")
+(te "(" (p "pred") ") ? " (p "then") " : " (p "else") ";")
 (while "while(" p ") {" n> r> n "}" >)
 
 c-mode
@@ -344,6 +351,18 @@ heex-mode heex-ts-mode html-mode html-ts-mode nxml-mode web-mode
 (form "<form method=\"" p "\" action=\"" p "\">" n> r> n "</form>" >)
 (head "<head>" n> r> n "</head>" >)
 (html "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"" (p "en" en) "\" lang=\"" en "\">" n> r> n "</html>" >)
+(html5 "<!DOCTYPE html>" n
+       "<html lang=\"" (p "en") "\">" n
+       "<head>" > n
+       "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />" > n
+       "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />" > n
+       "<title>" (p "HTML5 template") "</title>" > n
+       "<link href=\"" (p "css/style.css") "\" rel=\"stylesheet\" />" > n
+       "</head>" > n
+       "<body>" > n
+       "<div id=\"app\"></div>" > n
+       "</body>" > n
+       "</html>")
 (img "<img src=\"" p "\" alt=\"" p "\" />")
 (input "<input type=\"" p "\" name=\"" p "\" value=\"" p "\" />")
 (link "<link ref=\"" (p "stylesheet") "\" href=\"" (p "url") "\" type=\"" (p "text/css") "\" media=\"" (p "screen") "\" />")
@@ -352,17 +371,6 @@ heex-mode heex-ts-mode html-mode html-ts-mode nxml-mode web-mode
 (style "<style tyle=\"text/css\" media=\"" (p "screen") "\">" n> r> n "</style>")
 (tag "<" (p "tag" tag) ">" r "</" tag ">")
 (tags "<" p " />")
-(tpl "<!DOCTYPE html>" n
-     "<html lang=\"en\">" n
-     "<head>" > n
-     "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />" > n
-     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />" > n
-     "<title>" (r "HTML5 template") "</title>" > n
-     "</head>" > n
-     "<body>" > n
-     "<div id=\"app\"></div>" > n
-     "</body>" > n
-     "</html>")
 
 java-mode java-ts-mode
 
@@ -372,17 +380,49 @@ java-mode java-ts-mode
 
 js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
 
-(cas "console.assert(" (p "assertion") ");")
-(ccl "console.clear();")
-(cer "console.error(" r ");")
-(cin "console.info(" r ");")
-(clg "console.log(" r ");")
-(clf "console.log('" (p "var" var) ": ', " var ");")
-(cli "console.log(`" r "`);")
-(cwn "console.warn(" r ");")
-(fn "function " p "(" p ") {" n> r> n "}" >)
 (afn "async " (i fn))
-(ip "import " r ";")
+(ael (p "document") ".addEventListener('" (p "event") "', (" (p "ev") ") => {" n> r> n "});" >)
+(ca "console.assert(" (p "assertion") ");")
+(ce "console.error(" r ");")
+(ci "console.log(`" r "`);")
+(cl "console.log(" r ");")
+(cv "console.log('" (p "var" var) ":', " var ");")
+(cw "console.warn(" r ");")
+(eac (p "el") ".appendChild(" r ");")
+(erc (p "el") ".removeChild(" r ");")
+(ev (p "collection") ".every((" (p "elem") ") => {" n> r> n "});" >)
+(fd (p "collection") ".find((" (p "elem") ") => {" n> r> n "});" >)
+(fe (p "collection") ".forEach((" (p "elem") ") => {" n> r> n "});" >)
+(fl (p "collection") ".filter((" (p "elem") ") => {" n> r> n "});" >)
+(fn "function " p "(" p ") {" n> r> n "}" >)
+(forin "for (const " (p "key" key) " in " (p "object" obj) ") {" n>
+       "if (" obj ".hasOwnProperty(" key ")) {" n> r> n "}" > n "}" >)
+(forof "for (const " (p "iterator") " of " (p "collection") ") {" n> r> n "}" >)
+(gc "const " (p "els") " = Array.from(" (p "document") ".getElementsByClassName('" r "'));")
+(gi "const " (p "el") " = " (p "document") ".getElementById('" r "');")
+(gt "const " (p "els") " = Array.from(" (p "document") ".getElementsByTagName('" r "'));")
+(iife "(function (" p ") {" n> p n "})(" r ");")
+(imp "import " (p "*") " from '" (p "module") "';")
+(js "JSON.stringify(" r ")")
+(jp "JSON.parse(" r ")")
+(map (p "collection") ".map((" (p "elem") ") => {" n> r> n "});" >)
+(new "const " (p "name") " = new " (p "Name") "(" r ");")
+(oa "Object.assign(" (p "dest") ", " (p "source") ")")
+(oc "Object.create(" r ")")
+(oe "Object.entries(" r ")")
+(ok "Object.keys(" r ")")
+(ov "Object.values(" r ")")
+(on (p "emitter") ".on('" (p "event") "', (" (p "args") ") => {" n> r> n "});" >)
+(proto (p "Class") ".prototype." (p "method") " = (" (p "args") ") => {" n> r> n "}" >)
+(qs "const " (p "el") " = " (p "document") ".querySelector('" r "');")
+(qsa "const " (p "els") " = Array.from(" (p "document") ".querySelectorAll('" r "'));")
+(rel (p "document") ".removeEventListener('" (p "event") "', '" (p "listener") "');")
+(rd (p "collection") ".reduce((" (p "prev") ", " (p "curr") ") => {" n> r> n "});" >)
+(rq "const " p " = require('" (r "module") "');")
+(siv "setInterval(() => {" n> p n "}, " (p "interval") ");" >)
+(sleep "await new Promise((r) => setTimeout(r, " (r "1000") "));")
+(sto "setTimeout(() => {" n> p n "}, " (p "timeout") ");" >)
+(sm (p "collection") ".some((" (p "elem") ") => {" n> r> n "});" >)
 (try "try {" n> p n "} catch (err) {" > n> p n "} finally {" > n> r> n "}" >)
 (uc "const " (p "cachedFn") " = useCallback(" (p "fn") ", [" r "]);")
 (uct "const " p " = useContext(" r ");")
@@ -504,19 +544,20 @@ rst-mode
 
 rust-mode rust-ts-mode
 
-(a "#[allow(" (p "lint") ")]")
 (adc "#[allow(dead_code)]")
 (afn "async " (i fn))
 (afnr "async " (i fnr))
 (afns "async " (i fns))
 (afnw "async " (i fnw))
+(allow "#[allow(" (p "lint") ")]")
+(allowb "#![allow(" (p "lint") ")]")
 (amain "#[tokio::main]" n>  "async " (i main))
 (anfn "|" (p "arg") "| {" n> r> n "}" >)
 (ar "#![allow(" (p "lint") ")]")
 (ass "assert!(" (p "pred") ")")
 (asseq "assert_eq!(" (p "expected") ", " (p "actual") ");")
 (assne "assert_ne!(" (p "expected") ", " (p "actual") ");")
-(case (p "pattern") " => " (p "expr") ",")
+(case (p "pattern") " => " (p "expr"))
 (cfg "#[cfg(" (p "opt") ")]")
 (ct "#[cfg(\"test\")]")
 (cv "#[cfg(" (p "opt") " = \"" (p "val") "\")]")
@@ -542,7 +583,7 @@ rust-mode rust-ts-mode
       "where" n>
       (p "trait") n>
       " {" n> r> n "}" >)
-(for "for " p " in " p " {" n> r> n "}" >)
+(for "for " (p "elem") " in " (p "iter") " {" n> r> n "}" >)
 (ip "impl " p " {" n> r> n "}")
 (ipb "impl Builder for " p " {" n>
      "fn default() -> Self {" n>
@@ -572,35 +613,38 @@ rust-mode rust-ts-mode
 (main "fn main() {" n> r> n "}")
 (match "match " (p "expr") " {" n> r> n "}" >)
 (mod "mod " (p "module") " {" n> r> n "}" >)
-(p "print!(" r ")")
+(modt "#[cfg(test)]" n> "mod tests {" n> "use super::*;" n n> r> n "}" >)
+(modu "mod " (p "module") ";")
+(p "print!(" r ");")
 (pafn "pub " (i afn))
 (pafnr "pub " (i afnr))
+(pc "panic!(" r ");")
 (penum "pub " (i enum))
 (pfn "pub " (i fn))
 (pfnr "pub " (i fnr))
 (pfns "pub " (i fns))
 (pfnsr "pub " (i fnsr))
 (pfnw "pub " (i fnw))
-(pl "println!(" r ")")
-(plv "println!(\"" (p "value" val) ": {" val "}\")")
+(pl "println!(" r ");")
 (pmod "pub " (i mod))
 (ps "pub " (i s))
 (ptt "pub " (i tt))
-(pv "print!(\"" (p "value" val) ": {" val "}\")")
-(s "struct " p " {" n> r> n> "}")
 (spawn "spawn(proc() {" n> r> n "});" >)
+(st "struct " (p "Name") " {" n> r> n> "}")
+(stt "struct " (p "Name") "(" (p "Type") ");")
+(stu "struct " (p "Name") ";")
 (t "todo!(" r ")")
-(tafn "#[tokio::test]" n>  "async " (i fn))
-(tfn "#[test]" n>  (i fn))
-(tfnr "#[test]" n>  (i fnr))
-(tifn "#[test]" n> "#[ignore]" n>  (i fn))
-(tiafn "#[tokio::test]" n> "#[ignore]" n>  (i afn))
-(tpfn "#[test]" n> "#[should_panic]" n>  (i fn))
+(te "type " (p "Alias") " = " (p "Type") ";")
+(test "#[test]" n>  (i fn))
+(testa "#[tokio::test]" n> (i afn))
+(testai "#[tokio::test]" n> "#[ignore]" n>  (i afn))
+(testi "#[test]" n> "#[ignore]" n>  (i fn))
+(testp "#[test]" n> "#[should_panic]" n>  (i fn))
 (tt "trait " p " {" n> r> n> "}")
-(u "union " p " {" n> r> n "}")
-(ut "#[cfg(test)]" n> "mod tests {" n> "use super::*;" n n> r> n "}" >)
-(w "#[warn(" (p "lint") ")]")
-(wr "#![warn(" (p "lint") ")]")
+(un "union " p " {" n> r> n "}")
+(vec "vec![" r "]")
+(warn "#[warn(" (p "lint") ")]")
+(warnb "#![warn(" (p "lint") ")]")
 (while "while " p " {" n> r> n "}" >)
 (whilel "while let " (p "pattern") " = " (p "expr") " {" n> r> n "}" >)
 
@@ -656,6 +700,33 @@ typst-mode typst-ts-mode
      "strong(it)" n>
      "}" n>
      "#outline(indent: auto)")
+
+zig-mode zig-ts-mode
+
+(arr "[" (p "_") "]" (p "type") "{" r "}")
+(case (p "pattern") " => " (p "expr"))
+(const "const " (p "name") ": " (p "type") " = " r ";")
+(enum "const " (p "Name") " = enum {" n> r> n "};" >)
+(enumt "const " (p "Name") " = enum(" (p "type") ") {" n> r> n "};" >)
+(err "const " (p "Name") "Error = error {" n> r> n "};" >)
+(fn "fn " (p "name") "(" p ") {" n> r> n "}" >)
+(fnr "fn " (p "name") "(" p ") " (p "void") " {" n> r> n "}" >)
+(for "for (" p ") |" p "| {" n> r> n "}" >)
+(gfn "fn " (p "name") "(comptime T: type, " p ") type {" n> r> n "}" >)
+(if "if (" p ") {" n> r> n "}" >)
+(ifi "if (" p ") " p " else " r)
+(ifn "inline " (i fn))
+(imp "const " (p "name") " = @import(\"" (r "lib") "\");")
+(main "pub fn main() void {" n> r> n "}")
+(p "std.debug.print(\"" p "\", .{" r "});")
+(std "const std = @import(\"std\");")
+(struct "const " (p "Name") " = struct {" n> r> n "}" >)
+(switch "switch (" p ") {" n> (i case) "," n> "else => " p "," n "}" >)
+(test "test \"" (p "name") "\" {" n> r> n "}" >)
+(union "const " (p "Name") " = union {" n> r> n "};" >)
+(var "var " (p "name") ": " (p "type") " = " r ";")
+(while "while (" p ") {" n> r> n "}" >)
+(whilei "while (" p ") : (" p ") {" n> r> n "}" >)
 
 ;; Local Variables:
 ;; mode: lisp-data

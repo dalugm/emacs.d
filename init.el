@@ -79,7 +79,7 @@
 
 ;; Program.
 (require 'init-sexp)
-(require 'init-web)
+(require 'init-frontend)
 (require 'init-lsp)
 
 ;; Personal setup.

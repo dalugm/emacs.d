@@ -144,9 +144,6 @@
 [submodule "htmlize"]
 	path = lib/htmlize
 	url = https://github.com/hniksic/emacs-htmlize
-[submodule "kotlin-ts-mode"]
-	path = lib/kotlin-ts-mode
-	url = https://gitlab.com/bricka/emacs-kotlin-ts-mode.git
 [submodule "llama"]
 	path = lib/llama
 	url = https://git.sr.ht/~tarsius/llama
@@ -162,6 +159,9 @@
 [submodule "monokai-pro-theme"]
 	path = lib/monokai-pro-theme
 	url = https://github.com/belak/emacs-monokai-pro-theme
+[submodule "nix-ts-mode"]
+	path = lib/nix-ts-mode
+	url = https://github.com/nix-community/nix-ts-mode
 [submodule "no-littering"]
 	path = lib/no-littering
 	url = https://github.com/emacscollective/no-littering
@@ -186,9 +186,9 @@
 [submodule "racket-mode"]
 	path = lib/racket-mode
 	url = https://github.com/greghendershott/racket-mode
-[submodule "rainbow-delimiters"]
-	path = lib/rainbow-delimiters
-	url = https://github.com/Fanael/rainbow-delimiters
+[submodule "reformatter"]
+	path = lib/reformatter
+	url = https://github.com/purcell/emacs-reformatter
 [submodule "s"]
 	path = lib/s
 	url = https://github.com/magnars/s.el
@@ -273,3 +273,6 @@
 [submodule "zh-lib"]
 	path = lib/zh-lib
 	url = https://github.com/dalugm/zh-lib.el
+[submodule "zig-mode"]
+	path = lib/zig-mode
+	url = https://github.com/ziglang/zig-mode

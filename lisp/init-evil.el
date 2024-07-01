@@ -39,6 +39,7 @@
          ("<leader>ll" . eglot)
          ("<leader>la" . eglot-code-actions)
          ("<leader>lc" . eglot-show-workspace-configuration)
+         ("<leader>ld" . eldoc)
          ("<leader>lf" . eglot-format)
          ("<leader>lq" . eglot-shutdown)
          ("<leader>lQ" . eglot-shutdown-all)
