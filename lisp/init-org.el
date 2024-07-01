@@ -223,12 +223,19 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numberin
   :defer t
   :custom (org-confirm-babel-evaluate nil)
   :config
-  (defun my-org-babel-load-languages ()
-    "Add src_block supported src."
-    (interactive)
-    (org-babel-do-load-languages 'org-babel-load-languages
-                                 '((C . t) (python . t)
-                                   (emacs-lisp . t) (lisp . t)))))
+  (define-advice org-babel-execute-src-block (:around (fn &rest args) lazy-load-languages)
+    "Load languages when needed."
+    (let* ((language (org-element-property :language (org-element-at-point)))
+           (lang-cons (assoc (intern language) org-babel-load-languages)))
+      (unless (cdr lang-cons)
+        (add-to-list 'org-babel-load-languages (cons (intern language) t))
+        (org-babel-do-load-languages 'org-babel-load-languages
+                                     org-babel-load-languages)))
+    (apply fn args)))
+
+(use-package ob-js
+  :defer t
+  :custom (org-babel-js-cmd "bun"))
 
 (use-package ob-lisp
   :defer t

@@ -11,6 +11,7 @@
   :bind (("C-c l l" . eglot)
          ("C-c l a" . eglot-code-actions)
          ("C-c l c" . eglot-show-workspace-configuration)
+         ("C-c l d" . eldoc)
          ("C-c l f" . eglot-format)
          ("C-c l q" . eglot-shutdown)
          ("C-c l Q" . eglot-shutdown-all)

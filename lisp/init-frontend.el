@@ -1,8 +1,8 @@
-;;; init-web.el --- Web develop configuration -*- lexical-binding: t -*-
+;;; init-frontend.el --- Frontend develop configuration -*- lexical-binding: t -*-
 
 ;;; Commentary:
 ;;
-;; Configuration for web develop.
+;; Configuration for frontend develop.
 ;;
 
 ;;; Code:
@@ -45,6 +45,5 @@
   (web-mode-enable-auto-quoting nil)
   (web-mode-enable-auto-pairing nil))
 
-(provide 'init-web)
-
-;;; init-web.el ends here
+(provide 'init-frontend)
+;;; init-frontend.el ends here

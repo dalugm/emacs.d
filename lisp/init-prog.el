@@ -21,27 +21,27 @@
             (dart "https://github.com/UserNobody14/tree-sitter-dart")
             (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
             (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
-            (erlang "https://github.com/WhatsApp/tree-sitter-erlang")
             (go "https://github.com/tree-sitter/tree-sitter-go")
             (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
             (heex "https://github.com/phoenixframework/tree-sitter-heex")
             (html "https://github.com/tree-sitter/tree-sitter-html")
             (java "https://github.com/tree-sitter/tree-sitter-java")
             (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
+            (jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
             (json "https://github.com/tree-sitter/tree-sitter-json")
-            (kotlin "https://github.com/fwcd/tree-sitter-kotlin")
             (lua "https://github.com/tree-sitter-grammars/tree-sitter-lua")
             (markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown/src")
             (markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown-inline/src")
+            (nix "https://github.com/nix-community/tree-sitter-nix")
             (python "https://github.com/tree-sitter/tree-sitter-python")
-            (racket "https://github.com/6cdh/tree-sitter-racket")
             (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
             (rust "https://github.com/tree-sitter/tree-sitter-rust")
             (toml "https://github.com/tree-sitter/tree-sitter-toml")
             (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src")
             (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src")
             (typst "https://github.com/uben0/tree-sitter-typst")
-            (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+            (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+            (zig "https://github.com/maxxnino/tree-sitter-zig")))
   :custom
   (major-mode-remap-alist
    '((c-mode          . c-ts-mode)
@@ -83,40 +83,8 @@
   (compilation-ask-about-save nil)
   (compilation-always-kill t)
   (compilation-scroll-output 'first-error)
-  :config
-  ;; Colorize output of Compilation Mode.
-  ;; https://stackoverflow.com/a/3072831/355252
-  (require 'ansi-color)
-
-  (defun my--colorize-compilation-buffer ()
-    "Colorize a compilation mode buffer."
-    ;; Don't mess with child modes such as grep, ack, ag, etc.
-    (when (eq major-mode 'compilation-mode)
-      (let ((inhibit-read-only t))
-        (ansi-color-apply-on-region (point-min) (point-max)))))
-
-  (add-hook 'compilation-filter-hook #'my--colorize-compilation-buffer)
-
-  (defvar my-last-compilation-buffer nil
-    "The last buffer in which compilation took place.")
-
-  (defun my--save-compilation-buffer (&rest _)
-    "Save the last compilation buffer to find it later."
-    (setq my-last-compilation-buffer next-error-last-buffer))
-
-  (advice-add 'compilation-start :after #'my--save-compilation-buffer)
-
-  (defun my--find-prev-compilation (orig &optional edit-command)
-    "Find the previous compilation buffer, if present, and recompile there."
-    (if (and (null edit-command)
-             (not (derived-mode-p 'compilation-mode))
-             my-last-compilation-buffer
-             (buffer-live-p (get-buffer my-last-compilation-buffer)))
-        (with-current-buffer my-last-compilation-buffer
-          (funcall orig edit-command))
-      (funcall orig edit-command)))
-
-  (advice-add 'recompile :around #'my--find-prev-compilation))
+  :hook
+  (compilation-filter . ansi-color-compilation-filter))
 
 (use-package etags
   :defer t
@@ -146,9 +114,6 @@
                               'face '(:strike-through t)
                               'font-lock-face '(:strike-through t))
                   "\n")))
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package evil-nerd-commenter
   :bind (("C-c c l" . evilnc-comment-or-uncomment-lines)
@@ -212,9 +177,12 @@
   :when (and (treesit-available-p) (treesit-ready-p 'dart 'message))
   :mode "\\.dart\\'")
 
-(use-package kotlin-ts-mode
-  :when (and (treesit-available-p) (treesit-ready-p 'kotlin 'message))
-  :mode "\\.kts?\\'")
+(use-package nix-ts-mode
+  :when (and (treesit-available-p) (treesit-ready-p 'nix 'message))
+  :mode "\\.nix\\'")
+
+(use-package zig-mode
+  :mode "\\.zig\\'")
 
 (provide 'init-prog)
 ;;; init-prog.el ends here
