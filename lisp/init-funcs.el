@@ -395,27 +395,6 @@ Version: 2018-09-07 2022-09-13."
               nil t)
         (replace-match "")))))
 
-(defun my-fixup-whitespace ()
-  "Add Chinese characters support for `fixup-whitespace'."
-  (interactive "*")
-  (save-excursion
-    (delete-horizontal-space)
-    (if (or (looking-at "^\\|\\s)")
-            (save-excursion (forward-char -1)
-                            (looking-at "\\cc\\|$\\|\\s(\\|\\s'")))
-        nil
-      (insert ?\s))))
-
-;; Use `cl-lef' to change the behavior of `fixup-whitespace' only when
-;; called from `delete-indentation'.
-(defun my--delete-indentation (old-func &rest args)
-  "My modified `delete-indentation'.
-Fix OLD-FUNC with ARGS."
-  (cl-letf (((symbol-function 'fixup-whitespace) #'my-fixup-whitespace))
-    (apply old-func args)))
-
-(advice-add 'delete-indentation :around #'my--delete-indentation)
-
 (defun my-recompile-init ()
   "Byte-compile dotfiles again."
   (interactive)

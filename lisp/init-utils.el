@@ -88,13 +88,6 @@
 ;; Indent with spaces.
 (setopt indent-tabs-mode nil)
 
-;; Smart tab behavior - indent or complete.
-;; `completion-at-point' is often bound to M-TAB.
-(setopt tab-always-indent 'complete)
-
-;; TAB cycle if there are only few candidates.
-(setopt completion-cycle-threshold 3)
-
 ;; Pass `C-u' to `recenter' to put point in the window's center.
 (setopt next-error-recenter '(4))
 
@@ -188,6 +181,7 @@
 
 ;; Be able to M-x without meta.
 (keymap-global-set "C-c m x" #'execute-extended-command)
+
 ;; Zero width space.
 (keymap-global-set "C-c 8 z" (lambda ()
                                (interactive)
@@ -250,6 +244,24 @@
 
 (keymap-global-set "M-s M-j" #'scroll-other-window)
 (keymap-global-set "M-s M-k" #'scroll-other-window-down)
+
+;;;; Advice.
+
+(define-advice delete-indentation (:around (fn &rest args) chinese)
+  "Add Chinese characters support for `fixup-whitespace'.
+
+Use `cl-letf' to change the behavior of `fixup-whitespace' only when
+called from `delete-indentation'."
+  (cl-letf (((symbol-function #'fixup-whitespace)
+             (lambda ()
+               (save-excursion
+                 (delete-horizontal-space)
+                 (if (or (looking-at "^\\|\\s)")
+                         (save-excursion (forward-char -1)
+                                         (looking-at "\\cc\\|$\\|\\s(\\|\\s'")))
+                     nil
+                   (insert ?\s))))))
+    (apply fn args)))
 
 (provide 'init-utils)
 ;;; init-utils.el ends here

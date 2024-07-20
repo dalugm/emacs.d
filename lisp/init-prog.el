@@ -67,7 +67,6 @@
                   (gomod      . (,(rx "/go.mod" eos) . go-mod-ts-mode))
                   (heex       . (,(rx "." (opt (any "hl")) "eex" eos) . heex-ts-mode))
                   (lua        . (,(rx ".lua" eos) . lua-ts-mode))
-                  (rust       . (,(rx ".rs" eos) . rust-ts-mode))
                   (tsx        . (,(rx ".tsx" eos) . tsx-ts-mode))
                   (typescript . (,(rx ".ts" eos) . typescript-ts-mode))
                   (yaml       . (,(rx ".y" (opt "a") "ml" eos) . yaml-ts-mode))))
@@ -181,8 +180,34 @@
   :when (and (treesit-available-p) (treesit-ready-p 'nix 'message))
   :mode "\\.nix\\'")
 
+(use-package rust-mode
+  :bind (:map rust-mode-map
+              ("C-c C-c C-c" . rust-compile)
+              ("C-c C-c C-d" . rust-dbg-wrap-or-unwrap)
+              ("C-c C-c C-m" . rust-toggle-mutability)
+              ;; Unbind `rust-dbg-wrap-or-unwrap' for doc.
+              ("C-c C-d" . nil)
+              ("C-c C-d C-d" . my-rust-doc)
+              ("C-c C-d C-o" . my-rust-doc-open)
+              ("C-c C-p C-b" . rust-playpen-buffer)
+              ("C-c C-p C-r" . rust-playpen-region)
+              ("C-c C-r C-c" . rust-compile-release)
+              ("C-c C-r C-r" . rust-run-release))
+  :custom (rust-mode-treesitter-derive t)
+  :config
+  (defun my-rust-doc ()
+    "Build documentation using `cargo doc'."
+    (interactive)
+    (rust--compile nil "%s doc" rust-cargo-bin))
+
+  (defun my-rust-doc-open ()
+    "Build and open documentation using `cargo doc'."
+    (interactive)
+    (rust--compile nil "%s doc --open" rust-cargo-bin)))
+
 (use-package zig-mode
-  :mode "\\.zig\\'")
+  :mode "\\.zig\\'"
+  :custom (zig-format-on-save nil))
 
 (provide 'init-prog)
 ;;; init-prog.el ends here

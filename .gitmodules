@@ -36,12 +36,6 @@
 [submodule "closql"]
 	path = lib/closql
 	url = https://github.com/magit/closql
-[submodule "color-theme-sanityinc-solarized"]
-	path = lib/color-theme-sanityinc-solarized
-	url = https://github.com/purcell/color-theme-sanityinc-solarized
-[submodule "color-theme-sanityinc-tomorrow"]
-	path = lib/color-theme-sanityinc-tomorrow
-	url = https://github.com/purcell/color-theme-sanityinc-tomorrow
 [submodule "compat"]
 	path = lib/compat
 	url = https://github.com/emacs-compat/compat
@@ -66,9 +60,9 @@
 [submodule "diff-hl"]
 	path = lib/diff-hl
 	url = https://github.com/dgutov/diff-hl
-[submodule "dracula-theme"]
-	path = lib/dracula-theme
-	url = https://github.com/dracula/emacs
+[submodule "doom-themes"]
+	path = lib/doom-themes
+	url = https://github.com/doomemacs/themes
 [submodule "edit-indirect"]
 	path = lib/edit-indirect
 	url = https://github.com/Fanael/edit-indirect
@@ -156,9 +150,6 @@
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode
-[submodule "monokai-pro-theme"]
-	path = lib/monokai-pro-theme
-	url = https://github.com/belak/emacs-monokai-pro-theme
 [submodule "nix-ts-mode"]
 	path = lib/nix-ts-mode
 	url = https://github.com/nix-community/nix-ts-mode
@@ -189,6 +180,9 @@
 [submodule "reformatter"]
 	path = lib/reformatter
 	url = https://github.com/purcell/emacs-reformatter
+[submodule "rust-mode"]
+	path = lib/rust-mode
+	url = https://github.com/rust-lang/rust-mode
 [submodule "s"]
 	path = lib/s
 	url = https://github.com/magnars/s.el
@@ -267,9 +261,6 @@
 [submodule "xiaoshuo-mode"]
 	path = lib/xiaoshuo-mode
 	url = https://github.com/dalugm/xiaoshuo-mode
-[submodule "zenburn-theme"]
-	path = lib/zenburn-theme
-	url = https://github.com/bbatsov/zenburn-emacs
 [submodule "zh-lib"]
 	path = lib/zh-lib
 	url = https://github.com/dalugm/zh-lib.el

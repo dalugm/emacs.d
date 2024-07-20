@@ -15,25 +15,22 @@
 
 (use-package project
   :defer t
-  :init
-  (defun my-project-find-regexp ()
-    "Start `consult-ripgrep' or `consult-grep' in the current project."
-    (interactive)
-    (let ((root (project-root (project-current t))))
-      (if (executable-find "rg")
-          (consult-ripgrep root)
-        (consult-grep root))))
-
-  (defun my-project-find-file ()
-    "Start `consult-fd' or `consult-find' in the current project."
-    (interactive)
-    (let ((root (project-root (project-current t))))
-      (if (or (executable-find "fd") (executable-find "fdfind"))
-          (consult-fd root)
-        (consult-find root))))
   :config
-  (advice-add #'project-find-regexp :override #'my-project-find-regexp)
-  (advice-add #'project-find-file :override #'my-project-find-file)
+  (require 'keymap)
+  (require 'cl-seq)
+
+  (keymap-substitute project-prefix-map #'project-find-regexp #'consult-ripgrep)
+  (cl-nsubstitute-if
+   '(consult-ripgrep "Find regexp")
+   (pcase-lambda (`(,cmd _)) (eq cmd #'project-find-regexp))
+   project-switch-commands)
+
+  (keymap-substitute project-prefix-map #'project-find-file #'consult-fd)
+  (cl-nsubstitute-if
+   '(consult-fd "Find file")
+   (pcase-lambda (`(,cmd _)) (eq cmd #'project-find-file))
+   project-switch-commands)
+
   (keymap-set project-prefix-map "m" #'magit-project-status)
   (add-to-list 'project-switch-commands '(magit-project-status "Magit") t))
 
@@ -174,17 +171,16 @@
   :bind ("C-c e u" . vundo))
 
 (use-package orderless
-  :init
-  (setopt completion-styles '(orderless basic)
-          completion-category-defaults nil
-          completion-category-overrides '((file (styles partial-completion))))
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion))))
   :config
-  (defun my--orderless-regexp (str)
+  (define-advice orderless-regexp (:filter-args (str) enhance)
     "Enhance `orderless-regexp' when searching STR."
     (require 'zh-lib)
     (setf (car str) (zh-lib-build-regexp-string (car str)))
-    str)
-  (advice-add 'orderless-regexp :filter-args #'my--orderless-regexp))
+    str))
 
 (use-package consult
   :init
@@ -271,7 +267,7 @@
     :group 'convenience
     :type 'character)
 
-  (defun my--consult-zh-regexp-compiler (input type ignore-case)
+  (define-advice consult--default-regexp-compiler (:override (input type ignore-case) zh)
     "Compile the INPUT string to a list of regular expressions.
 
 The function should return a pair, the list of regular expressions and a
@@ -292,10 +288,8 @@ matches case insensitively."
           (when-let (regexps (seq-filter #'consult--valid-regexp-p input))
             (apply-partially #'consult--highlight-regexps regexps ignore-case))))
 
-  (advice-add 'consult--default-regexp-compiler :override #'my--consult-zh-regexp-compiler)
-
   (when my-win-p
-    (defun my--consult-find-win (&optional dir initial)
+    (define-advice consult-find (:override (&optional dir initial) win)
       "Use `consult-find' on Windows.
 
 URL `https://github.com/minad/consult/issues/475'."
@@ -306,8 +300,7 @@ URL `https://github.com/minad/consult/issues/475'."
                    (`(,prompt ,paths ,dir) (consult--directory-prompt "Find" dir))
                    (default-directory dir)
                    (builder (consult--find-make-builder paths)))
-        (find-file (consult--find prompt builder initial))))
-    (advice-add 'consult-find :override #'my--consult-find-win))
+        (find-file (consult--find prompt builder initial)))))
 
   (consult-customize
    consult-theme :preview-key '(:debounce 0.5 any)))

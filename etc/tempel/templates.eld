@@ -25,28 +25,80 @@ c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-m
 
 c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-mode js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
 
-(class "class " p " {" n> r> n "}")
 (doc "/**" n " * " r n " */")
-(dow "do {" n> p n "} while (" p ")" >)
+(dowhile "do {" n> p n "} while (" p ")" >)
 (for "for (" p ") {" n> r> n "}" >)
 (if "if (" p ") {" n> r> n "}" >)
-(switch "switch (" p ") {" n> r> n "}" >)
+(switch "switch (" (p "key") ") {" n> "case " (p "value") ":" > n> r> n "break;" > n> "default:" > n> "break;" > n "}" >)
 (te "(" (p "pred") ") ? " (p "then") " : " (p "else") ";")
 (while "while(" p ") {" n> r> n "}" >)
 
-c-mode
+c++-mode c++-ts-mode
 
+(cin "std::cin >> " r ";")
+(cout "std::cout << " r ";")
+(class "class " (p "MyClass" class) " {" n
+       "public:" n>
+       class "();" > n>
+       class "(" class " &&) = default;" > n>
+       class "(const " class "&) = default;" > n>
+       class " &operator=(" class " &&) = default;" > n>
+       class " &operator=(const " class " &) = default;" > n>
+       "~" class "();" > n n
+       "private:" n> r> n
+       "};" n n
+       class "::" class "() {}" n n
+       class "::~" class "() {}")
+(classi "class " (p "MyClass" class) " {" n
+        "public:" n>
+        class "() = default;" > n>
+        class "(" class " &&) = default;" > n>
+        class "(const " class "&) = default;" > n>
+        class " &operator=(" class " &&) = default;" > n>
+        class " &operator=(const " class " &) = default;" > n>
+        "~" class "() = default;" > n n
+        "private:" n> r> n
+        "};")
+(classe "class " (p "MyClass" class) " {" n
+        "public:" n> p n
+        "private:" n> r> n
+        "};")
+(fore "for (auto " (p "elem") " : " (p "collection") ") {" n> r> n "}")
+(io "#include <iostream>")
+(ns "namespace " (p "Namespace") " {" n> r> n "}")
+
+c++-mode c++-ts-mode c-mode c-ts-mode
+
+(def "#define " (p "MACRO"))
+(deff "#define " (p "MACRO") "(" p ") (" r ")")
+(enum "enum " (p "Enum") " {" n> r> n "};")
+(err "#error \"" r "\"")
+(fnd (p "void") " " (p "name") "(" p ");")
+(main "int main(int argc, char *argv[]) {" n> p n n> "return 0;" n "}")
+(ifd "#if " (p "cond" cond) n r n "#endif /* if " cond " */")
+(ifdef "#ifdef " (p "cond" cond) n r n "#endif /* ifdef " cond " */")
+(ifndef "#ifndef " (p "cond" cond) n r n "#endif /* ifndef " cond " */")
+(init (i io) n n (i main))
+(inc "#include <" r ">")
+(incl "#include \"" r "\"")
 (p "printf(" r ");")
+(pv "printf(\"" (p "var" var) " = %" (p "d") "\", " var ");")
+(warn "#warning \"" r "\"")
 
-c-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
+c-mode c-ts-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 
-(inc "#include <" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) ">")
-(incc "#include \"" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) "\"")
-(io "#include <stdio.h>")
+(ass "assert(" r ");")
+(assh "#include <assert.h>")
 (compile "// -*- compile-command: \"gcc -Wall -o " (file-name-sans-extension (buffer-name)) " " (buffer-name) " && ./" (file-name-sans-extension (buffer-name)) "\" -*-")
-(main "int main() {" n> p n n> "return 0;" n "}")
-(std "#include <stdlib.h>")
+(io "#include <stdio.h>")
+(lib "#include <stdlib.h>")
+(once "#ifndef " (p "FILE" file) "_H" n "#define " file "_H" n r n "#endif /* end of include guard: " file "_H */")
+(sass "static_assert(" (p "expr") ", " (p "message") ");")
+(st "struct " (p "name") " {" n> r> n "};")
 (str "#include <string.h>")
+(td "typedef " (p "void") " " (p "alias") ";")
+(tds "typedef struct " p " " (p "alias") ";")
+(tdu "typedef union " p " " (p "alias") ";")
 
 clojure-mode clojure-ts-mode
 
@@ -54,8 +106,8 @@ clojure-mode clojure-ts-mode
 (cond "(cond" n> "(" p ") " p n> ":else " r ")")
 (condp "(condp " (p "pred") " " (p "expr") n> r> ")")
 (def "(def " r ")")
-(defn "(defn " p "\n  \"" (p "doc") "\"\n  [" p "]" n> r> ")")
-(defn- "(defn- " p "\n  \"" (p "doc") "\"\n  [" p "]" n> r> ")")
+(defn "(defn " (p "fn") n> "\"" (p "doc") "\"" > n> "[" p "]" > n> r> ")" >)
+(defn- "(defn- " (p "fn") n> "\"" (p "doc") "\"" > n> "[" p "]" > n> r> ")" >)
 (doall "(doall" n> r> ")")
 (dorun "(dorun" n> r> ")")
 (doseq "(doseq [" p "]" n> r> ")")
@@ -65,7 +117,7 @@ clojure-mode clojure-ts-mode
 (import "(:import [" p "])")
 (letfn "(letfn [" p "]" n> r> ")")
 (loop "(loop [" p "]" n> r> ")")
-(macro "(defmacro " p "\n  \"" (p "doc") "\"\n  [" p "]" n> r> ")")
+(macro "(defmacro " (p "macro") n> "\"" (p "doc") "\"" > n> "[" p "]" n> r> ")")
 (map "(map " p " " p ")")
 (mapi "(map-indexed " p " " p ")")
 (mdoc "^{:doc \"" r "\"}")
@@ -139,7 +191,7 @@ dart-mode dart-ts-mode
 (ur "const [" (p "state") ", " (p "dispatch") "] = useReducer(" (p "reducer") ", " (p "args") ");")
 (urf "final " (p "ref") " = useRef(" r ");")
 (us "final " (p "name") " = useState<" (p "dynamic") ">(" r ");")
-(uvc "useValueChanged(" (p "value") ", (_, __) {" n> r> ";\n});" >)
+(uvc "useValueChanged(" (p "value") ", (_, __) {" n> r> n> "});" >)
 
 dart-mode dart-ts-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 
@@ -265,7 +317,7 @@ elixir-mode elixir-ts-mode
 emacs-lisp-mode lisp-mode
 
 (cond "(cond" n "(" q "))" >)
-(defun "(defun " p " (" p ")\n  \"" p "\"" n> r> ")")
+(defun "(defun " (p "name") " (" p ")" n> "\"" (p "doc") "\"" n> r> ")")
 (ifl "(if-let (" p ")" n> r> ")")
 (lambda "(lambda (" p ")" n> r> ")")
 (let "(let (" p ")" n> r> ")")
@@ -274,6 +326,7 @@ emacs-lisp-mode lisp-mode
 (param "(defparameter " r ")")
 (progn "(progn" n> r> ")")
 (setf "(setf " r ")")
+(unless "(unless " (p "pred") n> r> ")")
 (var "(defvar " r ")")
 (whenl "(when-let (" p ")" n> r> ")")
 (whilel "(while-let (" p ")" n> r> ")")
@@ -283,16 +336,16 @@ emacs-lisp-mode
 (alias "(defalias '" p " '" p ")")
 (andl "(and-let* (" p ")" n> r> ")")
 (autoload ";;;###autoload")
-(cmd "(defun " p " (" p ")\n  \"" p "\"" n> "(interactive" p ")" n> r> ")")
-(const "(defconst " p "\n  \"" p "\")")
-(custom "(defcustom " p "\n  \"" p "\"" n> ":type '" p ")")
+(cmd "(defun " (p "fn") " (" p ")" n> "\"" (p "doc") "\"" n> "(interactive" p ")" n> r> ")")
+(const "(defconst " (p "const") n> "\"" (p "doc") "\")")
+(custom "(defcustom " (p "custom") n> "\"" (p "doc") "\"" n> ":type '" r ")")
 (dolist "(dolist (" p ")" n> r> ")")
 (dotimes "(dotimes (" p ")" n> r> ")")
-(face "(defface " p " '((t :inherit " p "))\n  \"" p "\")")
-(group "(defgroup " p " nil\n  \"" p "\"" n> ":group '" p n> ":prefix \"" p "-\")")
+(face "(defface " p " '((t :inherit " p "))" n> "\"" (p "doc") "\")")
+(group "(defgroup " (p "group") " nil" n> "\"" (p "doc") "\"" n> ":group '" p n> ":prefix \"" p "-\")")
 (loop "(cl-loop for " p " in " p " do" n> r> ")")
 (m "(message \"" r "\")")
-(macro "(defmacro " p " (" p ")\n  \"" p "\"" n> r> ")")
+(macro "(defmacro " (p "macro") " (" p ")" n> "\"" (p "doc") "\"" n> r> ")")
 (pcase "(pcase " (p "scrutinee") n "(" q "))" >)
 (pcasel "(pcase-let (" p ")" n> r> ")")
 (pcasels "(pcase-let* (" p ")" n> r> ")")
@@ -304,8 +357,7 @@ emacs-lisp-mode
         " -- " p " -*- lexical-binding: t -*-" n
         ";;; Commentary:" n ";;; Code:" n n)
 (provide "(provide '" (file-name-base (or (buffer-file-name) (buffer-name))) ")" n
-         ";;; " (file-name-nondirectory (or (buffer-file-name) (buffer-name)))
-         " ends here" n)
+         ";;; " (file-name-nondirectory (or (buffer-file-name) (buffer-name))) " ends here")
 (package (i header) r n n (i provide))
 
 eshell-mode
@@ -372,6 +424,10 @@ heex-mode heex-ts-mode html-mode html-ts-mode nxml-mode web-mode
 (tag "<" (p "tag" tag) ">" r "</" tag ">")
 (tags "<" p " />")
 
+java-mode java-ts-mode js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
+
+(class "class " p " {" n> r> "}")
+
 java-mode java-ts-mode
 
 (p "System.out.print(" p ");")
@@ -434,33 +490,33 @@ js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
 
 latex-mode
 
-(abstract "\\begin{abstract}\n" r> n> "\\end{abstract}")
-(align "\\begin{align}\n" r> n> "\\end{align}")
-(alignn "\\begin{align*}\n" r> n> "\\end{align*}")
-(gather "\\begin{gather}\n" r> n> "\\end{gather}")
-(gatherr "\\begin{gather*}\n" r> n> "\\end{gather*}")
-(appendix "\\begin{appendix}\n" r> n> "\\end{appendix}")
-(begin "\\begin{" (s env) "}" r> n> "\\end{" (s env) "}")
-(center "\\begin{center}\n" r> n> "\\end{center}")
-(displaymath "\\begin{displaymath}\n" r> n> "\\end{displaymath}")
-(document "\\begin{document}\n" r> n> "\\end{document}")
-(enumerate "\\begin{enumerate}\n\\item " r> n> "\\end{enumerate}")
-(equation "\\begin{equation}" r> n> "\\end{equation}")
-(flushleft "\\begin{flushleft}" r> n> "\\end{flushleft}")
-(flushright "\\begin{flushright}" r> n> "\\end{flushright}")
+(abstract "\\begin{abstract}" n> r> n> "\\end{abstract}" >)
+(align "\\begin{align}" n> r> n> "\\end{align}" >)
+(alignn "\\begin{align*}" n> r> n> "\\end{align*}" >)
+(gather "\\begin{gather}" n> r> n> "\\end{gather}" >)
+(gatherr "\\begin{gather*}" n> r> n> "\\end{gather*}" >)
+(appendix "\\begin{appendix}" n> r> n> "\\end{appendix}" >)
+(begin "\\begin{" (s env) "}" n> r> n> "\\end{" (s env) "}" >)
+(center "\\begin{center}" n> r> n> "\\end{center}" >)
+(displaymath "\\begin{displaymath}" n> r> n> "\\end{displaymath}" >)
+(document "\\begin{document}" n> r> n> "\\end{document}" >)
+(enumerate "\\begin{enumerate}" n> "\\item " r> n> "\\end{enumerate}" >)
+(equation "\\begin{equation}" n> r> n> "\\end{equation}" >)
+(flushleft "\\begin{flushleft}" n> r> n> "\\end{flushleft}" >)
+(flushright "\\begin{flushright}" n> r> n> "\\end{flushright}" >)
 (frac "\\frac{" p "}{" q "}")
-(fussypar "\\begin{fussypar}" r> n> "\\end{fussypar}")
-(itemize "\\begin{itemize}\n\\item " r> n> "\\end{itemize}")
-(letter "\\begin{letter}\n" r> n> "\\end{letter}")
-(math "\\begin{math}\n" r> n> "\\end{math}")
-(minipage "\\begin{minipage}[t]{0.5\linewidth}\n" r> n> "\\end{minipage}")
-(quotation "\\begin{quotation}\n" r> n> "\\end{quotation}")
-(quote "\\begin{quote}\n" r> n> "\\end{quote}")
-(sloppypar "\\begin{sloppypar}\n" r> n> "\\end{sloppypar}")
-(theindex "\\begin{theindex}\n" r> n> "\\end{theindex}")
-(trivlist "\\begin{trivlist}\n" r> n> "\\end{trivlist}")
-(verbatim "\\begin{verbatim}\n" r> n> "\\end{verbatim}")
-(verbatimm "\\begin{verbatim*}\n" r> n> "\\end{verbatim*}")
+(fussypar "\\begin{fussypar}" r> n> "\\end{fussypar}" >)
+(itemize "\\begin{itemize}" n> "\\item " r> n> "\\end{itemize}" >)
+(letter "\\begin{letter}" n> r> n> "\\end{letter}" >)
+(math "\\begin{math}" n> r> n> "\\end{math}" >)
+(minipage "\\begin{minipage}[t]{0.5\linewidth}" n> r> n> "\\end{minipage}" >)
+(quotation "\\begin{quotation}" n> r> n> "\\end{quotation}" >)
+(quote "\\begin{quote}" n> r> n> "\\end{quote}" >)
+(sloppypar "\\begin{sloppypar}" n> r> n> "\\end{sloppypar}" >)
+(theindex "\\begin{theindex}" n> r> n> "\\end{theindex}" >)
+(trivlist "\\begin{trivlist}" n> r> n> "\\end{trivlist}" >)
+(verbatim "\\begin{verbatim}" n> r> n> "\\end{verbatim}" >)
+(verbatimm "\\begin{verbatim*}" n> r> n> "\\end{verbatim*}" >)
 
 lisp-mode
 
@@ -551,7 +607,6 @@ rust-mode rust-ts-mode
 (afnw "async " (i fnw))
 (allow "#[allow(" (p "lint") ")]")
 (allowb "#![allow(" (p "lint") ")]")
-(amain "#[tokio::main]" n>  "async " (i main))
 (anfn "|" (p "arg") "| {" n> r> n "}" >)
 (ar "#![allow(" (p "lint") ")]")
 (ass "assert!(" (p "pred") ")")
@@ -583,6 +638,7 @@ rust-mode rust-ts-mode
       "where" n>
       (p "trait") n>
       " {" n> r> n "}" >)
+(fnza "fn " (p "name") "() {" n> r> n "}" >)
 (for "for " (p "elem") " in " (p "iter") " {" n> r> n "}" >)
 (ip "impl " p " {" n> r> n "}")
 (ipb "impl Builder for " p " {" n>
@@ -613,9 +669,9 @@ rust-mode rust-ts-mode
 (main "fn main() {" n> r> n "}")
 (match "match " (p "expr") " {" n> r> n "}" >)
 (mod "mod " (p "module") " {" n> r> n "}" >)
-(modt "#[cfg(test)]" n> "mod tests {" n> "use super::*;" n n> r> n "}" >)
+(modt "#[cfg(test)]" n> "mod tests {" n> "use super::*;" n n> (i test) n "}" >)
 (modu "mod " (p "module") ";")
-(p "print!(" r ");")
+(p "print!(" r ")")
 (pafn "pub " (i afn))
 (pafnr "pub " (i afnr))
 (pc "panic!(" r ");")
@@ -625,7 +681,7 @@ rust-mode rust-ts-mode
 (pfns "pub " (i fns))
 (pfnsr "pub " (i fnsr))
 (pfnw "pub " (i fnw))
-(pl "println!(" r ");")
+(pl "println!(" r ")")
 (pmod "pub " (i mod))
 (ps "pub " (i s))
 (ptt "pub " (i tt))
@@ -635,11 +691,9 @@ rust-mode rust-ts-mode
 (stu "struct " (p "Name") ";")
 (t "todo!(" r ")")
 (te "type " (p "Alias") " = " (p "Type") ";")
-(test "#[test]" n>  (i fn))
-(testa "#[tokio::test]" n> (i afn))
-(testai "#[tokio::test]" n> "#[ignore]" n>  (i afn))
-(testi "#[test]" n> "#[ignore]" n>  (i fn))
-(testp "#[test]" n> "#[should_panic]" n>  (i fn))
+(test "#[test]" n> (i fnza) >)
+(testi "#[test]" n> "#[ignore]" n> (i fnza))
+(testp "#[test]" n> "#[should_panic]" n> (i fnza))
 (tt "trait " p " {" n> r> n> "}")
 (un "union " p " {" n> r> n "}")
 (vec "vec![" r "]")
@@ -709,6 +763,7 @@ zig-mode zig-ts-mode
 (enum "const " (p "Name") " = enum {" n> r> n "};" >)
 (enumt "const " (p "Name") " = enum(" (p "type") ") {" n> r> n "};" >)
 (err "const " (p "Name") "Error = error {" n> r> n "};" >)
+(expect "const expect = @import(\"std\").testing.expect;")
 (fn "fn " (p "name") "(" p ") {" n> r> n "}" >)
 (fnr "fn " (p "name") "(" p ") " (p "void") " {" n> r> n "}" >)
 (for "for (" p ") |" p "| {" n> r> n "}" >)

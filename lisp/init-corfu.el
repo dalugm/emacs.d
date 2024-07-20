@@ -8,7 +8,6 @@
 ;;; Code:
 
 (use-package corfu
-  :hook (after-init . global-corfu-mode)
   :custom
   (corfu-auto t)
   (corfu-cycle t)
@@ -19,18 +18,8 @@
   ;; (corfu-preselect 'prompt)      ; disable candidate preselection
   ;; (corfu-on-exact-match nil)     ; configure handling of exact matches
   ;; (corfu-scroll-margin 5)        ; use scroll margin
-  :config
-  ;; Use Dabbrev with Corfu.
-  (use-package dabbrev
-    ;; Swap M-/ and C-M-/.
-    :bind (("M-/" . dabbrev-completion)
-           ("C-M-/" . dabbrev-expand))
-    :config
-    (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
-    ;; Since 29.1, use `dabbrev-ignored-buffer-regexps' on older.
-    (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
-    (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
-    (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode)))
+  :hook
+  (after-init . global-corfu-mode))
 
 (if (display-graphic-p)
     (use-package corfu-popupinfo
@@ -53,7 +42,46 @@
   :unless (display-graphic-p)
   :hook (corfu-mode . corfu-terminal-mode))
 
+;; Use Dabbrev with Corfu.
+(use-package dabbrev
+    ;; Swap M-/ and C-M-/.
+    :bind (("M-/" . dabbrev-completion)
+           ("C-M-/" . dabbrev-expand))
+    :config
+    (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+    ;; Since 29.1, use `dabbrev-ignored-buffer-regexps' on older.
+    (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
+    (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
+
+;; A few more useful configurations...
+(use-package emacs
+  :custom
+  ;; TAB cycle if there are only few candidates.
+  (completion-cycle-threshold 3)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (tab-always-indent 'complete)
+
+  ;; Emacs 30 and newer: Disable Ispell completion function. As an
+  ;; alternative, try `cape-dict'.
+  (text-mode-ispell-word-completion nil)
+
+  ;; Emacs 28 and newer: Hide commands in M-x which do not apply to
+  ;; the current mode.  Corfu commands are hidden, since they are not
+  ;; used via M-x. This setting is useful beyond Corfu.
+  (read-extended-command-predicate #'command-completion-default-include-p))
+
 (use-package cape
+  ;; Bind prefix keymap providing all Cape commands under a mnemonic
+  ;; key.  Press C-c k ? to for help.
+  :bind ("C-c k" . cape-prefix-map) ;; Alternative keys: M-p, M-+, ...
+  ;; Alternatively bind Cape commands individually.
+  ;; :bind (("C-c k d" . cape-dabbrev)
+  ;;        ("C-c k h" . cape-history)
+  ;;        ("C-c k f" . cape-file)
+  ;;        ...)
   :init
   ;; Add to the global default value of
   ;; `completion-at-point-functions' which is used by
@@ -61,36 +89,21 @@
   ;; first function returning a result wins.  Note that the list of
   ;; buffer-local completion functions takes precedence over the
   ;; global list.
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  ;;(add-to-list 'completion-at-point-functions #'cape-history)
-  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
-  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
-  ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-  ;;(add-to-list 'completion-at-point-functions #'cape-line)
-  ;; Bind dedicated completion commands.
-  :bind (("C-c k p" . completion-at-point) ; capf
-         ("C-c k t" . complete-tag)        ; etags
-         ("C-c k d" . cape-dabbrev)
-         ("C-c k h" . cape-history)
-         ("C-c k f" . cape-file)
-         ("C-c k k" . cape-keyword)
-         ("C-c k s" . cape-elisp-symbol)
-         ("C-c k e" . cape-elisp-block)
-         ("C-c k a" . cape-abbrev)
-         ("C-c k l" . cape-line)
-         ("C-c k :" . cape-emoji)
-         ("C-c k w" . cape-dict)
-         ("C-c k \\" . cape-tex)
-         ("C-c k _" . cape-tex)
-         ("C-c k ^" . cape-tex)
-         ("C-c k &" . cape-sgml)
-         ("C-c k r" . cape-rfc1345)))
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  ;; (add-hook 'completion-at-point-functions #'cape-history)
+  ;; ...
+
+  (defun my--cape-dict-file ()
+    "Return `cape-dict-file'."
+    (let ((file "/usr/share/dict/words"))
+      (if my-win-p
+          "~/.dict"
+        (list file "~/.dict"))))
+
+  :custom
+  (cape-dict-file #'my--cape-dict-file))
 
 (provide 'init-corfu)
 ;;; init-corfu.el ends here

@@ -47,7 +47,7 @@ sexp before point and insert output into current position."
 
 (use-package sly
   :config
-  (defun my-sly-mrepl-switch (&rest _)
+  (define-advice sly-mrepl (:override (&rest _) last)
     "Switch to the last Lisp/Sly-Mrepl buffer."
     (interactive)
     (if (derived-mode-p 'sly-mrepl-mode)
@@ -64,8 +64,6 @@ sexp before point and insert output into current position."
               (select-window win)
             (pop-to-buffer buf))
         (user-error "No Sly-Mrepl buffer found"))))
-  (advice-add 'sly-mrepl :override #'my-sly-mrepl-switch)
-
   :bind ((:map sly-mode-map
                ("C-c C-x C-c" . sly-connect)
                ("C-c C-x C-q" . sly-disconnect)
