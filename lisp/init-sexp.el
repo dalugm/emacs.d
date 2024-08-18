@@ -65,6 +65,10 @@ sexp before point and insert output into current position."
             (pop-to-buffer buf))
         (user-error "No Sly-Mrepl buffer found"))))
   :bind ((:map sly-mode-map
+               ("C-c C-a C-c" . sly-asdf-compile-system)
+               ("C-c C-a C-l" . sly-asdf-load-system)
+               ("C-c C-a C-r" . sly-asdf-reload-system)
+               ("C-c C-a C-t" . sly-asdf-test-system)
                ("C-c C-x C-c" . sly-connect)
                ("C-c C-x C-q" . sly-disconnect)
                ("C-c C-x C-j" . sly))
@@ -104,7 +108,8 @@ sexp before point and insert output into current position."
   (cider-enable-nrepl-jvmti-agent t)
   :config
   ;; https://github.com/clojure-emacs/cider/issues/3588
-  (when (string= "powershell" cider-clojure-cli-command)
+  (when (and (string= "powershell" cider-clojure-cli-command)
+             (executable-find "pwsh"))
     (setopt cider-clojure-cli-command "pwsh")))
 
 (use-package fennel-mode

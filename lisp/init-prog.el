@@ -67,7 +67,7 @@
                   (gomod      . (,(rx "/go.mod" eos) . go-mod-ts-mode))
                   (heex       . (,(rx "." (opt (any "hl")) "eex" eos) . heex-ts-mode))
                   (lua        . (,(rx ".lua" eos) . lua-ts-mode))
-                  (tsx        . (,(rx ".tsx" eos) . tsx-ts-mode))
+                  (tsx        . (,(rx "." (opt (any "jt")) "sx" eos) . tsx-ts-mode))
                   (typescript . (,(rx ".ts" eos) . typescript-ts-mode))
                   (yaml       . (,(rx ".y" (opt "a") "ml" eos) . yaml-ts-mode))))
     (let ((parser (car list))
@@ -142,6 +142,8 @@
   :bind (("C-c c f" . apheleia-format-buffer)
          ("C-c c F" . apheleia-goto-error))
   :config
+  (add-to-list 'apheleia-mode-alist '(python-mode . ruff))
+  (add-to-list 'apheleia-mode-alist '(python-ts-mode . ruff))
   (add-to-list 'apheleia-formatters '(rustfmt . ("rustfmt" "--quiet"
                                                  "--emit" "stdout"
                                                  "--edition" "2021"))))

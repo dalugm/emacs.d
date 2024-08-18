@@ -1,4 +1,3 @@
-# test
     (let (visibles beg)
             (push (cons beg (point)) visibles)
           (nreverse visibles))

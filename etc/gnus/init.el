@@ -8,23 +8,30 @@
 ;;; Code:
 
 ;; Send mail through SMTP.
-(require 'smtpmail)
-(setq message-send-mail-function #'smtpmail-send-it)
+(setopt send-mail-function #'smtpmail-send-it)
 
-;; Outlook.
-(setq smtpmail-smtp-user "mou.tong@outlook.com"
-      smtpmail-smtp-server "smtp.office365.com"
-      smtpmail-smtp-service 587
-      smtpmail-stream-type 'starttls)
+(setopt user-mail-address "mou.tong@qq.com"
+        user-full-name "Mou Tong")
 
-(with-eval-after-load 'gnus
-  ;; Fetch only part of the article if we can.
-  (setq gnus-read-active-file 'some)
-  (setq nnmail-expiry-wait 'never)
-  (setq nnmail-expiry-target "Deleted Messages"))
+(setopt smtpmail-smtp-user "mou.tong@qq.com"
+        smtpmail-smtp-server "smtp.qq.com"
+        smtpmail-smtp-service 465
+        smtpmail-stream-type 'ssl)
+
+(setq gnus-select-method
+      '(nnimap "qq.com"
+               (nnimap-address "imap.qq.com")
+               (nnimap-inbox "INBOX")
+               (nnimap-server-port 993)
+               (nnimap-stream ssl)))
+
+;; Fetch only part of the article if we can.
+(setopt gnus-read-active-file 'some)
+(setopt nnmail-expiry-wait 'never)
+(setopt nnmail-expiry-target "Deleted Messages")
 
 ;; ;; Debug.
-;; (setq smtpmail-debug-info t)
-;; (setq smtpmail-debug-verb t)
+;; (setopt smtpmail-debug-info t)
+;; (setopt smtpmail-debug-verb t)
 
 ;;; init.el ends here

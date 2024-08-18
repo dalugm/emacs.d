@@ -438,12 +438,12 @@ js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
 
 (afn "async " (i fn))
 (ael (p "document") ".addEventListener('" (p "event") "', (" (p "ev") ") => {" n> r> n "});" >)
-(ca "console.assert(" (p "assertion") ");")
-(ce "console.error(" r ");")
-(ci "console.log(`" r "`);")
-(cl "console.log(" r ");")
-(cv "console.log('" (p "var" var) ":', " var ");")
-(cw "console.warn(" r ");")
+(ca "console.assert(" (p "assertion") ")")
+(ce "console.error(" r ")")
+(ci "console.log(`" r "`)")
+(cl "console.log(" r ")")
+(cv "console.log('" (p "var" var) ":', " var ")")
+(cw "console.warn(" r ")")
 (eac (p "el") ".appendChild(" r ");")
 (erc (p "el") ".removeChild(" r ");")
 (ev (p "collection") ".every((" (p "elem") ") => {" n> r> n "});" >)
@@ -480,13 +480,6 @@ js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
 (sto "setTimeout(() => {" n> p n "}, " (p "timeout") ");" >)
 (sm (p "collection") ".some((" (p "elem") ") => {" n> r> n "});" >)
 (try "try {" n> p n "} catch (err) {" > n> p n "} finally {" > n> r> n "}" >)
-(uc "const " (p "cachedFn") " = useCallback(" (p "fn") ", [" r "]);")
-(uct "const " p " = useContext(" r ");")
-(ue "useEffect(() => {" n> "return " p ";" n "}, [" r "]);" >)
-(um "const " (p "memoized") " = useMemo(() => " (p "rst") ", [" r "]);")
-(ur "const [" (p "state") ", " (p "dispatch") "] = useReducer(" (p "reducer") ", " (p "args") ");")
-(urf "const " (p "ref") " = useRef(" r ");")
-(us "const [" (p "var" var) ", set" (upcase-initials var) "] = useState(" r ");")
 
 latex-mode
 
@@ -683,7 +676,7 @@ rust-mode rust-ts-mode
 (pfnw "pub " (i fnw))
 (pl "println!(" r ")")
 (pmod "pub " (i mod))
-(ps "pub " (i s))
+(pst "pub " (i st))
 (ptt "pub " (i tt))
 (spawn "spawn(proc() {" n> r> n "});" >)
 (st "struct " (p "Name") " {" n> r> n> "}")
@@ -738,6 +731,21 @@ text-mode
 (rot13 (p "plain text" text) n "----" n (rot13 text))
 (calc (p "taylor(sin(x),x=0,3)" formula) n "----" n (format "%s" (calc-eval formula)))
 
+tsx-ts-mode
+
+(comp "export default function " (file-name-base (buffer-file-name)) "(" p ") {" n>
+      "return (" n>
+      "<>" n> r> n> "</>" n>
+      ");" n>
+      "}" >)
+(uc "const " (p "cachedFn") " = useCallback(" (p "fn") ", [" r "]);")
+(uct "const " p " = useContext(" r ");")
+(ue "useEffect(() => {" n> "return " p ";" n "}, [" r "]);" >)
+(um "const " (p "memoized") " = useMemo(() => " (p "rst") ", [" r "]);")
+(ur "const [" (p "state") ", " (p "dispatch") "] = useReducer(" (p "reducer") ", " (p "args") ");")
+(urf "const " (p "ref") " = useRef(" r ");")
+(us "const [" (p "var" var) ", set" (upcase-initials var) "] = useState(" r ");")
+
 typst-mode typst-ts-mode
 
 (break "#pagebreak()")
@@ -769,7 +777,6 @@ zig-mode zig-ts-mode
 (for "for (" p ") |" p "| {" n> r> n "}" >)
 (gfn "fn " (p "name") "(comptime T: type, " p ") type {" n> r> n "}" >)
 (if "if (" p ") {" n> r> n "}" >)
-(ifi "if (" p ") " p " else " r)
 (ifn "inline " (i fn))
 (imp "const " (p "name") " = @import(\"" (r "lib") "\");")
 (main "pub fn main() void {" n> r> n "}")
@@ -777,6 +784,7 @@ zig-mode zig-ts-mode
 (std "const std = @import(\"std\");")
 (struct "const " (p "Name") " = struct {" n> r> n "}" >)
 (switch "switch (" p ") {" n> (i case) "," n> "else => " p "," n "}" >)
+(te "if (" p ") " p " else " r)
 (test "test \"" (p "name") "\" {" n> r> n "}" >)
 (union "const " (p "Name") " = union {" n> r> n "};" >)
 (var "var " (p "name") ": " (p "type") " = " r ";")

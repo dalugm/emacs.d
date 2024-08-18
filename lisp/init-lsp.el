@@ -11,11 +11,14 @@
   :bind (("C-c l l" . eglot)
          ("C-c l a" . eglot-code-actions)
          ("C-c l c" . eglot-show-workspace-configuration)
-         ("C-c l d" . eldoc)
+         ("C-c l d" . eglot-find-declaration)
          ("C-c l f" . eglot-format)
+         ("C-c l h" . eldoc)
+         ("C-c l i" . eglot-find-implementation)
+         ("C-c l n" . eglot-rename)
          ("C-c l q" . eglot-shutdown)
-         ("C-c l Q" . eglot-shutdown-all)
-         ("C-c l r" . eglot-rename)))
+         ("C-c l t" . eglot-find-typeDefinition)
+         ("C-c l Q" . eglot-shutdown-all)))
 
 (use-package eglot-booster
   :when (executable-find "emacs-lsp-booster")

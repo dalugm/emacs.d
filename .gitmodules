@@ -140,7 +140,7 @@
 	url = https://github.com/hniksic/emacs-htmlize
 [submodule "llama"]
 	path = lib/llama
-	url = https://git.sr.ht/~tarsius/llama
+	url = https://github.com/tarsius/llama
 [submodule "magit"]
 	path = lib/magit
 	url = https://github.com/magit/magit

@@ -28,7 +28,7 @@
   :defer t)
 
 (use-package epkg-marginalia
-  :after epkg
+  :after (epkg marginalia)
   :config
   (cl-pushnew 'epkg-marginalia-annotate-package
               (alist-get 'package marginalia-annotator-registry)))

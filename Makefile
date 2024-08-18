@@ -29,14 +29,12 @@ codespell-dry:
 	@codespell \
 	  --ignore-words ./etc/codespell/ignore-words \
 	  --exclude-file ./etc/codespell/ignore-lines \
-	  --skip $(shell sed '/^\s*$$/d;/^\s*#.*$$/d;s/#.*//;s/\s//g' \
-	  ./etc/codespell/ignore-files | tr "\\n" ",")
+          --skip $(shell sed '/^\s*$$/d;/^\s*#.*$$/d;s/#.*//;s/\s//g' ./etc/codespell/ignore-files | tr "\\n" ",")
 
 codespell-fix:
 	@codespell --write-changes \
 	  --ignore-words ./etc/codespell/ignore-words \
 	  --exclude-file ./etc/codespell/ignore-lines \
-	  --skip $(shell sed '/^\s*$$/d;/^\s*#.*$$/d;s/#.*//;s/\s//g' \
-	  ./etc/codespell/ignore-files | tr "\\n" ",")
+	  --skip $(shell sed '/^\s*$$/d;/^\s*#.*$$/d;s/#.*//;s/\s//g' ./etc/codespell/ignore-files | tr "\\n" ",")
 
 endif

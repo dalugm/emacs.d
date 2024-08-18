@@ -14,11 +14,10 @@
 *** [[https://sachachua.com/blog/feed][sasha-chua]]
 *** [[https://overreacted.io/rss.xml][Dan Abramov]]
 ** DAILY                                                                        :daily:
-*** [[https://feeds.feedburner.com/zhihu-daily][知乎日报]]
+*** [[https://zhihu.com/rss][知乎日报]]
 *** [[https://songshuhui.net/feed][科学松鼠会]]
-*** [[https://guokr.com/rss/][果壳网]]
+*** [[https://guokr.com/rss][果壳网]]
 *** [[https://zhihu.com/rss][知乎每日精选]]
-*** [[https://d4j.cn/feed ][三秋书屋]]
 *** [[https://douban.com/feed/review/book][豆瓣书评]]
 *** [[https://douban.com/feed/review/movie][豆瓣影评]]
 *** [[https://xkcd.com/rss.xml][xkcd]]
