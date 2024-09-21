@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: fmt.Println(var)
-# key: plv
-# --
-fmt.Println("${1:var}: %s", $1)

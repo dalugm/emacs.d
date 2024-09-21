@@ -392,6 +392,35 @@ fundamental-mode ;; Available everywhere
 
 (today (format-time-string "%Y-%m-%d"))
 
+go-mode go-ts-mode
+
+(arr "[" p "]" (p "type") "{" q "}")
+(const "const (" n> (p "name") " = " (p "value") n ")")
+(fn "func " (p "name") "(" p ") {" n> q n "}" >)
+(fnm "func (" (p "recv") " " (p "type") ") " (p "name") "(" p ") {" n> q n "}" >)
+(fnr "func " (p "name") "(" p ") " (p "type") " {" n> q n "}" >)
+(for "for " p " {" n> q n "}" >)
+(forr "for " (p "idx") ", " (p "value") " := range " (p "target") " {" n> q n "}" >)
+(if "if " p " {" n> q n "}" >)
+(iferr "if err != " (p "nil") " {" n> q n "}" >)
+(imp "import (" n> "\"" (p "pkg")  "\"" n ")")
+(inf "interface {" n> q n "}")
+(init "func init() {" n> q n "}")
+(main "func main() {" n> q n "}")
+(map "map[" p "]" q)
+(p "fmt.Print(" q ")")
+(pf "fmt.Printf(\"" q "\")")
+(pkg "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")))
+(pkgt "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")) "_test")
+(pl "fmt.Println(" q ")")
+(select "select {" n> "case " p ":" n> q n "}" >)
+(st "struct {" n> q n "}" >)
+(switch "switch " p " {" n> "case " p ":" n> p n> "default:" n> q n "}" >)
+(test "func Test" p "(t *testing.T) { " n> q n "}")
+(tst "type " (p "name") " " (i st))
+(type "type (" n> (p "NewType") " " (p "SourceType") n ")")
+(var "var (" n> (p "name") " " (p "type") " = " (p "value") n ")")
+
 heex-mode heex-ts-mode html-mode html-ts-mode nxml-mode web-mode
 
 (a "<a href=\"" (p "#") "\">" r "</a>")
@@ -515,6 +544,22 @@ lisp-mode
 
 (export "(:export " r ")")
 (use "(:use " r ")")
+
+lua-mode lua-ts-mode
+
+(elif "elseif " (p "cond") " then" n q >)
+(fn "function " (p "name") "(" p ")" n q > n "end" >)
+(for "for " (p "i") " = " p " do" n> q n "end" >)
+(fore "for " (p "k") ", " (p "v") " in pairs(" (p "table") ") do" n> q n "end" >)
+(if "if " (p "cond") " then" n q > n "end" >)
+(l "local " q)
+(lpcall "local " (p "status") ", " (p "err_or_value") " = " (i pcall))
+(lreq (i l) (p "var") " = " (i req))
+(p "print(" q ")")
+(pcall "pcall(" (p "func") ")")
+(req "require(\"" (p "module") "\")")
+(self "function self:" (p "method") "(" p ")" n q > n "end" >)
+(while "while " (p "cond") " do" n q > n "end" >)
 
 markdown-mode
 

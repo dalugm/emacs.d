@@ -3,5 +3,5 @@
 # key: type
 # --
 type (
-     ${1:NewTypeName} ${2:SourceType}$0
+     ${1:NewTypeName} ${2:SourceType}
 )
