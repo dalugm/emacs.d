@@ -23,6 +23,7 @@
             (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
             (go "https://github.com/tree-sitter/tree-sitter-go")
             (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
+            (haskell "https://github.com/tree-sitter/tree-sitter-haskell")
             (heex "https://github.com/phoenixframework/tree-sitter-heex")
             (html "https://github.com/tree-sitter/tree-sitter-html")
             (java "https://github.com/tree-sitter/tree-sitter-java")
@@ -65,6 +66,7 @@
                   (elixir     . (,(rx (or ".elixir" (seq ".ex" (opt "s")) "mix.lock") eos) . elixir-ts-mode))
                   (go         . (,(rx ".go" eos) . go-ts-mode))
                   (gomod      . (,(rx "/go.mod" eos) . go-mod-ts-mode))
+                  (haskell    . (,(rx "." (opt "l") "hs" eos) . haskell-ts-mode))
                   (heex       . (,(rx "." (opt (any "hl")) "eex" eos) . heex-ts-mode))
                   (lua        . (,(rx ".lua" eos) . lua-ts-mode))
                   (tsx        . (,(rx "." (opt (any "jt")) "sx" eos) . tsx-ts-mode))
@@ -142,11 +144,14 @@
   :bind (("C-c c f" . apheleia-format-buffer)
          ("C-c c F" . apheleia-goto-error))
   :config
-  (add-to-list 'apheleia-mode-alist '(python-mode . ruff))
-  (add-to-list 'apheleia-mode-alist '(python-ts-mode . ruff))
+  (add-to-list 'apheleia-formatters
+               '(google-java-format . ("google-java-format" "--aosp" "-")))
   (add-to-list 'apheleia-formatters '(rustfmt . ("rustfmt" "--quiet"
-                                                 "--emit" "stdout"
-                                                 "--edition" "2021"))))
+                                                 "--edition" "2021"
+                                                 "--emit" "stdout")))
+
+  (add-to-list 'apheleia-mode-alist '(python-ts-mode . ruff))
+  (add-to-list 'apheleia-mode-alist '(python-mode . ruff)))
 
 ;;;; Major modes.
 

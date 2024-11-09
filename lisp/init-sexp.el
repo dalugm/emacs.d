@@ -51,16 +51,16 @@ sexp before point and insert output into current position."
     "Switch to the last Lisp/Sly-Mrepl buffer."
     (interactive)
     (if (derived-mode-p 'sly-mrepl-mode)
-        (if-let ((buf (seq-find (lambda (b)
-                                  (with-current-buffer b
-                                    (derived-mode-p 'lisp-mode)))
-                                (buffer-list))))
-            (if-let ((win (get-buffer-window buf)))
+        (if-let* ((buf (seq-find (lambda (b)
+                                   (with-current-buffer b
+                                     (derived-mode-p 'lisp-mode)))
+                                 (buffer-list))))
+            (if-let* ((win (get-buffer-window buf)))
                 (select-window win)
               (pop-to-buffer buf))
           (user-error "No Lisp buffer found"))
-      (if-let ((buf (sly-mrepl--find-create (sly-current-connection))))
-          (if-let ((win (get-buffer-window buf)))
+      (if-let* ((buf (sly-mrepl--find-create (sly-current-connection))))
+          (if-let* ((win (get-buffer-window buf)))
               (select-window win)
             (pop-to-buffer buf))
         (user-error "No Sly-Mrepl buffer found"))))
@@ -99,7 +99,9 @@ sexp before point and insert output into current position."
 
 (use-package cider
   :bind ((:map cider-mode-map
-               ("C-c M-r" . cider-inspect-last-result))
+               ("C-c C-i C-i" . cider-inspect)
+               ("C-c C-i C-r" . cider-inspect-last-result)
+               ("C-c C-i C-s" . cider-inspect-last-sexp))
          (:map cider-start-map
                ("r" . cider-restart)
                ("C-r" . cider-restart)))

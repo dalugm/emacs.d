@@ -23,6 +23,7 @@
 (use-package eglot-booster
   :when (executable-find "emacs-lsp-booster")
   :after eglot
+  :custom (eglot-booster-io-only t)
   :config (eglot-booster-mode +1))
 
 (use-package eglot-tempel

@@ -21,7 +21,7 @@
   (defun my--tempel-include (elt)
     "Add ELT (i template) to include templates by name in another template."
     (when (eq (car-safe elt) 'i)
-      (if-let (template (alist-get (cadr elt) (tempel--templates)))
+      (if-let* ((template (alist-get (cadr elt) (tempel--templates))))
           (cons 'l template)
         (message "Template %s not found" (cadr elt))
         nil)))

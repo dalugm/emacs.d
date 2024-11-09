@@ -285,7 +285,7 @@ matches case insensitively."
                      (zh-lib-build-regexp-string (substring input 1))
                    input)))
     (cons (mapcar (lambda (x) (consult--convert-regexp x type)) input)
-          (when-let (regexps (seq-filter #'consult--valid-regexp-p input))
+          (when-let* ((regexps (seq-filter #'consult--valid-regexp-p input)))
             (apply-partially #'consult--highlight-regexps regexps ignore-case))))
 
   (when my-win-p

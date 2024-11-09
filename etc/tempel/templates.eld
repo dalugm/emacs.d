@@ -318,7 +318,6 @@ emacs-lisp-mode lisp-mode
 
 (cond "(cond" n "(" q "))" >)
 (defun "(defun " (p "name") " (" p ")" n> "\"" (p "doc") "\"" n> r> ")")
-(ifl "(if-let (" p ")" n> r> ")")
 (lambda "(lambda (" p ")" n> r> ")")
 (let "(let (" p ")" n> r> ")")
 (lets "(let* (" p ")" n> r> ")")
@@ -328,7 +327,6 @@ emacs-lisp-mode lisp-mode
 (setf "(setf " r ")")
 (unless "(unless " (p "pred") n> r> ")")
 (var "(defvar " r ")")
-(whenl "(when-let (" p ")" n> r> ")")
 (whilel "(while-let (" p ")" n> r> ")")
 
 emacs-lisp-mode
@@ -343,6 +341,8 @@ emacs-lisp-mode
 (dotimes "(dotimes (" p ")" n> r> ")")
 (face "(defface " p " '((t :inherit " p "))" n> "\"" (p "doc") "\")")
 (group "(defgroup " (p "group") " nil" n> "\"" (p "doc") "\"" n> ":group '" p n> ":prefix \"" p "-\")")
+(ifl "(if-let* (" p ")" n> r> ")")
+(letrec "(letrec (" p ")" n> r> ")")
 (loop "(cl-loop for " p " in " p " do" n> r> ")")
 (m "(message \"" r "\")")
 (macro "(defmacro " (p "macro") " (" p ")" n> "\"" (p "doc") "\"" n> r> ")")
@@ -350,7 +350,7 @@ emacs-lisp-mode
 (pcasel "(pcase-let (" p ")" n> r> ")")
 (pcasels "(pcase-let* (" p ")" n> r> ")")
 (pt "(point)")
-(rec "(letrec (" p ")" n> r> ")")
+(whenl "(when-let* (" p ")" n> r> ")")
 (advice "(defun " (p "adv" name) " (&rest app)" n> p n> "(apply app))" n>
         "(advice-add #'" (p "fun") " " (p ":around") " #'" (s name) ")")
 (header ";;; " (file-name-nondirectory (or (buffer-file-name) (buffer-name)))
@@ -397,15 +397,22 @@ go-mode go-ts-mode
 (arr "[" p "]" (p "type") "{" q "}")
 (const "const (" n> (p "name") " = " (p "value") n ")")
 (fn "func " (p "name") "(" p ") {" n> q n "}" >)
+(fngo "go func(" p ") {" n> q n "}()" >)
 (fnm "func (" (p "recv") " " (p "type") ") " (p "name") "(" p ") {" n> q n "}" >)
 (fnr "func " (p "name") "(" p ") " (p "type") " {" n> q n "}" >)
 (for "for " p " {" n> q n "}" >)
-(forr "for " (p "idx") ", " (p "value") " := range " (p "target") " {" n> q n "}" >)
+(forr "for " (p "k") ", " (p "v") " := range " (p "target") " {" n> q n "}" >)
+(fp "fmt.Fprint(" q ")")
+(fpf "fmt.Fprintf(" q ")")
+(fpl "fmt.Fprintln(" q ")")
 (if "if " p " {" n> q n "}" >)
 (iferr "if err != " (p "nil") " {" n> q n "}" >)
 (imp "import (" n> "\"" (p "pkg")  "\"" n ")")
 (inf "interface {" n> q n "}")
 (init "func init() {" n> q n "}")
+(lp "log.Print(" q ")")
+(lpf "log.Printf(\"" q "\")")
+(lpl "log.Println(" q ")")
 (main "func main() {" n> q n "}")
 (map "map[" p "]" q)
 (p "fmt.Print(" q ")")
@@ -414,12 +421,30 @@ go-mode go-ts-mode
 (pkgt "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")) "_test")
 (pl "fmt.Println(" q ")")
 (select "select {" n> "case " p ":" n> q n "}" >)
+(sp "fmt.Sprint(" q ")")
+(spf "fmt.Sprintf(\"" q "\")")
+(spl "fmt.Sprintln(" q ")")
 (st "struct {" n> q n "}" >)
 (switch "switch " p " {" n> "case " p ":" n> p n> "default:" n> q n "}" >)
 (test "func Test" p "(t *testing.T) { " n> q n "}")
 (tst "type " (p "name") " " (i st))
 (type "type (" n> (p "NewType") " " (p "SourceType") n ")")
 (var "var (" n> (p "name") " " (p "type") " = " (p "value") n ")")
+
+haskell-mode haskell-ts-mode
+
+(case "case " (p "var") " of" n>
+      (p "cond") " -> " (p "val") n>
+      "otherwise -> " (p "other"))
+(class "class " (p "Name") " where" n> q)
+(data "data " (p "Type") " = " q)
+(doc "{-" n q n "-}")
+(fn (p "function" fn) " :: " (p "Type") n
+    fn " " (p "args") " " q)
+(main "main :: IO ()" n "main = do " q)
+(module "module " (p "Name") " where" n> q)
+(p "print " q)
+(prag "{-# " (p "PRAGMA") " #-}")
 
 heex-mode heex-ts-mode html-mode html-ts-mode nxml-mode web-mode
 
@@ -452,6 +477,26 @@ heex-mode heex-ts-mode html-mode html-ts-mode nxml-mode web-mode
 (style "<style tyle=\"text/css\" media=\"" (p "screen") "\">" n> r> n "</style>")
 (tag "<" (p "tag" tag) ">" r "</" tag ">")
 (tags "<" p " />")
+
+hy-mode hy-ts-mode
+
+(cond "(cond" n> (p "pred") n> p n> "True" n> q ")")
+(cut "(cut " (p "var") " " (p "range") ")")
+(defclass "(defclass " (p "name") " [" p "]" n> "(defn __init__ " "[self" p "]" n> q "))")
+(defn "(defn " (p "name") " [" p "]" n> "\"" (p "doc") "\"" n> r> ")")
+(do "(do" n> r> ")")
+(fn "(fn [" p "] " q ")")
+(for "(for [" p "]" n> r> ")")
+(lambda "(lambda " (p "name") " [" p "]" n> r> ")")
+(lfor "(lfor " (p "var") " " (p "list") " " q ")")
+(get "(get " (p "var") " " (p "0") ")")
+(if "(if " (p "pred") n> (p "then") n> (p "else") ")")
+(import "(import " q ")")
+(print "(print " q ")")
+(require "(require " q ")")
+(set "(set " r ")")
+(setv "(setv " r ")")
+(while "(while " (p "pred") n> r> ")")
 
 java-mode java-ts-mode js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
 
@@ -542,8 +587,10 @@ latex-mode
 
 lisp-mode
 
+(ifl "(if-let (" p ")" n> r> ")")
 (export "(:export " r ")")
 (use "(:use " r ")")
+(whenl "(when-let (" p ")" n> r> ")")
 
 lua-mode lua-ts-mode
 
@@ -778,11 +825,11 @@ text-mode
 
 tsx-ts-mode
 
-(comp "export default function " (file-name-base (buffer-file-name)) "(" p ") {" n>
-      "return (" n>
-      "<>" n> r> n> "</>" n>
-      ");" n>
-      "}" >)
+(rc "function " (p (file-name-base (buffer-file-name))) "(" p ") {" n>
+    "return (" n>
+    "<>" n> r> n> "</>" n>
+    ");" n>
+    "}" >)
 (uc "const " (p "cachedFn") " = useCallback(" (p "fn") ", [" r "]);")
 (uct "const " p " = useContext(" r ");")
 (ue "useEffect(() => {" n> "return " p ";" n "}, [" r "]);" >)

@@ -132,12 +132,18 @@
 [submodule "goto-chg"]
 	path = lib/goto-chg
 	url = https://github.com/emacs-evil/goto-chg
+[submodule "haskell-ts-mode"]
+	path = lib/haskell-ts-mode
+	url = https://codeberg.org/pranshu/haskell-ts-mode
 [submodule "hl-todo"]
 	path = lib/hl-todo
 	url = https://github.com/tarsius/hl-todo
 [submodule "htmlize"]
 	path = lib/htmlize
 	url = https://github.com/hniksic/emacs-htmlize
+[submodule "hy-mode"]
+	path = lib/hy-mode
+	url = https://github.com/hylang/hy-mode
 [submodule "llama"]
 	path = lib/llama
 	url = https://github.com/tarsius/llama
