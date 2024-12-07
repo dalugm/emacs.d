@@ -40,21 +40,15 @@
   (interactive "nSet transparency (0 is transparent - 100 is opaque): ")
   (set-frame-parameter (selected-frame) 'alpha value))
 
-(keymap-global-set "C-c w p" #'my-set-window-transparency)
-
 (defun my-set-window-margins (margin)
   "Set the MARGIN of the current window."
   (interactive "nMargin Value: ")
   (set-window-margins (selected-window) margin margin))
 
-(keymap-global-set "C-c w m" #'my-set-window-margins)
-
 (defun my-set-line-spacing (space)
   "Set the line SPACE of the current window."
   (interactive "nLine Space: ")
   (setopt line-spacing space))
-
-(keymap-global-set "C-c w l" #'my-set-line-spacing)
 
 ;;;; Font.
 

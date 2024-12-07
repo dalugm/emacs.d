@@ -160,6 +160,29 @@ clojure-mode clojure-ts-mode fennel-mode
 (p "(print " r ")")
 (while "(while " p n> r> ")")
 
+csharp-mode csharp-ts-mode
+
+(afn (p "public") " async " (p "Task") "<" (p "void") "> " (p "Name") "(" p ")" n (i section))
+(class "class " (p "Name") n (i section) >)
+(cw "Console.WriteLine(" q ");")
+(do "do" n (i section) " while (" q ");" >)
+(else "else" n (i section))
+(enum "enum " (p "Name") n (i section))
+(section "{" n> p n "}" >)
+(fn (p "public") " " (p "void") " " (p "Name") "(" p ")" n (i section))
+(fore "foreach (var " (p "item") " in " (p "collection") ")" n (i section))
+(for "for (" p ")" n (i section))
+(if "if (" (p "cond") ")" n (i section))
+(inf "interface I" (p "Name") n (i section))
+(ns "namespace " (p "Name") n (i section))
+(ifd "#if " (p "cond") n> q n "#endif")
+(region "#region " (p "Name") n> q n "#endregion")
+(st "struct " (p "Name") n (i section))
+(switch "switch (" (p "cond") ")" n (i section))
+(try "try" n (i section) n "catch" n (i section) n "finally" n (i section))
+(using "using (" (p "resource") ")" n (i section))
+(while "while (" (p "cond") ")" n (i section))
+
 dart-mode dart-ts-mode
 
 (afn "Future<" (p "void") "> " (p "name") "(" p ") async {" n> r> n "}" >)
