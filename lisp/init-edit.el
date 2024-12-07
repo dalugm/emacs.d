@@ -79,8 +79,12 @@
                  nil
                  (window-parameters (mode-line-format . none)))))
 
-(use-package tabspaces
-  :hook (after-init . tabspaces-mode)
+(use-package workspaces
+  :bind (("C-c C-w" . workspaces-prefix-map)
+         ("C-c w s" . workspaces-switch)
+         ("C-c w l" . workspaces-switch)
+         ("C-c w o" . workspaces-open))
+  :hook (after-init . workspaces-mode)
   :config
   ;; Integrate workspace buffers into `consult-buffer'.
   (with-eval-after-load 'consult
@@ -92,27 +96,24 @@
             :state    #'consult--buffer-state
             :default  t
             :items    (lambda () (consult--buffer-query
-                                  :predicate #'tabspaces--local-buffer-p
+                                  :predicate #'workspaces--local-buffer-p
                                   :sort 'visibility
                                   :as #'buffer-name)))
       "Workspace buffer candidate source for `consult-buffer'.")
 
-    (defun my--consult-tabspaces ()
-      "Isolate workspace buffers when using tabspaces."
-      (if tabspaces-mode
+    (defun my--consult-workspaces ()
+      "Isolate workspace buffers when using workspaces."
+      (if workspaces-mode
           (add-to-list 'consult-buffer-sources 'consult--source-workspace)
         ;; Reset `consult-buffer' to show all buffers.
         (setq consult-buffer-sources
               (remove #'consult--source-workspace consult-buffer-sources))))
 
-    (my--consult-tabspaces)
-    (add-hook 'tabspaces-mode-hook #'my--consult-tabspaces)))
+    (my--consult-workspaces)
+    (add-hook 'workspaces-mode-hook #'my--consult-workspaces)))
 
 (use-package ace-window
-  :bind (([remap other-window] . ace-window)
-         ("C-c w s" . ace-swap-window)
-         ("C-c w d" . ace-delete-window)
-         ("C-c w o" . ace-delete-other-windows))
+  :bind ([remap other-window] . ace-window)
   :config
   ;; Inherits from `avy'.
   (with-eval-after-load 'avy

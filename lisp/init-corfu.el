@@ -38,10 +38,6 @@
                 ("M-l" . corfu-info-location)
                 ("M-d" . corfu-info-documentation))))
 
-(use-package corfu-terminal
-  :unless (display-graphic-p)
-  :hook (corfu-mode . corfu-terminal-mode))
-
 ;; Use Dabbrev with Corfu.
 (use-package dabbrev
     ;; Swap M-/ and C-M-/.

@@ -18,6 +18,9 @@
 [submodule "borg"]
 	path = lib/borg
 	url = https://github.com/emacscollective/borg
+[submodule "borland-blue-theme"]
+	path = lib/borland-blue-theme
+	url = https://codeberg.org/fourier/borland-blue-theme
 [submodule "cape"]
 	path = lib/cape
 	url = https://github.com/minad/cape
@@ -45,9 +48,6 @@
 [submodule "corfu"]
 	path = lib/corfu
 	url = https://github.com/minad/corfu
-[submodule "corfu-terminal"]
-	path = lib/corfu-terminal
-	url = https://codeberg.org/akib/emacs-corfu-terminal
 [submodule "darkroom"]
 	path = lib/darkroom
 	url = https://github.com/joaotavora/darkroom
@@ -174,9 +174,6 @@
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools
-[submodule "popon"]
-	path = lib/popon
-	url = https://codeberg.org/akib/emacs-popon
 [submodule "queue"]
 	path = lib/queue
 	url = https://github.com/emacsmirror/queue
@@ -225,9 +222,6 @@
 [submodule "tablist"]
 	path = lib/tablist
 	url = https://github.com/emacsorphanage/tablist
-[submodule "tabspaces"]
-	path = lib/tabspaces
-	url = https://github.com/dalugm/tabspaces
 [submodule "tao-theme"]
 	path = lib/tao-theme
 	url = https://github.com/11111000000/tao-theme-emacs
@@ -242,7 +236,7 @@
 	url = https://github.com/magit/transient
 [submodule "typst-ts-mode"]
 	path = lib/typst-ts-mode
-	url = https://git.sr.ht/~meow_king/typst-ts-mode
+	url = https://codeberg.org/meow_king/typst-ts-mode.git
 [submodule "valign"]
 	path = lib/valign
 	url = https://github.com/casouri/valign
@@ -264,6 +258,9 @@
 [submodule "with-editor"]
 	path = lib/with-editor
 	url = https://github.com/magit/with-editor
+[submodule "workspaces"]
+	path = lib/workspaces
+	url = https://github.com/dalugm/workspaces
 [submodule "xiaoshuo-mode"]
 	path = lib/xiaoshuo-mode
 	url = https://github.com/dalugm/xiaoshuo-mode

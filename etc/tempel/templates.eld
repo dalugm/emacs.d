@@ -160,6 +160,29 @@ clojure-mode clojure-ts-mode fennel-mode
 (p "(print " r ")")
 (while "(while " p n> r> ")")
 
+csharp-mode csharp-ts-mode
+
+(afn (p "public") " async " (p "Task") "<" (p "void") "> " (p "Name") "(" p ")" n (i section))
+(class "class " (p "Name") n (i section) >)
+(cw "Console.WriteLine(" q ");")
+(do "do" n (i section) " while (" q ");" >)
+(else "else" n (i section))
+(enum "enum " (p "Name") n (i section))
+(section "{" n> p n "}" >)
+(fn (p "public") " " (p "void") " " (p "Name") "(" p ")" n (i section))
+(fore "foreach (var " (p "item") " in " (p "collection") ")" n (i section))
+(for "for (" p ")" n (i section))
+(if "if (" (p "cond") ")" n (i section))
+(inf "interface I" (p "Name") n (i section))
+(ns "namespace " (p "Name") n (i section))
+(ifd "#if " (p "cond") n> q n "#endif")
+(region "#region " (p "Name") n> q n "#endregion")
+(st "struct " (p "Name") n (i section))
+(switch "switch (" (p "cond") ")" n (i section))
+(try "try" n (i section) n "catch" n (i section) n "finally" n (i section))
+(using "using (" (p "resource") ")" n (i section))
+(while "while (" (p "cond") ")" n (i section))
+
 dart-mode dart-ts-mode
 
 (afn "Future<" (p "void") "> " (p "name") "(" p ") async {" n> r> n "}" >)
@@ -168,16 +191,15 @@ dart-mode dart-ts-mode
        "return const Placeholder(" n>
        "child: Center(child: Text('" r "'))," n>
        ");" n "}" >)
-(cp "const " p "._();")
 (dcd "@override" n>
      "void didChangeDependencies () {" n>
      "super.didChangeDependencies();" n> r> n
      "}" >)
 (dp "@override" n> "void dispose() {" n> r> n> "super.dispose();" n "}" >)
-(fzj "factory " (p "name" name) ".fromJson(Map<String, dynamic> json) => _$" name "FromJson(json);")
+(ffj "factory " (p "name" name) ".fromJson(Map<String, dynamic> json) => _$" name "FromJson(json);")
+(fp "debugPrint(" r ")")
 (is "@override" n> "void initState() {" n> "super.initState();" n> r> n "}" >)
 (p "print(" r ")")
-(pv "print('" (r "var" var) ": ${" var "}')")
 (ss "setState(() {" n> r> n "});" >)
 (try "try {" n> r> n
      "} catch (e, s) { " > n>
@@ -190,7 +212,7 @@ dart-mode dart-ts-mode
 (um "final " (p "memoized") " = useMemoized(() => " (p "result") ", [" r "]);")
 (ur "const [" (p "state") ", " (p "dispatch") "] = useReducer(" (p "reducer") ", " (p "args") ");")
 (urf "final " (p "ref") " = useRef(" r ");")
-(us "final " (p "name") " = useState<" (p "dynamic") ">(" r ");")
+(us "final " (p "name") " = useState(" r ");")
 (uvc "useValueChanged(" (p "value") ", (_, __) {" n> r> n> "});" >)
 
 dart-mode dart-ts-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
@@ -554,6 +576,16 @@ js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
 (sto "setTimeout(() => {" n> p n "}, " (p "timeout") ");" >)
 (sm (p "collection") ".some((" (p "elem") ") => {" n> r> n "});" >)
 (try "try {" n> p n "} catch (err) {" > n> p n "} finally {" > n> r> n "}" >)
+
+json-mode json-ts-mode
+
+(snp "\"" (p "name" name) "\": {" n>
+     "\"prefix\": \"" (p "prefix") "\"," > n>
+     "\"body\": [" > n>
+     "\"" p "\"" > n>
+     "]," > n>
+     "\"description\": \"" name "\"" > n>
+     "}," >)
 
 latex-mode
 
