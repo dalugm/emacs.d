@@ -46,6 +46,7 @@
          ("<leader>ln" . eglot-rename)
          ("<leader>lq" . eglot-shutdown)
          ("<leader>lt" . eglot-find-typeDefinition)
+         ("<leader>lR" . eglot-reconnect)
          ("<leader>lQ" . eglot-shutdown-all)
 ;;;;; Evil leader my custom.
          ("<leader>mc" . my-avy-copy-thing-at-point)

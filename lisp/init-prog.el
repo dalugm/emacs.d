@@ -30,6 +30,7 @@
             (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
             (jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
             (json "https://github.com/tree-sitter/tree-sitter-json")
+            (just "https://github.com/IndianBoy42/tree-sitter-just")
             (lua "https://github.com/tree-sitter-grammars/tree-sitter-lua")
             (markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown/src")
             (markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown-inline/src")
@@ -66,7 +67,6 @@
                   (elixir     . (,(rx (or ".elixir" (seq ".ex" (opt "s")) "mix.lock") eos) . elixir-ts-mode))
                   (go         . (,(rx ".go" eos) . go-ts-mode))
                   (gomod      . (,(rx "/go.mod" eos) . go-mod-ts-mode))
-                  (haskell    . (,(rx "." (opt "l") "hs" eos) . haskell-ts-mode))
                   (heex       . (,(rx "." (opt (any "hl")) "eex" eos) . heex-ts-mode))
                   (lua        . (,(rx ".lua" eos) . lua-ts-mode))
                   (tsx        . (,(rx "." (opt (any "jt")) "sx" eos) . tsx-ts-mode))
@@ -183,6 +183,17 @@
   :when (and (treesit-available-p) (treesit-ready-p 'dart 'message))
   :mode "\\.dart\\'")
 
+(use-package fsharp-mode :defer t)
+
+(use-package haskell-ts-mode
+  :when (and (treesit-available-p) (treesit-ready-p 'haskell 'message))
+  :mode "\\.hs\\'"
+  :config (with-eval-after-load 'eglot (haskell-ts-setup-eglot)))
+
+(use-package just-ts-mode
+  :when (and (treesit-available-p) (treesit-ready-p 'just 'message))
+  :defer t)
+
 (use-package nix-ts-mode
   :when (and (treesit-available-p) (treesit-ready-p 'nix 'message))
   :mode "\\.nix\\'")
@@ -212,8 +223,10 @@
     (interactive)
     (rust--compile nil "%s doc --open" rust-cargo-bin)))
 
+(use-package tuareg :defer t)
+
 (use-package zig-mode
-  :mode "\\.zig\\'"
+  :defer t
   :custom (zig-format-on-save nil))
 
 (provide 'init-prog)

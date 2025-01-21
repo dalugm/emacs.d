@@ -265,6 +265,7 @@ dart-mode dart-ts-mode :when (re-search-backward "^\\S-*$" (line-beginning-posit
      "factory " name ".fromJson(Map<string, dynamic> json) => _$" name "FromJson(json);" n n>
      "Map<String, dynamic> toJson() => _$" name "ToJson(this);" n
      "}")
+(main "void main() {" n q n "}")
 (pf "part '" (file-name-sans-extension (buffer-name)) ".freezed.dart';")
 (pg "part '" (file-name-sans-extension (buffer-name)) ".g.dart';")
 (po "part of '" p "';")

@@ -18,6 +18,7 @@
          ("C-c l n" . eglot-rename)
          ("C-c l q" . eglot-shutdown)
          ("C-c l t" . eglot-find-typeDefinition)
+         ("C-c l R" . eglot-reconnect)
          ("C-c l Q" . eglot-shutdown-all)))
 
 (use-package eglot-booster

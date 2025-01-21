@@ -120,6 +120,9 @@
 [submodule "fennel-mode"]
 	path = lib/fennel-mode
 	url = https://git.sr.ht/~technomancy/fennel-mode
+[submodule "fsharp-mode"]
+	path = lib/fsharp-mode
+	url = https://github.com/fsharp/emacs-fsharp-mode
 [submodule "git-link"]
 	path = lib/git-link
 	url = https://github.com/sshaw/git-link
@@ -144,6 +147,9 @@
 [submodule "hy-mode"]
 	path = lib/hy-mode
 	url = https://github.com/hylang/hy-mode
+[submodule "just-ts-mode"]
+	path = lib/just-ts-mode
+	url = https://github.com/leon-barrett/just-ts-mode.el
 [submodule "llama"]
 	path = lib/llama
 	url = https://github.com/tarsius/llama
@@ -234,6 +240,9 @@
 [submodule "transient"]
 	path = lib/transient
 	url = https://github.com/magit/transient
+[submodule "tuareg"]
+	path = lib/tuareg
+	url = https://github.com/ocaml/tuareg
 [submodule "typst-ts-mode"]
 	path = lib/typst-ts-mode
 	url = https://codeberg.org/meow_king/typst-ts-mode.git
