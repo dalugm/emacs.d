@@ -9,8 +9,7 @@
 
 (use-package flymake
   :bind (("C-c ! b" . flymake-show-buffer-diagnostics)
-         ("C-c ! p" . flymake-show-project-diagnostics))
-  :custom (flymake-show-diagnostics-at-end-of-line 'short))
+         ("C-c ! p" . flymake-show-project-diagnostics)))
 
 (use-package flyspell
   :defer t

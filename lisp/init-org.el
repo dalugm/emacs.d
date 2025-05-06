@@ -24,6 +24,7 @@
   (word-wrap-by-category t)
   (org-default-notes-file (expand-file-name "notes.org" org-directory))
   (org-src-fontify-natively t)
+  (org-edit-src-content-indentation 0)
   ;; Save state changes in the LOGBOOK drawer.
   (org-log-into-drawer t)
   ;; `X/Y', X means action when enters the state, Y means action when

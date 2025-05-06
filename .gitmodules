@@ -206,7 +206,7 @@
 	url = https://github.com/dalugm/sinolor-themes
 [submodule "site-lisp"]
 	path = lib/site-lisp
-	url = https://git.sr.ht/~pkal/site-lisp
+	url = https://codeberg.org/pkal/site-lisp.el
 [submodule "sly"]
 	path = lib/sly
 	url = https://github.com/joaotavora/sly
