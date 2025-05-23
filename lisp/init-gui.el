@@ -71,8 +71,9 @@
 ;; (set-fontset-font t 'kana "LXGW WenKai Mono")
 ;; (set-fontset-font t 'hangul "LXGW WenKai Mono")
 
-(defvar my-font-alist
-  '(("霞鹜文楷等宽" "LXGW WenKai Mono" nil 1)
+(defcustom my-font-alist
+  '(("Jetbrains Maple" "Jetbrains Maple Mono" nil 1)
+    ("霞鹜文楷等宽" "LXGW WenKai Mono" nil 1)
     ("3270" "3270 Nerd Font Mono" "Unifont" 1)
     ("BigBlue Terminal" "BigBlueTermPlus Nerd Font Mono" "Unifont" 1)
     ("Comic" "ComicShannsMono Nerd Font" "LXGW WenKai Mono" 1)
@@ -93,7 +94,23 @@ Each element is like
 FONT-NAME is the display name, ASCII-NAME is the ASCII font
 family name, CJK-NAME is the CJK font family name, CJK-SCALE is
 the CJK font rescale ratio.  ASCII-SPEC and CJK-SPEC are
-additional font spec for ASCII and CJK font.")
+additional font spec for ASCII and CJK font."
+  :type '(repeat (list (string :tag "Font display name")
+                       (string :tag "ASCII font name")
+                       (choice (string :tag "CJK font name") (const nil))
+                       (number :tag "CJK font rescale ratio")
+                       (choice (plist :tag "ASCII font spec"
+                                      :key-type symbol
+                                      :value-type natnum)
+                               (const nil))
+                       (choice (plist :tag "CJK font spec"
+                                      :key-type symbol
+                                      :value-type natnum)
+                               (const nil)))))
+
+(defcustom my-font-size 13
+  "Default font size."
+  :type '(natnum :tag "Font size"))
 
 (defun my--create-fontset (ascii-spec cjk-spec)
   "Create a fontset NAME with ASCII-SPEC and CJK-SPEC font."
@@ -142,13 +159,6 @@ SCJK-SCALE is nil, don't add size attributes to the CJK spec."
                         `(:family ,cjk-family ,@cjk-extra-spec))))
     (list ascii-spec cjk-spec)))
 
-(defun my--font-default-size ()
-  "Return the default font size."
-  (cond
-   ((>= (display-pixel-height) 2160) 28)
-   ((>= (display-pixel-height) 1440) 20)
-   (t 14)))
-
 (defun my--font-name-to-spec (&optional font-name)
   "Translate FONT-NAME to font-spec.
 
@@ -187,7 +197,7 @@ More details are inside `my-load-font'."
   ;; face with ASCII font and use default fontset for Unicode font.
   (interactive
    (list (completing-read "Font: " (mapcar #'car my-font-alist) nil t)
-         (read-number "Size: " (my--font-default-size))))
+         (read-number "Size: " my-font-size)))
   (let* ((spec (my--font-expand-spec
                 (my--font-name-to-spec font-name)
                 size))
@@ -211,7 +221,7 @@ ATTRS."
   (interactive
    (list (intern (completing-read "Face: " (face-list) nil t))
          (completing-read "Font: " (mapcar #'car my-font-alist) nil t)
-         (read-number "Size: " (my--font-default-size))))
+         (read-number "Size: " my-font-size)))
   (let* ((spec (my--font-name-to-spec font-name))
          (fontset (apply #'my--create-fontset
                          (my--font-expand-spec spec size))))
@@ -224,7 +234,7 @@ ATTRS."
 
 (keymap-global-set "C-c m F" #'my-load-font)
 
-(my-load-font 'default nil (my--font-default-size))
+(my-load-default-font nil my-font-size)
 
 ;; Emoji display.
 (set-fontset-font t 'emoji

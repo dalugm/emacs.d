@@ -11,38 +11,17 @@
   :when (treesit-available-p)
   :init
   (setopt treesit-language-source-alist
-          '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-            (c "https://github.com/tree-sitter/tree-sitter-c")
+          '((c3 "https://github.com/c3lang/tree-sitter-c3")
             (clojure "https://github.com/sogaiu/tree-sitter-clojure")
-            (cmake "https://github.com/uyha/tree-sitter-cmake")
-            (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-            (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
-            (css "https://github.com/tree-sitter/tree-sitter-css")
             (dart "https://github.com/UserNobody14/tree-sitter-dart")
-            (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-            (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
-            (go "https://github.com/tree-sitter/tree-sitter-go")
-            (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
             (haskell "https://github.com/tree-sitter/tree-sitter-haskell")
-            (heex "https://github.com/phoenixframework/tree-sitter-heex")
-            (html "https://github.com/tree-sitter/tree-sitter-html")
-            (java "https://github.com/tree-sitter/tree-sitter-java")
-            (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
-            (jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
-            (json "https://github.com/tree-sitter/tree-sitter-json")
             (just "https://github.com/IndianBoy42/tree-sitter-just")
-            (lua "https://github.com/tree-sitter-grammars/tree-sitter-lua")
             (markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown/src")
             (markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown-inline/src")
             (nix "https://github.com/nix-community/tree-sitter-nix")
-            (python "https://github.com/tree-sitter/tree-sitter-python")
-            (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
+            (odin "https://github.com/tree-sitter-grammars/tree-sitter-odin")
             (rust "https://github.com/tree-sitter/tree-sitter-rust")
-            (toml "https://github.com/tree-sitter/tree-sitter-toml")
-            (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src")
-            (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src")
             (typst "https://github.com/uben0/tree-sitter-typst")
-            (yaml "https://github.com/ikatyang/tree-sitter-yaml")
             (zig "https://github.com/maxxnino/tree-sitter-zig")))
   :custom
   (major-mode-remap-alist
@@ -96,7 +75,7 @@
 
 (use-package eldoc-box
   :when (display-graphic-p)
-  :hook (eldoc-mode . eldoc-box-hover-mode)
+  :hook ((eldoc-mode eglot-managed-mode) . eldoc-box-hover-mode)
   :custom
   (eldoc-box-only-multi-line t)
   (eldoc-box-clear-with-C-g t)
@@ -108,6 +87,7 @@
                ("C-M-a" . eldoc-box-beginning)
                ("C-M-e" . eldoc-box-end)))
   :config
+  (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t)
   (setopt eldoc-doc-buffer-separator
           (concat "\n"
                   (propertize "-"
@@ -179,11 +159,19 @@
   (setopt tex-command "xelatex")
   (add-to-list 'tex-compile-commands '("xelatex %f" t "%r.pdf")))
 
+(use-package c3-ts-mode
+  :when (and (treesit-available-p) (treesit-ready-p 'c3 'message))
+  :mode "\\.c3\\'")
+
 (use-package dart-ts-mode
   :when (and (treesit-available-p) (treesit-ready-p 'dart 'message))
   :mode "\\.dart\\'")
 
 (use-package fsharp-mode :defer t)
+
+(use-package odin-ts-mode
+  :when (and (treesit-available-p) (treesit-ready-p 'odin 'message))
+  :mode "\\.odin\\'")
 
 (use-package haskell-ts-mode
   :when (and (treesit-available-p) (treesit-ready-p 'haskell 'message))
