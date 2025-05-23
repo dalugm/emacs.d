@@ -100,6 +100,26 @@ c-mode c-ts-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) '
 (tds "typedef struct " p " " (p "alias") ";")
 (tdu "typedef union " p " " (p "alias") ";")
 
+c3-ts-mode
+
+(section "{" n> r> n> "}" >)
+(cfn "extern fn " (p "type") " _" (p "c3name") "(" p ") @extern(\"" (p "cname") "\")"
+     n> (i section))
+(fn "fn " (p "type") " " (p "name") "(" p ")" n> (i section))
+(macro "macro " (p "name") "(" p ")" n> (i section))
+(switch "switch (" (p "expr") ")" n>
+        "{" n> "case " p ":" n>
+        p n> "default:" > n> q n>
+        "}" >)
+(do "do" n> (i section) ";")
+(if "if (" p ")" n> (i section))
+(for "for (" p ")" n> (i section))
+(fore "foreach (" (p "index") ", " (p "value") " : " (p "values") ")" n> (i section))
+(while "while (" p ")" n> (i section))
+(struct "struct " (p "name") n> (i section))
+(enum "enum " (p "name") n> (i section))
+(union "union " (p "name") n> (i section))
+
 clojure-mode clojure-ts-mode
 
 (comment "(comment" n> p n> ":" (p "done") ")")
@@ -256,7 +276,7 @@ dart-mode dart-ts-mode :when (re-search-backward "^\\S-*$" (line-beginning-posit
     "const " name "({super.key});" n n>
     (i build) n
     "}")
-(imp "import '" p "';")
+(import "import '" p "';")
 (jsc "@JsonSerializable" n
      "class " (p "name" name) " {" n>
      name "({" n>
@@ -430,7 +450,7 @@ go-mode go-ts-mode
 (fpl "fmt.Fprintln(" q ")")
 (if "if " p " {" n> q n "}" >)
 (iferr "if err != " (p "nil") " {" n> q n "}" >)
-(imp "import (" n> "\"" (p "pkg")  "\"" n ")")
+(import "import (" n> "\"" (p "pkg")  "\"" n ")")
 (inf "interface {" n> q n "}")
 (init "func init() {" n> q n "}")
 (lp "log.Print(" q ")")
@@ -439,7 +459,7 @@ go-mode go-ts-mode
 (main "func main() {" n> q n "}")
 (map "map[" p "]" q)
 (p "fmt.Print(" q ")")
-(pf "fmt.Printf(\"" q "\")")
+(pf "fmt.Printf(\"" p "\", " q ")")
 (pkg "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")))
 (pkgt "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")) "_test")
 (pl "fmt.Println(" q ")")
@@ -555,7 +575,6 @@ js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
 (gi "const " (p "el") " = " (p "document") ".getElementById('" r "');")
 (gt "const " (p "els") " = Array.from(" (p "document") ".getElementsByTagName('" r "'));")
 (iife "(function (" p ") {" n> p n "})(" r ");")
-(imp "import " (p "*") " from '" (p "module") "';")
 (js "JSON.stringify(" r ")")
 (jp "JSON.parse(" r ")")
 (map (p "collection") ".map((" (p "elem") ") => {" n> r> n "});" >)
@@ -641,7 +660,7 @@ lua-mode lua-ts-mode
 (self "function self:" (p "method") "(" p ")" n q > n "end" >)
 (while "while " (p "cond") " do" n q > n "end" >)
 
-markdown-mode
+markdown-mode markdown-ts-mode
 
 (toc (let ((start "# Table of Contents")
            (end "<!-- :TOC: -->"))
@@ -653,6 +672,22 @@ markdown-mode
                      1)
                 ? )
                end)))
+
+odin-ts-mode
+
+(main "main :: proc() {" n> r> n "}" >)
+(for "for " p " {" n> r> n "}" >)
+(fordo "for " p " do " q)
+(if "if " p " {" n> r> n "}" >)
+(ifdo "if " p " do " q)
+(switch "switch " p " {" n> "case " (p "value") ":" n> r> n "case:" > n "}" >)
+(when "when " p " {" n> r> n "}" >)
+(struct (p "name") " :: struct {" n> r> n "}" >)
+(proc (p "name") " :: proc(" p ") {" n> r> n "}" >)
+(procr (p "name") " :: proc(" p ") -> " p " {" n> r> n "}" >)
+(pl "fmt.println(" q ")")
+(pf "fmt.printf(\"" p "\", " q ")")
+(pkg "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")))
 
 org-mode
 
@@ -903,7 +938,7 @@ zig-mode zig-ts-mode
 (gfn "fn " (p "name") "(comptime T: type, " p ") type {" n> r> n "}" >)
 (if "if (" p ") {" n> r> n "}" >)
 (ifn "inline " (i fn))
-(imp "const " (p "name") " = @import(\"" (r "lib") "\");")
+(import "const " (p "name") " = @import(\"" (r "lib") "\");")
 (main "pub fn main() void {" n> r> n "}")
 (p "std.debug.print(\"" p "\", .{" r "});")
 (std "const std = @import(\"std\");")
