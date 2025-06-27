@@ -188,8 +188,7 @@ With a prefix ARG, rename based on current name."
 ;;;; Search.
 
 (defvar my-search-engine-alist
-  '(
-    (baidu         . "https://www.baidu.com/s?wd=")
+  '((baidu         . "https://www.baidu.com/s?wd=")
     (bilibili      . "https://search.bilibili.com/all?keyword=")
     (bing          . "https://www.bing.com/search?q=")
     (duckduckgo    . "https://www.duckduckgo.com/?q=")
@@ -200,8 +199,7 @@ With a prefix ARG, rename based on current name."
     (vocabulary    . "https://www.vocabulary.com/dictionary/")
     (wikipedia     . "https://www.wikipedia.org/wiki/Special:Search?go=Go&search=")
     (youtube       . "https://www.youtube.com/results?search_query=")
-    (zhihu         . "https://www.zhihu.com/search?type=content&q=")
-    )
+    (zhihu         . "https://www.zhihu.com/search?type=content&q="))
   "An alist of all the engines you can search by.
 Key is a symbol as the name, value is a plist specifying the search url.")
 
@@ -220,8 +218,6 @@ Key is a symbol as the name, value is a plist specifying the search url.")
                   (buffer-substring-no-properties (region-beginning) (region-end))
                 (read-string
                  (message "%s Search: " (capitalize search-engine)))))))))
-
-(keymap-global-set "C-c s o" #'my-search-online)
 
 ;;;; Daily.
 

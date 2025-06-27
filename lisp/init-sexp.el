@@ -91,7 +91,7 @@ sexp before point and insert output into current position."
   ("\\.cljs\\'" . clojurescript-mode))
 
 (use-package clojure-ts-mode
-  :when (and (treesit-available-p) (treesit-ready-p 'clojure 'message))
+  :when (treesit-available-p)
   :mode
   ("\\.\\(clj\\|edn\\)\\'" . clojure-ts-mode)
   ("\\.cljs\\'" . clojure-ts-clojurescript-mode)

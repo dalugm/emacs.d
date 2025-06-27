@@ -93,9 +93,6 @@
 [submodule "embark"]
 	path = lib/embark
 	url = https://github.com/oantolin/embark
-[submodule "emmet-mode"]
-	path = lib/emmet-mode
-	url = https://github.com/dalugm/emmet-mode
 [submodule "epkg"]
 	path = lib/epkg
 	url = https://github.com/emacscollective/epkg
@@ -165,15 +162,21 @@
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode
+[submodule "neocaml"]
+	path = lib/neocaml
+	url = https://github.com/bbatsov/neocaml
 [submodule "nix-ts-mode"]
 	path = lib/nix-ts-mode
 	url = https://github.com/nix-community/nix-ts-mode
 [submodule "no-littering"]
 	path = lib/no-littering
 	url = https://github.com/emacscollective/no-littering
+[submodule "ocaml-eglot"]
+	path = lib/ocaml-eglot
+	url = https://github.com/tarides/ocaml-eglot
 [submodule "odin-ts-mode"]
 	path = lib/odin-ts-mode
-	url = https://github.com/Sampie159/odin-ts-mode.git
+	url = https://github.com/Sampie159/odin-ts-mode
 [submodule "orderless"]
 	path = lib/orderless
 	url = https://github.com/oantolin/orderless
@@ -186,15 +189,15 @@
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools
+[submodule "purescript-mode"]
+	path = lib/purescript-mode
+	url = https://github.com/purescript-emacs/purescript-mode
 [submodule "queue"]
 	path = lib/queue
 	url = https://github.com/emacsmirror/queue
 [submodule "racket-mode"]
 	path = lib/racket-mode
 	url = https://github.com/greghendershott/racket-mode
-[submodule "reformatter"]
-	path = lib/reformatter
-	url = https://github.com/purcell/emacs-reformatter
 [submodule "rust-mode"]
 	path = lib/rust-mode
 	url = https://github.com/rust-lang/rust-mode
@@ -246,24 +249,21 @@
 [submodule "transient"]
 	path = lib/transient
 	url = https://github.com/magit/transient
-[submodule "tuareg"]
-	path = lib/tuareg
-	url = https://github.com/ocaml/tuareg
 [submodule "typst-ts-mode"]
 	path = lib/typst-ts-mode
-	url = https://codeberg.org/meow_king/typst-ts-mode.git
+	url = https://codeberg.org/meow_king/typst-ts-mode
 [submodule "valign"]
 	path = lib/valign
 	url = https://github.com/casouri/valign
 [submodule "vertico"]
 	path = lib/vertico
 	url = https://github.com/minad/vertico
+[submodule "vue-ts-mode"]
+	path = lib/vue-ts-mode
+	url = https://github.com/8uff3r/vue-ts-mode
 [submodule "vundo"]
 	path = lib/vundo
 	url = https://github.com/casouri/vundo
-[submodule "web-mode"]
-	path = lib/web-mode
-	url = https://github.com/fxbois/web-mode
 [submodule "wgrep"]
 	path = lib/wgrep
 	url = https://github.com/mhayashi1120/Emacs-wgrep
@@ -282,6 +282,6 @@
 [submodule "zh-lib"]
 	path = lib/zh-lib
 	url = https://github.com/dalugm/zh-lib.el
-[submodule "zig-mode"]
-	path = lib/zig-mode
-	url = https://github.com/ziglang/zig-mode
+[submodule "zig-ts-mode"]
+	path = lib/zig-ts-mode
+	url = https://codeberg.org/meow_king/zig-ts-mode

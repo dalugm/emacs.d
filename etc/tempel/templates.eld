@@ -23,7 +23,7 @@ c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-m
 
 (fn (p "void") " " (p "name") "(" p ") {" n> r> n "}" >)
 
-c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-mode js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
+c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-mode js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode vue-ts-mode web-mode
 
 (doc "/**" n " * " r n " */")
 (dowhile "do {" n> p n "} while (" p ")" >)
@@ -489,7 +489,7 @@ haskell-mode haskell-ts-mode
 (p "print " q)
 (prag "{-# " (p "PRAGMA") " #-}")
 
-heex-mode heex-ts-mode html-mode html-ts-mode nxml-mode web-mode
+heex-mode heex-ts-mode html-mode html-ts-mode nxml-mode vue-ts-mode web-mode
 
 (a "<a href=\"" (p "#") "\">" r "</a>")
 (body "<body>" n> r> n "</body>" >)
@@ -541,7 +541,7 @@ hy-mode hy-ts-mode
 (setv "(setv " r ")")
 (while "(while " (p "pred") n> r> ")")
 
-java-mode java-ts-mode js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
+java-mode java-ts-mode js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode vue-ts-mode web-mode
 
 (class "class " p " {" n> r> "}")
 
@@ -551,7 +551,7 @@ java-mode java-ts-mode
 (pf "System.out.printf(" p ");")
 (pl "System.out.println(" p ");")
 
-js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode web-mode
+js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode vue-ts-mode web-mode
 
 (afn "async " (i fn))
 (ael (p "document") ".addEventListener('" (p "event") "', (" (p "ev") ") => {" n> r> n "});" >)
