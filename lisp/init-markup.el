@@ -8,7 +8,7 @@
 ;;; Code:
 
 (use-package toc-org
-  :hook ((org-mode markdown-mode) . toc-org-mode)
+  :hook ((org-mode markdown-mode markdown-ts-mode) . toc-org-mode)
   :bind (:map markdown-mode-map
               :package markdown-mode
               ("C-c C-o" . toc-org-markdown-follow-thing-at-point)))
@@ -37,12 +37,6 @@ Show the heading too, if it is currently invisible."
                                  (point-max)
                                (point)))
                            nil))))
-
-(use-package typst-ts-mode
-  :defer t
-  :custom
-  ;; Typst will open the compiled file automatically.
-  (typst-ts-mode-watch-options "--open"))
 
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
@@ -99,6 +93,10 @@ Show the heading too, if it is currently invisible."
   ;; `multimarkdown' is necessary for `highlight.js' and `mermaid.js'.
   (when (executable-find "multimarkdown")
     (setopt markdown-command "multimarkdown")))
+
+(use-package typst-ts-mode
+  :when (treesit-available-p)
+  :mode "\\.typ\\'")
 
 (provide 'init-markup)
 ;;; init-markup.el ends here

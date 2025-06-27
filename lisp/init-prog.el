@@ -11,17 +11,47 @@
   :when (treesit-available-p)
   :init
   (setopt treesit-language-source-alist
-          '((c3 "https://github.com/c3lang/tree-sitter-c3")
+          '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+            (c "https://github.com/tree-sitter/tree-sitter-c")
+            (c3 "https://github.com/c3lang/tree-sitter-c3")
             (clojure "https://github.com/sogaiu/tree-sitter-clojure")
+            (cmake "https://github.com/uyha/tree-sitter-cmake")
+            (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+            (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+            (css "https://github.com/tree-sitter/tree-sitter-css")
             (dart "https://github.com/UserNobody14/tree-sitter-dart")
+            (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+            (doxygen "https://github.com/tree-sitter-grammars/tree-sitter-doxygen")
+            (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
+            (go "https://github.com/tree-sitter/tree-sitter-go")
+            (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
             (haskell "https://github.com/tree-sitter/tree-sitter-haskell")
+            (heex "https://github.com/phoenixframework/tree-sitter-heex")
+            (html "https://github.com/tree-sitter/tree-sitter-html")
+            (java "https://github.com/tree-sitter/tree-sitter-java")
+            (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
+            (jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
+            (json "https://github.com/tree-sitter/tree-sitter-json")
             (just "https://github.com/IndianBoy42/tree-sitter-just")
+            (lua "https://github.com/tree-sitter-grammars/tree-sitter-lua")
             (markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown/src")
             (markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown-inline/src")
             (nix "https://github.com/nix-community/tree-sitter-nix")
+            (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml" nil "grammars/ocaml/src")
+            (ocaml-interface "https://github.com/tree-sitter/tree-sitter-ocaml" nil "grammars/interface/src")
             (odin "https://github.com/tree-sitter-grammars/tree-sitter-odin")
+            (php "https://github.com/tree-sitter/tree-sitter-php" nil "php/src")
+            (phpdoc "https://github.com/claytonrcarter/tree-sitter-phpdoc")
+            (purescript "https://github.com/postsolar/tree-sitter-purescript")
+            (python "https://github.com/tree-sitter/tree-sitter-python")
+            (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
             (rust "https://github.com/tree-sitter/tree-sitter-rust")
+            (toml "https://github.com/tree-sitter-grammars/tree-sitter-toml")
+            (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src")
+            (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src")
             (typst "https://github.com/uben0/tree-sitter-typst")
+            (vue "https://github.com/tree-sitter-grammars/tree-sitter-vue")
+            (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")
             (zig "https://github.com/maxxnino/tree-sitter-zig")))
   :custom
   (major-mode-remap-alist
@@ -36,6 +66,7 @@
      (javascript-mode . js-ts-mode)
      (js-json-mode    . json-ts-mode)
      (js-mode         . js-ts-mode)
+     (mhtml-mode      . mhtml-ts-mode)
      (python-mode     . python-ts-mode)
      (ruby-mode       . ruby-ts-mode)
      (sh-mode         . bash-ts-mode)))
@@ -48,13 +79,37 @@
                   (gomod      . (,(rx "/go.mod" eos) . go-mod-ts-mode))
                   (heex       . (,(rx "." (opt (any "hl")) "eex" eos) . heex-ts-mode))
                   (lua        . (,(rx ".lua" eos) . lua-ts-mode))
-                  (tsx        . (,(rx "." (opt (any "jt")) "sx" eos) . tsx-ts-mode))
+                  (tsx        . (,(rx "." (any "jt") "sx" eos) . tsx-ts-mode))
                   (typescript . (,(rx ".ts" eos) . typescript-ts-mode))
                   (yaml       . (,(rx ".y" (opt "a") "ml" eos) . yaml-ts-mode))))
     (let ((parser (car list))
           (alist (cdr list)))
       (when (treesit-ready-p parser 'message)
         (add-to-list 'auto-mode-alist alist)))))
+
+(use-package eglot
+  :bind (("C-c l l" . eglot)
+         ("C-c l a" . eglot-code-actions)
+         ("C-c l c" . eglot-show-workspace-configuration)
+         ("C-c l d" . eglot-find-declaration)
+         ("C-c l f" . eglot-format)
+         ("C-c l h" . eldoc)
+         ("C-c l i" . eglot-find-implementation)
+         ("C-c l n" . eglot-rename)
+         ("C-c l q" . eglot-shutdown)
+         ("C-c l t" . eglot-find-typeDefinition)
+         ("C-c l R" . eglot-reconnect)
+         ("C-c l Q" . eglot-shutdown-all)))
+
+(use-package eglot-booster
+  :when (executable-find "emacs-lsp-booster")
+  :after eglot
+  :custom (eglot-booster-io-only t)
+  :config (eglot-booster-mode +1))
+
+(use-package eglot-tempel
+  :after (eglot tempel)
+  :config (eglot-tempel-mode +1))
 
 (use-package compile
   :bind (("C-c c k" . compile)
@@ -65,13 +120,6 @@
   (compilation-scroll-output 'first-error)
   :hook
   (compilation-filter . ansi-color-compilation-filter))
-
-(use-package etags
-  :defer t
-  :custom (tags-revert-without-query t))
-
-(use-package subword
-  :hook ((prog-mode text-mode) . subword-mode))
 
 (use-package eldoc-box
   :when (display-graphic-p)
@@ -124,14 +172,14 @@
   :bind (("C-c c f" . apheleia-format-buffer)
          ("C-c c F" . apheleia-goto-error))
   :config
-  (add-to-list 'apheleia-formatters
-               '(google-java-format . ("google-java-format" "--aosp" "-")))
-  (add-to-list 'apheleia-formatters '(rustfmt . ("rustfmt" "--quiet"
-                                                 "--edition" "2021"
-                                                 "--emit" "stdout")))
-
   (add-to-list 'apheleia-mode-alist '(python-ts-mode . ruff))
-  (add-to-list 'apheleia-mode-alist '(python-mode . ruff)))
+  (add-to-list 'apheleia-mode-alist '(python-mode . ruff))
+  (add-to-list 'apheleia-mode-alist '(vue-ts-mode . prettier))
+
+  (setf (alist-get 'rustfmt apheleia-formatters)
+        '("rustfmt" "--edition" "2024" "--quiet" "--emit" "stdout"))
+  (setf (alist-get 'google-java-format apheleia-formatters)
+        '("google-java-format" "--aosp" "-")))
 
 ;;;; Major modes.
 
@@ -145,45 +193,58 @@
   (python-indent-guess-indent-offset nil)
   (python-indent-offset 4))
 
-(use-package nxml
-  :mode
-  ("\\.[^.]*proj\\'" . nxml-mode)
-  ("\\.xaml\\'" . nxml-mode)
-  ("\\.p\\(?:list\\|om\\)\\'" . nxml-mode)
-  ("\\.xs\\(?:d\\|lt\\)\\'" . nxml-mode)
-  ("\\.rss\\'" . nxml-mode))
-
 (use-package tex-mode
   :defer t
   :config
   (setopt tex-command "xelatex")
   (add-to-list 'tex-compile-commands '("xelatex %f" t "%r.pdf")))
 
+(use-package fsharp-mode :defer t)
+(use-package purescript-mode :defer t)
+
 (use-package c3-ts-mode
-  :when (and (treesit-available-p) (treesit-ready-p 'c3 'message))
+  :when (treesit-available-p)
   :mode "\\.c3\\'")
 
 (use-package dart-ts-mode
-  :when (and (treesit-available-p) (treesit-ready-p 'dart 'message))
+  :when (treesit-available-p)
   :mode "\\.dart\\'")
 
-(use-package fsharp-mode :defer t)
-
 (use-package odin-ts-mode
-  :when (and (treesit-available-p) (treesit-ready-p 'odin 'message))
+  :when (treesit-available-p)
   :mode "\\.odin\\'")
 
 (use-package haskell-ts-mode
-  :when (and (treesit-available-p) (treesit-ready-p 'haskell 'message))
-  :mode "\\.hs\\'"
-  :config (with-eval-after-load 'eglot (haskell-ts-setup-eglot)))
+  :when (treesit-available-p)
+  :bind ("C-c C-z" . run-haskell)
+  :config
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '(haskell-ts-mode
+                   . ("haskell-language-server-wrapper" "--lsp"))))
+  :mode "\\.hs\\'")
+
+(use-package neocaml
+  :when (treesit-available-p)
+  :hook (neocaml-mode . neocaml-repl-minor-mode)
+  :config
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '((neocaml-mode :language-id "ocaml") . ("ocamllsp"))))
+  :mode
+  (("\\.mli\\'" . neocamli-mode)
+   ("\\.ml\\'" . neocaml-mode)))
+
+(use-package ocaml-eglot
+  :after (eglot neocaml)
+  :config (ocaml-eglot +1))
 
 (use-package just-ts-mode
-  :when (and (treesit-available-p) (treesit-ready-p 'just 'message))
-  :defer t)
+  :when (treesit-available-p)
+  :mode "\\.[Jj]ust\\(file\\)?\\'")
 
 (use-package nix-ts-mode
-  :when (and (treesit-available-p) (treesit-ready-p 'nix 'message))
+  :when (treesit-available-p)
   :mode "\\.nix\\'")
 
 (use-package rust-mode
@@ -211,11 +272,36 @@
     (interactive)
     (rust--compile nil "%s doc --open" rust-cargo-bin)))
 
-(use-package tuareg :defer t)
+(use-package vue-ts-mode
+  :when (treesit-available-p)
+  :config
+  (with-eval-after-load 'eglot
+    ;; Eglot with vuels.
+    (add-to-list 'eglot-server-programs
+                 '(vue-ts-mode . (eglot-vuels "vue-language-server" "--stdio")))
 
-(use-package zig-mode
-  :defer t
-  :custom (zig-format-on-save nil))
+    (defclass eglot-vuels (eglot-lsp-server) ()
+      :documentation "vue-language-server")
+
+    (cl-defmethod eglot-initialization-options ((server eglot-vuels))
+      "Pass through required cquery initialization options"
+      (let* ((get-ts-root
+              (lambda (&optional global)
+                (let* ((pnpm-root-cmd (format "pnpm root %s" (if global "--global" "")))
+                       (node-modules-dir (string-trim-right (shell-command-to-string pnpm-root-cmd)))
+                       (ts-dir (expand-file-name "typescript" node-modules-dir)))
+                  (when (file-exists-p ts-dir)
+                    ts-dir))))
+             (ts-package-path (or (funcall get-ts-root) (funcall get-ts-root t)))
+             (tsdk-path (and ts-package-path (expand-file-name "lib" ts-package-path))))
+        (when tsdk-path
+          `( :typescript (:tsdk ,tsdk-path)
+             :vue (:hybridMode :json-false))))))
+  :mode "\\.[nu]?vue\\'")
+
+(use-package zig-ts-mode
+  :when (treesit-available-p)
+  :mode "\\.zig\\'")
 
 (provide 'init-prog)
 ;;; init-prog.el ends here

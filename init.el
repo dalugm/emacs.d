@@ -68,22 +68,17 @@
 (require 'init-corfu)
 
 (require 'init-prog)
+(require 'init-sexp)
 (require 'init-check)
 
-;; Handy tools though not must have.
 (require 'init-misc)
 (require 'init-reader)
 (require 'init-evil)
 (require 'init-markup)
 (require 'init-snippet)
 
-;; Program.
-(require 'init-sexp)
-(require 'init-frontend)
-(require 'init-lsp)
-
 ;; Personal setup.
-(load (expand-file-name "~/.custom.el") t nil)
+(load (expand-file-name "~/.custom.el") t)
 
 (message "Emacs ready in %s with %d garbage collections."
          (format "%.2f seconds"
