@@ -196,6 +196,9 @@
   :mode ("\\.[cm]js\\'" . js-mode)
   :custom (js-indent-level 2))
 
+(use-package lua-ts-mode
+  :custom (lua-ts-indent-offset 3))
+
 (use-package python
   :mode ("\\.[cir]py\\'" . python-mode)
   :custom
@@ -208,9 +211,6 @@
   (setopt tex-command "xelatex")
   (add-to-list 'tex-compile-commands '("xelatex %f" t "%r.pdf")))
 
-(use-package fsharp-mode :defer t)
-(use-package purescript-mode :defer t)
-
 (use-package c3-ts-mode
   :when (treesit-available-p)
   :mode "\\.c3\\'")
@@ -219,19 +219,32 @@
   :when (treesit-available-p)
   :mode "\\.dart\\'")
 
-(use-package odin-ts-mode
-  :when (treesit-available-p)
-  :mode "\\.odin\\'")
+(use-package fsharp-mode
+  :bind (:map fsharp-mode-map
+              ("C-c C-x C-j" . run-fsharp))
+  :config
+  (with-eval-after-load 'eglot
+    (require 'eglot-fsharp)))
 
 (use-package haskell-ts-mode
   :when (treesit-available-p)
-  :bind ("C-c C-z" . run-haskell)
+  :bind (:map haskell-ts-mode-map
+              ("C-c C-x C-j" . run-haskell))
   :config
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
                  '(haskell-ts-mode
-                   . ("haskell-language-server-wrapper" "--lsp"))))
-  :mode "\\.hs\\'")
+                   . ("haskell-language-server-wrapper" "--lsp")))))
+
+(use-package purescript-mode :defer t)
+
+(use-package just-ts-mode
+  :when (treesit-available-p)
+  :mode "\\.[Jj]ust\\(file\\)?\\'")
+
+(use-package nix-ts-mode
+  :when (treesit-available-p)
+  :mode "\\.nix\\'")
 
 (use-package neocaml
   :when (treesit-available-p)
@@ -248,13 +261,9 @@
   :after (eglot neocaml)
   :config (ocaml-eglot +1))
 
-(use-package just-ts-mode
+(use-package odin-ts-mode
   :when (treesit-available-p)
-  :mode "\\.[Jj]ust\\(file\\)?\\'")
-
-(use-package nix-ts-mode
-  :when (treesit-available-p)
-  :mode "\\.nix\\'")
+  :mode "\\.odin\\'")
 
 (use-package rust-mode
   :bind (:map rust-mode-map
@@ -269,7 +278,7 @@
               ("C-c C-p C-r" . rust-playpen-region)
               ("C-c C-r C-c" . rust-compile-release)
               ("C-c C-r C-r" . rust-run-release))
-  :custom (rust-mode-treesitter-derive t)
+  ;; :custom (rust-mode-treesitter-derive t)
   :config
   (defun my-rust-doc ()
     "Build documentation using `cargo doc'."
@@ -288,7 +297,7 @@
     ;; Eglot with vuels.
     (defcustom my--eglot-vuels-path "/path/to/@vue/language-server"
       "Path to vue-language-server."
-      :type '(string :tag "Path to vuels"))
+      :type '(directory :tag "Path to vuels"))
 
     (add-to-list 'eglot-server-programs
                  '(vue-ts-mode . (eglot-vtsls "vtsls" "--stdio")))

@@ -35,37 +35,13 @@ c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-m
 
 c++-mode c++-ts-mode
 
+(bits "#include <bits/stdc++.h>")
 (cin "std::cin >> " r ";")
 (cout "std::cout << " r ";")
-(class "class " (p "MyClass" class) " {" n
-       "public:" n>
-       class "();" > n>
-       class "(" class " &&) = default;" > n>
-       class "(const " class "&) = default;" > n>
-       class " &operator=(" class " &&) = default;" > n>
-       class " &operator=(const " class " &) = default;" > n>
-       "~" class "();" > n n
-       "private:" n> r> n
-       "};" n n
-       class "::" class "() {}" n n
-       class "::~" class "() {}")
-(classi "class " (p "MyClass" class) " {" n
-        "public:" n>
-        class "() = default;" > n>
-        class "(" class " &&) = default;" > n>
-        class "(const " class "&) = default;" > n>
-        class " &operator=(" class " &&) = default;" > n>
-        class " &operator=(const " class " &) = default;" > n>
-        "~" class "() = default;" > n n
-        "private:" n> r> n
-        "};")
-(classe "class " (p "MyClass" class) " {" n
-        "public:" n> p n
-        "private:" n> r> n
-        "};")
 (fore "for (auto " (p "elem") " : " (p "collection") ") {" n> r> n "}")
 (io "#include <iostream>")
-(ns "namespace " (p "Namespace") " {" n> r> n "}")
+(ns "namespace " (p "namespace") " {" n> r> n "}")
+(usens "using namespace " (p "namespace") ";")
 
 c++-mode c++-ts-mode c-mode c-ts-mode
 

@@ -72,15 +72,11 @@
 ;; (set-fontset-font t 'hangul "LXGW WenKai Mono")
 
 (defcustom my-font-alist
-  '(("Jetbrains Maple" "Jetbrains Maple Mono" nil 1)
+  '(("Maple" "Maple Mono CN" nil 1)
+    ("Maple Normal" "Maple Mono Normal CN" nil 1)
     ("霞鹜文楷等宽" "LXGW WenKai Mono" nil 1)
-    ("3270" "3270 Nerd Font Mono" "Unifont" 1)
-    ("BigBlue Terminal" "BigBlueTermPlus Nerd Font Mono" "Unifont" 1)
-    ("Comic" "ComicShannsMono Nerd Font" "LXGW WenKai Mono" 1)
-    ("Fira Code" "FiraCode Nerd Font" "Sarasa Mono SC" 1)
-    ("Hack" "Hack Nerd Font" "Sarasa Mono SC" 1)
-    ("Jetbrains Mono" "JetbrainsMono Nerd Font" "Sarasa Mono SC" 1)
-    ("Meslo" "MesloLGS Nerd Font Mono" "Sarasa Mono SC" 1)
+    ("Fira Code" "Fira Code" "LXGW WenKai Mono" 1)
+    ("Jetbrains Mono" "Jetbrains Mono" "Maple Mono NF CN" 1)
     ("Unifont" "Unifont" nil 1)
     ("更纱黑体" "Sarasa Gothic SC" nil 1)
     ("等距更纱黑体" "Sarasa Mono SC" nil 1)
@@ -239,9 +235,9 @@ ATTRS."
 ;; Emoji display.
 (set-fontset-font t 'emoji
                   (font-spec
-                   :family (concat
-                            (if my-mac-p "Apple" "Noto")
-                            " Color Emoji"))
+                   :family (string-join
+                            `(,(if my-mac-p "Apple" "Noto") "Color" "Emoji")
+                            " "))
                   nil 'prepend)
 
 ;; https://www.reddit.com/r/emacs/comments/988paa/emacs_on_windows_seems_lagging/

@@ -24,14 +24,13 @@
   (auto-compile-on-load-mode +1)
   (auto-compile-on-save-mode +1))
 
-(use-package epkg
-  :defer t)
+(use-package epkg :defer t)
 
 (use-package epkg-marginalia
   :after (epkg marginalia)
   :config
-  (cl-pushnew 'epkg-marginalia-annotate-package
-              (alist-get 'package marginalia-annotator-registry)))
+  (setcar (alist-get 'package marginalia-annotators)
+          #'epkg-marginalia-annotate-package))
 
 (use-package no-littering
   :init
