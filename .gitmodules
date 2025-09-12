@@ -45,6 +45,9 @@
 [submodule "compat"]
 	path = lib/compat
 	url = https://github.com/emacs-compat/compat
+[submodule "cond-let"]
+	path = lib/cond-let
+	url = https://github.com/tarsius/cond-let
 [submodule "consult"]
 	path = lib/consult
 	url = https://github.com/minad/consult
@@ -162,6 +165,9 @@
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode
+[submodule "modus-themes"]
+	path = lib/modus-themes
+	url = https://github.com/protesilaos/modus-themes
 [submodule "neocaml"]
 	path = lib/neocaml
 	url = https://github.com/bbatsov/neocaml

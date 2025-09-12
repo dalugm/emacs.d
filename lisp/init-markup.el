@@ -96,6 +96,7 @@ Show the heading too, if it is currently invisible."
 
 (use-package typst-ts-mode
   :when (treesit-available-p)
+  :custom (typst-ts-indent-offset 2)
   :mode "\\.typ\\'")
 
 (provide 'init-markup)
