@@ -8,14 +8,17 @@
 ;;; Code:
 
 (use-package vertico
-  :hook (after-init . vertico-mode)
-  :custom (vertico-cycle t))
+  :custom
+  (vertico-cycle t)
+  :init (vertico-mode +1))
 
-;; Persist history over Emacs restarts. Vertico sorts by history
-;; position.
-(use-package savehist
-  :init
-  (savehist-mode))
+(use-package vertico-sort
+  :after vertico
+  :custom
+  (vertico-sort-function 'vertico-sort-history-length-alpha))
+
+;; Persist history over Emacs restarts for Vertico.
+(use-package savehist :init (savehist-mode +1))
 
 ;; A few more useful configurations...
 (use-package emacs

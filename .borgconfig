@@ -17,3 +17,6 @@
 	no-makeinfo = doclicense.texi
 [submodule "subed"]
 	load-path = subed
+[submodule "vertico"]
+	load-path = .
+	load-path = extensions

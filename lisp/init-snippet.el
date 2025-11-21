@@ -33,14 +33,16 @@
   (defun my--tempel-setup-capf ()
     "Add the Tempel Capf to `completion-at-point-functions'.
 
-`tempel-expand' only triggers on exact matches.  Alternatively use
-`tempel-complete' if you want to see all matches, but then you should
-also configure `tempel-trigger-prefix', such that Tempel does not
-trigger too often when you don't expect it.  NOTE: We add
-`tempel-expand' *before* the main programming mode Capf, such that it
-will be tried first."
+Add before the Capfs, such that it will be tried first."
+    ;; `tempel-expand' only triggers on exact matches, alternatively
+    ;; use `tempel-complete' if you want to see all matches.
     (setq-local completion-at-point-functions
-                (cons #'tempel-expand
+                (cons #'tempel-expand completion-at-point-functions))
+
+    ;; Use a trigger prefix to prevent from triggering unexpectly.
+    (setq-local corfu-auto-trigger "/"
+                completion-at-point-functions
+                (cons (cape-capf-trigger #'tempel-complete ?/)
                       completion-at-point-functions)))
 
   (add-hook 'conf-mode-hook #'my--tempel-setup-capf)
