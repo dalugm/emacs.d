@@ -18,15 +18,15 @@
 [submodule "borg"]
 	path = lib/borg
 	url = https://github.com/emacscollective/borg
-[submodule "borland-blue-theme"]
-	path = lib/borland-blue-theme
-	url = https://codeberg.org/fourier/borland-blue-theme
 [submodule "c3-ts-mode"]
 	path = lib/c3-ts-mode
 	url = https://github.com/c3lang/c3-ts-mode
 [submodule "cape"]
 	path = lib/cape
 	url = https://github.com/minad/cape
+[submodule "catppuccin-theme"]
+	path = lib/catppuccin-theme
+	url = https://github.com/catppuccin/emacs
 [submodule "cider"]
 	path = lib/cider
 	url = https://github.com/clojure-emacs/cider
@@ -42,6 +42,12 @@
 [submodule "closql"]
 	path = lib/closql
 	url = https://github.com/magit/closql
+[submodule "color-theme-sanityinc-solarized"]
+	path = lib/color-theme-sanityinc-solarized
+	url = https://github.com/purcell/color-theme-sanityinc-solarized
+[submodule "color-theme-sanityinc-tomorrow"]
+	path = lib/color-theme-sanityinc-tomorrow
+	url = https://github.com/purcell/color-theme-sanityinc-tomorrow
 [submodule "compat"]
 	path = lib/compat
 	url = https://github.com/emacs-compat/compat
@@ -66,9 +72,6 @@
 [submodule "diff-hl"]
 	path = lib/diff-hl
 	url = https://github.com/dgutov/diff-hl
-[submodule "doom-themes"]
-	path = lib/doom-themes
-	url = https://github.com/doomemacs/themes
 [submodule "edit-indirect"]
 	path = lib/edit-indirect
 	url = https://github.com/Fanael/edit-indirect
@@ -168,6 +171,9 @@
 [submodule "modus-themes"]
 	path = lib/modus-themes
 	url = https://github.com/protesilaos/modus-themes
+[submodule "monokai-theme"]
+	path = lib/monokai-theme
+	url = https://github.com/oneKelvinSmith/monokai-emacs
 [submodule "neocaml"]
 	path = lib/neocaml
 	url = https://github.com/bbatsov/neocaml
@@ -285,6 +291,9 @@
 [submodule "xiaoshuo-mode"]
 	path = lib/xiaoshuo-mode
 	url = https://github.com/dalugm/xiaoshuo-mode
+[submodule "zenburn-theme"]
+	path = lib/zenburn-theme
+	url = https://github.com/bbatsov/zenburn-emacs
 [submodule "zh-lib"]
 	path = lib/zh-lib
 	url = https://github.com/dalugm/zh-lib.el

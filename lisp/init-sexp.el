@@ -106,7 +106,7 @@ sexp before point and insert output into current position."
                ("r" . cider-restart)
                ("C-r" . cider-restart)))
   :custom
-  ;; Require Java >= 20.
+  ;; Require Java >= 21.
   (cider-enable-nrepl-jvmti-agent t)
   :config
   ;; https://github.com/clojure-emacs/cider/issues/3588

@@ -72,6 +72,7 @@
 (require 'init-check)
 
 (require 'init-misc)
+(require 'init-theme)
 (require 'init-reader)
 (require 'init-evil)
 (require 'init-markup)

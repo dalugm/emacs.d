@@ -136,9 +136,9 @@
   :custom
   (eldoc-box-only-multi-line t)
   (eldoc-box-clear-with-C-g t)
-  (eldoc-box-use-visible-frame-map t)
+  (eldoc-box-enable-frame-map t)
   :bind (("C-c h h" . eldoc-box-help-at-point)
-         (:map eldoc-box-visible-frame-map
+         (:map eldoc-box-frame-map
                ("C-M-n" . eldoc-box-scroll-up)
                ("C-M-p" . eldoc-box-scroll-down)
                ("C-M-a" . eldoc-box-beginning)
