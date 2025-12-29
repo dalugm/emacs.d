@@ -10,9 +10,10 @@ help helpall::
 	@printf "\n"
 
 bootstrap-borg:
-	@mkdir .git/modules
-	@git clone https://github.com/emacscollective/borg lib/borg \
-	--separate-git-dir .git/modules/borg
+	@ GITDIR="$$(realpath --relative-to=. "$$(git rev-parse --git-dir)")"; \
+	mkdir "$$GITDIR/modules"; \
+	git clone https://github.com/emacscollective/borg lib/borg \
+	--separate-git-dir "$$GITDIR/modules/borg"
 	@cd lib/borg; git symbolic-ref HEAD refs/heads/main
 	@cd lib/borg; git reset --hard HEAD
 
@@ -26,15 +27,17 @@ helpall::
 	@printf "\n"
 
 codespell-dry:
-	@codespell \
-	  --ignore-words ./etc/codespell/ignore-words \
-	  --exclude-file ./etc/codespell/ignore-lines \
-          --skip $(shell sed '/^\s*$$/d;/^\s*#.*$$/d;s/#.*//;s/\s//g' ./etc/codespell/ignore-files | tr "\\n" ",")
+	@cd lib; codespell \
+	  --ignore-words ../etc/codespell/ignore-words \
+	  --exclude-file ../etc/codespell/ignore-lines \
+	  --skip $(shell sed '/^\s*$$/d;/^\s*#.*$$/d;s/#.*//;s/\s//g' \
+	  etc/codespell/ignore-files | tr "\\n" ",")
 
 codespell-fix:
-	@codespell --write-changes \
-	  --ignore-words ./etc/codespell/ignore-words \
-	  --exclude-file ./etc/codespell/ignore-lines \
-	  --skip $(shell sed '/^\s*$$/d;/^\s*#.*$$/d;s/#.*//;s/\s//g' ./etc/codespell/ignore-files | tr "\\n" ",")
+	@cd lib; codespell --write-changes \
+	  --ignore-words ../etc/codespell/ignore-words \
+	  --exclude-file ../etc/codespell/ignore-lines \
+	  --skip $(shell sed '/^\s*$$/d;/^\s*#.*$$/d;s/#.*//;s/\s//g' \
+	  etc/codespell/ignore-files | tr "\\n" ",")
 
 endif

@@ -2,7 +2,7 @@
 #+author: dalu
 #+date: 2021:02:12
 
-* Table of Contents                                                             :TOC:noexport:
+* Table of Contents                                            :TOC:noexport:
 - [[#why-emacs][Why Emacs]]
 - [[#about-this-configuration][About this configuration]]
 - [[#install][Install]]
@@ -60,7 +60,7 @@ Emacs has a *broad ecosystem*. If you want to edit code in a niche
 language, there's probably an Emacs package for it.
 
 Emacs doesn't have a monopoly on good ideas, and there are other great
-tools out there. Nonetheless, we believe the [[file:opt/editor-learning-curve.jpg][Emacs learning curve pays
+tools out there. Nonetheless, we believe the [[file:etc/editor-learning-curve.jpg][Emacs learning curve pays
 off]].
 
 This *Why Emacs* section credits to [[https://github.com/remacs/remacs][Remacs]].
@@ -79,24 +79,24 @@ The following description assumes that you clone this repo to
 =~/.emacs.d=. If you clone to other location, modify the corresponding
 path.
 
-#+begin_src sh
-  git clone https://github.com/dalugm/emacs.d.git ~/.emacs.d
+#+begin_src bash-ts
+git clone https://github.com/dalugm/emacs.d.git ~/.emacs.d
 #+end_src
 
 ** Makefile
 
-#+begin_src sh
-  cd ~/.emacs.d
-  make bootstrap-borg
-  make help                       # check help
-  make bootstrap
+#+begin_src bash-ts
+cd ~/.emacs.d
+make bootstrap-borg
+make help                       # check help
+make bootstrap
 #+end_src
 
 ** Fetch submodule manually
 
-#+begin_src sh
-  cd ~/.emacs.d
-  git submodule update --init --recursive
-  git submodule foreach git reset --hard
-  git submodule foreach git checkout master
+#+begin_src bash-ts
+cd ~/.emacs.d
+git submodule update --init --recursive
+git submodule foreach git reset --hard
+git submodule foreach git checkout master
 #+end_src
