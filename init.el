@@ -156,8 +156,8 @@ excluded puncuation, then the characters that need
 pangu-spacing. The excluded puncuation will be matched to group
 3, and shortcut the matching for Chinese characters.  Thus group
 1 and group 2 will both be non-nil when a pangu space is needed."
-    :group 'convenience
-    :type 'regexp)
+    :type 'regexp
+    :group 'convenience)
 
   (defun my-pangu-spacing-current-buffer ()
     "Pangu space current buffer."
@@ -623,6 +623,11 @@ number."
                   list
                   "，"))))
 
+  (defun my--pulse-highlight-region (fn beg end &rest args)
+    "Momentarily highlight the region between BEG and END."
+    (pulse-momentary-highlight-region beg end)
+    (apply fn beg end args))
+
   :init
   ;; Handle large files
   ;; https://emacs-china.org/t/topic/25811/9
@@ -671,6 +676,8 @@ number."
   (when my-use-gbk-dos-coding-system
     (add-to-list 'process-coding-system-alist
                  '("[rR][gG]" . (utf-8 . gbk-dos))))
+
+  (advice-add 'kill-ring-save :around #'my--pulse-highlight-region)
 
   :bind
 
@@ -1655,17 +1662,33 @@ More details are inside `my-load-font'."
   (add-to-list 'citre-find-reference-backends 'elisp))
 
 (use-package apheleia
-  :bind (("C-c c f" . apheleia-format-buffer)
-         ("C-c c F" . apheleia-goto-error))
   :config
-  (add-to-list 'apheleia-mode-alist '(python-ts-mode . ruff))
-  (add-to-list 'apheleia-mode-alist '(python-mode . ruff))
-  (add-to-list 'apheleia-mode-alist '(vue-ts-mode . prettier))
+
+  (let ((formatter-mode-mapping
+         '((oxfmt . ( css-mode css-ts-mode scss-mode
+                      conf-toml-mode toml-ts-mode
+                      html-mode html-ts-mode
+                      js-mode js-ts-mode
+                      js-json-mode json-mode json-ts-mode
+                      markdown-mode markdown-ts-mode
+                      typescript-mode typescript-ts-mode tsx-ts-mode
+                      vue-ts-mode
+                      yaml-ts-mode))
+           (ruff . (python-mode python-ts-mode)))))
+    (dolist (rule formatter-mode-mapping)
+      (let ((formatter (car rule))
+            (modes     (cdr rule)))
+        (dolist (mode modes)
+          (add-to-list 'apheleia-mode-alist `(,mode . ,formatter))))))
 
   (setf (alist-get 'rustfmt apheleia-formatters)
         '("rustfmt" "--edition" "2024" "--quiet" "--emit" "stdout"))
   (setf (alist-get 'google-java-format apheleia-formatters)
-        '("google-java-format" "--aosp" "-")))
+        '("google-java-format" "--aosp" "-"))
+
+  :bind
+  (("C-c c f" . apheleia-format-buffer)
+   ("C-c c F" . apheleia-goto-error)))
 
 (use-package elisp-mode
   :preface
@@ -1734,6 +1757,7 @@ sexp before point and insert output into current position."
                ("C-c C-v C-d" . sly-inspect-definition)
                ("C-c C-x C-c" . sly-connect)
                ("C-c C-x C-q" . sly-disconnect)
+               ("C-c C-q"     . sly-quit-lisp)
                ("C-c C-x C-j" . sly))
          (:map sly-doc-map
                ("C-l" . sly-documentation)))
@@ -1821,10 +1845,10 @@ sexp before point and insert output into current position."
   :config
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
-                 '((neocaml-mode :language-id "ocaml") . ("ocamllsp"))))
+                 '((neocaml-mode neocaml-interface-mode) . ("ocamllsp"))))
   :mode
-  (("\\.mli\\'" . neocamli-mode)
-   ("\\.ml\\'" . neocaml-mode)))
+  (("\\.mli\\'" . neocaml-interface-mode)
+   ("\\.ml\\'"  . neocaml-mode)))
 
 (use-package ocaml-eglot
   :after (eglot neocaml)
@@ -1897,6 +1921,34 @@ sexp before point and insert output into current position."
   :config
   ;; Visit version controlled symlink without asking
   (setq vc-follow-symlinks t))
+
+(use-package smerge-mode
+  :preface
+
+  (defun my-smerge-resolve-all (keep)
+    "Resolves all conflicts while keeping KEEP side.
+
+KEEP is one of `upper', `base', `lower'."
+    (interactive
+     (list (intern (completing-read "Keep: " '(upper base lower)))))
+    (let ((resolve-func
+           (pcase keep
+             ('upper #'smerge-keep-upper)
+             ('base  #'smerge-keep-base)
+             ('lower #'smerge-keep-lower)
+             (_ (error "Invalid keep value: %s" keep))))
+          (resolve-count 0))
+      (save-excursion
+        (goto-char (point-min))
+        (while (ignore-errors (not (smerge-next)))
+          (funcall resolve-func)
+          (cl-incf resolve-count)))
+      (if (> resolve-count 0)
+          (message "Resolved %d conflict(s) using `%s'" resolve-count keep)
+        (message "No conflicts found"))))
+
+  :bind (:map smerge-basic-map
+              ("R" . my-smerge-resolve-all)))
 
 (use-package magit
   :bind (("C-x g"   . magit-status)
@@ -2438,6 +2490,8 @@ REPLACE instead.  URL `https://github.com/emacs-evil/evil/issues/511'."
 
   (keymap-set evil-normal-state-map "] SPC" #'evil-unimpaired-insert-newline-below)
 
+  (advice-add 'evil-yank :around #'my--pulse-highlight-region)
+
   (define-advice keyboard-quit (:before () evil-ex-nohighlight)
     "Disable evil ex search buffer highlight."
     (when (evil-ex-hl-active-p 'evil-ex-search)
@@ -2782,13 +2836,17 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
 
 (use-package tempel
   :preface
+
   (defun my--tempel-include (elt)
-    "Add ELT (i template) to include templates by name in another template."
-    (when (eq (car-safe elt) 'i)
-      (if-let* ((template (alist-get (cadr elt) (tempel--templates))))
-          (cons 'l template)
-        (message "Template %s not found" (cadr elt))
-        nil)))
+    (pcase elt
+      (`(i ,inc)
+       (cons 'l (or (alist-get inc (tempel--templates))
+                    (error "Template %s not found" inc))))))
+
+  (defun my--tempel-repeat (elt fields)
+    (pcase elt
+      (`(* ,count . ,rest)
+       (cons 'l (cl-loop for i below (eval count fields) append rest)))))
 
   (defun my--tempel-setup-capf ()
     "Add the Tempel Capf to `completion-at-point-functions'.
@@ -2809,24 +2867,27 @@ Add before the Capfs, such that it will be tried first."
   ;; :custom
   ;; (tempel-trigger-prefix "<")
 
-  :bind (("M-+" . tempel-complete)
-         ("M-_" . tempel-expand)
-         ("M-*" . tempel-insert))
+  :bind
+
+  (("M-+" . tempel-complete)
+   ("M-_" . tempel-expand)
+   ("M-*" . tempel-insert))
+
+  :init
+
+  ;; ;; Optionally make the Tempel templates available to Abbrev,
+  ;; ;; either locally or globally. `expand-abbrev' is bound to C-x '
+  ;; ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  ;; (global-tempel-abbrev-mode +1)
+
+  :hook
+
+  ((conf-mode prog-mode text-mode) . my--tempel-setup-capf)
 
   :config
 
   (add-to-list 'tempel-user-elements #'my--tempel-include)
-
-  :init
-
-  (add-hook 'conf-mode-hook #'my--tempel-setup-capf)
-  (add-hook 'prog-mode-hook #'my--tempel-setup-capf)
-  (add-hook 'text-mode-hook #'my--tempel-setup-capf)
-
-  ;; Optionally make the Tempel templates available to Abbrev,
-  ;; either locally or globally. `expand-abbrev' is bound to C-x '
-  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-  (global-tempel-abbrev-mode +1))
+  (add-to-list 'tempel-user-elements #'my--tempel-repeat))
 
 ;;; Org
 
@@ -3060,6 +3121,21 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numberin
   :defer t
   :custom (org-confirm-babel-evaluate nil)
   :config
+  (defun my-org-babel-highlight-result ()
+    "Highlight the result of the current source block.
+Adapt from `org-babel-remove-result'."
+    (interactive)
+    (when-let* ((location (org-babel-where-is-src-block-result))
+                (case-fold-search t))
+      (save-excursion
+        (goto-char location)
+        (when (looking-at org-babel-result-regexp)
+          (pulse-momentary-highlight-region
+           (1+ (match-end 0))
+           (progn (forward-line) (org-babel-result-end)))))))
+
+  (add-hook 'org-babel-after-execute-hook #'my-org-babel-highlight-result)
+
   (define-advice org-babel-execute-src-block (:around (fn &rest args) lazy-load-languages)
     "Load languages when needed."
     (let* ((language (org-element-property :language (org-element-at-point)))
@@ -3289,6 +3365,8 @@ Show the heading too, if it is currently invisible."
 (use-package typst-ts-mode
   :if (treesit-available-p)
   :custom (typst-ts-indent-offset 2)
+  :config
+  (add-to-list 'eglot-server-programs '(typst-ts-mode . ("tinymist")))
   :mode "\\.typ\\'")
 
 ;;; Reader

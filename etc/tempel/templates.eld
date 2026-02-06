@@ -4,7 +4,6 @@
 
 bash-ts-mode sh-mode
 
-(b "#!/usr/bin/env " (p "sh"))
 (case "case \"$" (p "VAR") "\" in" n>
       (p "1") ") echo 1" n> ";;" n>
       (p "2|3") ") echo 2 or 3" n> ";;" n>
@@ -16,6 +15,7 @@ bash-ts-mode sh-mode
 (elif "elif " (p "pred") "; then" n> r>)
 (else "else" n> r>)
 (select "select " p " in " p "; do" n> r> n "done")
+(shebang "#!/usr/bin/env " (p "sh"))
 (until "until " p "; do" n> r> n "done")
 (while "while " p "; do" n> r> n "done")
 
@@ -134,6 +134,7 @@ clojure-mode clojure-ts-mode
 clojure-mode clojure-ts-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 
 (main "(defn -main [& args]" n> r> ")")
+(shebang "#!/usr/bin/env bb")
 
 clojure-mode clojure-ts-mode emacs-lisp-mode fennel-mode lisp-mode racket-mode ;; Specify multiple modes
 
@@ -409,7 +410,9 @@ fennel-mode
 
 fundamental-mode ;; Available everywhere
 
-(today (format-time-string "%Y-%m-%d"))
+(today (format-time-string "%Y-%m-%d")
+       :ann "Today's date"
+       :doc "Insert today's date")
 
 go-mode go-ts-mode
 
@@ -604,6 +607,12 @@ latex-mode
 (itemize "\\begin{itemize}" n> "\\item " r> n> "\\end{itemize}" >)
 (letter "\\begin{letter}" n> r> n> "\\end{letter}" >)
 (math "\\begin{math}" n> r> n> "\\end{math}" >)
+(matrix (p (read-number "Rows: ") rows noinsert)
+        (p (read-number "Cols: ") cols noinsert)
+        "\\begin{" (p "pmatrix" type) "}" n
+        (* (1- rows) (p " ") (* (1- cols) " & " (p " ")) "\\\\" n)
+        (p " ") (* (1- cols) " & " (p " ")) n
+        "\\end{" type "}")
 (minipage "\\begin{minipage}[t]{0.5\linewidth}" n> r> n> "\\end{minipage}" >)
 (quotation "\\begin{quotation}" n> r> n> "\\end{quotation}" >)
 (quote "\\begin{quote}" n> r> n> "\\end{quote}" >)
@@ -849,23 +858,36 @@ texinfo-mode
 
 text-mode
 
+(block "┌────" n
+       "| " r n
+       "└────")
+(block-ascii ",---" n
+             "| " r n
+             "`---")
 (box "┌─" (make-string (length str) ?─) "─┐" n
      "│ " (s str)                       " │" n
      "└─" (make-string (length str) ?─) "─┘" n)
-(abox "+-" (make-string (length str) ?-) "-+" n
-      "| " (s str)                       " |" n
-      "+-" (make-string (length str) ?-) "-+" n)
-(fm (p "content") n n
-    "        [32m《" p "》[m [33m—— " r "[m" n
-    "%")
-(fp "[32m《" p "》[m" n
-    "[33m" p "[m" n
-    r n
-    "%")
+(box-ascii "+-" (make-string (length str) ?-) "-+" n
+           "| " (s str)                       " |" n
+           "+-" (make-string (length str) ?-) "-+" n)
+(fortune-motto (p "content") n n
+               "        [32m《" p "》[m [33m—— " r "[m" n
+               "%")
+(fortune-poet "[32m《" p "》[m" n
+              "[33m" p "[m" n
+              r n
+              "%")
+(calc (p "taylor(sin(x),x=0,3)" formula) n
+      "----" n
+      (format "%s" (calc-eval formula)))
 (cut "--8<---------------cut here---------------start------------->8---" n r n
      "--8<---------------cut here---------------end--------------->8---" n)
 (rot13 (p "plain text" text) n "----" n (rot13 text))
-(calc (p "taylor(sin(x),x=0,3)" formula) n "----" n (format "%s" (calc-eval formula)))
+(table (p (read-number "Rows: ") rows noinsert)
+       (p (read-number "Cols: ") cols noinsert)
+       "| " (p "  ") (* (1- cols) " | " (p "  ")) " |" n
+       "|" (* cols "----|") n
+       (* rows "| " (p "  ") (* (1- cols) " | " (p "  ")) " |" n))
 
 tsx-ts-mode
 
