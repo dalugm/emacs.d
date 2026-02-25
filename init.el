@@ -51,6 +51,54 @@
   ;; (setopt use-package-verbose t)
   (require 'use-package))
 
+(use-package package
+  :defer t
+  :preface
+  (defcustom my-package-archive-source 'official
+    "ELPA source for package installation.
+
+Supported values:
+`official'    - Official GNU ELPA and MELPA repositories
+`tuna'        - Tsinghua University TUNA mirror
+`163'         - NetEase 163 mirror
+`emacs-china' - Emacs China community mirror
+
+See also: `package-archives'."
+    :type '(choice
+            (const :tag "official"    official)
+            (const :tag "tuna"        tuna)
+            (const :tag "163"         163)
+            (const :tag "emacs-china" emacs-china))
+    :group 'convenience)
+  :custom
+  (package-archives (pcase my-package-archive-source
+                      ('official
+                       '(("gnu"    . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("melpa"  . "https://melpa.org/packages/")))
+
+                      ('emacs-china
+                       '(("gnu"    . "https://elpa.emacs-china.org/gnu/")
+                         ("nongnu" . "https://elpa.emacs-china.org/nongnu/")
+                         ("melpa"  . "https://elpa.emacs-china.org/melpa/")))
+
+                      ('163
+                       '(("gnu"    . "https://mirrors.163.com/elpa/gnu/")
+                         ("nongnu" . "https://mirrors.163.com/elpa/nongnu/")
+                         ("melpa"  . "https://mirrors.163.com/elpa/melpa/")))
+
+                      ('tuna
+                       '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                         ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+                         ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+
+                      (_               ; Default using official source
+                       '(("gnu"    . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("melpa"  . "https://melpa.org/packages/")))))
+
+  (package-install-upgrade-built-in t))
+
 (use-package compat)
 
 (use-package no-littering
@@ -64,11 +112,11 @@
                  (recentf-expand-file-name no-littering-etc-directory))))
 
 (use-package auto-compile
-  :config
-  (setq auto-compile-display-buffer               nil)
-  (setq auto-compile-mode-line-counter            t)
-  (setq auto-compile-source-recreate-deletes-dest t)
-  (setq auto-compile-toggle-deletes-nonlib-dest   t))
+  :custom
+  (auto-compile-use-mode-line  nil)
+  (auto-compile-display-buffer nil)
+  (auto-compile-toggle-deletes-nonlib-dest   t)
+  (auto-compile-source-recreate-deletes-dest t))
 
 (use-package epkg
   :defer t)
@@ -80,13 +128,13 @@
           #'epkg-marginalia-annotate-package))
 
 (use-package server
+  :if my-run-emacs-as-a-server
   :preface
   (defcustom my-run-emacs-as-a-server nil
     "Non-nil means to run Emacs as a server process, which allows
 access from `emacsclient'."
-    :group 'convenience
-    :type 'boolean)
-  :if my-run-emacs-as-a-server
+    :type 'boolean
+    :group 'convenience)
   :config
   (run-with-idle-timer 3 nil
                        (lambda ()
@@ -99,13 +147,13 @@ access from `emacsclient'."
   :preface
   (defcustom my-use-gbk-dos-coding-system nil
     "Non-nil means using GBK-DOS coding system."
-    :group 'convenience
-    :type 'boolean)
+    :type 'boolean
+    :group 'convenience)
 
   (defcustom my-http-proxy "127.0.0.1:1080"
     "HTTP proxy."
-    :group 'convenience
-    :type 'string)
+    :type 'string
+    :group 'convenience)
 
   (defcustom my-socks-proxy
     (list
@@ -705,7 +753,7 @@ number."
    ("C-c m 2"   . my-insert-user-information)
    ("C-c m d"   . my-delete-blank-lines)
    ("C-c m D"   . my-delete-visual-blank-lines)
-   ("C-c m e" .   my-open-externally)
+   ("C-c m e"   . my-open-externally)
    ("C-c m h"   . my-toggle-selective-display)
    ("C-c m o"   . my-occur-dwim)
    ("C-c m k"   . my-kill-other-buffers-without-special-ones)
@@ -716,7 +764,7 @@ number."
    ("C-c m x"   . execute-extended-command)))
 
 (use-package ffap
-  :bind (("C-x C-o" . ffap)))
+  :bind ("C-x C-o" . ffap))
 
 (use-package help
   :bind (:map help-map
@@ -735,7 +783,7 @@ number."
          ("C-o" . isearch-occur))))
 
 (use-package simple
-  :init
+  :config
   (define-advice delete-indentation (:around (fn &rest args) chinese)
     "Add Chinese characters support for `fixup-whitespace'.
 
@@ -1034,13 +1082,7 @@ called from `delete-indentation'."
   (tab-bar-new-tab-choice "*scratch*"))
 
 (use-package dired
-  :bind (:map dired-mode-map
-              ("," . dired-up-directory)
-              ("e" . my-dired-open-externally)
-              ("_" . my-dired-cycle-space-underscore-hyphen)
-              ("C-c C-e" . my-ediff-files)
-              ("C-c C-p" . wdired-change-to-wdired-mode))
-  :init
+  :preface
   (defun my-ediff-files ()
     "Run Ediff on the two marked files.
 
@@ -1087,7 +1129,18 @@ URL `https://oremacs.com/2017/03/18/dired-ediff/'."
     (dired-map-over-marks
      (my-open-externally (dired-get-file-for-visit))
      arg))
+
+  :bind
+
+  (:map dired-mode-map
+        ("," . dired-up-directory)
+        ("e" . my-dired-open-externally)
+        ("_" . my-dired-cycle-space-underscore-hyphen)
+        ("C-c C-e" . my-ediff-files)
+        ("C-c C-p" . wdired-change-to-wdired-mode))
+
   :custom
+
   (dired-listing-switches "-alh")
   ;; Search file name only when focus is over filename
   (dired-isearch-filenames 'dwim)
@@ -1233,16 +1286,7 @@ mouse-3: Toggle minor modes"
       (interactive "nLine Space: ")
       (setopt line-spacing space))
 
-    :config
-    (setq-default frame-title-format "GNU Emacs %@ %b")
-
     (when (featurep 'ns)
-      ;; Make NS behavior the same as other platforms
-      (setopt ns-command-modifier 'meta)
-      (setopt ns-alternate-modifier 'super)
-
-      (push '(ns-transparent-titlebar . t) default-frame-alist)
-
       (defun my--set-frame-ns-appearance (frame &rest _)
         "Set ns-appearance frame parameter for FRAME."
         (when (display-graphic-p frame)
@@ -1251,12 +1295,20 @@ mouse-3: Toggle minor modes"
 
       (defun my--set-all-frames-ns-appearance (&rest _)
         "Set ns-appearance frame parameter for all frames."
-        (mapc #'my--set-frame-ns-appearance (frame-list)))
+        (mapc #'my--set-frame-ns-appearance (frame-list))))
 
+    :config
+    (setq-default frame-title-format "GNU Emacs %@ %b")
+
+    (when (featurep 'ns)
       (add-hook 'after-init-hook #'my--set-all-frames-ns-appearance)
-      (add-hook 'after-make-frame-functions #'my--set-frame-ns-appearance)
-      (advice-add 'frame-set-background-mode
-                  :after #'my--set-frame-ns-appearance))
+      (add-to-list 'after-make-frame-functions #'my--set-frame-ns-appearance)
+      (advice-add 'frame-set-background-mode :after #'my--set-frame-ns-appearance)
+
+      (push '(ns-transparent-titlebar . t) default-frame-alist)
+      ;; Make NS behavior the same as other platforms
+      (setopt ns-alternate-modifier 'super)
+      (setopt ns-command-modifier 'meta))
 
     (pixel-scroll-precision-mode +1)
     (blink-cursor-mode -1))
@@ -1316,11 +1368,13 @@ additional font spec for ASCII and CJK font."
                            (choice (plist :tag "CJK font spec"
                                           :key-type symbol
                                           :value-type natnum)
-                                   (const nil)))))
+                                   (const nil))))
+      :group 'convenience)
 
     (defcustom my-font-size 13
       "Default font size."
-      :type '(natnum :tag "Font size"))
+      :type '(natnum :tag "Font size")
+      :group 'convenience)
 
     (defun my--create-fontset (ascii-spec cjk-spec)
       "Create a fontset NAME with ASCII-SPEC and CJK-SPEC font."
@@ -1468,46 +1522,30 @@ More details are inside `my-load-font'."
   (setq treesit-language-source-alist
         '((bash "https://github.com/tree-sitter/tree-sitter-bash")
           (c "https://github.com/tree-sitter/tree-sitter-c")
-          (c3 "https://github.com/c3lang/tree-sitter-c3")
-          (clojure "https://github.com/sogaiu/tree-sitter-clojure")
+          (c-sharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
           (cmake "https://github.com/uyha/tree-sitter-cmake")
           (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-          (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
           (css "https://github.com/tree-sitter/tree-sitter-css")
-          (dart "https://github.com/UserNobody14/tree-sitter-dart")
           (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-          (doxygen "https://github.com/tree-sitter-grammars/tree-sitter-doxygen")
           (elixir "https://github.com/elixir-lang/tree-sitter-elixir")
           (go "https://github.com/tree-sitter/tree-sitter-go")
           (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
-          (haskell "https://github.com/tree-sitter/tree-sitter-haskell")
           (heex "https://github.com/phoenixframework/tree-sitter-heex")
           (html "https://github.com/tree-sitter/tree-sitter-html")
           (java "https://github.com/tree-sitter/tree-sitter-java")
           (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
           (jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
           (json "https://github.com/tree-sitter/tree-sitter-json")
-          (just "https://github.com/IndianBoy42/tree-sitter-just")
           (lua "https://github.com/tree-sitter-grammars/tree-sitter-lua")
-          (markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown/src")
-          (markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" nil "tree-sitter-markdown-inline/src")
-          (nix "https://github.com/nix-community/tree-sitter-nix")
-          (ocaml "https://github.com/tree-sitter/tree-sitter-ocaml" nil "grammars/ocaml/src")
-          (ocaml-interface "https://github.com/tree-sitter/tree-sitter-ocaml" nil "grammars/interface/src")
-          (odin "https://github.com/tree-sitter-grammars/tree-sitter-odin")
           (php "https://github.com/tree-sitter/tree-sitter-php" nil "php/src")
           (phpdoc "https://github.com/claytonrcarter/tree-sitter-phpdoc")
-          (purescript "https://github.com/postsolar/tree-sitter-purescript")
           (python "https://github.com/tree-sitter/tree-sitter-python")
           (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
           (rust "https://github.com/tree-sitter/tree-sitter-rust")
           (toml "https://github.com/tree-sitter-grammars/tree-sitter-toml")
           (tsx "https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src")
           (typescript "https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src")
-          (typst "https://github.com/uben0/tree-sitter-typst")
-          (vue "https://github.com/tree-sitter-grammars/tree-sitter-vue")
-          (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")
-          (zig "https://github.com/maxxnino/tree-sitter-zig")))
+          (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
   :custom
   (major-mode-remap-alist
    '((c-mode          . c-ts-mode)
@@ -1539,17 +1577,12 @@ More details are inside `my-load-font'."
                   (yaml       . (,(rx ".y" (opt "a") "ml" eos) . yaml-ts-mode))))
     (let ((parser (car list))
           (alist (cdr list)))
-      (when (treesit-ready-p parser 'message)
+      (when (treesit-language-available-p parser)
         (add-to-list 'auto-mode-alist alist)))))
 
 (use-package js
   :mode ("\\.[cm]js\\'" . js-mode)
   :custom (js-indent-level 2))
-
-(use-package lua-ts-mode
-  :if (treesit-available-p)
-  :defer t
-  :custom (lua-ts-indent-offset 3))
 
 (use-package python
   :mode ("\\.[cir]py\\'" . python-mode)
@@ -1574,8 +1607,13 @@ More details are inside `my-load-font'."
          ("C-c l n" . eglot-rename)
          ("C-c l q" . eglot-shutdown)
          ("C-c l t" . eglot-find-typeDefinition)
+         ("C-c l L" . eglot-events-buffer)
          ("C-c l R" . eglot-reconnect)
          ("C-c l Q" . eglot-shutdown-all))
+  :custom
+  (eglot-autoshutdown t)
+  (eglot-extend-to-xref t)
+  (eglot-ignored-server-capabilities '(:documentHighlightProvider))
   :config
   ;; Use vtsls instead of ts_ls
   (add-to-list 'eglot-server-programs
@@ -1625,22 +1663,19 @@ More details are inside `my-load-font'."
   :custom
   (eldoc-box-only-multi-line t)
   (eldoc-box-clear-with-C-g t)
-  (eldoc-box-enable-frame-map t)
-  :bind (("C-c h h" . eldoc-box-help-at-point)
-         (:map eldoc-box-frame-map
-               ("C-M-n" . eldoc-box-scroll-up)
-               ("C-M-p" . eldoc-box-scroll-down)
-               ("C-M-a" . eldoc-box-beginning)
-               ("C-M-e" . eldoc-box-end)))
+  :bind ("C-c h h" . eldoc-box-help-at-point)
   :config
-  (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t)
-  (setq eldoc-doc-buffer-separator
-        (concat "\n"
-                (propertize "-"
-                            'display '(space :align-to right)
-                            'face '(:strike-through t)
-                            'font-lock-face '(:strike-through t))
-                "\n")))
+  (advice-add 'eldoc-box-buffer-setup
+              :before
+              (lambda (&rest _)
+                (bind-key* "C-M-p" #'eldoc-box-scroll-down)
+                (bind-key* "C-M-n" #'eldoc-box-scroll-up)))
+  (advice-add 'eldoc-box-quit-frame
+              :before
+              (lambda (&rest _)
+                (unbind-key "C-M-p" 'override-global-map)
+                (unbind-key "C-M-n" 'override-global-map)))
+  (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
 
 (use-package citre
   :bind (("C-c c a" . citre-ace-peek)
@@ -1730,7 +1765,20 @@ sexp before point and insert output into current position."
                ("C-c C-p" . my-eval-print-last-sexp))))
 
 (use-package sly
-  :preface
+  :bind ((:map sly-mode-map
+               ("C-c C-a C-c" . sly-asdf-compile-system)
+               ("C-c C-a C-l" . sly-asdf-load-system)
+               ("C-c C-a C-r" . sly-asdf-reload-system)
+               ("C-c C-a C-t" . sly-asdf-test-system)
+               ("C-c C-v C-i" . sly-inspect)
+               ("C-c C-v C-d" . sly-inspect-definition)
+               ("C-c C-x C-c" . sly-connect)
+               ("C-c C-x C-q" . sly-disconnect)
+               ("C-c C-q"     . sly-quit-lisp)
+               ("C-c C-x C-j" . sly))
+         (:map sly-doc-map
+               ("C-l" . sly-documentation)))
+  :config
   (define-advice sly-mrepl (:override (&rest _) last)
     "Switch to the last Lisp/Sly-Mrepl buffer."
     (interactive)
@@ -1748,19 +1796,6 @@ sexp before point and insert output into current position."
               (select-window win)
             (pop-to-buffer buf))
         (user-error "No Sly-Mrepl buffer found"))))
-  :bind ((:map sly-mode-map
-               ("C-c C-a C-c" . sly-asdf-compile-system)
-               ("C-c C-a C-l" . sly-asdf-load-system)
-               ("C-c C-a C-r" . sly-asdf-reload-system)
-               ("C-c C-a C-t" . sly-asdf-test-system)
-               ("C-c C-v C-i" . sly-inspect)
-               ("C-c C-v C-d" . sly-inspect-definition)
-               ("C-c C-x C-c" . sly-connect)
-               ("C-c C-x C-q" . sly-disconnect)
-               ("C-c C-q"     . sly-quit-lisp)
-               ("C-c C-x C-j" . sly))
-         (:map sly-doc-map
-               ("C-l" . sly-documentation)))
   :custom (inferior-lisp-program "sbcl"))
 
 (use-package sly-asdf :after sly)
@@ -1773,16 +1808,12 @@ sexp before point and insert output into current position."
               ("C-c C-x C-e" . racket-eval-last-sexp)))
 
 (use-package clojure-mode
-  :mode
-  ("\\.\\(cljd?\\|edn\\)\\'" . clojure-mode)
-  ("\\.cljs\\'" . clojurescript-mode))
+  :defer t)
 
 (use-package clojure-ts-mode
   :if (treesit-available-p)
-  :mode
-  ("\\.\\(clj\\|edn\\)\\'" . clojure-ts-mode)
-  ("\\.cljs\\'" . clojure-ts-clojurescript-mode)
-  ("\\.cljd\\'" . clojure-ts-clojuredart-mode))
+  :custom (clojure-ts-auto-remap t)
+  :after clojure-mode)
 
 (use-package cider
   :bind ((:map cider-eval-commands-map
@@ -1801,15 +1832,8 @@ sexp before point and insert output into current position."
     (setq cider-clojure-cli-command "pwsh")))
 
 (use-package fennel-mode
-  :mode ("\\.fnl\\'" . fennel-mode))
-
-(use-package c3-ts-mode
-  :if (treesit-available-p)
-  :mode "\\.c3\\'")
-
-(use-package dart-ts-mode
-  :if (treesit-available-p)
-  :mode "\\.dart\\'")
+  :bind (:map fennel-mode-map
+              ("C-c C-x C-j" . fennel-repl)))
 
 (use-package fsharp-mode
   :bind (:map fsharp-mode-map
@@ -1822,43 +1846,63 @@ sexp before point and insert output into current position."
   :bind (:map haskell-ts-mode-map
               ("C-c C-x C-j" . run-haskell))
   :config
+  (add-to-list 'treesit-language-source-alist
+               '(haskell
+                 . ("https://github.com/tree-sitter/tree-sitter-haskell")))
+  (unless (treesit-language-available-p 'haskell)
+    (treesit-install-language-grammar 'haskell))
+
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
                  '(haskell-ts-mode
                    . ("haskell-language-server-wrapper" "--lsp"))))
   :mode "\\.hs\\'")
 
-(use-package purescript-mode
-  :defer t)
-
 (use-package just-ts-mode
   :if (treesit-available-p)
-  :mode "\\.[Jj]ust\\(file\\)?\\'")
+  :config
+  (add-to-list 'treesit-language-source-alist
+               '(just . ("https://github.com/casey/tree-sitter-just")))
+  (unless (treesit-language-available-p 'just)
+    (treesit-install-language-grammar 'just))
+  :defer t)
 
 (use-package nix-ts-mode
   :if (treesit-available-p)
-  :mode "\\.nix\\'")
+  :config
+  (add-to-list 'treesit-language-source-alist
+               '(nix . ("https://github.com/nix-community/tree-sitter-nix")))
+  (unless (treesit-language-available-p 'nix)
+    (treesit-install-language-grammar 'nix))
+  :defer t)
 
 (use-package neocaml
   :if (treesit-available-p)
-  :hook (neocaml-mode . neocaml-repl-minor-mode)
+  :hook (neocaml-base-mode . neocaml-repl-minor-mode)
   :config
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
                  '((neocaml-mode neocaml-interface-mode) . ("ocamllsp"))))
-  :mode
-  (("\\.mli\\'" . neocaml-interface-mode)
-   ("\\.ml\\'"  . neocaml-mode)))
+  :bind (:map neocaml-repl-minor-mode-map
+              :package neocaml-repl
+              ("C-c C-x C-j" . neocaml-repl-switch-to-repl)))
 
 (use-package ocaml-eglot
   :after (eglot neocaml)
   :config (ocaml-eglot +1))
 
-(use-package odin-ts-mode
-  :if (treesit-available-p)
-  :mode "\\.odin\\'")
-
 (use-package rust-mode
+  :preface
+  (defun my-rust-doc ()
+    "Build documentation using `cargo doc'."
+    (interactive)
+    (rust--compile nil "%s doc" rust-cargo-bin))
+
+  (defun my-rust-doc-open ()
+    "Build and open documentation using `cargo doc'."
+    (interactive)
+    (rust--compile nil "%s doc --open" rust-cargo-bin))
+  :custom (rust-mode-treesitter-derive t)
   :bind (:map rust-mode-map
               ("C-c C-c C-c" . rust-compile)
               ("C-c C-c C-d" . rust-dbg-wrap-or-unwrap)
@@ -1870,57 +1914,31 @@ sexp before point and insert output into current position."
               ("C-c C-p C-b" . rust-playpen-buffer)
               ("C-c C-p C-r" . rust-playpen-region)
               ("C-c C-r C-c" . rust-compile-release)
-              ("C-c C-r C-r" . rust-run-release))
-  ;; :custom (rust-mode-treesitter-derive t)
-  :config
-  (defun my-rust-doc ()
-    "Build documentation using `cargo doc'."
-    (interactive)
-    (rust--compile nil "%s doc" rust-cargo-bin))
-
-  (defun my-rust-doc-open ()
-    "Build and open documentation using `cargo doc'."
-    (interactive)
-    (rust--compile nil "%s doc --open" rust-cargo-bin)))
+              ("C-c C-r C-r" . rust-run-release)))
 
 (use-package vue-ts-mode
   :if (treesit-available-p)
   :config
-  (with-eval-after-load 'eglot
-    ;; Eglot with vuels
-    (defcustom my--eglot-vuels-path "/path/to/@vue/language-server"
-      "Path to vue-language-server."
-      :type '(directory :tag "Path to vuels")
-      :group 'eglot)
-
-    (add-to-list 'eglot-server-programs
-                 '(vue-ts-mode . (eglot-vtsls "vtsls" "--stdio")))
-
-    (defclass eglot-vtsls (eglot-lsp-server) ()
-      :documentation "vtsls-language-server")
-
-    (cl-defmethod eglot-initialization-options ((server eglot-vtsls))
-      "Pass through required cquery initialization options"
-      `(:vtsls
-        (:tsserver
-         (:globalPlugins
-          [( :name "@vue/typescript-plugin"
-             :location ,my--eglot-vuels-path
-             :languages ["vue"]
-             :configNamespace "typescript")])))))
+  (add-to-list 'treesit-language-source-alist
+               '(vue . ("https://github.com/tree-sitter-grammars/tree-sitter-vue")))
+  (unless (treesit-language-available-p 'vue)
+    (treesit-install-language-grammar 'vue))
   :mode "\\.[nu]?vue\\'")
 
 (use-package zig-ts-mode
   :if (treesit-available-p)
-  :mode "\\.zig\\'")
+  :config
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs '(zig-ts-mode . ("zls"))))
+  :defer t)
 
 ;;; Version control
 
 (use-package vc
   :defer t
-  :config
+  :custom
   ;; Visit version controlled symlink without asking
-  (setq vc-follow-symlinks t))
+  (vc-follow-symlinks t))
 
 (use-package smerge-mode
   :preface
@@ -1992,38 +2010,25 @@ KEEP is one of `upper', `base', `lower'."
   :hook
   (after-init . vertico-mode))
 
-(use-package vertico-sort
-  :after vertico
-  :custom
-  (vertico-sort-function 'vertico-sort-history-length-alpha))
-
-;; Persist history over Emacs restarts for Vertico
+;; Persist history over Emacs restarts for vertico
 (use-package savehist
   :hook (after-init . savehist-mode))
 
-;; A few more useful configurations...
+;; Emacs minibuffer configurations for vertico
 (use-package emacs
   :custom
+  ;; Enable context menu. `vertico-multiform-mode' adds a menu in the
+  ;; minibuffer to switch display modes
+  (context-menu-mode t)
   ;; Support opening new minibuffers from inside existing minibuffers
   (enable-recursive-minibuffers t)
-  ;; Emacs 28 and newer: Hide commands in M-x which do not work in the
-  ;; current mode.  Vertico commands are hidden in normal
-  ;; buffers. This setting is useful beyond Vertico
+  ;; Hide commands in M-x which do not work in the current mode.
+  ;; Vertico commands are hidden in normal buffers. This setting is
+  ;; useful beyond Vertico
   (read-extended-command-predicate #'command-completion-default-include-p)
-  :init
-  (define-advice completing-read-multiple (:filter-args (args) crm-indicator)
-    "Add prompt indicator to `completing-read-multiple'."
-    (cons (format "[CRM%s] %s"
-                  (replace-regexp-in-string
-                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                   crm-separator)
-                  (car args))
-          (cdr args)))
-
   ;; Do not allow the cursor in the minibuffer prompt
-  (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
+  (minibuffer-prompt-properties
+   '(read-only t cursor-intangible t face minibuffer-prompt)))
 
 (use-package corfu
   :custom
@@ -2038,6 +2043,25 @@ KEEP is one of `upper', `base', `lower'."
   ;; (corfu-scroll-margin 5)        ; use scroll margin
   :hook
   (after-init . global-corfu-mode))
+
+;; A few more useful configurations for corfu
+(use-package emacs
+  :custom
+  ;; TAB cycle if there are only few candidates
+  (completion-cycle-threshold 3)
+
+  ;; Enable indentation+completion using the TAB key
+  ;; `completion-at-point' is often bound to M-TAB
+  (tab-always-indent 'complete)
+
+  ;; Emacs 30 and newer: Disable Ispell completion function. As an
+  ;; alternative, try `cape-dict'
+  (text-mode-ispell-word-completion nil)
+
+  ;; Hide commands in M-x which do not apply to the current mode.
+  ;; Corfu commands are hidden, since they are not used via M-x. This
+  ;; setting is useful beyond Corfu
+  (read-extended-command-predicate #'command-completion-default-include-p))
 
 (use-package corfu-popupinfo
   :if (display-graphic-p)
@@ -2065,31 +2089,21 @@ KEEP is one of `upper', `base', `lower'."
          ("C-M-/" . dabbrev-expand))
   :config
   (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
-  ;; Since 29.1, use `dabbrev-ignored-buffer-regexps' on older
+  (add-to-list 'dabbrev-ignored-buffer-modes 'authinfo-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
 
-;; A few more useful configurations...
-(use-package emacs
-  :custom
-  ;; TAB cycle if there are only few candidates
-  (completion-cycle-threshold 3)
-
-  ;; Enable indentation+completion using the TAB key
-  ;; `completion-at-point' is often bound to M-TAB
-  (tab-always-indent 'complete)
-
-  ;; Emacs 30 and newer: Disable Ispell completion function. As an
-  ;; alternative, try `cape-dict'
-  (text-mode-ispell-word-completion nil)
-
-  ;; Emacs 28 and newer: Hide commands in M-x which do not apply to
-  ;; the current mode.  Corfu commands are hidden, since they are not
-  ;; used via M-x. This setting is useful beyond Corfu
-  (read-extended-command-predicate #'command-completion-default-include-p))
-
 (use-package cape
+  :preface
+
+  (defun my--cape-dict-file ()
+    "Return `cape-dict-file'."
+    (let ((file "/usr/share/dict/words"))
+      (if (eq system-type 'windows-nt)
+          "~/.dict"
+        (list file "~/.dict"))))
+
   ;; Bind prefix keymap providing all Cape commands under a mnemonic
   ;; key.  Press C-c k ? to for help
   :bind ("C-c k" . cape-prefix-map) ;; Alternative keys: M-p, M-+, ...
@@ -2098,6 +2112,7 @@ KEEP is one of `upper', `base', `lower'."
   ;;        ("C-c k h" . cape-history)
   ;;        ("C-c k f" . cape-file)
   ;;        ...)
+
   :init
   ;; Add to the global default value of
   ;; `completion-at-point-functions' which is used by
@@ -2110,13 +2125,6 @@ KEEP is one of `upper', `base', `lower'."
   (add-hook 'completion-at-point-functions #'cape-elisp-block)
   ;; (add-hook 'completion-at-point-functions #'cape-history)
   ;; ...
-
-  (defun my--cape-dict-file ()
-    "Return `cape-dict-file'."
-    (let ((file "/usr/share/dict/words"))
-      (if (eq system-type 'windows-nt)
-          "~/.dict"
-        (list file "~/.dict"))))
 
   :custom
   (cape-dict-file #'my--cape-dict-file))
@@ -2168,7 +2176,7 @@ KEEP is one of `upper', `base', `lower'."
   :config
   ;; Integrate workspace buffers into `consult-buffer'
   (with-eval-after-load 'consult
-    (defvar consult--source-workspace
+    (defvar my-consult-source-workspace
       (list :name     "Workspace Buffers"
             :narrow   ?w
             :history  'buffer-name-history
@@ -2184,12 +2192,10 @@ KEEP is one of `upper', `base', `lower'."
     (defun my--consult-workspaces ()
       "Isolate workspace buffers when using workspaces."
       (if workspaces-mode
-          (add-to-list 'consult-buffer-sources 'consult--source-workspace)
+          (add-to-list 'consult-buffer-sources 'my-consult-source-workspace)
         ;; Reset `consult-buffer' to show all buffers
-        (setq consult-buffer-sources
-              (remove #'consult--source-workspace consult-buffer-sources))))
+        (delete 'my-consult-source-workspace consult-buffer-sources)))
 
-    (my--consult-workspaces)
     (add-hook 'workspaces-mode-hook #'my--consult-workspaces)))
 
 (use-package ace-window
@@ -2256,9 +2262,14 @@ KEEP is one of `upper', `base', `lower'."
 
 (use-package orderless
   :custom
+  ;; (orderless-style-dispatchers '(orderless-affix-dispatch))
+  ;; (orderless-component-separator #'orderless-escapable-split-on-space)
   (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion))))
+  ;; Disable defaults, use our settings
+  (completion-category-defaults nil)
+  ;; Emacs 31: partial-completion behaves like substring
+  (completion-pcm-leading-wildcard t)
   :config
   (define-advice orderless-regexp (:filter-args (str) enhance)
     "Enhance `orderless-regexp' when searching STR."
@@ -2271,8 +2282,8 @@ KEEP is one of `upper', `base', `lower'."
 
   (defcustom my-consult-zh-prefix ?:
     "The prefix character when using consult to search Zhongwen."
-    :group 'convenience
-    :type 'character)
+    :type 'character
+    :group 'convenience)
 
   :init
 
@@ -2439,6 +2450,52 @@ REPLACE instead.  URL `https://github.com/emacs-evil/evil/issues/511'."
        (add-hook (quote ,(intern (concat mode "-mode-hook")))
                  #'evil-normalize-keymaps)))
 
+  (defun my--evil-paren-range (count beg end type inclusive)
+    "Get minimum range of paren text object.
+
+COUNT, BEG, END, TYPE is used to identify the text object.
+If INCLUSIVE is t, the text object is inclusive.
+
+URL `http://blog.binchen.org/posts/code-faster-by-extending-emacs-evil-text-object'."
+    (let ((parens '("()" "[]" "{}" "<>" "\"\"" "''" "``"
+                    "（）" "《》" "「」" "『』" "【】" "〖〗"
+                    "“”" "‘’" "［］" "〔〕" "｛｝"))
+          (pos (point))
+          range found-range)
+      (dolist (paren parens)
+        (condition-case _
+            (let ((char1 (aref paren 0))
+                  (char2 (aref paren 1)))
+              (setq range (if (eq char1 char2)
+                              (evil-select-quote char1
+                                                 beg end
+                                                 type count inclusive)
+                            (evil-select-paren char1 char2
+                                               beg end
+                                               type count inclusive))))
+          (error nil))
+        (when (and range (<= (nth 0 range) pos) (< pos (nth 1 range)))
+          (cond
+           (found-range
+            (when (< (- (nth 1 range) (nth 0 range))
+                     (- (nth 1 found-range) (nth 0 found-range)))
+              (setf (nth 0 found-range) (nth 0 range))
+              (setf (nth 1 found-range) (nth 1 range))))
+           (t
+            (setq found-range range)))))
+      found-range))
+
+  (defun evil-unimpaired-insert-newline-above (count)
+    "Insert COUNT blank line(s) above current line."
+    (interactive "p")
+    (save-excursion (dotimes (_ count) (evil-insert-newline-above)))
+    (when (bolp) (forward-char count)))
+
+  (defun evil-unimpaired-insert-newline-below (count)
+    "Insert COUNT blank line(s) below current line."
+    (interactive "p")
+    (save-excursion (dotimes (_ count) (evil-insert-newline-below))))
+
   :hook
 
   (after-init . evil-mode)
@@ -2475,75 +2532,28 @@ REPLACE instead.  URL `https://github.com/emacs-evil/evil/issues/511'."
     ;; Comma as localleader
     (evil-set-leader state (kbd ",") t))
 
-  (defun evil-unimpaired-insert-newline-above (count)
-    "Insert COUNT blank line(s) above current line."
-    (interactive "p")
-    (save-excursion (dotimes (_ count) (evil-insert-newline-above)))
-    (when (bolp) (forward-char count)))
-
-  (keymap-set evil-normal-state-map "[ SPC" #'evil-unimpaired-insert-newline-above)
-
-  (defun evil-unimpaired-insert-newline-below (count)
-    "Insert COUNT blank line(s) below current line."
-    (interactive "p")
-    (save-excursion (dotimes (_ count) (evil-insert-newline-below))))
-
-  (keymap-set evil-normal-state-map "] SPC" #'evil-unimpaired-insert-newline-below)
-
-  (advice-add 'evil-yank :around #'my--pulse-highlight-region)
-
   (define-advice keyboard-quit (:before () evil-ex-nohighlight)
     "Disable evil ex search buffer highlight."
     (when (evil-ex-hl-active-p 'evil-ex-search)
       (evil-ex-nohighlight)))
-
-  (defun my--evil-paren-range (count beg end type inclusive)
-    "Get minimum range of paren text object.
-
-COUNT, BEG, END, TYPE is used to identify the text object.
-If INCLUSIVE is t, the text object is inclusive.
-
-URL `http://blog.binchen.org/posts/code-faster-by-extending-emacs-evil-text-object'."
-    (let ((parens '("()" "[]" "{}" "<>" "\"\"" "''" "``"
-                    "（）" "《》" "「」" "『』" "【】" "〖〗"
-                    "“”" "‘’" "［］" "〔〕" "｛｝"))
-          (pos (point))
-          range found-range)
-      (dolist (paren parens)
-        (condition-case _
-            (let ((char1 (aref paren 0))
-                  (char2 (aref paren 1)))
-              (setq range (if (eq char1 char2)
-                              (evil-select-quote char1
-                                                 beg end
-                                                 type count inclusive)
-                            (evil-select-paren char1 char2
-                                               beg end
-                                               type count inclusive))))
-          (error nil))
-        (when (and range (<= (nth 0 range) pos) (< pos (nth 1 range)))
-          (cond
-           (found-range
-            (when (< (- (nth 1 range) (nth 0 range))
-                     (- (nth 1 found-range) (nth 0 found-range)))
-              (setf (nth 0 found-range) (nth 0 range))
-              (setf (nth 1 found-range) (nth 1 range))))
-           (t
-            (setq found-range range)))))
-      found-range))
 
   (evil-define-text-object my--evil-a-paren (count &optional beg end type)
     "Select a text object."
     :extend-selection t
     (my--evil-paren-range count beg end type t))
 
-  (evil-define-text-object my--evil-inner-paren (count &optional beg end type)
+  (evil-define-text-object my--evil-i-paren (count &optional beg end type)
     "Select inner text object."
     :extend-selection nil
     (my--evil-paren-range count beg end type nil))
 
+  (keymap-set evil-normal-state-map "[ SPC" #'evil-unimpaired-insert-newline-above)
+  (keymap-set evil-normal-state-map "] SPC" #'evil-unimpaired-insert-newline-below)
+
+  (advice-add 'evil-yank :around #'my--pulse-highlight-region)
+
   (keymap-set evil-outer-text-objects-map "a" #'my--evil-a-paren)
-  (keymap-set evil-inner-text-objects-map "a" #'my--evil-inner-paren)
+  (keymap-set evil-inner-text-objects-map "a" #'my--evil-i-paren)
 
   (evil-define-key 'normal org-mode-map
     "gh" #'outline-up-heading
@@ -2617,6 +2627,7 @@ URL `http://blog.binchen.org/posts/code-faster-by-extending-emacs-evil-text-obje
    ("<leader>ln" . eglot-rename)
    ("<leader>lq" . eglot-shutdown)
    ("<leader>lt" . eglot-find-typeDefinition)
+   ("<leader>lL" . eglot-events-buffer)
    ("<leader>lR" . eglot-reconnect)
    ("<leader>lQ" . eglot-shutdown-all)
 ;;;;; Evil leader my custom
@@ -2753,42 +2764,54 @@ URL `http://blog.binchen.org/posts/code-faster-by-extending-emacs-evil-text-obje
 (use-package evil-surround
   :after evil
 
-  :preface
-
-  (defmacro my--quoted-text-object (name key start-regex end-regex)
-    "Define text objects for `evil-mode'.
-
-URL `https://stackoverflow.com/a/22418983/4921402'."
-    (let ((inner-name (make-symbol (concat "evil-inner-" name)))
-          (outer-name (make-symbol (concat "evil-a-" name))))
-      `(progn
-         (evil-define-text-object
-           ,inner-name (count &optional beg end type)
-           (evil-select-paren ,start-regex ,end-regex
-                              beg end type count nil))
-         (evil-define-text-object
-           ,outer-name (count &optional beg end type)
-           (evil-select-paren ,start-regex ,end-regex
-                              beg end type count t))
-         (keymap-set evil-inner-text-objects-map ,key #',inner-name)
-         (keymap-set evil-outer-text-objects-map ,key #',outer-name))))
-
   :config
 
-  (global-evil-surround-mode +1)
+  ;;   (defmacro my--quoted-text-object (name key start-regex end-regex)
+  ;;     "Define text objects for `evil-mode'.
 
-  ;; NOTE: do NOT use text-object such as `w', `p'
-  (my--quoted-text-object "ShuMingHao" "q" "《" "》")
-  (my--quoted-text-object "ShuangYinHao" "e" "“" "”")
-  (my--quoted-text-object "DanYinHao" "d" "‘" "’")
-  (my--quoted-text-object "ZhiJiaoYinHao" "r" "「" "」")
-  (my--quoted-text-object "ZhiJiaoShuangYinHao" "f" "『" "』")
-  (my--quoted-text-object "FangTouKuoHao" "t" "【" "】")
-  (my--quoted-text-object "KongXinFangTouKuoHao" "g" "〖" "〗")
-  (my--quoted-text-object "YuanKuoHao" "y" "（" "）")
-  (my--quoted-text-object "QuanJiaoFangKuoHao" "u" "［" "］")
-  (my--quoted-text-object "QuanJiaoWanKuoHao" "i" "〔" "〕")
-  (my--quoted-text-object "QuanJiaoHuaKuoHao" "o" "｛" "｝")
+  ;; URL `https://stackoverflow.com/a/22418983/4921402'."
+  ;;     (let ((inner-name (make-symbol (concat "evil-i-" name)))
+  ;;           (outer-name (make-symbol (concat "evil-a-" name))))
+  ;;       `(progn
+  ;;          (evil-define-text-object
+  ;;            ,inner-name (count &optional beg end type)
+  ;;            (evil-select-paren ,start-regex ,end-regex
+  ;;                               beg end type count nil))
+  ;;          (evil-define-text-object
+  ;;            ,outer-name (count &optional beg end type)
+  ;;            (evil-select-paren ,start-regex ,end-regex
+  ;;                               beg end type count t))
+  ;;          (keymap-set evil-inner-text-objects-map ,key #',inner-name)
+  ;;          (keymap-set evil-outer-text-objects-map ,key #',outer-name))))
+
+  ;;   ;; NOTE: do NOT use text-object such as `w', `p'
+  ;;   (my--quoted-text-object "ShuMingHao" "q" "《" "》")
+  ;;   (my--quoted-text-object "ShuangYinHao" "e" "“" "”")
+  ;;   (my--quoted-text-object "DanYinHao" "d" "‘" "’")
+  ;;   (my--quoted-text-object "ZhiJiaoYinHao" "r" "「" "」")
+  ;;   (my--quoted-text-object "ZhiJiaoShuangYinHao" "f" "『" "』")
+  ;;   (my--quoted-text-object "FangTouKuoHao" "t" "【" "】")
+  ;;   (my--quoted-text-object "KongXinFangTouKuoHao" "g" "〖" "〗")
+  ;;   (my--quoted-text-object "YuanKuoHao" "y" "（" "）")
+  ;;   (my--quoted-text-object "QuanJiaoFangKuoHao" "u" "［" "］")
+  ;;   (my--quoted-text-object "QuanJiaoWanKuoHao" "i" "〔" "〕")
+  ;;   (my--quoted-text-object "QuanJiaoHuaKuoHao" "o" "｛" "｝")
+
+  ;; (let ((alist '(
+  ;;                (?Q . ("《 " . " 》")) (?q . ("《" . "》"))
+  ;;                (?E . ("“ "  . " ”" )) (?e . ("“"  . "”" ))
+  ;;                (?D . ("‘ "  . " ’" )) (?d . ("‘"  . "’" ))
+  ;;                (?R . ("「 " . " 」")) (?r . ("「" . "」"))
+  ;;                (?F . ("『 " . " 』")) (?f . ("『" . "』"))
+  ;;                (?T . ("【 " . " 】")) (?t . ("【" . "】"))
+  ;;                (?G . ("〖 " . " 〗")) (?g . ("〖" . "〗"))
+  ;;                (?Y . ("（ " . " ）")) (?y . ("（" . "）"))
+  ;;                (?U . ("［ " . " ］")) (?u . ("［" . "］"))
+  ;;                (?I . ("〔 " . " 〕")) (?i . ("〔" . "〕"))
+  ;;                (?O . ("｛ " . " ｝")) (?o . ("｛" . "｝"))
+  ;;                )))
+  ;;   (setq-default evil-surround-pairs-alist
+  ;;                 (append alist evil-surround-pairs-alist)))
 
   (add-hook 'org-mode-hook
             (lambda ()
@@ -2802,21 +2825,7 @@ URL `https://stackoverflow.com/a/22418983/4921402'."
                                ))
                 (push alist evil-surround-pairs-alist))))
 
-  (let ((alist '(
-                 (?Q . ("《 " . " 》")) (?q . ("《" . "》"))
-                 (?E . ("“ "  . " ”" )) (?e . ("“"  . "”" ))
-                 (?D . ("‘ "  . " ’" )) (?d . ("‘"  . "’" ))
-                 (?R . ("「 " . " 」")) (?r . ("「" . "」"))
-                 (?F . ("『 " . " 』")) (?f . ("『" . "』"))
-                 (?T . ("【 " . " 】")) (?t . ("【" . "】"))
-                 (?G . ("〖 " . " 〗")) (?g . ("〖" . "〗"))
-                 (?Y . ("（ " . " ）")) (?y . ("（" . "）"))
-                 (?U . ("［ " . " ］")) (?u . ("［" . "］"))
-                 (?I . ("〔 " . " 〕")) (?i . ("〔" . "〕"))
-                 (?O . ("｛ " . " ｝")) (?o . ("｛" . "｝"))
-                 )))
-    (setq-default evil-surround-pairs-alist
-                  (append alist evil-surround-pairs-alist))))
+  (global-evil-surround-mode +1))
 
 (use-package evil-nerd-commenter
   :after evil
@@ -2892,13 +2901,117 @@ Add before the Capfs, such that it will be tried first."
 ;;; Org
 
 (use-package org
-  :bind (("C-c o b" . org-switchb)
-         ("C-c o d" . org-demote-subtree)
-         ("C-c o i" . org-insert-structure-template)
-         ("C-c o l" . org-store-link)
-         ("C-c o o" . org-open-at-point-global)
-         ("C-c o p" . org-promote-subtree)
-         ("C-c o t" . org-toggle-link-display))
+  :preface
+
+  (defun my--org-renumber-fragment (orig-func &rest args)
+    "Number equations in LaTeX fragment.
+
+URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/'."
+    (let ((counter -1)
+          results
+          equation-number)
+      (setq results (cl-loop for (begin . env)
+                             in (org-element-map (org-element-parse-buffer) 'latex-environment
+                                  (lambda (env)
+                                    (cons (org-element-property :begin env)
+                                          (org-element-property :value env))))
+                             collect (cond
+                                      ((and (string-match "\\\\begin{equation}" env)
+                                            (not (string-match "\\\\tag{" env)))
+                                       (cl-incf counter)
+                                       (cons begin counter))
+                                      ((and (string-match "\\\\begin{align}" env)
+                                            (string-match "\\\\notag" env))
+                                       (cl-incf counter)
+                                       (cons begin counter))
+                                      ((string-match "\\\\begin{align}" env)
+                                       (prog2
+                                           (cl-incf counter)
+                                           (cons begin counter)
+                                         (with-temp-buffer
+                                           (insert env)
+                                           (goto-char (point-min))
+                                           ;; `\\' is used for a new line
+                                           ;; Each one leads to a number
+                                           (cl-incf counter (count-matches "\\\\$"))
+                                           ;; Unless there are nonumbers
+                                           (goto-char (point-min))
+                                           (cl-decf counter
+                                                    (count-matches "\\nonumber")))))
+                                      (t
+                                       (cons begin nil)))))
+      (when (setq equation-number (cdr (assoc (point) results)))
+        (setf (car args)
+              (concat
+               (format "\\setcounter{equation}{%s}\n" equation-number)
+               (car args)))))
+    (apply orig-func args))
+
+  (defun my--org-justify-fragment-overlay-h (beg end)
+    "Adjust the justification of a LaTeX fragment horizontally.
+The justification is set by :justify in `org-format-latex-options'.
+Only equations at the beginning of a line are justified.
+
+URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview-fragments-in-org-mode/'."
+    (let* ((position (plist-get org-format-latex-options :justify))
+           (ov (car (overlays-at (/ (+ beg end) 2) t)))
+           (width (car (image-size (overlay-get ov 'display))))
+           offset)
+      (cond
+       ((and (eq 'center position)
+             (= beg (line-beginning-position)))
+        (setq offset (floor (- (/ fill-column 2)
+                               (/ width 2))))
+        (when (< offset 0)
+          (setq offset 0))
+        (overlay-put ov 'before-string (make-string offset #x20)))
+       ((and (eq 'right position)
+             (= beg (line-beginning-position)))
+        (setq offset (floor (- fill-column width)))
+        (when (< offset 0)
+          (setq offset 0))
+        (overlay-put ov 'before-string (make-string offset #x20))))))
+
+  (defun my--org-justify-fragment-overlay-v (beg end)
+    "Adjust the justification of a LaTeX fragment vertically."
+    (let* ((ov (car (overlays-at (/ (+ beg end) 2) t)))
+           (img (cdr (overlay-get ov 'display)))
+           (new-img (plist-put img :ascent 95)))
+      (overlay-put ov 'display (cons 'image new-img))))
+
+  (defun my-org-toggle-justify-fragment-overlay-h ()
+    "Toggle justify LaTeX fragment horizontally."
+    (interactive)
+    (if (advice-member-p #'my--org-justify-fragment-overlay-h
+                         'org--make-preview-overlay)
+        (advice-remove 'org--make-preview-overlay
+                       #'my--org-justify-fragment-overlay-h)
+      (advice-add 'org--make-preview-overlay
+                  :after #'my--org-justify-fragment-overlay-h)))
+
+  (defun my-org-toggle-justify-fragment-overlay-v ()
+    "Toggle justify LaTeX fragment vertically."
+    (interactive)
+    (if (advice-member-p #'my--org-justify-fragment-overlay-v 'org--make-preview-overlay)
+        (advice-remove 'org--make-preview-overlay #'my--org-justify-fragment-overlay-v)
+      (advice-add 'org--make-preview-overlay :after #'my--org-justify-fragment-overlay-v)))
+
+  (defun my-org-toggle-renumber-fragment ()
+    "Toggle renumber LaTeX fragment behavior."
+    (interactive)
+    (if (advice-member-p #'my--org-renumber-fragment 'org-create-formula-image)
+        (advice-remove 'org-create-formula-image #'my--org-renumber-fragment)
+      (advice-add 'org-create-formula-image :around #'my--org-renumber-fragment)))
+
+  :bind
+
+  (("C-c o b" . org-switchb)
+   ("C-c o d" . org-demote-subtree)
+   ("C-c o i" . org-insert-structure-template)
+   ("C-c o l" . org-store-link)
+   ("C-c o o" . org-open-at-point-global)
+   ("C-c o p" . org-promote-subtree)
+   ("C-c o t" . org-toggle-link-display))
 
   :custom
 
@@ -2985,128 +3098,11 @@ Add before the Capfs, such that it will be tried first."
 
   :config
 
-;;;; Org preview
-  ;; Enhance LaTeX preview in Org
-  ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview-fragments-in-org-mode/
-  ;; Use center or right, anything else means left-justified as the default
-  (plist-put org-format-latex-options :justify 'right)
-
-  ;; ;; Enlarge the preview magnification
-  ;; (plist-put org-format-latex-options :scale 1.5)
-
-  (defun my--org-justify-fragment-overlay-h (beg end)
-    "Adjust the justification of a LaTeX fragment horizontally.
-The justification is set by :justify in `org-format-latex-options'.
-Only equations at the beginning of a line are justified.
-
-URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview-fragments-in-org-mode/'."
-    (let* ((position (plist-get org-format-latex-options :justify))
-           (ov (car (overlays-at (/ (+ beg end) 2) t)))
-           (width (car (image-size (overlay-get ov 'display))))
-           offset)
-      (cond
-       ((and (eq 'center position)
-             (= beg (line-beginning-position)))
-        (setq offset (floor (- (/ fill-column 2)
-                               (/ width 2))))
-        (when (< offset 0)
-          (setq offset 0))
-        (overlay-put ov 'before-string (make-string offset #x20)))
-       ((and (eq 'right position)
-             (= beg (line-beginning-position)))
-        (setq offset (floor (- fill-column width)))
-        (when (< offset 0)
-          (setq offset 0))
-        (overlay-put ov 'before-string (make-string offset #x20))))))
-
-  (advice-add 'org--make-preview-overlay
-              :after #'my--org-justify-fragment-overlay-h)
-
-  (defun my-org-toggle-justify-fragment-overlay-h ()
-    "Toggle justify LaTeX fragment horizontally."
-    (interactive)
-    (if (advice-member-p #'my--org-justify-fragment-overlay-h
-                         'org--make-preview-overlay)
-        (advice-remove 'org--make-preview-overlay
-                       #'my--org-justify-fragment-overlay-h)
-      (advice-add 'org--make-preview-overlay
-                  :after #'my--org-justify-fragment-overlay-h)))
-
-  (defun my--org-justify-fragment-overlay-v (beg end)
-    "Adjust the justification of a LaTeX fragment vertically."
-    (let* ((ov (car (overlays-at (/ (+ beg end) 2) t)))
-           (img (cdr (overlay-get ov 'display)))
-           (new-img (plist-put img :ascent 95)))
-      (overlay-put ov 'display (cons 'image new-img))))
-
-  (defun my-org-toggle-justify-fragment-overlay-v ()
-    "Toggle justify LaTeX fragment vertically."
-    (interactive)
-    (if (advice-member-p #'my--org-justify-fragment-overlay-v 'org--make-preview-overlay)
-        (advice-remove 'org--make-preview-overlay #'my--org-justify-fragment-overlay-v)
-      (advice-add 'org--make-preview-overlay :after #'my--org-justify-fragment-overlay-v)))
-
-  (defun my--org-renumber-fragment (orig-func &rest args)
-    "Number equations in LaTeX fragment.
-
-URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/'."
-    (let ((counter -1)
-          results
-          equation-number)
-      (setq results (cl-loop for (begin . env)
-                             in (org-element-map
-                                    (org-element-parse-buffer)
-                                    'latex-environment
-                                  (lambda (env)
-                                    (cons
-                                     (org-element-property :begin env)
-                                     (org-element-property :value env))))
-                             collect
-                             (cond
-                              ((and (string-match "\\\\begin{equation}" env)
-                                    (not (string-match "\\\\tag{" env)))
-                               (cl-incf counter)
-                               (cons begin counter))
-                              ((and (string-match "\\\\begin{align}" env)
-                                    (string-match "\\\\notag" env))
-                               (cl-incf counter)
-                               (cons begin counter))
-                              ((string-match "\\\\begin{align}" env)
-                               (prog2
-                                   (cl-incf counter)
-                                   (cons begin counter)
-                                 (with-temp-buffer
-                                   (insert env)
-                                   (goto-char (point-min))
-                                   ;; `\\' is used for a new line
-                                   ;; Each one leads to a number
-                                   (cl-incf counter (count-matches "\\\\$"))
-                                   ;; Unless there are nonumbers
-                                   (goto-char (point-min))
-                                   (cl-decf counter
-                                            (count-matches "\\nonumber")))))
-                              (t
-                               (cons begin nil)))))
-      (when (setq equation-number (cdr (assoc (point) results)))
-        (setf (car args)
-              (concat
-               (format "\\setcounter{equation}{%s}\n" equation-number)
-               (car args)))))
-    (apply orig-func args))
-
-  (defun my-org-toggle-renumber-fragment ()
-    "Toggle renumber LaTeX fragment behavior."
-    (interactive)
-    (if (advice-member-p #'my--org-renumber-fragment 'org-create-formula-image)
-        (advice-remove 'org-create-formula-image #'my--org-renumber-fragment)
-      (advice-add 'org-create-formula-image :around #'my--org-renumber-fragment)))
-
-;;;; Org timestamp
   ;; -----------------------------------------
   ;; C-c . \+1w RET ;; => <2020-05-23 Sat +1w>
   ;; C-c . \-1w RET ;; => <2020-05-23 Sat -1w>
   ;; -----------------------------------------
-  (define-advice org-time-stamp (:around (fn &rest args) insert-escaped-repeater)
+  (define-advice org-timestamp (:around (fn &rest args) insert-escaped-repeater)
     "Insert escaped repeater for org timestamp."
     (apply fn args)
     (when (string-match (rx "\\" (group (any "+\\-") (0+ nonl)))
@@ -3115,12 +3111,22 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numberin
         (backward-char)
         (insert " "
                 (string-trim-right
-                 (match-string 1 org-read-date-final-answer)))))))
+                 (match-string 1 org-read-date-final-answer))))))
+
+  ;; ;; Enlarge the preview magnification
+  ;; (plist-put org-format-latex-options :scale 1.5)
+
+  (advice-add 'org--make-preview-overlay
+              :after #'my--org-justify-fragment-overlay-h)
+
+  ;; Enhance LaTeX preview in Org
+  ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview-fragments-in-org-mode/
+  ;; Use center or right, anything else means left-justified as the default
+  (plist-put org-format-latex-options :justify 'right))
 
 (use-package ob
   :defer t
-  :custom (org-confirm-babel-evaluate nil)
-  :config
+  :preface
   (defun my-org-babel-highlight-result ()
     "Highlight the result of the current source block.
 Adapt from `org-babel-remove-result'."
@@ -3133,9 +3139,8 @@ Adapt from `org-babel-remove-result'."
           (pulse-momentary-highlight-region
            (1+ (match-end 0))
            (progn (forward-line) (org-babel-result-end)))))))
-
-  (add-hook 'org-babel-after-execute-hook #'my-org-babel-highlight-result)
-
+  :hook (org-babel-after-execute-hook . my-org-babel-highlight-result)
+  :config
   (define-advice org-babel-execute-src-block (:around (fn &rest args) lazy-load-languages)
     "Load languages when needed."
     (let* ((language (org-element-property :language (org-element-at-point)))
@@ -3144,7 +3149,8 @@ Adapt from `org-babel-remove-result'."
         (add-to-list 'org-babel-load-languages (cons (intern language) t))
         (org-babel-do-load-languages 'org-babel-load-languages
                                      org-babel-load-languages)))
-    (apply fn args)))
+    (apply fn args))
+  :custom (org-confirm-babel-evaluate nil))
 
 (use-package ob-js
   :defer t
@@ -3366,8 +3372,17 @@ Show the heading too, if it is currently invisible."
   :if (treesit-available-p)
   :custom (typst-ts-indent-offset 2)
   :config
+  (add-to-list 'treesit-language-source-alist
+               '(typst . ("https://github.com/uben0/tree-sitter-typst")))
+  (unless (treesit-language-available-p 'typst)
+    (treesit-install-language-grammar 'typst))
+
   (add-to-list 'eglot-server-programs '(typst-ts-mode . ("tinymist")))
-  :mode "\\.typ\\'")
+  :defer t)
+
+(use-package asciidoc-mode
+  :if (treesit-available-p)
+  :defer t)
 
 ;;; Reader
 
@@ -3378,6 +3393,9 @@ Show the heading too, if it is currently invisible."
 (use-package elfeed-org
   :after elfeed
   :config (elfeed-org))
+
+(use-package logview
+  :defer t)
 
 (use-package pdf-tools
   :if (display-graphic-p)
@@ -3393,16 +3411,10 @@ Show the heading too, if it is currently invisible."
 (use-package modus-themes
   :defer t)
 
-(use-package ef-themes
-  :after modus-themes
-  :defer t)
-
 (use-package standard-themes
-  :after modus-themes
   :defer t)
 
 (use-package sinolor-themes
-  :after modus-themes
   :defer t)
 
 (use-package catppuccin-theme

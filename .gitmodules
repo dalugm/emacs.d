@@ -6,6 +6,9 @@
 [submodule "apheleia"]
 	path = lib/apheleia
 	url = https://github.com/radian-software/apheleia
+[submodule "asciidoc-mode"]
+	path = lib/asciidoc-mode
+	url = https://github.com/bbatsov/asciidoc-mode
 [submodule "auto-compile"]
 	path = lib/auto-compile
 	url = https://github.com/emacscollective/auto-compile
@@ -18,9 +21,6 @@
 [submodule "borg"]
 	path = lib/borg
 	url = https://github.com/emacscollective/borg
-[submodule "c3-ts-mode"]
-	path = lib/c3-ts-mode
-	url = https://github.com/c3lang/c3-ts-mode
 [submodule "cape"]
 	path = lib/cape
 	url = https://github.com/minad/cape
@@ -60,21 +60,18 @@
 [submodule "corfu"]
 	path = lib/corfu
 	url = https://github.com/minad/corfu
-[submodule "dart-ts-mode"]
-	path = lib/dart-ts-mode
-	url = https://github.com/50ways2sayhard/dart-ts-mode
 [submodule "dash"]
 	path = lib/dash
 	url = https://github.com/magnars/dash.el
+[submodule "datetime"]
+	path = lib/datetime
+	url = https://github.com/doublep/datetime
 [submodule "diff-hl"]
 	path = lib/diff-hl
 	url = https://github.com/dgutov/diff-hl
 [submodule "edit-indirect"]
 	path = lib/edit-indirect
 	url = https://github.com/Fanael/edit-indirect
-[submodule "ef-themes"]
-	path = lib/ef-themes
-	url = https://github.com/protesilaos/ef-themes
 [submodule "eglot-booster"]
 	path = lib/eglot-booster
 	url = https://github.com/jdtsmith/eglot-booster
@@ -83,7 +80,7 @@
 	url = https://github.com/fejfighter/eglot-tempel
 [submodule "eldoc-box"]
 	path = lib/eldoc-box
-	url = https://github.com/dalugm/eldoc-box
+	url = https://github.com/casouri/eldoc-box
 [submodule "elfeed"]
 	path = lib/elfeed
 	url = https://github.com/skeeto/elfeed
@@ -117,6 +114,9 @@
 [submodule "expreg"]
 	path = lib/expreg
 	url = https://github.com/casouri/expreg
+[submodule "extmap"]
+	path = lib/extmap
+	url = https://github.com/doublep/extmap
 [submodule "f"]
 	path = lib/f
 	url = https://github.com/rejeep/f.el
@@ -147,15 +147,15 @@
 [submodule "htmlize"]
 	path = lib/htmlize
 	url = https://github.com/hniksic/emacs-htmlize
-[submodule "hy-mode"]
-	path = lib/hy-mode
-	url = https://github.com/hylang/hy-mode
 [submodule "just-ts-mode"]
 	path = lib/just-ts-mode
 	url = https://github.com/leon-barrett/just-ts-mode.el
 [submodule "llama"]
 	path = lib/llama
 	url = https://github.com/tarsius/llama
+[submodule "logview"]
+	path = lib/logview
+	url = https://github.com/doublep/logview
 [submodule "magit"]
 	path = lib/magit
 	url = https://github.com/magit/magit
@@ -183,9 +183,6 @@
 [submodule "ocaml-eglot"]
 	path = lib/ocaml-eglot
 	url = https://github.com/tarides/ocaml-eglot
-[submodule "odin-ts-mode"]
-	path = lib/odin-ts-mode
-	url = https://github.com/Sampie159/odin-ts-mode
 [submodule "orderless"]
 	path = lib/orderless
 	url = https://github.com/oantolin/orderless
@@ -198,9 +195,6 @@
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools
-[submodule "purescript-mode"]
-	path = lib/purescript-mode
-	url = https://github.com/purescript-emacs/purescript-mode
 [submodule "queue"]
 	path = lib/queue
 	url = https://github.com/emacsmirror/queue
