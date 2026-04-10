@@ -21,24 +21,23 @@ bash-ts-mode sh-mode
 
 c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-mode
 
-(fn (p "void") " " (p "name") "(" p ") {" n> r> n "}" >)
+(fn (p "void") " " (p "name") "(" p ") " (i block))
 
-c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-mode js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode vue-ts-mode web-mode
+c++-mode c++-ts-mode c-mode c-ts-mode dart-mode dart-ts-mode java-mode java-ts-mode js-mode js-ts-mode kotlin-mode kotlin-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode vue-ts-mode web-mode
 
-(doc "/**" n " * " r n " */")
-(dowhile "do {" n> p n "} while (" p ")" >)
-(for "for (" p ") {" n> r> n "}" >)
-(if "if (" p ") {" n> r> n "}" >)
-(switch "switch (" (p "key") ") {" n> "case " (p "value") ":" > n> r> n "break;" > n> "default:" > n> "break;" > n "}" >)
-(te "(" (p "pred") ") ? " (p "then") " : " (p "else") ";")
-(while "while(" p ") {" n> r> n "}" >)
+(block "{" > n> r> n "}" >)
+(doc "/**" n> "* " r> n " */" >)
+(dowhile "do {" n> p > n "} while (" (p "cond") ")" >)
+(for "for (" p ") " (i block))
+(if "if (" (p "cond") ") " (i block))
+(switch "switch (" (p "value") ") " (i block))
+(while "while(" (p "cond") ") " (i block))
 
 c++-mode c++-ts-mode
 
 (bits "#include <bits/stdc++.h>")
 (cin "std::cin >> " r ";")
 (cout "std::cout << " r ";")
-(fore "for (auto " (p "elem") " : " (p "collection") ") {" n> r> n "}")
 (io "#include <iostream>")
 (ns "namespace " (p "namespace") " {" n> r> n "}")
 (usens "using namespace " (p "namespace") ";")
@@ -57,44 +56,43 @@ c++-mode c++-ts-mode c-mode c-ts-mode
 (init (i io) n n (i main))
 (inc "#include <" r ">")
 (incl "#include \"" r "\"")
-(p "printf(" r ");")
-(pv "printf(\"" (p "var" var) " = %" (p "d") "\", " var ");")
+(printf "printf(" r ");")
 (warn "#warning \"" r "\"")
 
 c-mode c-ts-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 
-(ass "assert(" r ");")
-(assh "#include <assert.h>")
-(compile "// -*- compile-command: \"gcc -Wall -o " (file-name-sans-extension (buffer-name)) " " (buffer-name) " && ./" (file-name-sans-extension (buffer-name)) "\" -*-")
+(assert "assert(" r ");")
+(asserth "#include <assert.h>")
+(compile "// -*- compile-command: \"gcc -Wall -o " (file-name-base) " " (buffer-name) " && ./" (file-name-base) "\" -*-")
 (io "#include <stdio.h>")
 (lib "#include <stdlib.h>")
 (once "#ifndef " (p "FILE" file) "_H" n "#define " file "_H" n r n "#endif /* end of include guard: " file "_H */")
 (sass "static_assert(" (p "expr") ", " (p "message") ");")
-(st "struct " (p "name") " {" n> r> n "};")
 (str "#include <string.h>")
+(struct "struct " (p "name") " {" n> r> n "};")
 (td "typedef " (p "void") " " (p "alias") ";")
 (tds "typedef struct " p " " (p "alias") ";")
 (tdu "typedef union " p " " (p "alias") ";")
 
 c3-ts-mode
 
-(section "{" n> r> n> "}" >)
+(block "{" > n> r> n "}" >)
 (cfn "extern fn " (p "type") " _" (p "c3name") "(" p ") @extern(\"" (p "cname") "\")"
-     n> (i section))
-(fn "fn " (p "type") " " (p "name") "(" p ")" n> (i section))
-(macro "macro " (p "name") "(" p ")" n> (i section))
+     n> (i block))
+(fn "fn " (p "type") " " (p "name") "(" p ")" n> (i block))
+(macro "macro " (p "name") "(" p ")" n> (i block))
 (switch "switch (" (p "expr") ")" n>
         "{" n> "case " p ":" n>
         p n> "default:" > n> q n>
         "}" >)
-(do "do" n> (i section) ";")
-(if "if (" p ")" n> (i section))
-(for "for (" p ")" n> (i section))
-(fore "foreach (" (p "index") ", " (p "value") " : " (p "values") ")" n> (i section))
-(while "while (" p ")" n> (i section))
-(struct "struct " (p "name") n> (i section))
-(enum "enum " (p "name") n> (i section))
-(union "union " (p "name") n> (i section))
+(do "do" n> (i block) ";")
+(if "if (" p ")" n> (i block))
+(for "for (" p ")" n> (i block))
+(fore "foreach (" (p "index") ", " (p "value") " : " (p "values") ")" n> (i block))
+(while "while (" p ")" n> (i block))
+(struct "struct " (p "name") n> (i block))
+(enum "enum " (p "name") n> (i block))
+(union "union " (p "name") n> (i block))
 
 clojure-mode clojure-ts-mode
 
@@ -104,6 +102,9 @@ clojure-mode clojure-ts-mode
 (def "(def " r ")")
 (defn "(defn " (p "fn") n> "\"" (p "doc") "\"" > n> "[" p "]" > n> r> ")" >)
 (defn- "(defn- " (p "fn") n> "\"" (p "doc") "\"" > n> "[" p "]" > n> r> ")" >)
+(defi "(definterface " (p "Interface") n> "(" p "))" >)
+(defr "(defrecord " p " [" p "]" n> r> ")")
+(deft "(deftype " p " [" p "]" n> r> ")")
 (doall "(doall" n> r> ")")
 (dorun "(dorun" n> r> ")")
 (doseq "(doseq [" p "]" n> r> ")")
@@ -119,14 +120,12 @@ clojure-mode clojure-ts-mode
 (mdoc "^{:doc \"" r "\"}")
 (ns "(ns " r ")")
 (once "(defonce " r ")")
-(pl "(println " r ")")
+(println "(println " r ")")
 (prn "(prn " r ")")
-(record "(defrecord " p " [" p "]" n> r> ")")
 (reduce "(reduce " p " " p ")")
 (require "(:require [" p "])")
 (run "(run! " r ")")
-(try "(try" n> p n> "(catch " (p "Exception") " e" n> r> "))")
-(type "(deftype " p " [" p "]" n> r> ")")
+(try "(try" n> p n> "(catch Exception e" > n> q "))")
 (use "(:use [" p "])")
 (whenl "(when-let [" p "]" n> r> ")")
 (whenn "(when-not " p n> r> ")")
@@ -159,26 +158,26 @@ clojure-mode clojure-ts-mode fennel-mode
 
 csharp-mode csharp-ts-mode
 
-(afn (p "public") " async " (p "Task") "<" (p "void") "> " (p "Name") "(" p ")" n (i section))
-(class "class " (p "Name") n (i section) >)
+(afn (p "public") " async " (p "Task") "<" (p "void") "> " (p "Name") "(" p ")" n (i block))
+(block "{" > n> r> n "}" >)
+(class "class " (p "Name") n (i block))
 (cw "Console.WriteLine(" q ");")
-(do "do" n (i section) " while (" q ");" >)
-(else "else" n (i section))
-(enum "enum " (p "Name") n (i section))
-(section "{" n> p n "}" >)
-(fn (p "public") " " (p "void") " " (p "Name") "(" p ")" n (i section))
-(fore "foreach (var " (p "item") " in " (p "collection") ")" n (i section))
-(for "for (" p ")" n (i section))
-(if "if (" (p "cond") ")" n (i section))
-(inf "interface I" (p "Name") n (i section))
-(ns "namespace " (p "Name") n (i section))
+(do "do" n (i block) " while (" q ");" >)
+(else "else" n (i block))
+(enum "enum " (p "Name") n (i block))
+(fn (p "public") " " (p "void") " " (p "Name") "(" p ")" n (i block))
+(fore "foreach (var " (p "item") " in " (p "collection") ")" n (i block))
+(for "for (" p ")" n (i block))
+(if "if (" (p "cond") ")" n (i block))
+(inf "interface I" (p "Name") n (i block))
+(ns "namespace " (p "Name") n (i block))
 (ifd "#if " (p "cond") n> q n "#endif")
 (region "#region " (p "Name") n> q n "#endregion")
-(st "struct " (p "Name") n (i section))
-(switch "switch (" (p "cond") ")" n (i section))
-(try "try" n (i section) n "catch" n (i section) n "finally" n (i section))
-(using "using (" (p "resource") ")" n (i section))
-(while "while (" (p "cond") ")" n (i section))
+(st "struct " (p "Name") n (i block))
+(switch "switch (" (p "cond") ")" n (i block))
+(try "try" n (i block) n "catch" n (i section) n "finally" n (i section))
+(using "using (" (p "resource") ")" n (i block))
+(while "while (" (p "cond") ")" n (i block))
 
 dart-mode dart-ts-mode
 
@@ -424,32 +423,31 @@ go-mode go-ts-mode
 (fnr "func " (p "name") "(" p ") " (p "type") " {" n> q n "}" >)
 (for "for " p " {" n> q n "}" >)
 (forr "for " (p "k") ", " (p "v") " := range " (p "target") " {" n> q n "}" >)
-(fp "fmt.Fprint(" q ")")
-(fpf "fmt.Fprintf(" q ")")
-(fpl "fmt.Fprintln(" q ")")
+(fprint "fmt.Fprint(" q ")")
+(fprintf "fmt.Fprintf(" q ")")
+(fprintln "fmt.Fprintln(" q ")")
 (if "if " p " {" n> q n "}" >)
 (iferr "if err != " (p "nil") " {" n> q n "}" >)
 (import "import (" n> "\"" (p "pkg")  "\"" n ")")
-(inf "interface {" n> q n "}")
+(interface "interface {" n> q n "}")
 (init "func init() {" n> q n "}")
-(lp "log.Print(" q ")")
-(lpf "log.Printf(\"" q "\")")
-(lpl "log.Println(" q ")")
+(lprint "log.Print(" q ")")
+(lprintf "log.Printf(\"" q "\")")
+(lprintln "log.Println(" q ")")
 (main "func main() {" n> q n "}")
 (map "map[" p "]" q)
-(p "fmt.Print(" q ")")
-(pf "fmt.Printf(\"" p "\", " q ")")
-(pkg "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")))
-(pkgt "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")) "_test")
-(pl "fmt.Println(" q ")")
+(package "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")))
+(packaget "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")) "_test")
+(print "fmt.Print(" q ")")
+(printf "fmt.Printf(\"" p "\", " q ")")
+(println "fmt.Println(" q ")")
 (select "select {" n> "case " p ":" n> q n "}" >)
-(sp "fmt.Sprint(" q ")")
-(spf "fmt.Sprintf(\"" q "\")")
-(spl "fmt.Sprintln(" q ")")
-(st "struct {" n> q n "}" >)
+(sprint "fmt.Sprint(" q ")")
+(sprintf "fmt.Sprintf(\"" q "\")")
+(sprintln "fmt.Sprintln(" q ")")
+(struct "struct {" n> q n "}" >)
 (switch "switch " p " {" n> "case " p ":" n> p n> "default:" n> q n "}" >)
 (test "func Test" p "(t *testing.T) { " n> q n "}")
-(tst "type " (p "name") " " (i st))
 (type "type (" n> (p "NewType") " " (p "SourceType") n ")")
 (var "var (" n> (p "name") " " (p "type") " = " (p "value") n ")")
 
@@ -520,15 +518,20 @@ hy-mode hy-ts-mode
 (setv "(setv " r ")")
 (while "(while " (p "pred") n> r> ")")
 
-java-mode java-ts-mode js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode vue-ts-mode web-mode
+js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode vue-ts-mode web-mode
 
-(class "class " p " {" n> r> "}")
+(class "class " p " {" n> r> n "}")
 
 java-mode java-ts-mode
 
-(p "System.out.print(" p ");")
-(pf "System.out.printf(" p ");")
-(pl "System.out.println(" p ");")
+(block "{" > n> r> n "}" >)
+(class "class " (p (file-name-base)) " " (i block))
+(ctor "public " (p (file-name-base)) "(" p ") " (i block))
+(main "public static void main(String[] args) " (i block))
+(print "System.out.print(" p ");")
+(printf "System.out.printf(" p ");")
+(println "System.out.println(" p ");")
+(try "try " (i block) " catch (Exception e) " (i block) " finally " (i block))
 
 js-mode js-ts-mode tsx-ts-mode typescript-mode typescript-ts-mode vue-ts-mode web-mode
 
@@ -585,6 +588,16 @@ json-mode json-ts-mode
      "]," > n>
      "\"description\": \"" name "\"" > n>
      "}," >)
+
+kotlin-mode kotlin-ts-mode
+
+(block "{" > n> r> n "}" >)
+(class "class " (p (file-name-base)) " " (i block))
+(init "init " (i block))
+(finally "finally " (i block))
+(ctor "constructor(" p ") " (i block))
+(fun "fun " (p "name") "(" p ") " (i block))
+(try "try {" n> p > n> "} catch (e: Exception) " (i block))
 
 latex-mode
 
@@ -658,21 +671,28 @@ markdown-mode markdown-ts-mode
                 ? )
                end)))
 
+ocaml-mode ocaml-ts-mode neocaml-base-mode
+
+(fun "fun (" p ") -> " p)
+(sig "sig" n> r > n> "end")
+(struct "struct" n> r > n> "end")
+(match "match " (p "value") " with" n> "| " r >)
+
 odin-ts-mode
 
-(main "main :: proc() {" n> r> n "}" >)
 (for "for " p " {" n> r> n "}" >)
 (fordo "for " p " do " q)
 (if "if " p " {" n> r> n "}" >)
 (ifdo "if " p " do " q)
-(switch "switch " p " {" n> "case " (p "value") ":" n> r> n "case:" > n "}" >)
-(when "when " p " {" n> r> n "}" >)
-(struct (p "name") " :: struct {" n> r> n "}" >)
+(main "main :: proc() {" n> r> n "}" >)
+(package "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")))
+(printf "fmt.printf(\"" p "\", " q ")")
+(println "fmt.println(" q ")")
 (proc (p "name") " :: proc(" p ") {" n> r> n "}" >)
 (procr (p "name") " :: proc(" p ") -> " p " {" n> r> n "}" >)
-(pl "fmt.println(" q ")")
-(pf "fmt.printf(\"" p "\", " q ")")
-(pkg "package " (p (or (file-name-nondirectory (directory-file-name (file-name-directory (file-name-directory (buffer-file-name))))) "main")))
+(struct (p "name") " :: struct {" n> r> n "}" >)
+(switch "switch " p " {" n> "case " (p "value") ":" n> r> n "case:" > n "}" >)
+(when "when " p " {" n> r> n "}" >)
 
 org-mode
 
@@ -725,6 +745,24 @@ prog-mode
 (bug (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "BUG ")
 (hack (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "HACK ")
 
+python-mode python-ts-mode
+
+(shebang "#!/usr/bin/env python")
+(ifmain "if __name__ == \"__main__\":" n> (p "main()"))
+(if "if " (p "cond") ":" n> (p "pass"))
+(match "match " (p "expr") ":" n> "case " (p "pattern") ":" n> (p "pass"))
+(case "case " (p "pattern") ":" n> (p "pass"))
+(while "while " (p "cond") ":" n> "pass")
+(for "for " (p "value") " in " (p "iterable") ":" n> (p "pass"))
+(with "with " (p "expr") " as " (p "target") ":" n> (p "pass"))
+(lambda "lambda " (p "args") ": " (p "expr"))
+(fn "def " (p "name") "(" p "):" n> (p "pass"))
+(class "class " (p "name") ":" n> (p "pass"))
+(try "try:" n> (p "pass") n
+     < "except Exception as e:" > n> (p "pass") n
+     < "else:" > n> (p "pass") n
+     < "finally:" > n> (p "pass"))
+
 racket-mode
 
 (case "(case " (p "val") n> "[" p "]" n> "[else " r "])")
@@ -763,25 +801,25 @@ rust-mode rust-ts-mode
 (unimplemented "unimplemented!(" r ")")
 (unreachable "unreachable!(" r ")")
 (vec "vec![" r "]")
-(section "{" n> r> n> "}" >)
-(enum "enum " p " " (i section))
-(fn "fn " (p "name") "(" p ") " (i section))
-(for "for " (p "elem") " in " (p "iter") " " (i section))
-(impl "impl " p " " (i section))
+(block "{" > n> r> n "}" >)
+(enum "enum " p " " (i block))
+(fn "fn " (p "name") "(" p ") " (i block))
+(for "for " (p "elem") " in " (p "iter") " " (i block))
+(impl "impl " p " " (i block))
 (if "if " p " {" n> r> n "}" >)
 (ifl "if let " (p "pattern") " = " (p "expr") " {" n> r> n "}" >)
-(loop "loop " (i section))
-(macro "macro_rules! " p " " (i section))
-(main "fn main() " (i section))
-(match "match " (p "expr") " " (i section))
-(mod "mod " (p "module") " " (i section))
+(loop "loop " (i block))
+(macro "macro_rules! " p " " (i block))
+(main "fn main() " (i block))
+(match "match " (p "expr") " " (i block))
+(mod "mod " (p "module") " " (i block))
 (modtest "#[cfg(test)]" n> "mod tests {" n> "use super::*;" > n n> (i test) n "}")
-(struct "struct " p " " (i section))
+(struct "struct " p " " (i block))
 (test "#[test]" n> (i fn) >)
-(trait "trait " p " " (i section))
-(union "union " p " " (i section))
-(while "while " p " " (i section))
-(whilel "while let " (p "pattern") " = " (p "expr") " " (i section))
+(trait "trait " p " " (i block))
+(union "union " p " " (i block))
+(while "while " p " " (i block))
+(whilel "while let " (p "pattern") " = " (p "expr") " " (i block))
 
 srt-mode subed-srt-mode text-mode
 
@@ -866,20 +904,20 @@ typst-mode typst-ts-mode
 
 zig-mode zig-ts-mode
 
-(catch "catch |err| " (i section))
-(cimport "const c = @cImport(" (i section) ");")
+(block "{" > n> r> n "}" >)
+(catch "catch |err| " (i block))
+(cimport "const c = @cImport(" (i block) ");")
 (expect "const expect = @import(\"std\").testing.expect;")
-(fn "fn " (p "name") "(" p ") " (p "!void") " " (i section))
-(for "for (" p ") |" p "| " (i section))
-(if "if (" p ") " (i section))
+(fn "fn " (p "name") "(" p ") " (p "!void") " " (i block))
+(for "for (" p ") |" p "| " (i block))
+(if "if (" p ") " (i block))
 (import "const " (p "name") " = @import(\"" r "\");")
 (main "pub fn main() !void {" n> r> n "}")
 (print "std.debug.print(\"" p "\", .{" r "});")
-(section "{" n> r> n "}" >)
 (std "const std = @import(\"std\");")
-(switch "switch (" p ") " (i section))
-(test "test \"" (p "name") "\" " (i section))
-(while "while (" p ") " (i section))
+(switch "switch (" p ") " (i block))
+(test "test \"" (p "name") "\" " (i block))
+(while "while (" p ") " (i block))
 
 ;; Local Variables:
 ;; mode: lisp-data

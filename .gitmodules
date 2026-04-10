@@ -123,9 +123,9 @@
 [submodule "fennel-mode"]
 	path = lib/fennel-mode
 	url = https://git.sr.ht/~technomancy/fennel-mode
-[submodule "fsharp-mode"]
-	path = lib/fsharp-mode
-	url = https://github.com/fsharp/emacs-fsharp-mode
+[submodule "fsharp-ts-mode"]
+	path = lib/fsharp-ts-mode
+	url = https://github.com/bbatsov/fsharp-ts-mode
 [submodule "git-link"]
 	path = lib/git-link
 	url = https://github.com/sshaw/git-link
@@ -150,6 +150,9 @@
 [submodule "just-ts-mode"]
 	path = lib/just-ts-mode
 	url = https://github.com/leon-barrett/just-ts-mode.el
+[submodule "kotlin-ts-mode"]
+	path = lib/kotlin-ts-mode
+	url = https://gitlab.com/bricka/emacs-kotlin-ts-mode
 [submodule "llama"]
 	path = lib/llama
 	url = https://github.com/tarsius/llama
