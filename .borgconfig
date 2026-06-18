@@ -4,15 +4,8 @@
 [submodule "dash"]
 	no-byte-compile = dash-functional.el
 	no-makeinfo = dash-template.texi
-[submodule "ef-themes"]
-	no-makeinfo = doclicense.texi
 [submodule "emacsql"]
 	no-byte-compile = emacsql-pg.el
-[submodule "emmet-mode"]
-	build-step = make clean
-	build-step = make
-[submodule "sqlite3"]
-	build-step = make
 [submodule "standard-themes"]
 	no-makeinfo = doclicense.texi
 [submodule "subed"]

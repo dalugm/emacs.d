@@ -1519,22 +1519,21 @@ More details are inside `my-load-font'."
 
 ;;; Prog
 
-(use-package cc-mode
+(use-package c-ts-mode
+  :if (treesit-available-p)
   :init
-  (when (treesit-available-p)
-    (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
-    (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode)))
+  (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
   :config
-  (when (treesit-available-p)
-    (add-to-list 'treesit-language-source-alist
-                 '(c . ("https://github.com/tree-sitter/tree-sitter-c")))
-    (unless (treesit-language-available-p 'c)
-      (treesit-install-language-grammar 'c))
+  (add-to-list 'treesit-language-source-alist
+               '(c . ("https://github.com/tree-sitter/tree-sitter-c")))
+  (unless (treesit-language-available-p 'c)
+    (treesit-install-language-grammar 'c))
 
-    (add-to-list 'treesit-language-source-alist
-                 '(cpp . ("https://github.com/tree-sitter/tree-sitter-cpp")))
-    (unless (treesit-language-available-p 'cpp)
-      (treesit-install-language-grammar 'cpp)))
+  (add-to-list 'treesit-language-source-alist
+               '(cpp . ("https://github.com/tree-sitter/tree-sitter-cpp")))
+  (unless (treesit-language-available-p 'cpp)
+    (treesit-install-language-grammar 'cpp))
   :defer t)
 
 (use-package clojure-mode
@@ -1640,6 +1639,10 @@ sexp before point and insert output into current position."
   (fsharp-ts-eglot-pipeline-hints t)
   ;; Use a globally installed fsautocomplete
   (fsharp-ts-eglot-server-install-dir nil))
+
+(use-package fsharp-ts-info
+  :after (eglot fsharp-ts-mode)
+  :config (fsharp-ts-info-mode +1))
 
 (use-package fsharp-ts-lens
   :after (eglot fsharp-ts-mode)
@@ -1815,6 +1818,15 @@ sexp before point and insert output into current position."
     (treesit-install-language-grammar 'phpdoc))
   :mode "\\(?:\\.\\(?:php[s345]?\\|phtml\\|inc\\|stub\\)\\|/\\.php_cs\\(?:\\.dist\\)?\\)\\'"
   :interpreter "php\\(?:-?[34578]\\(?:\\.[0-9]+\\)*\\)?")
+
+(use-package protobuf-ts-mode
+  :config
+  (when (treesit-available-p)
+    (add-to-list 'treesit-language-source-alist
+                 '(proto . ("https://github.com/coder3101/tree-sitter-proto")))
+    (unless (treesit-language-available-p 'proto)
+      (treesit-install-language-grammar 'proto)))
+  :mode "\\.proto\\'")
 
 (use-package python
   :init
@@ -2040,8 +2052,14 @@ sexp before point and insert output into current position."
 (use-package apheleia
   :config
 
+  (setf (alist-get 'rustfmt apheleia-formatters)
+        '("rustfmt" "--edition" "2024" "--quiet" "--emit" "stdout"))
+  (setf (alist-get 'google-java-format apheleia-formatters)
+        '("google-java-format" "--aosp" "-"))
+
   (let ((formatter-mode-mapping
-         '((oxfmt . ( css-mode css-ts-mode scss-mode
+         '((golangci-lint . (go-mode go-ts-mode))
+           (oxfmt . ( css-mode css-ts-mode scss-mode
                       conf-toml-mode toml-ts-mode
                       html-mode html-ts-mode
                       js-mode js-ts-mode
@@ -2056,11 +2074,6 @@ sexp before point and insert output into current position."
             (modes     (cdr rule)))
         (dolist (mode modes)
           (add-to-list 'apheleia-mode-alist `(,mode . ,formatter))))))
-
-  (setf (alist-get 'rustfmt apheleia-formatters)
-        '("rustfmt" "--edition" "2024" "--quiet" "--emit" "stdout"))
-  (setf (alist-get 'google-java-format apheleia-formatters)
-        '("google-java-format" "--aosp" "-"))
 
   :bind
   (("C-c c f" . apheleia-format-buffer)

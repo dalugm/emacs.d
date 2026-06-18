@@ -18,15 +18,15 @@
 [submodule "avy-zh"]
 	path = lib/avy-zh
 	url = https://github.com/dalugm/avy-zh
+[submodule "batppuccin"]
+	path = lib/batppuccin
+	url = https://github.com/bbatsov/batppuccin-emacs
 [submodule "borg"]
 	path = lib/borg
 	url = https://github.com/emacscollective/borg
 [submodule "cape"]
 	path = lib/cape
 	url = https://github.com/minad/cape
-[submodule "catppuccin-theme"]
-	path = lib/catppuccin-theme
-	url = https://github.com/catppuccin/emacs
 [submodule "cider"]
 	path = lib/cider
 	url = https://github.com/clojure-emacs/cider
@@ -42,12 +42,6 @@
 [submodule "closql"]
 	path = lib/closql
 	url = https://github.com/magit/closql
-[submodule "color-theme-sanityinc-solarized"]
-	path = lib/color-theme-sanityinc-solarized
-	url = https://github.com/purcell/color-theme-sanityinc-solarized
-[submodule "color-theme-sanityinc-tomorrow"]
-	path = lib/color-theme-sanityinc-tomorrow
-	url = https://github.com/purcell/color-theme-sanityinc-tomorrow
 [submodule "compat"]
 	path = lib/compat
 	url = https://github.com/emacs-compat/compat
@@ -198,6 +192,9 @@
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools
+[submodule "protobuf-ts-mode"]
+	path = lib/protobuf-ts-mode
+	url = https://github.com/emacsattic/protobuf-ts-mode
 [submodule "queue"]
 	path = lib/queue
 	url = https://github.com/emacsmirror/queue
@@ -231,6 +228,9 @@
 [submodule "sly-quicklisp"]
 	path = lib/sly-quicklisp
 	url = https://github.com/joaotavora/sly-quicklisp
+[submodule "solarized-theme"]
+	path = lib/solarized-theme
+	url = https://github.com/bbatsov/solarized-emacs
 [submodule "spinner"]
 	path = lib/spinner
 	url = https://github.com/Malabarba/spinner.el
@@ -252,6 +252,9 @@
 [submodule "toc-org"]
 	path = lib/toc-org
 	url = https://github.com/snosov1/toc-org
+[submodule "tokyo-night"]
+	path = lib/tokyo-night
+	url = https://github.com/bbatsov/tokyo-night-emacs
 [submodule "transient"]
 	path = lib/transient
 	url = https://github.com/magit/transient
