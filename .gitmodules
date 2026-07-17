@@ -66,9 +66,6 @@
 [submodule "edit-indirect"]
 	path = lib/edit-indirect
 	url = https://github.com/Fanael/edit-indirect
-[submodule "eglot-booster"]
-	path = lib/eglot-booster
-	url = https://github.com/jdtsmith/eglot-booster
 [submodule "eglot-tempel"]
 	path = lib/eglot-tempel
 	url = https://github.com/fejfighter/eglot-tempel
@@ -165,6 +162,9 @@
 [submodule "modus-themes"]
 	path = lib/modus-themes
 	url = https://github.com/protesilaos/modus-themes
+[submodule "moe-theme"]
+	path = lib/moe-theme
+	url = https://github.com/kuanyui/moe-theme.el
 [submodule "monokai-theme"]
 	path = lib/monokai-theme
 	url = https://github.com/oneKelvinSmith/monokai-emacs
@@ -189,9 +189,6 @@
 [submodule "parseedn"]
 	path = lib/parseedn
 	url = https://github.com/clojure-emacs/parseedn
-[submodule "pdf-tools"]
-	path = lib/pdf-tools
-	url = https://github.com/vedang/pdf-tools
 [submodule "protobuf-ts-mode"]
 	path = lib/protobuf-ts-mode
 	url = https://github.com/emacsattic/protobuf-ts-mode
@@ -201,6 +198,9 @@
 [submodule "racket-mode"]
 	path = lib/racket-mode
 	url = https://github.com/greghendershott/racket-mode
+[submodule "reader"]
+	path = lib/reader
+	url = https://codeberg.org/MonadicSheep/emacs-reader
 [submodule "rust-mode"]
 	path = lib/rust-mode
 	url = https://github.com/rust-lang/rust-mode

@@ -298,7 +298,7 @@ When region is active, delete the blank lines in region only."
     "Rotate windows in clock-wise direction."
     (interactive)
     (cond
-     ((not (> (count-windows) 1))
+     ((<= (count-windows) 1)
       (user-error "Cannot rotate a single window"))
      (t
       (let ((i 1)
@@ -441,11 +441,10 @@ With a prefix ARG, rename based on current name."
       (let ((new-name (read-string
                        "New name: "
                        (when arg (file-name-nondirectory filename)))))
-        (progn
-          (when (file-exists-p filename)
-            (rename-file filename new-name +1))
-          (set-visited-file-name new-name)
-          (rename-buffer new-name)))
+        (when (file-exists-p filename)
+          (rename-file filename new-name +1))
+        (set-visited-file-name new-name)
+        (rename-buffer new-name))
       (save-buffer)))
 
   (defun my-copy-file-name ()
@@ -503,9 +502,11 @@ With a prefix ARG, rename based on current name."
   (defun my-delete-file (file)
     "Delete FILE under current working directory."
     (interactive "sFile name: ")
-    (shell-command
-     (format "find . -depth -name %s -print0 | xargs -0 rm" file))
-    (message "`%s' under current working directory deleted." file))
+    (let ((count 0))
+      (dolist (f (directory-files-recursively default-directory (regexp-quote file)))
+        (delete-file f)
+        (cl-incf count))
+      (message "%d file(s) matching `%s' deleted." count file)))
 
   (defun my--sudo-file-path (file)
     "Get FILE's path with sudo."
@@ -584,7 +585,7 @@ URL `https://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/'"
         (progn
           (mapc #'disable-theme custom-enabled-themes)
           (load-theme (intern x) t))
-      (error "Problem loading theme %s" x)))
+      (message "Problem loading theme %s" x)))
 
   (defun my-load-default-theme ()
     "Load default Emacs theme."
@@ -796,10 +797,9 @@ called from `delete-indentation'."
                (lambda ()
                  (save-excursion
                    (delete-horizontal-space)
-                   (if (or (looking-at "^\\|\\s)")
-                           (save-excursion (forward-char -1)
-                                           (looking-at "\\cc\\|$\\|\\s(\\|\\s'")))
-                       nil
+                   (unless (or (looking-at "^\\|\\s)")
+                               (save-excursion (forward-char -1)
+                                               (looking-at "\\cc\\|$\\|\\s(\\|\\s'")))
                      (insert ?\s))))))
       (apply fn args)))
   :bind
@@ -1346,6 +1346,7 @@ mouse-3: Toggle minor modes"
         ("霞鹜文楷等宽" "LXGW WenKai Mono" nil 1)
         ("Fira Code" "Fira Code" "LXGW WenKai Mono" 1)
         ("Jetbrains Mono" "Jetbrains Mono" "Maple Mono NF CN" 1)
+        ("Monaspace" "Monaspace Neon" "Maple Mono NF CN" 1)
         ("Unifont" "Unifont" nil 1)
         ("更纱黑体" "Sarasa Gothic SC" nil 1)
         ("等距更纱黑体" "Sarasa Mono SC" nil 1)
@@ -1685,7 +1686,6 @@ sexp before point and insert output into current position."
                '(heex . ("https://github.com/phoenixframework/tree-sitter-heex")))
   (unless (treesit-language-available-p 'heex)
     (treesit-install-language-grammar 'heex))
-
   :mode "\\.[hl]?eex\\'")
 
 (use-package java-ts-mode
@@ -1777,7 +1777,7 @@ sexp before point and insert output into current position."
 (use-package neocaml
   :if (treesit-available-p)
   :hook
-  (neocaml-base-mode . neocaml-repl-minor-mode)
+  (neocaml-base-mode . neocaml-utop-minor-mode)
   (neocaml-base-mode . neocaml-dune-interaction-mode)
   (neocaml-dune-mode . neocaml-dune-interaction-mode)
   (neocaml-opam-mode . neocaml-dune-interaction-mode)
@@ -1820,6 +1820,7 @@ sexp before point and insert output into current position."
   :interpreter "php\\(?:-?[34578]\\(?:\\.[0-9]+\\)*\\)?")
 
 (use-package protobuf-ts-mode
+  :if (treesit-available-p)
   :config
   (when (treesit-available-p)
     (add-to-list 'treesit-language-source-alist
@@ -1965,16 +1966,22 @@ sexp before point and insert output into current position."
          ("C-c l L" . eglot-events-buffer)
          ("C-c l R" . eglot-reconnect)
          ("C-c l Q" . eglot-shutdown-all))
+
+  :config
+
+  (setopt eglot-workspace-configuration
+          `( :gopls ( :usePlaceholders t
+                      :semanticTokens t
+                      :analyses ( :unusedparams t
+                                  :nilness t
+                                  :unusedwrite t)
+                      :staticcheck t
+                      :gofumpt t)))
+
   :custom
   (eglot-extend-to-xref t)
   (eglot-ignored-server-capabilities '(:documentHighlightProvider))
   (eglot-autoshutdown t))
-
-(use-package eglot-booster
-  :if (executable-find "emacs-lsp-booster")
-  :after eglot
-  :custom (eglot-booster-io-only t)
-  :config (eglot-booster-mode +1))
 
 (use-package eglot-tempel
   :after (eglot tempel)
@@ -2335,7 +2342,6 @@ KEEP is one of `upper', `base', `lower'."
   (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
   (add-to-list 'dabbrev-ignored-buffer-modes 'authinfo-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
-  (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
   (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
 
 (use-package cape
@@ -2438,7 +2444,11 @@ KEEP is one of `upper', `base', `lower'."
       (if workspaces-mode
           (add-to-list 'consult-buffer-sources 'my-consult-source-workspace)
         ;; Reset `consult-buffer' to show all buffers
-        (delete 'my-consult-source-workspace consult-buffer-sources)))
+        (setq consult-buffer-sources
+              (delete 'my-consult-source-workspace consult-buffer-sources))))
+
+    (when workspaces-mode
+      (add-to-list 'consult-buffer-sources 'my-consult-source-workspace))
 
     (add-hook 'workspaces-mode-hook #'my--consult-workspaces)))
 
@@ -2828,10 +2838,9 @@ URL `http://blog.binchen.org/posts/code-faster-by-extending-emacs-evil-text-obje
                ("\\*scratch\\*"      . normal)))
     (add-to-list 'evil-buffer-regexps b))
 
-  (setq evil-emacs-state-modes
-        (append
-         '(calender-mode dired-mode erc-mode image-mode)
-         evil-emacs-state-modes))
+  (add-to-list 'evil-emacs-state-modes 'dired-mode)
+  (add-to-list 'evil-emacs-state-modes 'reader-mode)
+  (add-to-list 'evil-emacs-state-modes 'image-mode)
 
   (my--evil-adjust-major-mode-keymap "git-timemachine")
   (my--evil-adjust-major-mode-keymap "view")
@@ -3396,10 +3405,6 @@ Adapt from `org-babel-remove-result'."
     (apply fn args))
   :custom (org-confirm-babel-evaluate nil))
 
-(use-package ob-js
-  :defer t
-  :custom (org-babel-js-cmd "bun"))
-
 (use-package ob-lisp
   :defer t
   :custom (org-babel-lisp-eval-fn #'sly-eval))
@@ -3642,11 +3647,10 @@ Show the heading too, if it is currently invisible."
 (use-package logview
   :defer t)
 
-(use-package pdf-tools
-  :if (display-graphic-p)
-  :hook (pdf-view-mode . pdf-isearch-minor-mode)
-  :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
-  :magic ("%PDF" . pdf-view-mode))
+(use-package reader
+  :if (and (display-graphic-p)
+           (executable-find "make"))
+  :defer t)
 
 (use-package xiaoshuo-mode
   :bind ("C-c t x" . xiaoshuo-mode))
@@ -3662,19 +3666,19 @@ Show the heading too, if it is currently invisible."
 (use-package sinolor-themes
   :defer t)
 
-(use-package catppuccin-theme
-  :defer t)
-
-(use-package color-theme-sanityinc-tomorrow
-  :defer t)
-
-(use-package color-theme-sanityinc-solarized
+(use-package batppuccin
   :defer t)
 
 (use-package monokai-theme
   :defer t)
 
+(use-package solarized-theme
+  :defer t)
+
 (use-package tao-theme
+  :defer t)
+
+(use-package tokyo-night
   :defer t)
 
 (use-package zenburn-theme

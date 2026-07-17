@@ -6,6 +6,10 @@
 	no-makeinfo = dash-template.texi
 [submodule "emacsql"]
 	no-byte-compile = emacsql-pg.el
+[submodule "reader"]
+	build-step = make all
+	build-step = borg-update-autoloads
+	build-step = borg-compile
 [submodule "standard-themes"]
 	no-makeinfo = doclicense.texi
 [submodule "subed"]
