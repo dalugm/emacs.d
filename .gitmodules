@@ -3,6 +3,12 @@
 [submodule "ace-window"]
 	path = lib/ace-window
 	url = https://github.com/abo-abo/ace-window
+[submodule "acp"]
+	path = lib/acp
+	url = https://github.com/xenodium/acp.el
+[submodule "agent-shell"]
+	path = lib/agent-shell
+	url = https://github.com/xenodium/agent-shell
 [submodule "apheleia"]
 	path = lib/apheleia
 	url = https://github.com/radian-software/apheleia
@@ -213,6 +219,9 @@
 [submodule "sesman"]
 	path = lib/sesman
 	url = https://github.com/vspinu/sesman
+[submodule "shell-maker"]
+	path = lib/shell-maker
+	url = https://github.com/xenodium/shell-maker
 [submodule "sinolor-themes"]
 	path = lib/sinolor-themes
 	url = https://github.com/dalugm/sinolor-themes

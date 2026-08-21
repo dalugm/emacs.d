@@ -11,6 +11,10 @@
 (borg-initialize)
 
 (require 'auto-compile)
+(setopt auto-compile-use-mode-line nil
+        auto-compile-display-buffer nil
+        auto-compile-toggle-deletes-nonlib-dest t
+        auto-compile-source-recreate-deletes-dest t)
 (auto-compile-on-load-mode +1)
 (auto-compile-on-save-mode +1)
 

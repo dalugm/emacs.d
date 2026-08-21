@@ -97,7 +97,6 @@ See also: `package-archives'."
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
                          ("melpa"  . "https://melpa.org/packages/")))))
 
-  (package-vc-allow-build-commands t)
   (package-install-upgrade-built-in t))
 
 (use-package compat)
@@ -112,12 +111,7 @@ See also: `package-archives'."
     (add-to-list 'recentf-exclude
                  (recentf-expand-file-name no-littering-etc-directory))))
 
-(use-package auto-compile
-  :custom
-  (auto-compile-use-mode-line  nil)
-  (auto-compile-display-buffer nil)
-  (auto-compile-toggle-deletes-nonlib-dest   t)
-  (auto-compile-source-recreate-deletes-dest t))
+(use-package auto-compile)
 
 (use-package epkg
   :defer t)
@@ -462,11 +456,11 @@ With a prefix ARG, rename based on current name."
   (defun my-browse-this-file ()
     "Open current file as a URL using `browse-url'."
     (interactive)
-    (let ((file-name (buffer-file-name)))
-      (if (and (fboundp 'tramp-tramp-file-p)
-               (tramp-tramp-file-p file-name))
-          (user-error "Cannot open tramp file")
-        (browse-url (concat "file://" file-name)))))
+    (if-let* ((file-name (buffer-file-name)))
+        (if (file-remote-p file-name)
+            (user-error "Cannot open remote file")
+          (browse-url-of-file file-name))
+      (user-error "Current buffer is not visiting a file")))
 
   (defun my-open-externally (file)
     "Open FILE or url using system's default application."
@@ -500,13 +494,16 @@ With a prefix ARG, rename based on current name."
       (kill-this-buffer)))
 
   (defun my-delete-file (file)
-    "Delete FILE under current working directory."
+    "Recursively delete files named FILE under `default-directory'."
     (interactive "sFile name: ")
     (let ((count 0))
-      (dolist (f (directory-files-recursively default-directory (regexp-quote file)))
-        (delete-file f)
+      (dolist (path
+               (directory-files-recursively
+                default-directory
+                (concat "\\`" (regexp-quote file) "\\'")))
+        (delete-file path)
         (cl-incf count))
-      (message "%d file(s) matching `%s' deleted." count file)))
+      (message "%d file(s) named `%s' deleted." count file)))
 
   (defun my--sudo-file-path (file)
     "Get FILE's path with sudo."
@@ -581,11 +578,17 @@ URL `https://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/'"
                   (completing-read
                    "Choose a theme: "
                    (mapcar #'symbol-name (custom-available-themes)))))
-    (condition-case _
-        (progn
-          (mapc #'disable-theme custom-enabled-themes)
-          (load-theme (intern x) t))
-      (message "Problem loading theme %s" x)))
+    (let ((enabled-themes (copy-sequence custom-enabled-themes)))
+      (condition-case err
+          (progn
+            (mapc #'disable-theme custom-enabled-themes)
+            (load-theme (intern x) t))
+        (error
+         (mapc #'disable-theme custom-enabled-themes)
+         (mapc (lambda (theme) (load-theme theme t))
+               (reverse enabled-themes))
+         (message "Problem loading theme %s: %s"
+                  x (error-message-string err))))))
 
   (defun my-load-default-theme ()
     "Load default Emacs theme."
@@ -1086,11 +1089,18 @@ called from `delete-indentation'."
 
 (use-package dired
   :preface
+  (defun my--ediff-restore-window-configuration (configuration)
+    "Restore window CONFIGURATION after the current Ediff session."
+    (add-hook 'ediff-after-quit-hook-internal
+              (lambda () (set-window-configuration configuration))
+              nil t))
+
   (defun my-ediff-files ()
     "Run Ediff on the two marked files.
 
 URL `https://oremacs.com/2017/03/18/dired-ediff/'."
     (interactive)
+    (require 'dired-aux)
     (let ((files (dired-get-marked-files))
           (wnd (current-window-configuration)))
       (cond
@@ -1100,30 +1110,32 @@ URL `https://oremacs.com/2017/03/18/dired-ediff/'."
                          (cadr files)
                        (read-file-name
                         "File: "
-                        (dired-dwim-target-directory)))))
+                        (dired-dwim-target-directory))))
+              (startup-hooks
+               (list (apply-partially
+                      #'my--ediff-restore-window-configuration wnd))))
           (if (file-newer-than-file-p file1 file2)
-              (ediff-files file2 file1)
-            (ediff-files file1 file2))
-          (add-hook 'ediff-after-quit-hook-internal
-                    (lambda ()
-                      (setq ediff-after-quit-hook-internal nil)
-                      (set-window-configuration wnd)))))
+              (ediff-files file2 file1 startup-hooks)
+            (ediff-files file1 file2 startup-hooks))))
        (t
         (user-error "Mark more than 2 files")))))
 
   (defun my-dired-cycle-space-underscore-hyphen ()
     "Cycle marked files name between space, hyphen and underscore."
     (interactive)
-    (mapc (lambda (x)
-            (let ((x (file-name-nondirectory x)))
+    (dolist (file (dired-get-marked-files))
+      (let* ((directory (file-name-directory file))
+             (name (file-name-nondirectory file))
+             (new-name
               (cond
-               ((string-match " " x)
-                (rename-file x (replace-regexp-in-string " " "-" x)))
-               ((string-match "-" x)
-                (rename-file x (replace-regexp-in-string "-" "_" x)))
-               ((string-match "_" x)
-                (rename-file x (replace-regexp-in-string "_" " " x))))))
-          (dired-get-marked-files))
+               ((string-match-p " " name)
+                (replace-regexp-in-string " " "-" name))
+               ((string-match-p "-" name)
+                (replace-regexp-in-string "-" "_" name))
+               ((string-match-p "_" name)
+                (replace-regexp-in-string "_" " " name)))))
+        (when new-name
+          (rename-file file (expand-file-name new-name directory)))))
     (revert-buffer))
 
   (defun my-dired-open-externally (&optional arg)
@@ -1709,7 +1721,7 @@ sexp before point and insert output into current position."
     (add-to-list 'eglot-server-programs
                  '(((js-mode :language-id "javascript")
                     (js-ts-mode :language-id "javascript"))
-                   . ("vtsls" "--stdio"))))
+                   . ("tsc" "--lsp" "--stdio"))))
 
   (when (treesit-available-p)
     (add-to-list 'treesit-language-source-alist
@@ -1930,7 +1942,7 @@ sexp before point and insert output into current position."
     (add-to-list 'eglot-server-programs
                  '(((tsx-ts-mode :language-id "typescriptreact")
                     (typescript-ts-mode :language-id "typescript"))
-                   . ("vtsls" "--stdio"))))
+                   . ("tsc" "--lsp" "--stdio"))))
   :mode (("\\.[jt]sx\\'" . tsx-ts-mode)
          ("\\.ts\\'" . typescript-ts-mode)))
 
@@ -2004,23 +2016,30 @@ sexp before point and insert output into current position."
          (:map sly-doc-map
                ("C-l" . sly-documentation)))
   :config
-  (define-advice sly-mrepl (:override (&rest _) last)
-    "Switch to the last Lisp/Sly-Mrepl buffer."
+  (sly-setup)
+
+  (define-advice sly-mrepl (:around (fn &optional display-action) last)
+    "Switch interactively between the last Lisp and Sly-MREPL buffers.
+
+Preserve Sly's original behavior when DISPLAY-ACTION is non-nil, as
+used by Sly's internal callers."
     (interactive)
-    (if (derived-mode-p 'sly-mrepl-mode)
-        (if-let* ((buf (seq-find (lambda (b)
-                                   (with-current-buffer b
-                                     (derived-mode-p 'lisp-mode)))
-                                 (buffer-list))))
+    (if display-action
+        (funcall fn display-action)
+      (if (derived-mode-p 'sly-mrepl-mode)
+          (if-let* ((buf (seq-find (lambda (b)
+                                     (with-current-buffer b
+                                       (derived-mode-p 'lisp-mode)))
+                                   (buffer-list))))
+              (if-let* ((win (get-buffer-window buf)))
+                  (select-window win)
+                (pop-to-buffer buf))
+            (user-error "No Lisp buffer found"))
+        (if-let* ((buf (sly-mrepl--find-create (sly-current-connection))))
             (if-let* ((win (get-buffer-window buf)))
                 (select-window win)
               (pop-to-buffer buf))
-          (user-error "No Lisp buffer found"))
-      (if-let* ((buf (sly-mrepl--find-create (sly-current-connection))))
-          (if-let* ((win (get-buffer-window buf)))
-              (select-window win)
-            (pop-to-buffer buf))
-        (user-error "No Sly-Mrepl buffer found"))))
+          (user-error "No Sly-Mrepl buffer found")))))
   :custom (inferior-lisp-program "sbcl"))
 
 (use-package sly-asdf :after sly)
@@ -2107,23 +2126,34 @@ sexp before point and insert output into current position."
 
 (use-package eldoc-box
   :if (display-graphic-p)
-  :hook ((eldoc-mode eglot-managed-mode) . eldoc-box-hover-mode)
+  :preface
+  (defun my--eldoc-box-bind-scroll-keys (&rest _)
+    "Bind keys for scrolling the Eldoc child frame."
+    (bind-key* "C-M-p" #'eldoc-box-scroll-down)
+    (bind-key* "C-M-n" #'eldoc-box-scroll-up))
+
+  (defun my--eldoc-box-unbind-scroll-keys (&rest _)
+    "Unbind keys for scrolling the Eldoc child frame."
+    (unbind-key "C-M-p" 'override-global-map)
+    (unbind-key "C-M-n" 'override-global-map))
+
+  (defun my--eldoc-box-prettify-ts-errors-setup ()
+    "Prettify TypeScript errors in the current buffer's Eldoc box."
+    (add-hook 'eldoc-box-buffer-setup-hook
+              #'eldoc-box-prettify-ts-errors nil t))
+
+  :hook
+  (((eldoc-mode eglot-managed-mode) . eldoc-box-hover-mode)
+   ((typescript-ts-mode tsx-ts-mode) . my--eldoc-box-prettify-ts-errors-setup))
   :custom
   (eldoc-box-only-multi-line t)
   (eldoc-box-clear-with-C-g t)
   :bind ("C-c h h" . eldoc-box-help-at-point)
   :config
   (advice-add 'eldoc-box-buffer-setup
-              :before
-              (lambda (&rest _)
-                (bind-key* "C-M-p" #'eldoc-box-scroll-down)
-                (bind-key* "C-M-n" #'eldoc-box-scroll-up)))
+              :before #'my--eldoc-box-bind-scroll-keys)
   (advice-add 'eldoc-box-quit-frame
-              :before
-              (lambda (&rest _)
-                (unbind-key "C-M-p" 'override-global-map)
-                (unbind-key "C-M-n" 'override-global-map)))
-  (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
+              :before #'my--eldoc-box-unbind-scroll-keys))
 
 (use-package flymake
   :bind (("C-c ! b" . flymake-show-buffer-diagnostics)
@@ -2209,7 +2239,8 @@ KEEP is one of `upper', `base', `lower'."
           (resolve-count 0))
       (save-excursion
         (goto-char (point-min))
-        (while (ignore-errors (not (smerge-next)))
+        (while (re-search-forward smerge-begin-re nil t)
+          (goto-char (match-beginning 0))
           (funcall resolve-func)
           (cl-incf resolve-count)))
       (if (> resolve-count 0)
@@ -2274,8 +2305,8 @@ KEEP is one of `upper', `base', `lower'."
   ;; Support opening new minibuffers from inside existing minibuffers
   (enable-recursive-minibuffers t)
   ;; Hide commands in M-x which do not work in the current mode.
-  ;; Vertico commands are hidden in normal buffers. This setting is
-  ;; useful beyond Vertico
+  ;; This includes Vertico and Corfu commands outside their applicable
+  ;; buffers, and is useful beyond either package.
   (read-extended-command-predicate #'command-completion-default-include-p)
   ;; Do not allow the cursor in the minibuffer prompt
   (minibuffer-prompt-properties
@@ -2307,12 +2338,7 @@ KEEP is one of `upper', `base', `lower'."
 
   ;; Emacs 30 and newer: Disable Ispell completion function. As an
   ;; alternative, try `cape-dict'
-  (text-mode-ispell-word-completion nil)
-
-  ;; Hide commands in M-x which do not apply to the current mode.
-  ;; Corfu commands are hidden, since they are not used via M-x. This
-  ;; setting is useful beyond Corfu
-  (read-extended-command-predicate #'command-completion-default-include-p))
+  (text-mode-ispell-word-completion nil))
 
 (use-package corfu-popupinfo
   :if (display-graphic-p)
@@ -2387,6 +2413,15 @@ KEEP is one of `upper', `base', `lower'."
   :hook (after-init . marginalia-mode))
 
 (use-package embark
+  :preface
+  (defun my-embark-preview ()
+    "Preview the current candidate unless Consult already previews it."
+    (interactive)
+    (unless (bound-and-true-p consult--preview-function)
+      (save-selected-window
+        (let ((embark-quit-after-action nil))
+          (embark-dwim)))))
+
   :bind (("M-A" . embark-act)
          ("M-E" . embark-export)
          ("M-D" . embark-dwim)
@@ -2403,14 +2438,6 @@ KEEP is one of `upper', `base', `lower'."
   ;; Optionally replace the key help with a completing-read interface
   (prefix-help-command #'embark-prefix-help-command)
   :config
-  (defun my-embark-preview ()
-    "Previews candidate in vertico buffer, unless it's a consult command"
-    (interactive)
-    (unless (bound-and-true-p consult--preview-function)
-      (save-selected-window
-        (let ((embark-quit-after-action nil))
-          (embark-dwim)))))
-
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
@@ -2494,7 +2521,7 @@ KEEP is one of `upper', `base', `lower'."
          ("C-c g w" . avy-goto-word-or-subword-1)
          ("C-c m c" . my-avy-copy-thing-at-point)
          (:map dired-mode-map
-               :package dired-mode
+               :package dired
                (";" . avy-goto-char-2))
          (:map isearch-mode-map
                ("C-a" . avy-isearch)
@@ -2515,21 +2542,23 @@ KEEP is one of `upper', `base', `lower'."
   :bind ("C-c e u" . vundo))
 
 (use-package orderless
+  :preface
+  (defun my-orderless-zh-regexp (component)
+    "Match COMPONENT as a regexp enhanced for Zhongwen search."
+    (require 'zh-lib)
+    (orderless-regexp (zh-lib-build-regexp-string component)))
+
   :custom
   ;; (orderless-style-dispatchers '(orderless-affix-dispatch))
   ;; (orderless-component-separator #'orderless-escapable-split-on-space)
+  (orderless-matching-styles '(orderless-literal my-orderless-zh-regexp))
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles partial-completion))))
   ;; Disable defaults, use our settings
   (completion-category-defaults nil)
   ;; Emacs 31: partial-completion behaves like substring
   (completion-pcm-leading-wildcard t)
-  :config
-  (define-advice orderless-regexp (:filter-args (str) enhance)
-    "Enhance `orderless-regexp' when searching STR."
-    (require 'zh-lib)
-    (setf (car str) (zh-lib-build-regexp-string (car str)))
-    str))
+  :defer t)
 
 (use-package consult
   :preface
@@ -2623,26 +2652,18 @@ KEEP is one of `upper', `base', `lower'."
 
   :config
 
-  (define-advice consult--default-regexp-compiler (:override (input type ignore-case) zh)
-    "Compile the INPUT string to a list of regular expressions.
-
-The function should return a pair, the list of regular expressions and a
-highlight function. The highlight function should take a single
-argument, the string to highlight given the INPUT. TYPE is the desired
-type of regular expression, which can be `basic', `extended', `emacs' or
-`pcre'. If IGNORE-CASE is non-nil return a highlight function which
-matches case insensitively."
+  (define-advice consult--default-regexp-compiler
+      (:around (fn input type ignore-case) zh)
+    "Enhance prefixed INPUT for Zhongwen search before calling FN."
     (require 'zh-lib)
-    (setq input (consult--split-escaped
-                 (if (char-equal my-consult-zh-prefix (string-to-char input))
-                     ;; Detect the first entered character. If it
-                     ;; matches `my-consult-zh-prefix', convert the
-                     ;; subsequent characters into Zhongwen regexp
-                     (zh-lib-build-regexp-string (substring input 1))
-                   input)))
-    (cons (mapcar (lambda (x) (consult--convert-regexp x type)) input)
-          (when-let* ((regexps (seq-filter #'consult--valid-regexp-p input)))
-            (apply-partially #'consult--highlight-regexps regexps ignore-case))))
+    (funcall fn
+             (if (char-equal my-consult-zh-prefix (string-to-char input))
+                 ;; Detect the first entered character. If it matches
+                 ;; `my-consult-zh-prefix', convert the rest into a
+                 ;; Zhongwen regexp.
+                 (zh-lib-build-regexp-string (substring input 1))
+               input)
+             type ignore-case))
 
   (when (eq system-type 'windows-nt)
     (define-advice consult-find (:override (&optional dir initial) win)
@@ -3156,81 +3177,97 @@ Add before the Capfs, such that it will be tried first."
 (use-package org
   :preface
 
+  (defvar-local my--org-equation-number-cache nil
+    "Cached equation numbers as (BUFFER-TICK . NUMBERS).")
+
+  (defun my--org-equation-numbers ()
+    "Return an alist mapping LaTeX environment positions to equation numbers."
+    (let ((tick (buffer-chars-modified-tick)))
+      (if (eql tick (car-safe my--org-equation-number-cache))
+          (cdr my--org-equation-number-cache)
+        (let ((counter -1))
+          (setq my--org-equation-number-cache
+                (cons
+                 tick
+                 (org-element-map
+                     (org-element-parse-buffer) 'latex-environment
+                   (lambda (environment)
+                     (let ((begin (org-element-property :begin environment))
+                           (value (org-element-property :value environment)))
+                       (cons
+                        begin
+                        (cond
+                         ((and (string-match-p (rx "\\begin{equation}") value)
+                               (not (string-match-p (rx "\\tag{") value)))
+                          (cl-incf counter))
+                         ((string-match-p (rx "\\begin{align}") value)
+                          (cl-incf counter)
+                          (prog1 counter
+                            (with-temp-buffer
+                              (insert value)
+                              (goto-char (point-min))
+                              ;; Each LaTeX line break leads to a number.
+                              (cl-incf counter
+                                       (count-matches (rx "\\\\" line-end)))
+                              (goto-char (point-min))
+                              (cl-decf counter
+                                       (count-matches (rx "\\nonumber")))
+                              (goto-char (point-min))
+                              (cl-decf counter
+                                       (count-matches (rx "\\notag"))))))
+                         (t nil))))))))
+          (cdr my--org-equation-number-cache)))))
+
   (defun my--org-renumber-fragment (orig-func &rest args)
     "Number equations in LaTeX fragment.
 
 URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/'."
-    (let ((counter -1)
-          results
-          equation-number)
-      (setq results (cl-loop for (begin . env)
-                             in (org-element-map (org-element-parse-buffer) 'latex-environment
-                                  (lambda (env)
-                                    (cons (org-element-property :begin env)
-                                          (org-element-property :value env))))
-                             collect (cond
-                                      ((and (string-match "\\\\begin{equation}" env)
-                                            (not (string-match "\\\\tag{" env)))
-                                       (cl-incf counter)
-                                       (cons begin counter))
-                                      ((and (string-match "\\\\begin{align}" env)
-                                            (string-match "\\\\notag" env))
-                                       (cl-incf counter)
-                                       (cons begin counter))
-                                      ((string-match "\\\\begin{align}" env)
-                                       (prog2
-                                           (cl-incf counter)
-                                           (cons begin counter)
-                                         (with-temp-buffer
-                                           (insert env)
-                                           (goto-char (point-min))
-                                           ;; `\\' is used for a new line
-                                           ;; Each one leads to a number
-                                           (cl-incf counter (count-matches "\\\\$"))
-                                           ;; Unless there are nonumbers
-                                           (goto-char (point-min))
-                                           (cl-decf counter
-                                                    (count-matches "\\nonumber")))))
-                                      (t
-                                       (cons begin nil)))))
-      (when (setq equation-number (cdr (assoc (point) results)))
+    (let ((equation-number
+           (cdr (assq (point) (my--org-equation-numbers)))))
+      (when equation-number
         (setf (car args)
               (concat
                (format "\\setcounter{equation}{%s}\n" equation-number)
                (car args)))))
     (apply orig-func args))
 
-  (defun my--org-justify-fragment-overlay-h (beg end)
+  (defun my--org-preview-overlay-at (beg end)
+    "Return the Org LaTeX preview overlay between BEG and END."
+    (seq-find (lambda (overlay)
+                (eq (overlay-get overlay 'org-overlay-type)
+                    'org-latex-overlay))
+              (overlays-at (/ (+ beg end) 2) t)))
+
+  (defun my--org-justify-fragment-overlay-h (beg end &rest _)
     "Adjust the justification of a LaTeX fragment horizontally.
 The justification is set by :justify in `org-format-latex-options'.
 Only equations at the beginning of a line are justified.
 
 URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview-fragments-in-org-mode/'."
-    (let* ((position (plist-get org-format-latex-options :justify))
-           (ov (car (overlays-at (/ (+ beg end) 2) t)))
-           (width (car (image-size (overlay-get ov 'display))))
-           offset)
-      (cond
-       ((and (eq 'center position)
-             (= beg (line-beginning-position)))
-        (setq offset (floor (- (/ fill-column 2)
-                               (/ width 2))))
-        (when (< offset 0)
-          (setq offset 0))
-        (overlay-put ov 'before-string (make-string offset #x20)))
-       ((and (eq 'right position)
-             (= beg (line-beginning-position)))
-        (setq offset (floor (- fill-column width)))
-        (when (< offset 0)
-          (setq offset 0))
-        (overlay-put ov 'before-string (make-string offset #x20))))))
+    (when-let* ((position (plist-get org-format-latex-options :justify))
+                (overlay (my--org-preview-overlay-at beg end))
+                (display (overlay-get overlay 'display))
+                (width (car (image-size display)))
+                (at-line-beginning
+                 (= beg (save-excursion
+                          (goto-char beg)
+                          (line-beginning-position))))
+                (offset
+                 (pcase position
+                   ('center (floor (- (/ fill-column 2) (/ width 2))))
+                   ('right (floor (- fill-column width))))))
+      (overlay-put overlay 'before-string
+                   (make-string (max 0 offset) #x20))))
 
-  (defun my--org-justify-fragment-overlay-v (beg end)
+  (defun my--org-justify-fragment-overlay-v (beg end &rest _)
     "Adjust the justification of a LaTeX fragment vertically."
-    (let* ((ov (car (overlays-at (/ (+ beg end) 2) t)))
-           (img (cdr (overlay-get ov 'display)))
-           (new-img (plist-put img :ascent 95)))
-      (overlay-put ov 'display (cons 'image new-img))))
+    (when-let* ((overlay (my--org-preview-overlay-at beg end))
+                (display (overlay-get overlay 'display))
+                ((eq (car-safe display) 'image)))
+      (overlay-put overlay 'display
+                   (cons 'image
+                         (plist-put (copy-sequence (cdr display))
+                                    :ascent 95)))))
 
   (defun my-org-toggle-justify-fragment-overlay-h ()
     "Toggle justify LaTeX fragment horizontally."
@@ -3357,14 +3394,16 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview
   ;; -----------------------------------------
   (define-advice org-timestamp (:around (fn &rest args) insert-escaped-repeater)
     "Insert escaped repeater for org timestamp."
-    (apply fn args)
-    (when (string-match (rx "\\" (group (any "+\\-") (0+ nonl)))
-                        org-read-date-final-answer)
-      (save-excursion
-        (backward-char)
-        (insert " "
-                (string-trim-right
-                 (match-string 1 org-read-date-final-answer))))))
+    (let ((org-read-date-final-answer nil))
+      (prog1 (apply fn args)
+        (when (and (stringp org-read-date-final-answer)
+                   (string-match (rx "\\" (group (any "+\\-") (0+ nonl)))
+                                 org-read-date-final-answer))
+          (save-excursion
+            (backward-char)
+            (insert " "
+                    (string-trim-right
+                     (match-string 1 org-read-date-final-answer))))))))
 
   ;; ;; Enlarge the preview magnification
   ;; (plist-put org-format-latex-options :scale 1.5)
@@ -3394,15 +3433,18 @@ Adapt from `org-babel-remove-result'."
            (progn (forward-line) (org-babel-result-end)))))))
   :hook (org-babel-after-execute-hook . my-org-babel-highlight-result)
   :config
-  (define-advice org-babel-execute-src-block (:around (fn &rest args) lazy-load-languages)
+  (define-advice org-babel-execute-src-block
+      (:around (fn &optional arg info params executor-type) lazy-load-languages)
     "Load languages when needed."
-    (let* ((language (org-element-property :language (org-element-at-point)))
-           (lang-cons (assoc (intern language) org-babel-load-languages)))
-      (unless (cdr lang-cons)
-        (add-to-list 'org-babel-load-languages (cons (intern language) t))
+    (let* ((info (or info (org-babel-get-src-block-info)))
+           (language (car info))
+           (language-symbol (and language (intern language)))
+           (lang-cons (assq language-symbol org-babel-load-languages)))
+      (when (and language-symbol (not (cdr lang-cons)))
+        (add-to-list 'org-babel-load-languages (cons language-symbol t))
         (org-babel-do-load-languages 'org-babel-load-languages
-                                     org-babel-load-languages)))
-    (apply fn args))
+                                     org-babel-load-languages))
+      (funcall fn arg info params executor-type)))
   :custom (org-confirm-babel-evaluate nil))
 
 (use-package ob-lisp
@@ -3546,20 +3588,19 @@ Adapt from `org-babel-remove-result'."
     (interactive)
     (setq valign-fancy-bar (not valign-fancy-bar)))
 
-  ;; Compatible with `outline-mode'
-  (define-advice outline-show-entry (:override nil)
-    "Show the body directly following this heading.
-Show the heading too, if it is currently invisible."
+  ;; `outline-show-entry' passes point 0 to `outline-flag-region'
+  ;; when a heading starts at `point-min'.
+  (define-advice outline-show-entry
+      (:around (fn &rest args) clamp-region-start)
+    "Keep `outline-show-entry' inside the accessible buffer."
     (interactive)
-    (save-excursion
-      (outline-back-to-heading t)
-      (outline-flag-region (max (point-min) (1- (point)))
-                           (progn
-                             (outline-next-preface)
-                             (if (= 1 (- (point-max) (point)))
-                                 (point-max)
-                               (point)))
-                           nil))))
+    (let ((outline-flag-region-function
+           (symbol-function #'outline-flag-region)))
+      (cl-letf (((symbol-function #'outline-flag-region)
+                 (lambda (from to flag &rest flag-args)
+                   (apply outline-flag-region-function
+                          (max (point-min) from) to flag flag-args))))
+        (apply fn args)))))
 
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
@@ -3608,7 +3649,7 @@ Show the heading too, if it is currently invisible."
   });
 </script>
 ")
-  (markdown-gfm-additional-languages "Mermaid")
+  (markdown-gfm-additional-languages '("Mermaid"))
   :hook (markdown-mode . (lambda ()
                            "The markdown files may contain tables, so do not wrap lines."
                            (setq truncate-lines t)))
@@ -3632,6 +3673,11 @@ Show the heading too, if it is currently invisible."
 
 (use-package asciidoc-mode
   :if (treesit-available-p)
+  :defer t)
+
+;;; Agent
+
+(use-package agent-shell
   :defer t)
 
 ;;; Reader
@@ -3670,6 +3716,9 @@ Show the heading too, if it is currently invisible."
   :defer t)
 
 (use-package monokai-theme
+  :defer t)
+
+(use-package moe-theme
   :defer t)
 
 (use-package solarized-theme
