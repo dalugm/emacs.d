@@ -54,6 +54,38 @@
 (use-package package
   :defer t
   :preface
+  (defconst my-package-archive-source-alist
+    '((official
+       ("gnu"    . "https://elpa.gnu.org/packages/")
+       ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+       ("melpa"  . "https://melpa.org/packages/"))
+      (emacs-china
+       ("gnu"    . "https://elpa.emacs-china.org/gnu/")
+       ("nongnu" . "https://elpa.emacs-china.org/nongnu/")
+       ("melpa"  . "https://elpa.emacs-china.org/melpa/"))
+      (163
+       ("gnu"    . "https://mirrors.163.com/elpa/gnu/")
+       ("nongnu" . "https://mirrors.163.com/elpa/nongnu/")
+       ("melpa"  . "https://mirrors.163.com/elpa/melpa/"))
+      (tuna
+       ("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+       ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+       ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+    "ELPA archives provided by each package archive source.")
+
+  (defun my--set-package-archive-source (symbol value)
+    "Set SYMBOL to package archive source VALUE."
+    (let ((archives (alist-get value my-package-archive-source-alist)))
+      (unless archives
+        (setq value 'official
+              archives (alist-get value my-package-archive-source-alist)))
+      (set-default symbol value)
+      (setq package-archives
+            (mapcar (lambda (archive)
+                      (cons (copy-sequence (car archive))
+                            (copy-sequence (cdr archive))))
+                    archives))))
+
   (defcustom my-package-archive-source 'official
     "ELPA source for package installation.
 
@@ -69,37 +101,10 @@ See also: `package-archives'."
             (const :tag "tuna"        tuna)
             (const :tag "163"         163)
             (const :tag "emacs-china" emacs-china))
+    :set #'my--set-package-archive-source
     :group 'convenience)
   :custom
-  (package-archives (pcase my-package-archive-source
-                      ('official
-                       '(("gnu"    . "https://elpa.gnu.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                         ("melpa"  . "https://melpa.org/packages/")))
-
-                      ('emacs-china
-                       '(("gnu"    . "https://elpa.emacs-china.org/gnu/")
-                         ("nongnu" . "https://elpa.emacs-china.org/nongnu/")
-                         ("melpa"  . "https://elpa.emacs-china.org/melpa/")))
-
-                      ('163
-                       '(("gnu"    . "https://mirrors.163.com/elpa/gnu/")
-                         ("nongnu" . "https://mirrors.163.com/elpa/nongnu/")
-                         ("melpa"  . "https://mirrors.163.com/elpa/melpa/")))
-
-                      ('tuna
-                       '(("gnu"    . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("nongnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
-                         ("melpa"  . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
-
-                      (_               ; Default using official source
-                       '(("gnu"    . "https://elpa.gnu.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                         ("melpa"  . "https://melpa.org/packages/")))))
-
   (package-install-upgrade-built-in t))
-
-(use-package compat)
 
 (use-package no-littering
   :config
@@ -111,8 +116,6 @@ See also: `package-archives'."
     (add-to-list 'recentf-exclude
                  (recentf-expand-file-name no-littering-etc-directory))))
 
-(use-package auto-compile)
-
 (use-package epkg
   :defer t)
 
@@ -121,22 +124,6 @@ See also: `package-archives'."
   :config
   (setcar (alist-get 'package marginalia-annotators)
           #'epkg-marginalia-annotate-package))
-
-(use-package server
-  :if my-run-emacs-as-a-server
-  :preface
-  (defcustom my-run-emacs-as-a-server nil
-    "Non-nil means to run Emacs as a server process, which allows
-access from `emacsclient'."
-    :type 'boolean
-    :group 'convenience)
-  :config
-  (run-with-idle-timer 3 nil
-                       (lambda ()
-                         "Run Emacs as a server process."
-                         (unless (server-running-p)
-                           (message "Starting a server...")
-                           (server-start)))))
 
 (use-package emacs
   :preface
@@ -150,15 +137,7 @@ access from `emacsclient'."
     :type 'string
     :group 'convenience)
 
-  (defcustom my-socks-proxy
-    (list
-     (if (string-match-p "Microsoft" (shell-command-to-string "uname -a"))
-         (if (file-exists-p "/etc/resolv.conf")
-             (shell-command-to-string
-              "cat /etc/resolv.conf | grep nameserver | awk '{ printf $2 }'")
-           "0.0.0.0")
-       "127.0.0.1")
-     1080)
+  (defcustom my-socks-proxy '("127.0.0.1" 1080)
     "SOCKS proxy."
     :type '(list (string  :tag "Host")
                  (integer :tag "Port"))
@@ -201,6 +180,8 @@ pangu-spacing. The excluded puncuation will be matched to group
 1 and group 2 will both be non-nil when a pangu space is needed."
     :type 'regexp
     :group 'convenience)
+
+  (declare-function shell-command-do-open "dired-aux" (files))
 
   (defun my-pangu-spacing-current-buffer ()
     "Pangu space current buffer."
@@ -262,54 +243,6 @@ When region is active, delete the blank lines in region only."
                                (point-min)
                                (point-max)))))
 
-  (defun my-toggle-two-split-window ()
-    "Toggle two window layout vertically or horizontally."
-    (interactive)
-    (if (= (count-windows) 2)
-        (let* ((this-win-buffer (window-buffer))
-               (next-win-buffer (window-buffer (next-window)))
-               (this-win-edges  (window-edges (selected-window)))
-               (next-win-edges  (window-edges (next-window)))
-               (this-win-2nd    (not (and (<= (car this-win-edges)
-                                              (car next-win-edges))
-                                          (<= (cadr this-win-edges)
-                                              (cadr next-win-edges)))))
-               (splitter (if (= (car this-win-edges)
-                                (car (window-edges (next-window))))
-                             #'split-window-horizontally
-                           #'split-window-vertically)))
-          (delete-other-windows)
-          (let ((first-win (selected-window)))
-            (funcall splitter)
-            (when this-win-2nd (other-window 1))
-            (set-window-buffer (selected-window) this-win-buffer)
-            (set-window-buffer (next-window) next-win-buffer)
-            (select-window first-win)
-            (when this-win-2nd (other-window 1))))
-      (user-error "There should be only two windows in current frame")))
-
-  (defun my-rotate-windows ()
-    "Rotate windows in clock-wise direction."
-    (interactive)
-    (cond
-     ((<= (count-windows) 1)
-      (user-error "Cannot rotate a single window"))
-     (t
-      (let ((i 1)
-            (window-num (count-windows)))
-        (while (< i window-num)
-          (let* ((w1 (elt (window-list) i))
-                 (w2 (elt (window-list) (+ (% i window-num) 1)))
-                 (b1 (window-buffer w1))
-                 (b2 (window-buffer w2))
-                 (s1 (window-start w1))
-                 (s2 (window-start w2)))
-            (set-window-buffer w1 b2)
-            (set-window-buffer w2 b1)
-            (set-window-start w1 s2)
-            (set-window-start w2 s1)
-            (cl-incf i)))))))
-
   (defun my-toggle-full-window()
     "Toggle full view of selected window."
     (interactive)
@@ -369,7 +302,7 @@ When region is active, delete the blank lines in region only."
     "Enable SOCKS proxy."
     (interactive)
     (require 'socks)
-    (let ((host (car  my-socks-proxy))
+    (let ((host (car my-socks-proxy))
           (port (cadr my-socks-proxy)))
       (setopt url-gateway-method 'socks
               socks-server `("Default server" ,host ,port 5)
@@ -468,14 +401,8 @@ With a prefix ARG, rename based on current name."
     (unless (string-match-p "\\`[a-z]+://" file)
       (setq file (expand-file-name file)))
     (message "Opening `%s' externally..." file)
-    (if (and (eq system-type 'windows-nt)
-             (fboundp 'w32-shell-execute))
-        (w32-shell-execute "open" file)
-      (call-process (pcase system-type
-                      ('darwin "open")
-                      ('cygwin "cygstart")
-                      (_ "xdg-open"))
-                    nil 0 nil file)))
+    (require 'dired-aux)
+    (shell-command-do-open (list file)))
 
   (defun my-open-file-externally (file)
     "Open FILE using system's default application."
@@ -732,6 +659,11 @@ number."
 
   (advice-add 'kill-ring-save :around #'my--pulse-highlight-region)
 
+  :custom
+
+  ;; Respect kinsoku rules when wrapping CJK text visually.
+  (word-wrap-by-category t)
+
   :bind
 
   (("C-c f b"   . my-browse-this-file)
@@ -754,8 +686,8 @@ number."
    ("C-c t p S" . my-show-socks-proxy)
    ("C-c t t"   . load-theme)
    ("C-c w f"   . my-toggle-full-window)
-   ("C-c w r"   . my-rotate-windows)
-   ("C-c w t"   . my-toggle-two-split-window)
+   ("C-c w r"   . rotate-windows)
+   ("C-c w t"   . window-layout-transpose)
    ("C-c m 1"   . my-insert-date)
    ("C-c m 2"   . my-insert-user-information)
    ("C-c m d"   . my-delete-blank-lines)
@@ -790,8 +722,8 @@ number."
          ("C-o" . isearch-occur))))
 
 (use-package simple
-  :config
-  (define-advice delete-indentation (:around (fn &rest args) chinese)
+  :preface
+  (defun my--delete-indentation-chinese (fn &rest args)
     "Add Chinese characters support for `fixup-whitespace'.
 
 Use `cl-letf' to change the behavior of `fixup-whitespace' only when
@@ -805,6 +737,8 @@ called from `delete-indentation'."
                                                (looking-at "\\cc\\|$\\|\\s(\\|\\s'")))
                      (insert ?\s))))))
       (apply fn args)))
+  :config
+  (advice-add 'delete-indentation :around #'my--delete-indentation-chinese)
   :bind
   (;; Zero width space
    ("C-c 8 z" . (lambda () (interactive) (insert-char #x200b)))
@@ -832,6 +766,10 @@ called from `delete-indentation'."
   :config
   (global-subword-mode +1))
 
+(use-package repeat
+  :config
+  (repeat-mode +1))
+
 (use-package saveplace
   :config
   (save-place-mode +1))
@@ -841,23 +779,28 @@ called from `delete-indentation'."
   (electric-pair-mode +1))
 
 (use-package paren
+  :custom
+  (show-paren-context-when-offscreen 'overlay)
   :config
-  (setq show-paren-context-when-offscreen 'overlay)
   (show-paren-mode +1))
 
-(use-package midnight)
+(use-package midnight
+  :config
+  (midnight-mode +1))
 
 (use-package winner
+  :custom
+  (winner-boring-buffers '("*Apropos*" "*Buffer List*"
+                           "*Completions*" "*Compile-Log*"
+                           "*Help*" "*Ibuffer*"
+                           "*inferior-lisp*"))
   :config
-  (setq winner-boring-buffers '("*Apropos*" "*Buffer List*"
-                                "*Completions*" "*Compile-Log*"
-                                "*Help*" "*Ibuffer*"
-                                "*inferior-lisp*"))
   (winner-mode +1))
 
 (use-package autorevert
+  :custom
+  (auto-revert-verbose nil)
   :config
-  (setq auto-revert-verbose nil)
   (global-auto-revert-mode +1))
 
 (use-package recentf
@@ -910,6 +853,18 @@ called from `delete-indentation'."
   (ibuffer-expert t)
   (ibuffer-show-empty-filter-groups nil)
   (ibuffer-display-summary nil)
+  (ibuffer-human-readable-size t)
+  (ibuffer-formats
+   '((mark modified read-only vc-status-mini " "
+           (name 18 18 :left :elide)
+           " "
+           (size 9 -1 :right)
+           " "
+           (mode 16 16 :left :elide)
+           " "
+           (vc-status 16 16 :left)
+           " "
+           filename-and-process)))
   :commands (ibuffer-switch-to-saved-filter-groups)
   :defines (ibuffer-saved-filter-groups)
   :functions (my--ibuffer-get-major-modes-list
@@ -935,17 +890,6 @@ called from `delete-indentation'."
             (symbol-name state)
           "-"))))
 
-  ;; Use human readable Size column instead of original one
-  (define-ibuffer-column my--size
-    (:name "Size" :inline t)
-    (cond
-     ((> (buffer-size) 1000000)
-      (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-     ((> (buffer-size) 1000)
-      (format "%7.1fk" (/ (buffer-size) 1000.0)))
-     (t
-      (format "%8d" (buffer-size)))))
-
   (define-ibuffer-column vc-status-mini
     (:name "V")
     (if buffer-file-name
@@ -964,18 +908,6 @@ called from `delete-indentation'."
   (define-ibuffer-column vc-status
     (:name "VC status")
     (ibuffer-vc--status-string))
-
-  (setq ibuffer-formats
-        '((mark modified read-only vc-status-mini " "
-                (name 18 18 :left :elide)
-                " "
-                (my--size 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " "
-                (vc-status 16 16 :left)
-                " "
-                filename-and-process)))
 
   (defun my--ibuffer-get-major-modes-list ()
     "Get all major modes based on opened buffers."
@@ -1060,6 +992,8 @@ called from `delete-indentation'."
   (ediff-window-setup-function #'ediff-setup-windows-plain))
 
 (use-package project
+  :preface
+  (declare-function magit-project-status "magit-extras" ())
   :defer t
   :config
   (require 'keymap)
@@ -1089,6 +1023,11 @@ called from `delete-indentation'."
 
 (use-package dired
   :preface
+  (declare-function dired-get-marked-files
+                    "dired"
+                    (&optional localp arg filter distinguish-one-marked error))
+  (declare-function dired-dwim-target-directory "dired-aux" ())
+
   (defun my--ediff-restore-window-configuration (configuration)
     "Restore window CONFIGURATION after the current Ediff session."
     (add-hook 'ediff-after-quit-hook-internal
@@ -1138,18 +1077,11 @@ URL `https://oremacs.com/2017/03/18/dired-ediff/'."
           (rename-file file (expand-file-name new-name directory)))))
     (revert-buffer))
 
-  (defun my-dired-open-externally (&optional arg)
-    "Open marked or current file in OS's default application."
-    (interactive "P")
-    (dired-map-over-marks
-     (my-open-externally (dired-get-file-for-visit))
-     arg))
-
   :bind
 
   (:map dired-mode-map
         ("," . dired-up-directory)
-        ("e" . my-dired-open-externally)
+        ("e" . dired-do-open)
         ("_" . my-dired-cycle-space-underscore-hyphen)
         ("C-c C-e" . my-ediff-files)
         ("C-c C-p" . wdired-change-to-wdired-mode))
@@ -1284,7 +1216,7 @@ mouse-3: Toggle minor modes"
 
 ;;; GUI
 
-(when (display-graphic-p)
+(when (or (display-graphic-p) (daemonp))
 
 ;;;; Frame
 
@@ -1446,27 +1378,6 @@ If FONT-NAME is nil, use the first font in `my-font-alist'."
       (or (alist-get font-name my-font-alist nil nil #'equal)
           (cdar my-font-alist)))
 
-    (defun my--load-font-spec (face font-name size &rest attrs)
-      "Load FONT-SPEC for FACE.
-
-FONT-SPEC should be a list (ASCII-FAMILY CJK-FAMILY CJK-SCALE
-ASCII-SPEC CJK-SPEC), where ASCII-FAMILY is a ASCII font family,
-CJK-FAMILY is the CJK font family, and SCJK-SCALE is the scale
-factor of CJK font.  ASCII-SPEC and CJK-SPEC are extra spec for
-ASCII and CJK."
-      (if (eq face 'default)
-          (apply #'my-load-default-font font-name size attrs)
-        (let ((fontset
-               (apply #'my--create-fontset
-                      (my--font-expand-spec
-                       (my--font-name-to-spec font-name) size))))
-          (apply #'set-face-attribute face nil
-                 ;; We must set both `:font' and `fontset' for both ASCII
-                 ;; and non-ascii spec to take effect
-                 :font fontset
-                 :fontset fontset
-                 attrs))))
-
     (defun my-load-font (face font-name size &rest attrs)
       "Load FONT-NAME for FACE with SIZE and ATTRS.
 
@@ -1517,6 +1428,7 @@ More details are inside `my-load-font'."
 
     :config
 
+    ;; Fonts are global defaults and are inherited by newly created frames.
     (my-load-default-font nil my-font-size)
 
     ;; Emoji display
@@ -1532,22 +1444,18 @@ More details are inside `my-load-font'."
 
 ;;; Prog
 
-(use-package c-ts-mode
+(use-package treesit
   :if (treesit-available-p)
-  :init
-  (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(c . ("https://github.com/tree-sitter/tree-sitter-c")))
-  (unless (treesit-language-available-p 'c)
-    (treesit-install-language-grammar 'c))
+  :preface
+  (defun my--treesit-ensure-grammar (language source)
+    "Ensure third-party SOURCE for tree-sitter LANGUAGE is installed."
+    (setf (alist-get language treesit-language-source-alist) source)
+    (unless (treesit-language-available-p language)
+      (treesit-install-language-grammar language)))
 
-  (add-to-list 'treesit-language-source-alist
-               '(cpp . ("https://github.com/tree-sitter/tree-sitter-cpp")))
-  (unless (treesit-language-available-p 'cpp)
-    (treesit-install-language-grammar 'cpp))
-  :defer t)
+  :custom
+  (treesit-auto-install-grammar 'always)
+  (treesit-enabled-modes t))
 
 (use-package clojure-mode
   :defer t)
@@ -1559,32 +1467,10 @@ More details are inside `my-load-font'."
 
 (use-package cmake-ts-mode
   :if (treesit-available-p)
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(cmake . ("https://github.com/uyha/tree-sitter-cmake")))
-  (unless (treesit-language-available-p 'cmake)
-    (treesit-install-language-grammar 'cmake))
   :mode "\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'")
-
-(use-package csharp-mode
-  :init
-  (when (treesit-available-p)
-    (add-to-list 'major-mode-remap-alist '(csharp-mode . csharp-ts-mode)))
-  :config
-  (when (treesit-available-p)
-    (add-to-list 'treesit-language-source-alist
-                 '(c-sharp . ("https://github.com/tree-sitter/tree-sitter-c-sharp")))
-    (unless (treesit-language-available-p 'c-sharp)
-      (treesit-install-language-grammar 'c-sharp)))
-  :defer t)
 
 (use-package dockerfile-ts-mode
   :if (treesit-available-p)
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile")))
-  (unless (treesit-language-available-p 'dockerfile)
-    (treesit-install-language-grammar 'dockerfile))
   :mode "\\(?:Dockerfile\\(?:\\..*\\)?\\|\\.[Dd]ockerfile\\)\\'")
 
 (use-package elisp-mode
@@ -1628,11 +1514,6 @@ sexp before point and insert output into current position."
 
 (use-package elixir-ts-mode
   :if (treesit-available-p)
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(elixir . ("https://github.com/elixir-lang/tree-sitter-elixir")))
-  (unless (treesit-language-available-p 'elixir)
-    (treesit-install-language-grammar 'elixir))
   :mode "\\(?:\\.elixir\\|\\.exs?\\|mix\\.lock\\)\\'")
 
 (use-package fennel-mode
@@ -1663,16 +1544,6 @@ sexp before point and insert output into current position."
 
 (use-package go-ts-mode
   :if (treesit-available-p)
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(go . ("https://github.com/tree-sitter/tree-sitter-go")))
-  (unless (treesit-language-available-p 'go)
-    (treesit-install-language-grammar 'go))
-
-  (add-to-list 'treesit-language-source-alist
-               '(gomod . ("https://github.com/camdencheek/tree-sitter-go-mod")))
-  (unless (treesit-language-available-p 'gomod)
-    (treesit-install-language-grammar 'gomod))
   :mode (("\\.go\\'" . go-ts-mode)
          ("/go\\.mod\\'" . go-mod-ts-mode)))
 
@@ -1681,10 +1552,7 @@ sexp before point and insert output into current position."
   :bind (:map haskell-ts-mode-map
               ("C-c C-x C-j" . run-haskell))
   :config
-  (add-to-list 'treesit-language-source-alist
-               '(haskell . ("https://github.com/tree-sitter/tree-sitter-haskell")))
-  (unless (treesit-language-available-p 'haskell)
-    (treesit-install-language-grammar 'haskell))
+  (my--treesit-ensure-grammar 'haskell '("https://github.com/tree-sitter/tree-sitter-haskell"))
 
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
@@ -1693,28 +1561,13 @@ sexp before point and insert output into current position."
 
 (use-package heex-ts-mode
   :if (treesit-available-p)
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(heex . ("https://github.com/phoenixframework/tree-sitter-heex")))
-  (unless (treesit-language-available-p 'heex)
-    (treesit-install-language-grammar 'heex))
   :mode "\\.[hl]?eex\\'")
 
 (use-package java-ts-mode
   :if (treesit-available-p)
-  :init
-  (add-to-list 'major-mode-remap-alist '(java-mode . java-ts-mode))
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(java . ("https://github.com/tree-sitter/tree-sitter-java")))
-  (unless (treesit-language-available-p 'java)
-    (treesit-install-language-grammar 'java))
   :mode "\\.java\\'")
 
 (use-package js
-  :init
-  (when (treesit-available-p)
-    (add-to-list 'major-mode-remap-alist '(js-mode . js-ts-mode)))
   :custom (js-indent-level 2)
   :config
   (with-eval-after-load 'eglot
@@ -1722,38 +1575,17 @@ sexp before point and insert output into current position."
                  '(((js-mode :language-id "javascript")
                     (js-ts-mode :language-id "javascript"))
                    . ("tsc" "--lsp" "--stdio"))))
-
-  (when (treesit-available-p)
-    (add-to-list 'treesit-language-source-alist
-                 '(javascript . ("https://github.com/tree-sitter/tree-sitter-javascript")))
-    (unless (treesit-language-available-p 'javascript)
-      (treesit-install-language-grammar 'javascript))
-
-    (add-to-list 'treesit-language-source-alist
-                 '(jsdoc . ("https://github.com/tree-sitter/tree-sitter-jsdoc")))
-    (unless (treesit-language-available-p 'jsdoc)
-      (treesit-install-language-grammar 'jsdoc)))
-  :mode ("\\.[cm]js\\'" . js-mode))
+  :mode ("\\.[cm]js\\'" . javascript-mode))
 
 (use-package json-ts-mode
   :if (treesit-available-p)
-  :init
-  (add-to-list 'major-mode-remap-alist '(js-json-mode . json-ts-mode))
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(json . ("https://github.com/tree-sitter/tree-sitter-json")))
-  (unless (treesit-language-available-p 'json)
-    (treesit-install-language-grammar 'json))
   :mode "\\.json\\'")
 
 (use-package just-ts-mode
   :if (treesit-available-p)
   :custom (just-ts-indent-offset 2)
   :config
-  (add-to-list 'treesit-language-source-alist
-               '(just . ("https://github.com/casey/tree-sitter-just")))
-  (unless (treesit-language-available-p 'just)
-    (treesit-install-language-grammar 'just))
+  (my--treesit-ensure-grammar 'just '("https://github.com/casey/tree-sitter-just"))
   :defer t)
 
 (use-package kotlin-ts-mode
@@ -1762,10 +1594,7 @@ sexp before point and insert output into current position."
          ("C-c C-t C-f" . kotlin-ts-mode-run-current-test-function)
          ("C-c C-t C-t" . kotlin-ts-mode-goto-test-file))
   :config
-  (add-to-list 'treesit-language-source-alist
-               '(kotlin . ("https://github.com/fwcd/tree-sitter-kotlin")))
-  (unless (treesit-language-available-p 'kotlin)
-    (treesit-install-language-grammar 'kotlin))
+  (my--treesit-ensure-grammar 'kotlin '("https://github.com/fwcd/tree-sitter-kotlin"))
 
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
@@ -1776,11 +1605,6 @@ sexp before point and insert output into current position."
   :if (treesit-available-p)
   :custom (lua-ts-indent-offset 2)
   :config
-  (add-to-list 'treesit-language-source-alist
-               '(lua . ("https://github.com/tree-sitter-grammars/tree-sitter-lua")))
-  (unless (treesit-language-available-p 'lua)
-    (treesit-install-language-grammar 'lua))
-
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs '(lua-ts-mode . ("emmylua_ls"))))
   :mode "\\.lua\\'"
@@ -1810,51 +1634,25 @@ sexp before point and insert output into current position."
 (use-package nix-ts-mode
   :if (treesit-available-p)
   :config
-  (add-to-list 'treesit-language-source-alist
-               '(nix . ("https://github.com/nix-community/tree-sitter-nix")))
-  (unless (treesit-language-available-p 'nix)
-    (treesit-install-language-grammar 'nix))
+  (my--treesit-ensure-grammar 'nix '("https://github.com/nix-community/tree-sitter-nix"))
   :defer t)
 
 (use-package php-ts-mode
   :if (treesit-available-p)
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(php . ("https://github.com/tree-sitter/tree-sitter-php" nil "php/src")))
-  (unless (treesit-language-available-p 'php)
-    (treesit-install-language-grammar 'php))
-
-  (add-to-list 'treesit-language-source-alist
-               '(phpdoc . ("https://github.com/claytonrcarter/tree-sitter-phpdoc")))
-  (unless (treesit-language-available-p 'phpdoc)
-    (treesit-install-language-grammar 'phpdoc))
   :mode "\\(?:\\.\\(?:php[s345]?\\|phtml\\|inc\\|stub\\)\\|/\\.php_cs\\(?:\\.dist\\)?\\)\\'"
   :interpreter "php\\(?:-?[34578]\\(?:\\.[0-9]+\\)*\\)?")
 
 (use-package protobuf-ts-mode
   :if (treesit-available-p)
   :config
-  (when (treesit-available-p)
-    (add-to-list 'treesit-language-source-alist
-                 '(proto . ("https://github.com/coder3101/tree-sitter-proto")))
-    (unless (treesit-language-available-p 'proto)
-      (treesit-install-language-grammar 'proto)))
+  (my--treesit-ensure-grammar 'proto '("https://github.com/coder3101/tree-sitter-proto"))
   :mode "\\.proto\\'")
 
 (use-package python
-  :init
-  (when (treesit-available-p)
-    (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)))
   :custom
   (python-indent-guess-indent-offset nil)
   (python-indent-offset 4)
   :config
-  (when (treesit-available-p)
-    (add-to-list 'treesit-language-source-alist
-                 '(python . ("https://github.com/tree-sitter/tree-sitter-python")))
-    (unless (treesit-language-available-p 'python)
-      (treesit-install-language-grammar 'python)))
-
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
                  '((python-mode python-ts-mode) . ("ty" "server"))))
@@ -1868,56 +1666,7 @@ sexp before point and insert output into current position."
 
 (use-package ruby-ts-mode
   :if (treesit-available-p)
-  :init
-  (add-to-list 'major-mode-remap-alist '(ruby-mode . ruby-ts-mode))
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(ruby . ("https://github.com/tree-sitter/tree-sitter-ruby")))
-  (unless (treesit-language-available-p 'ruby)
-    (treesit-install-language-grammar 'ruby))
   :mode "\\(?:\\.\\(?:rbw?\\|ru\\|rake\\|thor\\|axlsx\\|jbuilder\\|rabl\\|gemspec\\|podspec\\)\\|/\\(?:Gem\\|Rake\\|Cap\\|Thor\\|Puppet\\|Berks\\|Brew\\|Fast\\|Vagrant\\|Guard\\|Pod\\)file\\)\\'")
-
-(use-package rust-mode
-  :preface
-  (defun my-rust-doc ()
-    "Build documentation using `cargo doc'."
-    (interactive)
-    (rust--compile nil "%s doc" rust-cargo-bin))
-
-  (defun my-rust-doc-open ()
-    "Build and open documentation using `cargo doc'."
-    (interactive)
-    (rust--compile nil "%s doc --open" rust-cargo-bin))
-  :custom (rust-mode-treesitter-derive t)
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(rust . ("https://github.com/tree-sitter/tree-sitter-rust")))
-  (unless (treesit-language-available-p 'rust)
-    (treesit-install-language-grammar 'rust))
-  :bind (:map rust-mode-map
-              ("C-c C-c C-c" . rust-compile)
-              ("C-c C-c C-d" . rust-dbg-wrap-or-unwrap)
-              ("C-c C-c C-m" . rust-toggle-mutability)
-              ;; Unbind `rust-dbg-wrap-or-unwrap' for doc
-              ("C-c C-d" . nil)
-              ("C-c C-d C-d" . my-rust-doc)
-              ("C-c C-d C-o" . my-rust-doc-open)
-              ("C-c C-p C-b" . rust-playpen-buffer)
-              ("C-c C-p C-r" . rust-playpen-region)
-              ("C-c C-r C-c" . rust-compile-release)
-              ("C-c C-r C-r" . rust-run-release)))
-
-(use-package sh-script
-  :init
-  (when (treesit-available-p)
-    (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode)))
-  :config
-  (when (treesit-available-p)
-    (add-to-list 'treesit-language-source-alist
-                 '(bash . ("https://github.com/tree-sitter/tree-sitter-bash")))
-    (unless (treesit-language-available-p 'bash)
-      (treesit-install-language-grammar 'bash)))
-  :defer t)
 
 (use-package tex-mode
   :defer t
@@ -1928,16 +1677,6 @@ sexp before point and insert output into current position."
 (use-package typescript-ts-mode
   :if (treesit-available-p)
   :config
-  (add-to-list 'treesit-language-source-alist
-               '(tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "tsx/src")))
-  (unless (treesit-language-available-p 'tsx)
-    (treesit-install-language-grammar 'tsx))
-
-  (add-to-list 'treesit-language-source-alist
-               '(typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" nil "typescript/src")))
-  (unless (treesit-language-available-p 'typescript)
-    (treesit-install-language-grammar 'typescript))
-
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs
                  '(((tsx-ts-mode :language-id "typescriptreact")
@@ -1949,10 +1688,7 @@ sexp before point and insert output into current position."
 (use-package vue-ts-mode
   :if (treesit-available-p)
   :config
-  (add-to-list 'treesit-language-source-alist
-               '(vue . ("https://github.com/tree-sitter-grammars/tree-sitter-vue")))
-  (unless (treesit-language-available-p 'vue)
-    (treesit-install-language-grammar 'vue))
+  (my--treesit-ensure-grammar 'vue '("https://github.com/tree-sitter-grammars/tree-sitter-vue"))
   :mode "\\.[nu]?vue\\'")
 
 (use-package zig-ts-mode
@@ -1981,14 +1717,14 @@ sexp before point and insert output into current position."
 
   :config
 
-  (setopt eglot-workspace-configuration
-          `( :gopls ( :usePlaceholders t
-                      :semanticTokens t
-                      :analyses ( :unusedparams t
-                                  :nilness t
-                                  :unusedwrite t)
-                      :staticcheck t
-                      :gofumpt t)))
+  (setq-default eglot-workspace-configuration
+                `( :gopls ( :usePlaceholders t
+                            :semanticTokens t
+                            :analyses ( :unusedparams t
+                                        :nilness t
+                                        :unusedwrite t)
+                            :staticcheck t
+                            :gofumpt t)))
 
   :custom
   (eglot-extend-to-xref t)
@@ -2002,23 +1738,11 @@ sexp before point and insert output into current position."
 ;;;; REPL
 
 (use-package sly
-  :bind ((:map sly-mode-map
-               ("C-c C-a C-c" . sly-asdf-compile-system)
-               ("C-c C-a C-l" . sly-asdf-load-system)
-               ("C-c C-a C-r" . sly-asdf-reload-system)
-               ("C-c C-a C-t" . sly-asdf-test-system)
-               ("C-c C-v C-i" . sly-inspect)
-               ("C-c C-v C-d" . sly-inspect-definition)
-               ("C-c C-x C-c" . sly-connect)
-               ("C-c C-x C-q" . sly-disconnect)
-               ("C-c C-q"     . sly-quit-lisp)
-               ("C-c C-x C-j" . sly))
-         (:map sly-doc-map
-               ("C-l" . sly-documentation)))
-  :config
-  (sly-setup)
+  :preface
+  (declare-function sly-current-connection "sly" ())
+  (declare-function sly-mrepl--find-create "sly-mrepl" (connection))
 
-  (define-advice sly-mrepl (:around (fn &optional display-action) last)
+  (defun my--sly-mrepl-last (fn &optional display-action)
     "Switch interactively between the last Lisp and Sly-MREPL buffers.
 
 Preserve Sly's original behavior when DISPLAY-ACTION is non-nil, as
@@ -2040,6 +1764,22 @@ used by Sly's internal callers."
                 (select-window win)
               (pop-to-buffer buf))
           (user-error "No Sly-Mrepl buffer found")))))
+  :bind ((:map sly-mode-map
+               ("C-c C-a C-c" . sly-asdf-compile-system)
+               ("C-c C-a C-l" . sly-asdf-load-system)
+               ("C-c C-a C-r" . sly-asdf-reload-system)
+               ("C-c C-a C-t" . sly-asdf-test-system)
+               ("C-c C-v C-i" . sly-inspect)
+               ("C-c C-v C-d" . sly-inspect-definition)
+               ("C-c C-x C-c" . sly-connect)
+               ("C-c C-x C-q" . sly-disconnect)
+               ("C-c C-q"     . sly-quit-lisp)
+               ("C-c C-x C-j" . sly))
+         (:map sly-doc-map
+               ("C-l" . sly-documentation)))
+  :config
+  (sly-setup)
+  (advice-add 'sly-mrepl :around #'my--sly-mrepl-last)
   :custom (inferior-lisp-program "sbcl"))
 
 (use-package sly-asdf :after sly)
@@ -2159,58 +1899,30 @@ used by Sly's internal callers."
   :bind (("C-c ! b" . flymake-show-buffer-diagnostics)
          ("C-c ! p" . flymake-show-project-diagnostics)))
 
-(use-package flyspell
+(use-package ispell
+  :if (executable-find "aspell")
   :defer t
-  :config
-  (when (executable-find "aspell")
-    (setq ispell-program-name "aspell"
-          ispell-extra-args '("--sug-mode=ultra"
-                              "--lang=en_US"
-                              "--camel-case"))))
+  :custom
+  (ispell-program-name "aspell")
+  (ispell-extra-args '("--sug-mode=ultra"
+                       "--lang=en_US"
+                       "--camel-case")))
+
+(use-package flyspell
+  :defer t)
 
 ;;; Text
 
-(use-package css-mode
-  :init
-  (when (treesit-available-p)
-    (add-to-list 'major-mode-remap-alist '(css-mode . css-ts-mode)))
-  :config
-  (when (treesit-available-p)
-    (add-to-list 'treesit-language-source-alist
-                 '(css . ("https://github.com/tree-sitter/tree-sitter-css")))
-    (unless (treesit-language-available-p 'css)
-      (treesit-install-language-grammar 'css)))
-  :defer t)
-
 (use-package html-ts-mode
   :if (treesit-available-p)
-  :init
-  (add-to-list 'major-mode-remap-alist '(html-mode . html-ts-mode))
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(html . ("https://github.com/tree-sitter/tree-sitter-html")))
-  (unless (treesit-language-available-p 'html)
-    (treesit-install-language-grammar 'html))
   :mode "\\.html\\'")
 
 (use-package toml-ts-mode
   :if (treesit-available-p)
-  :init
-  (add-to-list 'major-mode-remap-alist '(conf-toml-mode . toml-ts-mode))
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(toml . ("https://github.com/tree-sitter-grammars/tree-sitter-toml")))
-  (unless (treesit-language-available-p 'toml)
-    (treesit-install-language-grammar 'toml))
   :mode "\\.toml\\'")
 
 (use-package yaml-ts-mode
   :if (treesit-available-p)
-  :config
-  (add-to-list 'treesit-language-source-alist
-               '(yaml . ("https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
-  (unless (treesit-language-available-p 'yaml)
-    (treesit-install-language-grammar 'yaml))
   :mode "\\.ya?ml\\'")
 
 ;;; Version control
@@ -2341,7 +2053,6 @@ KEEP is one of `upper', `base', `lower'."
   (text-mode-ispell-word-completion nil))
 
 (use-package corfu-popupinfo
-  :if (display-graphic-p)
   :hook (corfu-mode . corfu-popupinfo-mode)
   :bind (:map corfu-map
               ("M-n" . corfu-popupinfo-scroll-up)
@@ -2351,13 +2062,6 @@ KEEP is one of `upper', `base', `lower'."
               ("M-l" . corfu-popupinfo-location)
               ("M-d" . corfu-popupinfo-documentation)
               ("M-t" . corfu-popupinfo-toggle)))
-
-(use-package corfu-info
-  :unless (display-graphic-p)
-  :after corfu
-  :bind (:map corfu-map
-              ("M-l" . corfu-info-location)
-              ("M-d" . corfu-info-documentation)))
 
 ;; Use Dabbrev with Corfu
 (use-package dabbrev
@@ -2445,6 +2149,16 @@ KEEP is one of `upper', `base', `lower'."
                  (window-parameters (mode-line-format . none)))))
 
 (use-package workspaces
+  :preface
+  (defvar consult-buffer-sources)
+
+  (defun my--consult-workspaces ()
+    "Isolate workspace buffers when using workspaces."
+    (if workspaces-mode
+        (add-to-list 'consult-buffer-sources 'my-consult-source-workspace)
+      ;; Reset `consult-buffer' to show all buffers
+      (setq consult-buffer-sources
+            (delete 'my-consult-source-workspace consult-buffer-sources))))
   :bind (("C-c C-w" . workspaces-prefix-map)
          ("C-c w s" . workspaces-switch)
          ("C-c w l" . workspaces-switch)
@@ -2466,32 +2180,10 @@ KEEP is one of `upper', `base', `lower'."
                                   :as #'buffer-name)))
       "Workspace buffer candidate source for `consult-buffer'.")
 
-    (defun my--consult-workspaces ()
-      "Isolate workspace buffers when using workspaces."
-      (if workspaces-mode
-          (add-to-list 'consult-buffer-sources 'my-consult-source-workspace)
-        ;; Reset `consult-buffer' to show all buffers
-        (setq consult-buffer-sources
-              (delete 'my-consult-source-workspace consult-buffer-sources))))
-
     (when workspaces-mode
       (add-to-list 'consult-buffer-sources 'my-consult-source-workspace))
 
     (add-hook 'workspaces-mode-hook #'my--consult-workspaces)))
-
-(use-package ace-window
-  :bind ([remap other-window] . ace-window)
-  :config
-  ;; Inherits from `avy'
-  (with-eval-after-load 'avy
-    (setq aw-keys avy-keys
-          aw-background avy-background)))
-
-(use-package winum
-  :hook (after-init . winum-mode)
-  :custom
-  (winum-format "%s ")
-  (winum-mode-line-position 0))
 
 ;; Jump between texts
 ;; https://emacsredux.com/blog/2015/07/19/ace-jump-mode-is-dead-long-live-avy
@@ -2563,10 +2255,47 @@ KEEP is one of `upper', `base', `lower'."
 (use-package consult
   :preface
 
+  (declare-function consult-register-window
+                    "consult-register"
+                    (buffer &optional show-empty pred))
+  (declare-function consult--directory-prompt "consult" (prompt dir))
+  (declare-function consult--find-make-builder "consult" (paths))
+  (declare-function consult--find "consult" (prompt builder initial))
+  (declare-function zh-lib-build-regexp-string
+                    "zh-lib"
+                    (str &optional no-punc-p only-chinese-p))
+
+  (defvar w32-quote-process-args)
+
   (defcustom my-consult-zh-prefix ?:
     "The prefix character when using consult to search Zhongwen."
     :type 'character
     :group 'convenience)
+
+  (defun my--consult-default-regexp-compiler-zh (fn input type ignore-case)
+    "Enhance prefixed INPUT for Zhongwen search before calling FN."
+    (require 'zh-lib)
+    (funcall fn
+             (if (char-equal my-consult-zh-prefix (string-to-char input))
+                 ;; Detect the first entered character. If it matches
+                 ;; `my-consult-zh-prefix', convert the rest into a
+                 ;; Zhongwen regexp.
+                 (zh-lib-build-regexp-string (substring input 1))
+               input)
+             type ignore-case))
+
+  (defun my--consult-find-win (&optional dir initial)
+    "Use `consult-find' on Windows.
+
+URL `https://github.com/minad/consult/issues/475'."
+    (pcase-let* ((w32-quote-process-args ?\\) ; or (w32-quote-process-args ?*)
+                 (consult-find-args (string-join
+                                     (push find-program (cdr (string-split consult-find-args)))
+                                     " "))
+                 (`(,prompt ,paths ,dir) (consult--directory-prompt "Find" dir))
+                 (default-directory dir)
+                 (builder (consult--find-make-builder paths)))
+      (find-file (consult--find prompt builder initial))))
 
   :init
 
@@ -2652,32 +2381,11 @@ KEEP is one of `upper', `base', `lower'."
 
   :config
 
-  (define-advice consult--default-regexp-compiler
-      (:around (fn input type ignore-case) zh)
-    "Enhance prefixed INPUT for Zhongwen search before calling FN."
-    (require 'zh-lib)
-    (funcall fn
-             (if (char-equal my-consult-zh-prefix (string-to-char input))
-                 ;; Detect the first entered character. If it matches
-                 ;; `my-consult-zh-prefix', convert the rest into a
-                 ;; Zhongwen regexp.
-                 (zh-lib-build-regexp-string (substring input 1))
-               input)
-             type ignore-case))
+  (advice-add 'consult--default-regexp-compiler
+              :around #'my--consult-default-regexp-compiler-zh)
 
   (when (eq system-type 'windows-nt)
-    (define-advice consult-find (:override (&optional dir initial) win)
-      "Use `consult-find' on Windows.
-
-URL `https://github.com/minad/consult/issues/475'."
-      (pcase-let* ((w32-quote-process-args ?\\) ; or (w32-quote-process-args ?*)
-                   (consult-find-args (string-join
-                                       (push find-program (cdr (string-split consult-find-args)))
-                                       " "))
-                   (`(,prompt ,paths ,dir) (consult--directory-prompt "Find" dir))
-                   (default-directory dir)
-                   (builder (consult--find-make-builder paths)))
-        (find-file (consult--find prompt builder initial)))))
+    (advice-add 'consult-find :override #'my--consult-find-win))
 
   (consult-customize
    consult-theme :preview-key '(:debounce 0.5 any)))
@@ -2714,6 +2422,12 @@ URL `https://github.com/minad/consult/issues/475'."
 
 (use-package evil
   :preface
+
+  (declare-function evil-ex-hl-active-p "evil-search" (name))
+  (declare-function evil-ex-nohighlight "evil-search" ())
+  ;; These functions are generated later by `evil-define-text-object'.
+  (declare-function my--evil-a-paren nil (&optional count beg end type))
+  (declare-function my--evil-i-paren nil (&optional count beg end type))
 
   (defmacro my--evil-adjust-major-mode-keymap (mode &optional replace)
     "Use MODE\\='s keymap in `evil-normal-state' after MODE loaded.
@@ -2771,20 +2485,23 @@ URL `http://blog.binchen.org/posts/code-faster-by-extending-emacs-evil-text-obje
     (interactive "p")
     (save-excursion (dotimes (_ count) (evil-insert-newline-below))))
 
+  (defun my--evil-ex-nohighlight ()
+    "Disable Evil Ex search buffer highlight."
+    (when (evil-ex-hl-active-p 'evil-ex-search)
+      (evil-ex-nohighlight)))
+
   :hook
 
   (after-init . evil-mode)
 
   :init
 
-  ;; https://github.com/emacs-evil/evil/issues/1486#issuecomment-876371225
-  (setopt evil-disable-insert-state-bindings t)
+  ;; This must be set before Evil creates its insert-state keymap.
+  (setq evil-disable-insert-state-bindings t)
 
   :custom
 
   (evil-want-C-i-jump nil)
-  ;; Use Emacs keys in INSERT state
-  (evil-disable-insert-state-bindings t)
   (evil-ex-interactive-search-highlight 'selected-window)
   ;; Move back the cursor one position when exiting insert mode
   (evil-move-cursor-back t)
@@ -2807,10 +2524,7 @@ URL `http://blog.binchen.org/posts/code-faster-by-extending-emacs-evil-text-obje
     ;; Comma as localleader
     (evil-set-leader state (kbd ",") t))
 
-  (define-advice keyboard-quit (:before () evil-ex-nohighlight)
-    "Disable evil ex search buffer highlight."
-    (when (evil-ex-hl-active-p 'evil-ex-search)
-      (evil-ex-nohighlight)))
+  (advice-add 'keyboard-quit :before #'my--evil-ex-nohighlight)
 
   (evil-define-text-object my--evil-a-paren (count &optional beg end type)
     "Select a text object."
@@ -2985,24 +2699,14 @@ URL `http://blog.binchen.org/posts/code-faster-by-extending-emacs-evil-text-obje
    ("<localleader>xx" . flymake-show-buffer-diagnostics)
    ("<localleader>xp" . flymake-show-project-diagnostics)
 ;;;;; Evil localleader window
-   ("<localleader>0"  . winum-select-window-0-or-10)
-   ("<localleader>1"  . winum-select-window-1)
-   ("<localleader>2"  . winum-select-window-2)
-   ("<localleader>3"  . winum-select-window-3)
-   ("<localleader>4"  . winum-select-window-4)
-   ("<localleader>5"  . winum-select-window-5)
-   ("<localleader>6"  . winum-select-window-6)
-   ("<localleader>7"  . winum-select-window-7)
-   ("<localleader>8"  . winum-select-window-8)
-   ("<localleader>9"  . winum-select-window-9)
    ("<localleader>oo" . my-toggle-full-window)
    ("<localleader>sa" . split-window-vertically)
    ("<localleader>sd" . split-window-horizontally)
    ("<localleader>sh" . split-window-below)
    ("<localleader>sq" . delete-window)
    ("<localleader>sv" . split-window-right)
-   ("<localleader>rr" . my-rotate-windows)
-   ("<localleader>tt" . my-toggle-two-split-window)
+   ("<localleader>rr" . rotate-windows)
+   ("<localleader>tt" . window-layout-transpose)
 ;;;; Evil state bindings
    (:map evil-normal-state-map
          ("]b" . next-buffer)
@@ -3180,6 +2884,19 @@ Add before the Capfs, such that it will be tried first."
   (defvar-local my--org-equation-number-cache nil
     "Cached equation numbers as (BUFFER-TICK . NUMBERS).")
 
+  (defun my--org-timestamp-insert-escaped-repeater (fn &rest args)
+    "Insert escaped repeater for Org timestamp."
+    (let ((org-read-date-final-answer nil))
+      (prog1 (apply fn args)
+        (when (and (stringp org-read-date-final-answer)
+                   (string-match (rx "\\" (group (any "+\\-") (0+ nonl)))
+                                 org-read-date-final-answer))
+          (save-excursion
+            (backward-char)
+            (insert " "
+                    (string-trim-right
+                     (match-string 1 org-read-date-final-answer))))))))
+
   (defun my--org-equation-numbers ()
     "Return an alist mapping LaTeX environment positions to equation numbers."
     (let ((tick (buffer-chars-modified-tick)))
@@ -3311,9 +3028,6 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview
   ;; Respect property lines
   (org-startup-folded 'nofold)
 
-  ;; Make Emacs respect kinsoku rules when wrapping lines visually
-  (word-wrap-by-category t)
-
   (org-default-notes-file (expand-file-name "notes.org" org-directory))
   (org-src-fontify-natively t)
   (org-edit-src-content-indentation 0)
@@ -3349,42 +3063,7 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview
   (org-tag-alist
    (quote (("@work" . ?w) ("@home" . ?h) ("@school" . ?s)
            ("@code" . ?c) ("TOC" . ?T) ("noexport" . ?n))))
-  (org-preview-latex-process-alist
-   (quote ((dvisvgm
-            :programs ("xelatex" "dvisvgm")
-            :description "xdv > svg"
-            :message "you need to install the programs: xelatex and dvisvgm."
-            :image-input-type "xdv"
-            :image-output-type "svg"
-            :image-size-adjust (1.7 . 1.5)
-            :latex-compiler
-            ("xelatex -no-pdf -interaction nonstopmode -output-directory %o %f")
-            :image-converter
-            ;; use `-e' to compute exact glyph bounding boxes
-            ("dvisvgm %f -e -n -b min -c %S -o %O"))
-           (dvipng
-            :programs ("latex" "dvipng")
-            :description "dvi > png"
-            :message "you need to install the programs: latex and dvipng."
-            :image-input-type "dvi"
-            :image-output-type "png"
-            :image-size-adjust (1.0 . 1.0)
-            :latex-compiler
-            ("latex -interaction nonstopmode -output-directory %o %f")
-            :image-converter
-            ("dvipng -D %D -T tight -bg Transparent -o %O %f"))
-           (imagemagick
-            :programs ("latex" "convert")
-            :description "pdf > png"
-            :message "you need to install the programs: latex and imagemagick."
-            :image-input-type "pdf"
-            :image-output-type "png"
-            :image-size-adjust (1.0 . 1.0)
-            :latex-compiler
-            ("pdflatex -interaction nonstopmode -output-directory %o %f")
-            :image-converter
-            ("convert -density %D -trim -antialias %f -quality 100 %O")))))
-  (org-preview-latex-default-process 'dvisvgm)
+  (org-preview-latex-default-process 'xelatex)
 
   :config
 
@@ -3392,18 +3071,8 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview
   ;; C-c . \+1w RET ;; => <2020-05-23 Sat +1w>
   ;; C-c . \-1w RET ;; => <2020-05-23 Sat -1w>
   ;; -----------------------------------------
-  (define-advice org-timestamp (:around (fn &rest args) insert-escaped-repeater)
-    "Insert escaped repeater for org timestamp."
-    (let ((org-read-date-final-answer nil))
-      (prog1 (apply fn args)
-        (when (and (stringp org-read-date-final-answer)
-                   (string-match (rx "\\" (group (any "+\\-") (0+ nonl)))
-                                 org-read-date-final-answer))
-          (save-excursion
-            (backward-char)
-            (insert " "
-                    (string-trim-right
-                     (match-string 1 org-read-date-final-answer))))))))
+  (advice-add 'org-timestamp
+              :around #'my--org-timestamp-insert-escaped-repeater)
 
   ;; ;; Enlarge the preview magnification
   ;; (plist-put org-format-latex-options :scale 1.5)
@@ -3419,6 +3088,15 @@ URL `https://kitchingroup.cheme.cmu.edu/blog/2016/11/06/Justifying-LaTeX-preview
 (use-package ob
   :defer t
   :preface
+  (declare-function org-babel-where-is-src-block-result
+                    "ob-core"
+                    (&optional insert info hash))
+  (declare-function org-babel-result-end "ob-core" ())
+  (declare-function org-babel-get-src-block-info
+                    "ob-core"
+                    (&optional no-eval datum))
+  (declare-function org-babel-do-load-languages "org" (sym value))
+
   (defun my-org-babel-highlight-result ()
     "Highlight the result of the current source block.
 Adapt from `org-babel-remove-result'."
@@ -3431,11 +3109,10 @@ Adapt from `org-babel-remove-result'."
           (pulse-momentary-highlight-region
            (1+ (match-end 0))
            (progn (forward-line) (org-babel-result-end)))))))
-  :hook (org-babel-after-execute-hook . my-org-babel-highlight-result)
-  :config
-  (define-advice org-babel-execute-src-block
-      (:around (fn &optional arg info params executor-type) lazy-load-languages)
-    "Load languages when needed."
+
+  (defun my--org-babel-execute-src-block-lazy-load-languages
+      (fn &optional arg info params executor-type)
+    "Load Org Babel languages when needed."
     (let* ((info (or info (org-babel-get-src-block-info)))
            (language (car info))
            (language-symbol (and language (intern language)))
@@ -3445,6 +3122,10 @@ Adapt from `org-babel-remove-result'."
         (org-babel-do-load-languages 'org-babel-load-languages
                                      org-babel-load-languages))
       (funcall fn arg info params executor-type)))
+  :hook (org-babel-after-execute-hook . my-org-babel-highlight-result)
+  :config
+  (advice-add 'org-babel-execute-src-block
+              :around #'my--org-babel-execute-src-block-lazy-load-languages)
   :custom (org-confirm-babel-evaluate nil))
 
 (use-package ob-lisp
@@ -3554,6 +3235,7 @@ Adapt from `org-babel-remove-result'."
   ;; Compared to `pdflatex', `xelatex' supports unicode and can use
   ;; system's font
   (org-latex-compiler "xelatex")
+  (org-latex-default-class "ctexart")
   ;; Export org in Chinese into PDF
   ;; https://freizl.github.io/posts/2012-04-06-export-orgmode-file-in-Chinese.html
   (org-latex-pdf-process
@@ -3567,8 +3249,7 @@ Adapt from `org-babel-remove-result'."
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-  (setopt org-latex-default-class "ctexart"))
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 ;;; Markup
 
@@ -3586,21 +3267,7 @@ Adapt from `org-babel-remove-result'."
   (defun my-valign-fancy-bar ()
     "Toggle valign fancy bar."
     (interactive)
-    (setq valign-fancy-bar (not valign-fancy-bar)))
-
-  ;; `outline-show-entry' passes point 0 to `outline-flag-region'
-  ;; when a heading starts at `point-min'.
-  (define-advice outline-show-entry
-      (:around (fn &rest args) clamp-region-start)
-    "Keep `outline-show-entry' inside the accessible buffer."
-    (interactive)
-    (let ((outline-flag-region-function
-           (symbol-function #'outline-flag-region)))
-      (cl-letf (((symbol-function #'outline-flag-region)
-                 (lambda (from to flag &rest flag-args)
-                   (apply outline-flag-region-function
-                          (max (point-min) from) to flag flag-args))))
-        (apply fn args)))))
+    (setq valign-fancy-bar (not valign-fancy-bar))))
 
 (use-package markdown-mode
   :mode ("README\\.md\\'" . gfm-mode)
@@ -3662,10 +3329,7 @@ Adapt from `org-babel-remove-result'."
   :if (treesit-available-p)
   :custom (typst-ts-indent-offset 2)
   :config
-  (add-to-list 'treesit-language-source-alist
-               '(typst . ("https://github.com/uben0/tree-sitter-typst")))
-  (unless (treesit-language-available-p 'typst)
-    (treesit-install-language-grammar 'typst))
+  (my--treesit-ensure-grammar 'typst '("https://github.com/uben0/tree-sitter-typst"))
 
   (with-eval-after-load 'eglot
     (add-to-list 'eglot-server-programs '(typst-ts-mode . ("tinymist"))))
@@ -3709,7 +3373,7 @@ Adapt from `org-babel-remove-result'."
 (use-package standard-themes
   :defer t)
 
-(use-package sinolor-themes
+(use-package jinlor
   :defer t)
 
 (use-package batppuccin
@@ -3734,8 +3398,6 @@ Adapt from `org-babel-remove-result'."
   :defer t)
 
 ;;; Tequila worms
-
-(use-package site-lisp)
 
 (borg-report-init-duration)
 

@@ -1,8 +1,5 @@
 [include]
 	path = .borgconfig
-[submodule "ace-window"]
-	path = lib/ace-window
-	url = https://github.com/abo-abo/ace-window
 [submodule "acp"]
 	path = lib/acp
 	url = https://github.com/xenodium/acp.el
@@ -207,9 +204,6 @@
 [submodule "reader"]
 	path = lib/reader
 	url = https://codeberg.org/MonadicSheep/emacs-reader
-[submodule "rust-mode"]
-	path = lib/rust-mode
-	url = https://github.com/rust-lang/rust-mode
 [submodule "s"]
 	path = lib/s
 	url = https://github.com/magnars/s.el
@@ -222,12 +216,9 @@
 [submodule "shell-maker"]
 	path = lib/shell-maker
 	url = https://github.com/xenodium/shell-maker
-[submodule "sinolor-themes"]
-	path = lib/sinolor-themes
-	url = https://github.com/dalugm/sinolor-themes
-[submodule "site-lisp"]
-	path = lib/site-lisp
-	url = https://codeberg.org/pkal/site-lisp.el
+[submodule "jinlor"]
+	path = lib/jinlor
+	url = https://github.com/dalugm/jinlor.el
 [submodule "sly"]
 	path = lib/sly
 	url = https://github.com/joaotavora/sly
@@ -285,9 +276,6 @@
 [submodule "wgrep"]
 	path = lib/wgrep
 	url = https://github.com/mhayashi1120/Emacs-wgrep
-[submodule "winum"]
-	path = lib/winum
-	url = https://github.com/deb0ch/emacs-winum
 [submodule "with-editor"]
 	path = lib/with-editor
 	url = https://github.com/magit/with-editor
