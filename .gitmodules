@@ -1,11 +1,5 @@
 [include]
 	path = .borgconfig
-[submodule "acp"]
-	path = lib/acp
-	url = https://github.com/xenodium/acp.el
-[submodule "agent-shell"]
-	path = lib/agent-shell
-	url = https://github.com/xenodium/agent-shell
 [submodule "apheleia"]
 	path = lib/apheleia
 	url = https://github.com/radian-software/apheleia
@@ -141,6 +135,9 @@
 [submodule "htmlize"]
 	path = lib/htmlize
 	url = https://github.com/hniksic/emacs-htmlize
+[submodule "jinlor"]
+	path = lib/jinlor
+	url = https://github.com/dalugm/jinlor.el
 [submodule "just-ts-mode"]
 	path = lib/just-ts-mode
 	url = https://github.com/leon-barrett/just-ts-mode.el
@@ -213,12 +210,6 @@
 [submodule "sesman"]
 	path = lib/sesman
 	url = https://github.com/vspinu/sesman
-[submodule "shell-maker"]
-	path = lib/shell-maker
-	url = https://github.com/xenodium/shell-maker
-[submodule "jinlor"]
-	path = lib/jinlor
-	url = https://github.com/dalugm/jinlor.el
 [submodule "sly"]
 	path = lib/sly
 	url = https://github.com/joaotavora/sly

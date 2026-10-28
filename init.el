@@ -351,8 +351,8 @@ Key is a symbol as the name, value is a plist specifying the search url."
                                  my-search-engine-alist
                                  nil nil #'equal)))
       (browse-url
-       (url-encode-url
-        (concat search-url
+       (concat search-url
+               (url-hexify-string
                 (if mark-active
                     (buffer-substring-no-properties (region-beginning) (region-end))
                   (read-string
@@ -532,12 +532,12 @@ URL `https://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/'"
                (seq-filter #'buffer-file-name (buffer-list))))))
 
   (defun my-kill-other-buffers-with-special-ones ()
-    "Keep all buffers (include special buffers) but the current one.
+    "Kill all other buffers, including special buffers.
 
 URL `https://stackoverflow.com/questions/3417438/closing-all-other-buffers-in-emacs'"
     (interactive)
     (when (y-or-n-p "Kill all buffers but current one? ")
-      (mapc #'kill-buffer (cdr (buffer-list (current-buffer))))))
+      (mapc #'kill-buffer (remq (current-buffer) (buffer-list)))))
 
   (defun my-insert-date (&optional arg)
     "Insert current date at point.
@@ -2150,40 +2150,29 @@ KEEP is one of `upper', `base', `lower'."
 
 (use-package workspaces
   :preface
-  (defvar consult-buffer-sources)
-
-  (defun my--consult-workspaces ()
-    "Isolate workspace buffers when using workspaces."
-    (if workspaces-mode
-        (add-to-list 'consult-buffer-sources 'my-consult-source-workspace)
-      ;; Reset `consult-buffer' to show all buffers
-      (setq consult-buffer-sources
-            (delete 'my-consult-source-workspace consult-buffer-sources))))
+  (defvar consult-buffer-list-function)
   :bind (("C-c C-w" . workspaces-prefix-map)
+         ("C-c w b" . workspaces-switch-to-buffer)
+         ("C-c w B" . workspaces-switch-buffer-and-tab)
+         ("C-c w c" . workspaces-clear-buffers)
+         ("C-c w k" . workspaces-kill-buffer)
+         ("C-c w n" . workspaces-rename)
+         ("C-c w q" . workspaces-close)
          ("C-c w s" . workspaces-switch)
-         ("C-c w l" . workspaces-switch)
          ("C-c w o" . workspaces-open))
   :hook (after-init . workspaces-mode)
   :config
-  ;; Integrate workspace buffers into `consult-buffer'
   (with-eval-after-load 'consult
     (defvar my-consult-source-workspace
-      (list :name     "Workspace Buffers"
-            :narrow   ?w
-            :history  'buffer-name-history
-            :category 'buffer
-            :state    #'consult--buffer-state
-            :default  t
-            :items    (lambda () (consult--buffer-query
-                                  :predicate #'workspaces--local-buffer-p
-                                  :sort 'visibility
-                                  :as #'buffer-name)))
-      "Workspace buffer candidate source for `consult-buffer'.")
-
-    (when workspaces-mode
-      (add-to-list 'consult-buffer-sources 'my-consult-source-workspace))
-
-    (add-hook 'workspaces-mode-hook #'my--consult-workspaces)))
+      (append (list :name "Workspace Buffers"
+                    :narrow ?w
+                    :enabled (lambda () workspaces-mode)
+                    :items (lambda ()
+                             (let ((consult-buffer-list-function #'workspaces-buffer-list))
+                               (funcall (plist-get consult-source-buffer :items)))))
+              consult-source-buffer)
+      "Current workspace buffers, alongside Consult's global buffer source.")
+    (add-to-list 'consult-buffer-sources 'my-consult-source-workspace)))
 
 ;; Jump between texts
 ;; https://emacsredux.com/blog/2015/07/19/ace-jump-mode-is-dead-long-live-avy
@@ -2263,7 +2252,7 @@ KEEP is one of `upper', `base', `lower'."
   (declare-function consult--find "consult" (prompt builder initial))
   (declare-function zh-lib-build-regexp-string
                     "zh-lib"
-                    (str &optional no-punc-p only-chinese-p))
+                    (str &rest args))
 
   (defvar w32-quote-process-args)
 
@@ -3122,8 +3111,8 @@ Adapt from `org-babel-remove-result'."
         (org-babel-do-load-languages 'org-babel-load-languages
                                      org-babel-load-languages))
       (funcall fn arg info params executor-type)))
-  :hook (org-babel-after-execute-hook . my-org-babel-highlight-result)
   :config
+  (add-hook 'org-babel-after-execute-hook #'my-org-babel-highlight-result)
   (advice-add 'org-babel-execute-src-block
               :around #'my--org-babel-execute-src-block-lazy-load-languages)
   :custom (org-confirm-babel-evaluate nil))
@@ -3183,14 +3172,17 @@ Adapt from `org-babel-remove-result'."
       ;; Locate YEAR headline, then MONTH headline
       (dolist (heading heading-list)
         (let ((re (format org-complex-heading-regexp-format
-                          (regexp-quote heading))))
-          (if (re-search-forward re end t)
+                          (regexp-quote heading)))
+              found)
+          (while (and (not found) (re-search-forward re end t))
+            (setq found (= (org-outline-level) level)))
+          (if found
               (goto-char (line-beginning-position))
-            ;; Not found, create a new headline at EOF
-            (goto-char (point-max))
+            ;; Append inside the parent subtree, or at EOF for a new year.
+            (goto-char (or end (point-max)))
             (or (bolp) (insert "\n"))
-            (when (/= (point) (point-min)) (org-end-of-subtree t t))
-            (insert (make-string level ?*) " " heading "\n")))
+            (insert (make-string level ?*) " " heading "\n")
+            (forward-line -1)))
         (cl-incf level)
         (setq end (save-excursion (org-end-of-subtree t t))))
       (org-end-of-subtree)))
@@ -3281,49 +3273,10 @@ Adapt from `org-babel-remove-result'."
   (markdown-gfm-uppercase-checkbox t)
   (markdown-italic-underscore t)
   (markdown-make-gfm-checkboxes-buttons t)
-
-  (markdown-content-type "application/xhtml+xml")
-  (markdown-css-paths '("https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css"
-                        "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/github.min.css"))
-  (markdown-xhtml-header-content "
-<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
-<style>
-  body {
-    max-width: 50rem;
-    width: 100%;
-    margin: 2rem auto !important;
-  }
-</style>
-
-<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/styles/default.min.css'>
-<script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.body.classList.add('markdown-body');
-    document.querySelectorAll('pre code').forEach((code) => {
-      if (code.className !== 'mermaid') {
-        hljs.highlightElement(code);
-      }
-    });
-  });
-</script>
-
-<script src='https://unpkg.com/mermaid/dist/mermaid.min.js'></script>
-<script>
-  mermaid.initialize({
-    theme: 'default',  // default, forest, dark, neutral
-    startOnLoad: true
-  });
-</script>
-")
-  (markdown-gfm-additional-languages '("Mermaid"))
+  (markdown-gfm-additional-languages '("mermaid"))
   :hook (markdown-mode . (lambda ()
                            "The markdown files may contain tables, so do not wrap lines."
-                           (setq truncate-lines t)))
-  :config
-  ;; `multimarkdown' is necessary for `highlight.js' and `mermaid.js'
-  (when (executable-find "multimarkdown")
-    (setq markdown-command "multimarkdown")))
+                           (setq-local truncate-lines t))))
 
 (use-package typst-ts-mode
   :if (treesit-available-p)
@@ -3337,11 +3290,6 @@ Adapt from `org-babel-remove-result'."
 
 (use-package asciidoc-mode
   :if (treesit-available-p)
-  :defer t)
-
-;;; Agent
-
-(use-package agent-shell
   :defer t)
 
 ;;; Reader

@@ -1,9 +1,8 @@
-#########
-# Files #
-#########
+# Compiled and generated files
 *.elc
 /.lsp*
 /.org-id-locations
+/README.html
 /abbrev_defs
 /amx-items
 /bookmarks
@@ -12,33 +11,25 @@
 /ido.last
 /places
 /projectile*
-/recentf
 /projects
+/projects.eld
+/recentf
 /tramp
 /viper
-/README.html
-/projects.eld
 
-###########
-# Folders #
-###########
+# Runtime directories
 /.cache/
 /auto-save-list/
 /elpa/
-/transient/
-/url/
-/tramp/
+/eln-cache/
 /eshell/
 /games/
 /server/
-/eln-cache/
+/transient/
+/url/
 /var/
-/site-lisp/*
-/tree-sitter/*
 
-################
-# DON'T IGNORE #
-################
-
-!/site-lisp/README
-!/tree-sitter/README
+# Local Lisp and parser builds
+/site-lisp/
+/tree-sitter/
+/user-lisp/
